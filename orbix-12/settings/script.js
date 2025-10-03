@@ -2,7 +2,7 @@
 const widgetContainer = document.getElementById('widgetContainer');
 
 // Chemin vers le core réutilisable (note le _common)
-const settingsPageURL = '../../_common/core/settings-core';
+const settingsPageURL = '../../-common/core/settings-core';
 
 const currentURL = window.location.href;
 let baseURL = currentURL;
