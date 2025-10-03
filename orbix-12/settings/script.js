@@ -1,7 +1,7 @@
 // Paramètres de recherche
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const settingsJson = urlParams.get("settingsJson") || "";
+const settingsJson = urlParams.get("settingsJson") || "settings.json";
 const widgetURL = urlParams.get("widgetURL") || "";
 const showUnmuteIndicator = GetBooleanParam("showUnmuteIndicator", false);
 
