@@ -1,11 +1,11 @@
-// Search paramaters
+// Paramètres de recherche
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const settingsJson = urlParams.get("settingsJson") || "";
 const widgetURL = urlParams.get("widgetURL") || "";
 const showUnmuteIndicator = GetBooleanParam("showUnmuteIndicator", false);
 
-// Page elements
+// Éléments de la page
 const widgetUrlInputWrapper = document.getElementById('widgetUrlInputWrapper');
 const widgetUrlInput = document.getElementById('widgetUrlInput');
 const urlLabel = document.getElementById('urlLabel');
@@ -16,25 +16,25 @@ const loadDefaultsBox = document.getElementById('loadDefaultsWrapper');
 const loadSettingsBox = document.getElementById('loadSettingsWrapper');
 const unmuteLabel = document.getElementById('unmute-label');
 
-// Global variables
+// Variables globales
 let settingsData = '';
 let settingsMap = new Map();
 
-// Construct local storage key prefix so that each widget has their own unique settings
+// Construire le préfixe de clé du local storage pour que chaque widget ait ses propres paramètres
 const parts = widgetURL.replace(/\/+$/, '').split('/');
 const keyPrefix = parts[parts.length - 1];
 
-// Set visibility of the unmute indicator
+// Afficher/masquer l’indicateur de réactivation du son
 if (showUnmuteIndicator)
 	unmuteLabel.style.display = 'inline';
 
-// Set hint text for "Load URL" text input
+// Texte d’indice pour l’entrée “Charger l’URL”
 loadUrlBox.placeholder = `${widgetURL}?...`
 
 
 
 /////////////////////////////
-// LOAD FROM SETTINGS.JSON //
+// CHARGER DE SETTINGS.JSON //
 /////////////////////////////
 
 function LoadJSON(settingsJson) {
@@ -43,12 +43,12 @@ function LoadJSON(settingsJson) {
 		.then(data => {
 			settingsData = data;
 
-			// Clear the settings panel
+			// Vider le panneau des paramètres
 			settingsPanel.innerHTML = '';
 
 			const groupedSettings = {};
 
-			// Group settings by their 'group' property
+			// Grouper les paramètres par la propriété 'group'
 			data.settings.forEach(setting => {
 				if (!groupedSettings[setting.group]) {
 					groupedSettings[setting.group] = [];
@@ -56,7 +56,7 @@ function LoadJSON(settingsJson) {
 				groupedSettings[setting.group].push(setting);
 			});
 
-			// Render settings for each group
+			// Afficher les paramètres pour chaque groupe
 			for (const groupName in groupedSettings) {
 				const groupDiv = document.createElement('div');
 				groupDiv.classList.add('setting-group');
@@ -92,14 +92,14 @@ function LoadJSON(settingsJson) {
 						case 'text':
 							inputElement = document.createElement('input');
 							inputElement.type = 'text';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							inputElement.autocomplete = 'new-password';
 							break;
 						case 'password':
 							inputElement = document.createElement('input');
 							inputElement.type = 'password';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							inputElement.autocomplete = 'new-password';
 							break;
@@ -117,7 +117,7 @@ function LoadJSON(settingsJson) {
 							slider.classList.add('round');
 							labelDiv.appendChild(slider);
 
-							// Add event listener to the switchDiv
+							// Inverser l’état et mettre à jour la visibilité
 							labelDiv.addEventListener('click', () => {
 								checkBoxElement.checked = !checkBoxElement.checked;
 								UpdateSettingItemVisibility();
@@ -126,7 +126,7 @@ function LoadJSON(settingsJson) {
 							break;
 						case 'select':
 							inputElement = document.createElement('select');
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							setting.options.forEach(option => {
 								const optionElement = document.createElement('option');
 								optionElement.value = option.value;
@@ -141,13 +141,13 @@ function LoadJSON(settingsJson) {
 						case 'color':
 							inputElement = document.createElement('input');
 							inputElement.type = 'color';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							break;
 						case 'number':
 							inputElement = document.createElement('input');
 							inputElement.type = 'number';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							inputElement.min = setting.min;
 							inputElement.max = setting.max;
@@ -156,15 +156,15 @@ function LoadJSON(settingsJson) {
 						case 'sb-actions':
 							inputElement = document.createElement('input');
 							inputElement.type = 'text';
-							inputElement.placeholder = 'Type to search...';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.placeholder = 'Tapez pour rechercher...';
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							inputElement.setAttribute('list', 'streamer-bot-actions');
 							inputElement.autocomplete = 'off';
 							break;
 						case 'button':
 							inputElement = document.createElement('button');
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.textContent = setting.label;
 
 							inputElement.addEventListener('click', () => {
@@ -187,15 +187,15 @@ function LoadJSON(settingsJson) {
 						default:
 							inputElement = document.createElement('input');
 							inputElement.type = 'text';
-							inputElement.id = setting.id; //Added setting ID
+							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 					}
 
-					// Save settings to settings map
+					// Enregistrer la valeur par défaut
 					if (!settingsMap.has(setting.id))
 						settingsMap.set(setting.id, setting.defaultValue);
 
-					// Refresh the preview when any setting changes
+					// Rafraîchir l’aperçu à chaque changement
 					inputElement.addEventListener('input', function (event) {
 						const settingElement = document.getElementById(setting.id);
 						if (setting.type == 'checkbox')
@@ -230,7 +230,7 @@ function LoadJSON(settingsJson) {
 						const parentElement = document.getElementById(setting.showIf);
 						let shouldShow = true;
 
-						// Walk up the chain of showIf dependencies
+						// Remonter la chaîne de dépendances showIf
 						let currentSetting = setting;
 						while (currentSetting.showIf) {
 							const parentInput = document.getElementById(currentSetting.showIf);
@@ -239,7 +239,7 @@ function LoadJSON(settingsJson) {
 								break;
 							}
 
-							// Find the parent setting object (to keep walking up)
+							// Retrouver l’objet parent (pour continuer à remonter)
 							currentSetting = data.settings.find(s => s.id === currentSetting.showIf) || {};
 						}
 
@@ -252,7 +252,7 @@ function LoadJSON(settingsJson) {
 			RefreshWidgetPreview();
 			SaveSettingsToStorage();
 		})
-		.catch(error => console.error('Error loading settings:', error));
+		.catch(error => console.error('Erreur lors du chargement des paramètres :', error));
 }
 
 function SaveSettingsToStorage() {
@@ -263,7 +263,7 @@ function SaveSettingsToStorage() {
 }
 
 function LoadSettingsFromStorage() {
-	// Retrieve session rankings from local storage
+	// Récupérer les paramètres depuis le local storage
 	const settingsMapString = localStorage.getItem(`${keyPrefix}-settings`);
 	if (settingsMapString) {
 		const settingsMapArray = JSON.parse(settingsMapString);
@@ -283,7 +283,7 @@ function LoadDefaultSettings() {
 function RefreshWidgetPreview() {
 	const settings = {};
 	settingsData.settings.forEach(setting => {
-		if (setting.type === 'button') return; // Skip buttons
+		if (setting.type === 'button') return; // Ignorer les boutons
 
 		let inputElement = document.getElementById(setting.id);
 		if (!inputElement) return;
@@ -295,12 +295,12 @@ function RefreshWidgetPreview() {
 		}
 	});
 
-	// Generate parameter string
+	// Construire la chaîne de paramètres
 	const paramString = Object.entries(settings)
 		.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
 		.join('&');
 
-	console.debug('Parameter String:', paramString);
+	console.debug('Chaîne de paramètres :', paramString);
 
 	widgetUrlInput.value = widgetURL + "?" + paramString;
 	widgetPreview.src = widgetUrlInput.value;
@@ -327,7 +327,7 @@ function UpdateStreamerBotConnection() {
 // STREAMER.BOT //
 //////////////////
 
-// Connect to Streamer.bot and get list of actions
+// Connexion à Streamer.bot et récupération de la liste des actions
 let sbServerAddress = '127.0.0.1';
 let sbServerPort = '8080';
 let client = new StreamerbotClient({
@@ -335,15 +335,15 @@ let client = new StreamerbotClient({
 	port: sbServerPort,
 
 	onConnect: (data) => {
-		console.log(`Streamer.bot successfully connected to ${sbServerAddress}:${sbServerPort}`)
+		console.log(`Streamer.bot connecté avec succès à ${sbServerAddress}:${sbServerPort}`)
 		console.debug(data);
 
-		// Get list of actions
+		// Récupérer la liste des actions
 		GetSBActions();
 	},
 
 	onDisconnect: () => {
-		console.error(`Streamer.bot disconnected from ${sbServerAddress}:${sbServerPort}`)
+		console.error(`Streamer.bot déconnecté de ${sbServerAddress}:${sbServerPort}`)
 	}
 });
 
@@ -367,45 +367,45 @@ async function GetSBActions() {
 
 
 /////////////////////////
-// BUTTON CLICK EVENTS //
+// ÉVÉNEMENTS BOUTONS  //
 /////////////////////////
 
 function CopyURLToClipboard() {
-	// Copy to clipboard
+	// Copier dans le presse-papiers
 	navigator.clipboard.writeText(widgetUrlInput.value);
 
-	// Create the "Copied!" message
+	// Créer le message "Copié !"
 	const copiedMessage = document.createElement('span');
-	copiedMessage.textContent = 'Copied to clipboard!';
+	copiedMessage.textContent = 'Copié dans le presse-papiers !';
 	copiedMessage.style.textAlign = 'center';
 	copiedMessage.style.fontWeight = 'absolute';
 	copiedMessage.style.position = 'absolute';
 	copiedMessage.style.top = '50%';
 	copiedMessage.style.left = '50%';
 	copiedMessage.style.transform = 'translate(-50%, -50%)';
-	copiedMessage.style.backgroundColor = '#00dd63'; // Green with some transparency
+	copiedMessage.style.backgroundColor = '#00dd63'; // Vert
 	copiedMessage.style.color = 'white';
 	copiedMessage.style.padding = '5px 10px';
 	copiedMessage.style.borderRadius = '5px';
 	copiedMessage.style.fontWeight = '500';
-	copiedMessage.style.zIndex = '2'; // Ensure it's above the input and label
-	copiedMessage.style.opacity = '0'; // Start with opacity 0 for fade-in
+	copiedMessage.style.zIndex = '2'; // au-dessus de l’input/label
+	copiedMessage.style.opacity = '0'; // départ en transparence
 	copiedMessage.style.transition = 'opacity 0.2s ease-in-out';
 
 	widgetUrlInputWrapper.appendChild(copiedMessage);
 
-	// Force a reflow to trigger the transition
+	// Forcer un reflow pour déclencher la transition
 	void copiedMessage.offsetWidth;
 
-	// Fade in the message
+	// Fondu entrant
 	copiedMessage.style.opacity = '1';
 
-	// Fade out and remove the message after 3 seconds
+	// Disparition puis retrait après 3 s
 	setTimeout(() => {
 		copiedMessage.style.opacity = '0';
 		setTimeout(() => {
 			widgetUrlInputWrapper.removeChild(copiedMessage);
-		}, 500); // Wait for the fade-out
+		}, 500); // attendre la fin du fondu
 	}, 5000);
 }
 
@@ -430,7 +430,7 @@ function LoadSettings() {
 				inputElement.checked = value.toLocaleLowerCase() == 'true';
 			else
 				inputElement.value = value;
-			inputElement.dispatchEvent(new Event('input')); // Triggers the page refresh
+			inputElement.dispatchEvent(new Event('input')); // Déclenche le rafraîchissement
 		}
 	});
 
@@ -457,14 +457,14 @@ function OpenLoadSettingsPopup() {
 
 
 //////////////////////
-// HELPER FUNCTIONS //
+// FONCTIONS AIDE   //
 //////////////////////
 
-// Handle first window interaction
+// Gérer la première interaction avec la fenêtre
 window.addEventListener('message', (event) => {
 	if (event.origin === new URL(widgetPreview.src).origin && event.data === 'iframe-interacted') {
 		iframeHasBeenInteractedWith = true;
-		console.log('Iframe has been interacted with!');
+		console.log('Interaction avec l’iframe détectée !');
 		unmuteLabel.style.display = 'none';
 	}
 });
@@ -472,8 +472,8 @@ window.addEventListener('message', (event) => {
 
 
 
-// Load settings from local storage
+// Charger les paramètres depuis le local storage
 LoadSettingsFromStorage();
 
-// Load default settings
+// Charger les paramètres par défaut
 LoadJSON(settingsJson);
