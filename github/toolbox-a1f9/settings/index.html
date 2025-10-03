@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Vibe Meter</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
+</head>
+<body>
+    <div id="header">
+        <button id="copyURLButton" onclick="CopyURLToClipboard()">📋 Copier l'URL</button>
+        <div id="widgetUrlInputWrapper">
+            <input id="widgetUrlInput" type="text" readonly>
+            <span id="urlLabel">Survolez pour voir l'URL</span>
+        </div>
+        <button onclick="OpenLoadSettingsPopup()">⬆️ Charger les paramètres</button>
+        <button onclick="OpenLoadDefaultsPopup()">🔄 Réinitialiser</button>
+    </div>
+
+    <div id="contentArea">
+        <div id="settingsPanel">
+            <!-- Les paramètres seront chargés ici dynamiquement -->
+        </div>
+        <div id="widget-preview-wrapper">
+            <iframe id="widgetPreview"></iframe>
+            <div id="unmute-label">Cliquez pour activer le son</div>
+        </div>
+    </div>
+
+    <!-- Popup pour réinitialiser -->
+    <div id="loadDefaultsWrapper">
+        <div id="loadDefaultsContainer">
+            <h2>⚠️ Réinitialiser les paramètres</h2>
+            <p>Êtes-vous sûr de vouloir réinitialiser tous les paramètres aux valeurs par défaut ?</p>
+            <button onclick="LoadDefaultSettings()">Oui, réinitialiser</button>
+            <button onclick="CloseDefaultsPopup()">Annuler</button>
+        </div>
+    </div>
+
+    <!-- Popup pour charger les paramètres -->
+    <div id="loadSettingsWrapper">
+        <div id="loadSettingsContainer">
+            <h2>⬆️ Charger les paramètres depuis une URL</h2>
+            <p>Collez une URL complète avec les paramètres :</p>
+            <input type="text" id="loadUrlBox" placeholder="https://...">
+            <button onclick="LoadSettings()">Charger</button>
+            <button onclick="CloseSettings()">Annuler</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+* {
+	margin: 0;
+	padding: 0;
+	--margin: 20px;
+	--border-radius: 0.5em;
+}
+
+body {
+	overflow: hidden;
+}
+
+html {
+	width: 100vw;
+	height: 100vh;
+	scroll-behavior: smooth;
+	/* background: #000000d9; */
+	font-size: 30px;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	color: white;
+	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+	overflow-wrap: break-word;
+}
+
+#statusContainer {
+	font-weight: 500;
+	font-size: 30px;
+	text-align: center;
+	background-color: #D12025;
+	color: white;
+	padding: 10px;
+	border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#mainContainer {
+	position: absolute;
+	height: calc(100% - 2 * var(--margin));
+	width: calc(100% - 2 * var(--margin));
+	margin: var(--margin);
+}
+
+#messageList {
+	position: absolute;
+	left: 0;
+	width: 100%;
+}
+
+.normalScrollDirection {
+	bottom: 0;
+}
+
+.reverseScrollDirection {
+	display: flex;
+	top: 0;
+	flex-direction: column-reverse;
+}
+
+li {
+	list-style: none;
+	/* overflow: hidden; */
+	max-height: 0;
+	margin: 10px 0px 0px 0px;
+	transition: all 1s ease-in-out;
+}
+
+.reverseLineItemDirection {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+
+.slide-fade li {
+	transition: all var(--animation-speed) ease-out;
+	/* opacity: 0; */
+}
+
+.slide-fade li.show {
+	/* opacity: 1; */
+}
+
+#IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList {
+	opacity: 0;
+}
+
+#firstMessage,
+#sharedChat {
+	display: none;
+	font-weight: 500;
+	font-size: 0.7em;
+}
+
+.bubble {
+	background: var(--bubble-color) !important;
+	padding: 0.5em 1em;
+	border-radius: var(--border-radius);
+}
+
+.highlightMessage {
+	/* background: #adadad46 !important; */
+	background: #414141e5 !important;
+	box-shadow: inset 0 0 0 0.1em rgb(94, 94, 94);
+	padding: 0.5em 1em;
+	border-radius: var(--border-radius);
+}
+
+.message-contents {
+	display: flex;
+	flex-direction: row;
+	gap: 0.5em;
+}
+
+.add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
+	align-items: center;
+}
+
+#avatar {
+	width: 2em;
+}
+
+#avatar:empty {
+	display: none;
+}
+
+.avatar {
+    width: 2em;                /* Set width equal to height */
+    height: 2em;
+    margin: 1px;
+    transform: translate(0px, 0.25em);
+    border-radius: 50%;
+    object-fit: cover;         /* Crop to fill the circle */
+    overflow: hidden;          /* Ensure no overflow outside the circle */
+    display: inline-block;     /* Just in case */
+}
+
+.timestamp,
+.pronouns {
+	background: #adadad46;
+	/* border-radius: var(--border-radius); */
+	border-radius: 1em;
+	font-size: 0.7em;
+	/* padding: 5px 15px; */
+	padding: 0.15em 0.5em;
+}
+
+.bits {
+	background: #adadad46;
+	border-radius: calc(var(--border-radius) / 2);
+	font-size: 0.7em;
+	padding: 5px 10px;
+}
+
+.platform,
+.badge {
+	height: 1em;
+	margin: 1px;
+	transform: translate(0px, 0.25em);
+}
+
+.emote {
+	height: 1.5em;
+	margin: 1px;
+	transform: translate(0px, 0.4em);
+}
+
+.productImage {
+	height: 3em;
+	border-radius: 0.25em;
+	transform: translate(0px, 0.25em);
+}
+
+.youtubeThumbnail {
+	width: 5em;
+	border-radius: 0.25em;
+	transform: translate(0px, 0.25em);
+}
+
+/* .centerThatShitHomie {
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+} */
+
+#badgeList {
+	margin: 0px 5px;
+}
+
+#username,
+#title {
+	font-weight: 700;
+}
+
+.title {
+	font-weight: 700;
+}
+
+#reply {
+	display: none;
+	overflow: hidden;
+	white-space: normal; /* Allow line wrapping */
+	text-overflow: ellipsis;
+	word-break: break-word; /* Break long words if necessary */
+	font-size: 0.7em;
+	opacity: 0.5;
+}
+
+#message {
+	font-weight: 400;
+	line-height: var(--line-spacing);
+}
+
+#card {
+	background: #adadad46;
+	padding: 0.5em 1em;
+	border-radius: var(--border-radius);
+}
+
+.youtube-super-sticker {
+	height: 2em;
+	margin: 1px;
+	transform: translate(0px, 0.25em);
+}
+
+.kick-gift,
+.tiktok-gift {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 1em;
+	padding: 0.5em;
+	border-radius: var(--border-radius);
+	max-width: 100%;
+}
+
+.kick-gift-avatar,
+.tiktok-gift-avatar {
+	height: 3em;
+	margin: 1px;
+	border-radius: 50%;
+	justify-content: left;
+	flex-shrink: 0;
+}
+
+.kick-gift-contents,
+.tiktok-gift-message {
+	flex-grow: 1;
+	/* white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis; */
+	gap: 1em;
+}
+
+/* .kick-gift-contents {
+	text-align: center;
+} */
+
+#kick-gift-message {
+	font-size: 0.9em;
+}
+
+.kick-gift-sticker,
+.tiktok-gift-sticker {
+	flex-shrink: 0;
+	justify-content: flex-end;
+
+	filter: drop-shadow(5px 5px 5px #00000060);
+}
+
+.tiktok-gift-sticker {
+	height: 2.5em;
+}
+
+.kick-gift-sticker {
+	height: 5em;
+}
+
+#tiktok-gift-repeat-count {
+	justify-content: flex-end;
+	font-size: 1.5em;
+	font-style: italic;
+	font-weight: 500;
+}
+
+/*****************/
+/** CARD COLORS **/
+/*****************/
+
+.announcementBlue {
+	background: linear-gradient(#03d3d7, #8d49fe) !important;
+}
+
+.announcementGreen {
+	background: linear-gradient(#01da86, #55bee4) !important;
+}
+
+.announcementOrange {
+	background: linear-gradient(#feb419, #e1df00) !important;
+}
+
+.announcementPurple {
+	background: linear-gradient(#9548ff, #fc74e6) !important;
+}
+
+.twitch {
+	background: linear-gradient(#6d5ca1, #9146ff) !important;
+}
+
+.youtube {
+	background: linear-gradient(#FF6C60, #FF0707) !important;
+}
+
+.kick {
+	background: linear-gradient(#32b602, #005600) !important;
+}
+
+.streamlabs {
+	background: linear-gradient(#73dabb, #397765) !important;
+}
+
+.streamelements {
+	background: linear-gradient(#263b8a, #0a112a) !important;
+}
+
+.patreon {
+	background: linear-gradient(#c76633, #fd5e0a) !important;
+}
+
+.kofi {
+	background: linear-gradient(#54c7ee, #08c2ff) !important;
+}
+
+.tipeeeStream {
+	background: linear-gradient(#120e23, #5d192a) !important;
+}
+
+.fourthwall {
+	background: linear-gradient(#466edb, #1c56f5) !important;
+}
+
+.tiktok {
+	background: linear-gradient(#262626, #000000) !important;
+}
+
+.fourthwall {
+	background: linear-gradient(#466edb, #1c56f5) !important;
+}
+
+.thumbnail {
+	background: linear-gradient(#494949, #202020) !important;
+}
+
+
+.blank {
+	background: #adadad00 !important;
+}
+
+/****************/
+/** ANIMATIONS **/
+/****************/
+
+.statusConnected {
+	animation-name: statusConnected;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
+.statusDisconnected {
+	animation-name: statusDisconnected;
+	animation-duration: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes statusConnected {
+	0% {
+		opacity: 1;
+		background-color: #2FB774;
+	}
+
+	100% {
+		opacity: 0;
+		background-color: #2FB774;
+	}
+}
+
+@keyframes statusDisconnected {
+	0% {
+		background-color: #D12025;
+	}
+
+	100% {
+		background-color: #D12025;
+	}
+}
