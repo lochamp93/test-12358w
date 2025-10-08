@@ -106,23 +106,18 @@ li {
 	border-radius: var(--border-radius);
 }
 
-/* CORRECTION PRINCIPALE : Alignement des messages */
 .message-contents {
 	display: flex;
 	flex-direction: row;
 	gap: 0.5em;
-	align-items: flex-end; /* Aligne les éléments sur leur bas */
 }
 
 .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
 }
 
-/* CORRECTION : Avatar aligné en bas */
 #avatar {
 	width: 2em;
-	flex-shrink: 0; /* Empêche l'avatar de rétrécir */
-	align-self: flex-end; /* Force l'alignement en bas */
 }
 
 #avatar:empty {
@@ -130,14 +125,14 @@ li {
 }
 
 .avatar {
-    width: 2em;
+    width: 2em;                /* Set width equal to height */
     height: 2em;
     margin: 1px;
-    /* SUPPRESSION du transform qui causait les problèmes */
+    transform: translate(0px, 0.25em);
     border-radius: 50%;
-    object-fit: cover;
-    overflow: hidden;
-    display: block;
+    object-fit: cover;         /* Crop to fill the circle */
+    overflow: hidden;          /* Ensure no overflow outside the circle */
+    display: inline-block;     /* Just in case */
 }
 
 .timestamp,
@@ -161,27 +156,25 @@ li {
 .badge {
 	height: 1em;
 	margin: 1px;
-	/* CORRECTION : Alignement vertical des badges inline */
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 .emote {
 	height: 1.5em;
 	margin: 1px;
-	/* CORRECTION : Alignement vertical des emotes inline */
-	vertical-align: middle;
+	transform: translate(0px, 0.4em);
 }
 
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 .youtubeThumbnail {
 	width: 5em;
 	border-radius: 0.25em;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 /* .centerThatShitHomie {
@@ -192,8 +185,6 @@ li {
 
 #badgeList {
 	margin: 0px 5px;
-	display: inline-block;
-	vertical-align: middle;
 }
 
 #username,
@@ -213,30 +204,23 @@ li {
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
-	/* CORRECTION : Alignement du texte de réponse */
-	margin-bottom: 0.25em;
 }
 
 #message {
 	font-weight: 400;
 	line-height: var(--line-spacing);
-	/* CORRECTION : Assure que le message commence bien aligné */
-	display: inline-block;
-	vertical-align: baseline;
 }
 
-/* CORRECTION : Annonces avec bordure au lieu de fond */
 #card {
-	background: transparent !important;
+	background: #adadad46;
 	padding: 0.5em 1em;
 	border-radius: var(--border-radius);
-	border-left: 0.25em solid transparent; /* Bordure par défaut */
 }
 
 .youtube-super-sticker {
 	height: 2em;
 	margin: 1px;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 .kick-gift,
@@ -303,25 +287,20 @@ li {
 /** CARD COLORS **/
 /*****************/
 
-/* CORRECTION : Application des dégradés en bordure pour les annonces */
 .announcementBlue {
-	border-left-color: #03d3d7 !important;
-	background: rgba(3, 211, 215, 0.1) !important;
+	background: linear-gradient(#03d3d7, #8d49fe) !important;
 }
 
 .announcementGreen {
-	border-left-color: #01da86 !important;
-	background: rgba(1, 218, 134, 0.1) !important;
+	background: linear-gradient(#01da86, #55bee4) !important;
 }
 
 .announcementOrange {
-	border-left-color: #feb419 !important;
-	background: rgba(254, 180, 25, 0.1) !important;
+	background: linear-gradient(#feb419, #e1df00) !important;
 }
 
 .announcementPurple {
-	border-left-color: #9548ff !important;
-	background: rgba(149, 72, 255, 0.1) !important;
+	background: linear-gradient(#9548ff, #fc74e6) !important;
 }
 
 .twitch {
@@ -414,19 +393,3 @@ li {
 		background-color: #D12025;
 	}
 }
-
-/* OPTIONAL : Si tu veux des bordures arrondies en "pilule verticale" pour les annonces */
-/* Décommente ces lignes : */
-/*
-#card {
-	border-radius: 1em;
-}
-*/
-
-/* OPTIONAL : Si tu préfères des bordures droites (plus proche du style Twitch) */
-/* Remplace la valeur border-radius dans #card par : */
-/*
-#card {
-	border-radius: 0;
-}
-*/
