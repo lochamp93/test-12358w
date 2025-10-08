@@ -106,18 +106,24 @@ li {
 	border-radius: var(--border-radius);
 }
 
+/* CORRECTION : Alignement flex-start pour que l'avatar reste en haut */
 .message-contents {
 	display: flex;
 	flex-direction: row;
 	gap: 0.5em;
+	align-items: flex-start; /* Alignement en haut, pas en bas */
 }
 
 .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
 }
 
+/* CORRECTION : Avatar positionné pour s'aligner avec le pseudo */
 #avatar {
 	width: 2em;
+	flex-shrink: 0;
+	display: flex;
+	align-items: flex-start;
 }
 
 #avatar:empty {
@@ -125,14 +131,13 @@ li {
 }
 
 .avatar {
-    width: 2em;                /* Set width equal to height */
+    width: 2em;
     height: 2em;
-    margin: 1px;
-    transform: translate(0px, 0.25em);
+    margin: 0;
     border-radius: 50%;
-    object-fit: cover;         /* Crop to fill the circle */
-    overflow: hidden;          /* Ensure no overflow outside the circle */
-    display: inline-block;     /* Just in case */
+    object-fit: cover;
+    overflow: hidden;
+    display: block;
 }
 
 .timestamp,
@@ -143,6 +148,8 @@ li {
 	font-size: 0.7em;
 	/* padding: 5px 15px; */
 	padding: 0.15em 0.5em;
+	display: inline-block;
+	vertical-align: baseline;
 }
 
 .bits {
@@ -155,26 +162,27 @@ li {
 .platform,
 .badge {
 	height: 1em;
-	margin: 1px;
-	transform: translate(0px, 0.25em);
+	margin: 0 1px;
+	vertical-align: baseline;
+	display: inline-block;
 }
 
 .emote {
 	height: 1.5em;
 	margin: 1px;
-	transform: translate(0px, 0.4em);
+	vertical-align: middle;
 }
 
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 .youtubeThumbnail {
 	width: 5em;
 	border-radius: 0.25em;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 /* .centerThatShitHomie {
@@ -184,7 +192,20 @@ li {
 } */
 
 #badgeList {
-	margin: 0px 5px;
+	display: inline-block;
+	vertical-align: baseline;
+	line-height: 1;
+}
+
+/* CORRECTION : userInfo en inline pour aligner tous les éléments */
+#userInfo {
+	display: inline-block;
+	vertical-align: baseline;
+	line-height: 1.2em;
+}
+
+#userInfo > * {
+	vertical-align: baseline;
 }
 
 #username,
@@ -204,23 +225,28 @@ li {
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
+	margin-bottom: 0.25em;
+	margin-top: 0.25em;
 }
 
 #message {
 	font-weight: 400;
 	line-height: var(--line-spacing);
+	display: block;
 }
 
+/* CORRECTION : Bordure arrondie en "gellule" (capsule) pour les annonces */
 #card {
-	background: #adadad46;
+	background: transparent !important;
 	padding: 0.5em 1em;
-	border-radius: var(--border-radius);
+	border-radius: 2em; /* Arrondi important pour effet capsule */
+	border-left: 0.3em solid transparent;
 }
 
 .youtube-super-sticker {
 	height: 2em;
 	margin: 1px;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 .kick-gift,
@@ -287,73 +313,86 @@ li {
 /** CARD COLORS **/
 /*****************/
 
+/* CORRECTION : Bordures colorées en mode "gellule" avec fond légèrement coloré */
 .announcementBlue {
-	background: linear-gradient(#03d3d7, #8d49fe) !important;
+	border-left-color: #03d3d7 !important;
+	background: rgba(3, 211, 215, 0.15) !important;
 }
 
 .announcementGreen {
-	background: linear-gradient(#01da86, #55bee4) !important;
+	border-left-color: #01da86 !important;
+	background: rgba(1, 218, 134, 0.15) !important;
 }
 
 .announcementOrange {
-	background: linear-gradient(#feb419, #e1df00) !important;
+	border-left-color: #feb419 !important;
+	background: rgba(254, 180, 25, 0.15) !important;
 }
 
 .announcementPurple {
-	background: linear-gradient(#9548ff, #fc74e6) !important;
+	border-left-color: #9548ff !important;
+	background: rgba(149, 72, 255, 0.15) !important;
 }
 
 .twitch {
-	background: linear-gradient(#6d5ca1, #9146ff) !important;
+	border-left-color: #9146ff !important;
+	background: rgba(145, 70, 255, 0.15) !important;
 }
 
 .youtube {
-	background: linear-gradient(#FF6C60, #FF0707) !important;
+	border-left-color: #FF0707 !important;
+	background: rgba(255, 7, 7, 0.15) !important;
 }
 
 .kick {
-	background: linear-gradient(#32b602, #005600) !important;
+	border-left-color: #32b602 !important;
+	background: rgba(50, 182, 2, 0.15) !important;
 }
 
 .streamlabs {
-	background: linear-gradient(#73dabb, #397765) !important;
+	border-left-color: #73dabb !important;
+	background: rgba(115, 218, 187, 0.15) !important;
 }
 
 .streamelements {
-	background: linear-gradient(#263b8a, #0a112a) !important;
+	border-left-color: #263b8a !important;
+	background: rgba(38, 59, 138, 0.15) !important;
 }
 
 .patreon {
-	background: linear-gradient(#c76633, #fd5e0a) !important;
+	border-left-color: #fd5e0a !important;
+	background: rgba(253, 94, 10, 0.15) !important;
 }
 
 .kofi {
-	background: linear-gradient(#54c7ee, #08c2ff) !important;
+	border-left-color: #08c2ff !important;
+	background: rgba(8, 194, 255, 0.15) !important;
 }
 
 .tipeeeStream {
-	background: linear-gradient(#120e23, #5d192a) !important;
+	border-left-color: #5d192a !important;
+	background: rgba(93, 25, 42, 0.15) !important;
 }
 
 .fourthwall {
-	background: linear-gradient(#466edb, #1c56f5) !important;
+	border-left-color: #1c56f5 !important;
+	background: rgba(28, 86, 245, 0.15) !important;
 }
 
 .tiktok {
-	background: linear-gradient(#262626, #000000) !important;
-}
-
-.fourthwall {
-	background: linear-gradient(#466edb, #1c56f5) !important;
+	border-left-color: #000000 !important;
+	background: rgba(0, 0, 0, 0.15) !important;
 }
 
 .thumbnail {
-	background: linear-gradient(#494949, #202020) !important;
+	border-left-color: #494949 !important;
+	background: rgba(73, 73, 73, 0.15) !important;
 }
 
 
 .blank {
 	background: #adadad00 !important;
+	border-left-color: transparent !important;
 }
 
 /****************/
@@ -393,3 +432,13 @@ li {
 		background-color: #D12025;
 	}
 }
+
+/* OPTIONAL : Pour des bordures complètement droites (style Twitch strict) */
+/* Remplace le border-radius de #card par : */
+/*
+#card {
+	border-radius: 0;
+	border-top-left-radius: 0.5em;
+	border-bottom-left-radius: 0.5em;
+}
+*/
