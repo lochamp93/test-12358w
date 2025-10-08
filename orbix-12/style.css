@@ -106,18 +106,23 @@ li {
 	border-radius: var(--border-radius);
 }
 
+/* CORRECTION PRINCIPALE : Alignement des messages */
 .message-contents {
 	display: flex;
 	flex-direction: row;
 	gap: 0.5em;
+	align-items: flex-end; /* Aligne les éléments sur leur bas */
 }
 
 .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
 }
 
+/* CORRECTION : Avatar aligné en bas */
 #avatar {
 	width: 2em;
+	flex-shrink: 0; /* Empêche l'avatar de rétrécir */
+	align-self: flex-end; /* Force l'alignement en bas */
 }
 
 #avatar:empty {
@@ -125,14 +130,14 @@ li {
 }
 
 .avatar {
-    width: 2em;                /* Set width equal to height */
+    width: 2em;
     height: 2em;
     margin: 1px;
-    transform: translate(0px, 0.25em);
+    /* SUPPRESSION du transform qui causait les problèmes */
     border-radius: 50%;
-    object-fit: cover;         /* Crop to fill the circle */
-    overflow: hidden;          /* Ensure no overflow outside the circle */
-    display: inline-block;     /* Just in case */
+    object-fit: cover;
+    overflow: hidden;
+    display: block;
 }
 
 .timestamp,
@@ -156,25 +161,27 @@ li {
 .badge {
 	height: 1em;
 	margin: 1px;
-	transform: translate(0px, 0.25em);
+	/* CORRECTION : Alignement vertical des badges inline */
+	vertical-align: middle;
 }
 
 .emote {
 	height: 1.5em;
 	margin: 1px;
-	transform: translate(0px, 0.4em);
+	/* CORRECTION : Alignement vertical des emotes inline */
+	vertical-align: middle;
 }
 
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 .youtubeThumbnail {
 	width: 5em;
 	border-radius: 0.25em;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 /* .centerThatShitHomie {
@@ -185,6 +192,8 @@ li {
 
 #badgeList {
 	margin: 0px 5px;
+	display: inline-block;
+	vertical-align: middle;
 }
 
 #username,
@@ -204,23 +213,30 @@ li {
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
+	/* CORRECTION : Alignement du texte de réponse */
+	margin-bottom: 0.25em;
 }
 
 #message {
 	font-weight: 400;
 	line-height: var(--line-spacing);
+	/* CORRECTION : Assure que le message commence bien aligné */
+	display: inline-block;
+	vertical-align: baseline;
 }
 
+/* CORRECTION : Annonces avec bordure au lieu de fond */
 #card {
-	background: #adadad46;
+	background: transparent !important;
 	padding: 0.5em 1em;
 	border-radius: var(--border-radius);
+	border-left: 0.25em solid transparent; /* Bordure par défaut */
 }
 
 .youtube-super-sticker {
 	height: 2em;
 	margin: 1px;
-	transform: translate(0px, 0.25em);
+	vertical-align: middle;
 }
 
 .kick-gift,
@@ -287,73 +303,86 @@ li {
 /** CARD COLORS **/
 /*****************/
 
+/* CORRECTION : Application des dégradés en bordure pour les annonces */
 .announcementBlue {
-	background: linear-gradient(#03d3d7, #8d49fe) !important;
+	border-left-color: #03d3d7 !important;
+	background: rgba(3, 211, 215, 0.1) !important;
 }
 
 .announcementGreen {
-	background: linear-gradient(#01da86, #55bee4) !important;
+	border-left-color: #01da86 !important;
+	background: rgba(1, 218, 134, 0.1) !important;
 }
 
 .announcementOrange {
-	background: linear-gradient(#feb419, #e1df00) !important;
+	border-left-color: #feb419 !important;
+	background: rgba(254, 180, 25, 0.1) !important;
 }
 
 .announcementPurple {
-	background: linear-gradient(#9548ff, #fc74e6) !important;
+	border-left-color: #9548ff !important;
+	background: rgba(149, 72, 255, 0.1) !important;
 }
 
 .twitch {
-	background: linear-gradient(#6d5ca1, #9146ff) !important;
+	border-left-color: #9146ff !important;
+	background: rgba(145, 70, 255, 0.1) !important;
 }
 
 .youtube {
-	background: linear-gradient(#FF6C60, #FF0707) !important;
+	border-left-color: #FF0707 !important;
+	background: rgba(255, 7, 7, 0.1) !important;
 }
 
 .kick {
-	background: linear-gradient(#32b602, #005600) !important;
+	border-left-color: #32b602 !important;
+	background: rgba(50, 182, 2, 0.1) !important;
 }
 
 .streamlabs {
-	background: linear-gradient(#73dabb, #397765) !important;
+	border-left-color: #73dabb !important;
+	background: rgba(115, 218, 187, 0.1) !important;
 }
 
 .streamelements {
-	background: linear-gradient(#263b8a, #0a112a) !important;
+	border-left-color: #263b8a !important;
+	background: rgba(38, 59, 138, 0.1) !important;
 }
 
 .patreon {
-	background: linear-gradient(#c76633, #fd5e0a) !important;
+	border-left-color: #fd5e0a !important;
+	background: rgba(253, 94, 10, 0.1) !important;
 }
 
 .kofi {
-	background: linear-gradient(#54c7ee, #08c2ff) !important;
+	border-left-color: #08c2ff !important;
+	background: rgba(8, 194, 255, 0.1) !important;
 }
 
 .tipeeeStream {
-	background: linear-gradient(#120e23, #5d192a) !important;
+	border-left-color: #5d192a !important;
+	background: rgba(93, 25, 42, 0.1) !important;
 }
 
 .fourthwall {
-	background: linear-gradient(#466edb, #1c56f5) !important;
+	border-left-color: #1c56f5 !important;
+	background: rgba(28, 86, 245, 0.1) !important;
 }
 
 .tiktok {
-	background: linear-gradient(#262626, #000000) !important;
-}
-
-.fourthwall {
-	background: linear-gradient(#466edb, #1c56f5) !important;
+	border-left-color: #000000 !important;
+	background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .thumbnail {
-	background: linear-gradient(#494949, #202020) !important;
+	border-left-color: #494949 !important;
+	background: rgba(73, 73, 73, 0.1) !important;
 }
 
 
 .blank {
 	background: #adadad00 !important;
+	border-left-color: transparent !important;
 }
 
 /****************/
@@ -393,3 +422,19 @@ li {
 		background-color: #D12025;
 	}
 }
+
+/* OPTIONAL : Si tu veux des bordures arrondies en "pilule verticale" pour les annonces */
+/* Décommente ces lignes : */
+/*
+#card {
+	border-radius: 1em;
+}
+*/
+
+/* OPTIONAL : Si tu préfères des bordures droites (plus proche du style Twitch) */
+/* Remplace la valeur border-radius dans #card par : */
+/*
+#card {
+	border-radius: 0;
+}
+*/
