@@ -325,64 +325,56 @@ li {
 }
 
 .twitch {
-	border-left-color: #9146ff !important;
-	background: rgba(145, 70, 255, 0.1) !important;
+	background: linear-gradient(#6d5ca1, #9146ff) !important;
 }
 
 .youtube {
-	border-left-color: #FF0707 !important;
-	background: rgba(255, 7, 7, 0.1) !important;
+	background: linear-gradient(#FF6C60, #FF0707) !important;
 }
 
 .kick {
-	border-left-color: #32b602 !important;
-	background: rgba(50, 182, 2, 0.1) !important;
+	background: linear-gradient(#32b602, #005600) !important;
 }
 
 .streamlabs {
-	border-left-color: #73dabb !important;
-	background: rgba(115, 218, 187, 0.1) !important;
+	background: linear-gradient(#73dabb, #397765) !important;
 }
 
 .streamelements {
-	border-left-color: #263b8a !important;
-	background: rgba(38, 59, 138, 0.1) !important;
+	background: linear-gradient(#263b8a, #0a112a) !important;
 }
 
 .patreon {
-	border-left-color: #fd5e0a !important;
-	background: rgba(253, 94, 10, 0.1) !important;
+	background: linear-gradient(#c76633, #fd5e0a) !important;
 }
 
 .kofi {
-	border-left-color: #08c2ff !important;
-	background: rgba(8, 194, 255, 0.1) !important;
+	background: linear-gradient(#54c7ee, #08c2ff) !important;
 }
 
 .tipeeeStream {
-	border-left-color: #5d192a !important;
-	background: rgba(93, 25, 42, 0.1) !important;
+	background: linear-gradient(#120e23, #5d192a) !important;
 }
 
 .fourthwall {
-	border-left-color: #1c56f5 !important;
-	background: rgba(28, 86, 245, 0.1) !important;
+	background: linear-gradient(#466edb, #1c56f5) !important;
 }
 
 .tiktok {
-	border-left-color: #000000 !important;
-	background: rgba(0, 0, 0, 0.1) !important;
+	background: linear-gradient(#262626, #000000) !important;
+}
+
+.fourthwall {
+	background: linear-gradient(#466edb, #1c56f5) !important;
 }
 
 .thumbnail {
-	border-left-color: #494949 !important;
-	background: rgba(73, 73, 73, 0.1) !important;
+	background: linear-gradient(#494949, #202020) !important;
 }
 
 
 .blank {
 	background: #adadad00 !important;
-	border-left-color: transparent !important;
 }
 
 /****************/
