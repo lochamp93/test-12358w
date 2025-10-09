@@ -1,7 +1,7 @@
 * {
 	margin: 0;
 	padding: 0;
-	--margin: 20px;
+	--margin: 1em;
 	--border-radius: 0.5em;
 }
 
@@ -44,7 +44,7 @@ html {
 
 #messageList {
 	position: absolute;
-	left: 0;
+	left: 0em;
 	width: 100%;
 }
 
@@ -62,7 +62,7 @@ li {
 	list-style: none;
 	/* overflow: hidden; */
 	max-height: 0;
-	margin: 10px 0px 0px 0px;
+	margin: 1em 0px 0px 0px;
 	transition: all 1s ease-in-out;
 }
 
@@ -106,83 +106,90 @@ li {
 	border-radius: var(--border-radius);
 }
 
-/* CORRECTION : Alignement flex-start pour que l'avatar reste en haut */
 .message-contents {
 	display: flex;
 	flex-direction: row;
-	gap: 0.5em;
-	align-items: flex-start; /* Alignement en haut, pas en bas */
+	gap: .5em; /*espace entre PP et le reste*/
 }
 
-.add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
+/* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
-}
+} */
 
-/* CORRECTION : Avatar positionné pour s'aligner avec le pseudo */
-#avatar {
+/* #avatar {
 	width: 2em;
-	flex-shrink: 0;
-	display: flex;
-	align-items: flex-start;
-}
+} */
 
 #avatar:empty {
 	display: none;
 }
 
 .avatar {
-    width: 2em;
+    width: 2em;                /* Set width equal to height */
     height: 2em;
     margin: 0;
+    transform: translate(10em, -1,8em);
     border-radius: 50%;
-    object-fit: cover;
-    overflow: hidden;
-    display: block;
+    object-fit: cover;         /* Crop to fill the circle */
+    overflow: hidden;          /* Ensure no overflow outside the circle */
+    display: inline-block;     /* Just in case */
 }
 
 .timestamp,
 .pronouns {
 	background: #adadad46;
-	/* border-radius: var(--border-radius); */
 	border-radius: 1em;
 	font-size: 0.7em;
-	/* padding: 5px 15px; */
-	padding: 0.15em 0.5em;
-	display: inline-block;
-	vertical-align: baseline;
+	padding: 0.2em 0.65em;
+	display: inline-block;    /* <-- rend les marges verticales actives */
+	margin-bottom: 0.45em;    /* <-- le “jeu” que tu veux sous la gélule */
+	vertical-align: bottom;   /* <-- la maintient alignée en bas du reste */
 }
+
+/* .timestamp,
+.pronouns {
+	background: #adadad46;
+	border-radius: 1em;
+	font-size: 0.7em;
+	padding: 0.2em 0.65em;
+	margin-bottom: 0.3em;
+} */
 
 .bits {
 	background: #adadad46;
 	border-radius: calc(var(--border-radius) / 2);
 	font-size: 0.7em;
-	padding: 5px 10px;
+	padding: 0.2em 0.65em;
 }
 
-.platform,
+.platform {
+  height: 1.2em;
+	margin: 0, 0, 0, 0;
+  transform: translate(0, 0,25em);
+  }
 .badge {
 	height: 1em;
-	margin: 0 1px;
-	vertical-align: baseline;
-	display: inline-block;
+	margin: 0, 10em, 0, 2em;
+	transform: translate(0, 0,25em);
+  padding-inline-start: 0.5em;
 }
 
 .emote {
 	height: 1.5em;
 	margin: 1px;
-	vertical-align: middle;
+	transform: translate(0px, 0.4em);
 }
 
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 .youtubeThumbnail {
 	width: 5em;
 	border-radius: 0.25em;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 /* .centerThatShitHomie {
@@ -192,20 +199,7 @@ li {
 } */
 
 #badgeList {
-	display: inline-block;
-	vertical-align: baseline;
-	line-height: 1;
-}
-
-/* CORRECTION : userInfo en inline pour aligner tous les éléments */
-#userInfo {
-	display: inline-block;
-	vertical-align: baseline;
-	line-height: 1.2em;
-}
-
-#userInfo > * {
-	vertical-align: baseline;
+	margin: 10em,2em;
 }
 
 #username,
@@ -225,28 +219,25 @@ li {
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
-	margin-bottom: 0.25em;
-	margin-top: 0.25em;
 }
 
 #message {
 	font-weight: 400;
 	line-height: var(--line-spacing);
-	display: block;
 }
 
-/* CORRECTION : Bordure arrondie en "gellule" (capsule) pour les annonces */
 #card {
-	background: transparent !important;
+	position:relative;
+  background: transparent;
 	padding: 0.5em 1em;
-	border-radius: 2em; /* Arrondi important pour effet capsule */
-	border-left: 0.3em solid transparent;
+	border-radius: var(--border-radius);
 }
+
 
 .youtube-super-sticker {
 	height: 2em;
 	margin: 1px;
-	vertical-align: middle;
+	transform: translate(0px, 0.25em);
 }
 
 .kick-gift,
@@ -313,86 +304,84 @@ li {
 /** CARD COLORS **/
 /*****************/
 
-/* CORRECTION : Bordures colorées en mode "gellule" avec fond légèrement coloré */
-.announcementBlue {
-	border-left-color: #03d3d7 !important;
-	background: rgba(3, 211, 215, 0.15) !important;
+/* ► Annonces : liseré dégradé à gauche (coins arrondis par défaut)
+   Pour une version “droite” : commente les 2 border-radius du ::before */
+#card.announcementBlue::before,
+#card.announcementGreen::before,
+#card.announcementOrange::before,
+#card.announcementPurple::before,
+#card.announcementDefault::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.4em;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
 }
 
-.announcementGreen {
-	border-left-color: #01da86 !important;
-	background: rgba(1, 218, 134, 0.15) !important;
-}
+/* Couleurs fixes */
+#card.announcementBlue::before   { background: linear-gradient(#0d3d37, #8d49fe); }
+#card.announcementGreen::before  { background: linear-gradient(#10da86, #55bee4); }
+#card.announcementOrange::before { background: linear-gradient(#feb419, #e1df00); }
+#card.announcementPurple::before { background: linear-gradient(#9548ff, #fc74e6); }
 
-.announcementOrange {
-	border-left-color: #feb419 !important;
-	background: rgba(254, 180, 25, 0.15) !important;
-}
-
-.announcementPurple {
-	border-left-color: #9548ff !important;
-	background: rgba(149, 72, 255, 0.15) !important;
+/* Couleur dynamique (= couleur du pseudo) */
+#card.announcementDefault::before { 
+  /* simple aplat */
+  background: var(--userColor, #888888);
 }
 
 .twitch {
-	border-left-color: #9146ff !important;
-	background: rgba(145, 70, 255, 0.15) !important;
+	background: linear-gradient(#6d5ca1, #9146ff) !important;
 }
 
 .youtube {
-	border-left-color: #FF0707 !important;
-	background: rgba(255, 7, 7, 0.15) !important;
+	background: linear-gradient(#FF6C60, #FF0707) !important;
 }
 
 .kick {
-	border-left-color: #32b602 !important;
-	background: rgba(50, 182, 2, 0.15) !important;
+	background: linear-gradient(#32b602, #005600) !important;
 }
 
 .streamlabs {
-	border-left-color: #73dabb !important;
-	background: rgba(115, 218, 187, 0.15) !important;
+	background: linear-gradient(#73dabb, #397765) !important;
 }
 
 .streamelements {
-	border-left-color: #FF0707 !important;
-	background: rgba(38, 59, 138, 0.15) !important;
+	background: linear-gradient(#263b8a, #0a112a) !important;
 }
 
 .patreon {
-	border-left-color: #fd5e0a !important;
-	background: rgba(253, 94, 10, 0.15) !important;
+	background: linear-gradient(#c76633, #fd5e0a) !important;
 }
 
 .kofi {
-	border-left-color: #08c2ff !important;
-	background: rgba(8, 194, 255, 0.15) !important;
+	background: linear-gradient(#54c7ee, #08c2ff) !important;
 }
 
 .tipeeeStream {
-	border-left-color: #5d192a !important;
-	background: rgba(93, 25, 42, 0.15) !important;
+	background: linear-gradient(#120e23, #5d192a) !important;
 }
 
 .fourthwall {
-	border-left-color: #1c56f5 !important;
-	background: rgba(28, 86, 245, 0.15) !important;
+	background: linear-gradient(#466edb, #1c56f5) !important;
 }
 
 .tiktok {
-	border-left-color: #000000 !important;
-	background: rgba(0, 0, 0, 0.15) !important;
+	background: linear-gradient(#262626, #000000) !important;
+}
+
+.fourthwall {
+	background: linear-gradient(#466edb, #1c56f5) !important;
 }
 
 .thumbnail {
-	border-left-color: #494949 !important;
-	background: rgba(73, 73, 73, 0.15) !important;
+	background: linear-gradient(#494949, #202020) !important;
 }
 
 
 .blank {
 	background: #adadad00 !important;
-	border-left-color: transparent !important;
 }
 
 /****************/
@@ -432,13 +421,3 @@ li {
 		background-color: #D12025;
 	}
 }
-
-/* OPTIONAL : Pour des bordures complètement droites (style Twitch strict) */
-/* Remplace le border-radius de #card par : */
-/*
-#card {
-	border-radius: 0;
-	border-top-left-radius: 0.5em;
-	border-bottom-left-radius: 0.5em;
-}
-*/
