@@ -631,6 +631,9 @@ async function TwitchChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		// Ajuste la marge des gélules pour le mode inline
+		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
+		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
 	}
 
 	// Render platform
@@ -819,6 +822,13 @@ async function TwitchAnnouncement(data) {
 		case "PURPLE":
 			cardDiv.classList.add('announcementPurple');
 			break;
+	default: {
+		// Cas sans couleur → on prend la couleur du pseudo (fallback si absent)
+		const userColor = (data.user && data.user.color) ? data.user.color : '#888888';
+		cardDiv.style.setProperty('--userColor', userColor);
+		cardDiv.classList.add('announcementDefault');
+		break;
+		}
 	}
 
 	// Set the card header
@@ -846,7 +856,7 @@ async function TwitchAnnouncement(data) {
 	// Remove the line break
 	content.querySelector("#colon-separator").style.display = `inline`;
 	content.querySelector("#line-space").style.display = `none`;
-
+	
 	// Remove the avatar
 	content.querySelector("#avatar").style.display = `none`;
 
@@ -923,7 +933,7 @@ async function TwitchFollow(data) {
 	if (data.user_name.toLowerCase() != data.user_login.toLowerCase())
 		username = `${data.user_name} (${data.user_login})`;
 
-	titleDiv.innerText = `${username} a suivi`;
+	titleDiv.innerText = `${username} followed`;
 
 	AddMessageItem(instance, data.messageId);
 }
@@ -967,9 +977,9 @@ async function TwitchSub(data) {
 	const isPrime = data.is_prime;
 
 	if (!isPrime)
-		titleDiv.innerText = `${username} s’est abonné avec le palier ${subTier.charAt(0)}`;
+		titleDiv.innerText = `${username} s'abonne en Tier ${subTier.charAt(0)}`;
 	else
-		titleDiv.innerText = `${username} a utilisé son abonnement Prime`;
+		titleDiv.innerText = `${username} s'abonne avec Prime`;
 
 	AddMessageItem(instance, data.messageId);
 }
@@ -1015,9 +1025,9 @@ async function TwitchResub(data) {
 	const message = data.text;
 
 	if (!isPrime)
-		titleDiv.innerText = `${username} s’est réabonné avec le palier ${subTier.charAt(0)} (${cumulativeMonths} mois)`;
+		titleDiv.innerText = `${username} se réabonne en Tier ${subTier.charAt(0)} (${cumulativeMonths}e mois)`;
 	else
-		titleDiv.innerText = `${username} a utilisé son abonnement Prime (${cumulativeMonths} mois)`;
+		titleDiv.innerText = `${username} s'abonne avec Prime (${cumulativeMonths}e mois)`;
 	contentDiv.innerText = `${message}`;
 
 	AddMessageItem(instance, data.messageId);
@@ -1062,9 +1072,9 @@ async function TwitchGiftSub(data) {
 	const recipient = data.recipient.name;
 	const cumlativeTotal = data.cumlativeTotal;
 
-	titleDiv.innerText = `${username} a offert un abonnement Palier ${subTier.charAt(0)} à ${recipient}`;
+	titleDiv.innerText = `${username} a offert un sub Tier ${subTier.charAt(0)} à ${recipient}`;
 	if (cumlativeTotal > 0)
-		contentDiv.innerText = `A offert ${cumlativeTotal} abonnements au total !`;
+		contentDiv.innerText = `C'est son ${cumlativeTotal}e sub offert !`;
 
 	AddMessageItem(instance, data.messageId);
 }
@@ -1109,7 +1119,7 @@ async function TwitchRewardRedemption(data) {
 	const userInput = data.user_input;
 	const channelPointIcon = `<img src="icons/badges/twitch-channel-point.png" class="platform"/>`;
 
-	titleDiv.innerHTML = `${username} a utilisé ${rewardName} ${channelPointIcon} ${cost}`;
+	titleDiv.innerHTML = `${username} a réclammé ${rewardName} ${channelPointIcon} pour ${cost} points`;
 	contentDiv.innerText = `${userInput}`;
 
 	AddMessageItem(instance, data.messageId);
@@ -1153,8 +1163,8 @@ async function TwitchRaid(data) {
 		username = `${data.from_broadcaster_user_name} (${data.from_broadcaster_user_login})`;
 	const viewers = data.viewers;
 
-	titleDiv.innerText = `${username} lance un raid`;
-	contentDiv.innerText = `avec ${viewers} viewers`;
+	titleDiv.innerText = `${username} raid`;
+	contentDiv.innerText = `avec ses ${viewers} viewers`;
 
 	AddMessageItem(instance, data.messageId);
 }
@@ -1282,6 +1292,9 @@ async function YouTubeMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		// Ajuste la marge des gélules pour le mode inline
+		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
+		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
 	}
 
 	// Render platform
@@ -1355,6 +1368,7 @@ async function YouTubeMessage(data) {
 	if (data.user.isModerator) {
 		usernameDiv.classList.add('moderator-glow')
 	}
+
 	// Hide the header if the same username sends a message twice in a row
 	// EXCEPT when the scroll direction is set to reverse (scrollDirection == 2)
 	const messageList = document.getElementById("messageList");
@@ -1420,7 +1434,7 @@ function YouTubeSuperChat(data) {
 	cardDiv.classList.add('youtube');
 
 	// Set message text
-	titleDiv.innerText = `🪙 ${data.user.name} a envoyé un Super Chat (${data.amount})`;
+	titleDiv.innerText = `🪙 ${data.user.name} a envoyé un Super Chat | (${data.amount})`;
 	if (data.message)
 		contentDiv.innerText = `${data.message}!`;
 
@@ -1457,7 +1471,7 @@ function YouTubeSuperSticker(data) {
 	const stickerImage = `<img src="${stickerURL}" class="youtube-super-sticker"/>`;
 
 	avatarDiv.innerHTML = stickerImage;
-	titleDiv.innerHTML = `${user} a envoyé un Super Sticker (${amount})`;
+	titleDiv.innerHTML = `${user} a envoyé un Super Sticker | (${amount})`;
 
 	AddMessageItem(instance);
 }
@@ -1484,8 +1498,8 @@ function YouTubeNewSponsor(data) {
 	cardDiv.classList.add('youtube');
 
 	// Set message text
-	titleDiv.innerText = `⭐ Nouveau ${data.levelName}`;
-	contentDiv.innerText = `Bienvenue ${data.user.name} !`;
+	titleDiv.innerText = `⭐ Nouvel abonnement ${data.levelName}`;
+	contentDiv.innerText = `Bienvenue ${data.user.name}!`;
 
 	AddMessageItem(instance, data.eventId);
 }
@@ -1513,7 +1527,7 @@ function YouTubeGiftMembershipReceived(data) {
 
 	// Set message text
 	titleDiv.innerText = `🎁 ${data.gifter.name} a offert un abonnement`;
-	contentDiv.innerText = `à ${data.user.name} (${data.tier}) !`;
+	contentDiv.innerText = `à ${data.user.name} (${data.tier})!`;
 
 	AddMessageItem(instance, data.eventId);
 }
@@ -1545,7 +1559,7 @@ async function StreamlabsDonation(data) {
 	const currency = data.currency;
 	const message = data.message;
 
-	titleDiv.innerText = `🪙 ${donater} a fait un don de ${currency}${formattedAmount}`;
+	titleDiv.innerText = `🪙 ${donater} a fait un don de ${formattedAmount}${currency}`;
 	contentDiv.innerText = `${message}`;
 
 	AddMessageItem(instance);
@@ -1578,7 +1592,7 @@ async function StreamElementsTip(data) {
 	const currency = data.currency;
 	const message = data.message;
 
-	titleDiv.innerText = `🪙 ${donater} a fait un don de ${currency}${formattedAmount}`;
+	titleDiv.innerText = `🪙 ${donater} a fait un don de ${formattedAmount}${currency}`;
 	contentDiv.innerText = `${message}`;
 
 	AddMessageItem(instance, data.id);
@@ -1609,7 +1623,7 @@ function PatreonPledgeCreated(data) {
 	const amount = (data.attributes.will_pay_amount_cents / 100).toFixed(2);
 	const patreonIcon = `<img src="icons/platforms/patreon.png" class="platform"/>`;
 
-	titleDiv.innerHTML = `${patreonIcon} ${user} a rejoint Patreon ($${amount})`;
+	titleDiv.innerHTML = `${patreonIcon} ${user} s'est abonné à Patreon (${amount}€)`;
 
 	AddMessageItem(instance, data.id);
 }
@@ -1642,10 +1656,10 @@ function KofiDonation(data) {
 	const message = data.message;
 	const kofiIcon = `<img src="icons/platforms/kofi.png" class="platform"/>`;
 
-	if (currency == "USD")
-		titleDiv.innerHTML = `${kofiIcon} ${user} a fait un don de $${amount}`;
+	if (currency == "EUR")
+		titleDiv.innerHTML = `${kofiIcon} ${user} a fait un don de${amount}€`;
 	else
-		titleDiv.innerHTML = `${kofiIcon} ${user} a fait un don de ${currency} ${amount}`;
+		titleDiv.innerHTML = `${kofiIcon} ${user} a fait un don de ${amount}${currency}`;
 
 	if (message != null)
 		contentDiv.innerHTML = `${message}`;
@@ -1681,10 +1695,10 @@ function KofiSubscription(data) {
 	const message = data.message;
 	const kofiIcon = `<img src="icons/platforms/kofi.png" class="platform"/>`;
 
-	if (currency == "USD")
-		titleDiv.innerHTML = `${kofiIcon} ${user} s’est abonné(e) ($${amount})`;
+	if (currency == "EUR")
+		titleDiv.innerHTML = `${kofiIcon} ${user} a pris un abonnement (${amount}€)`;
 	else
-		titleDiv.innerHTML = `${kofiIcon} ${user} s’est abonné(e) (${currency} ${amount})`;
+		titleDiv.innerHTML = `${kofiIcon} ${user} a pris un abonnement (${amount}${currency})`;
 
 	if (message != null)
 		contentDiv.innerHTML = `${message}`;
@@ -1719,7 +1733,7 @@ function KofiResubscription(data) {
 	const message = data.message;
 	const kofiIcon = `<img src="icons/platforms/kofi.png" class="platform"/>`;
 
-	titleDiv.innerHTML = `${kofiIcon} ${user} s’est réabonné(e) (${tier})`;
+	titleDiv.innerHTML = `${kofiIcon} ${user} a pris un abonnement (${tier})`;
 	if (message != null)
 		contentDiv.innerHTML = `${message}`;
 
@@ -1798,10 +1812,10 @@ function TipeeeStreamDonation(data) {
 	const message = data.message;
 	const tipeeeStreamIcon = `<img src="icons/platforms/tipeeeStream.png" class="platform"/>`;
 
-	if (currency == "USD")
-		titleDiv.innerHTML = `${tipeeeStreamIcon} ${user} a fait un don de $${amount}`;
+	if (currency == "EUR")
+		titleDiv.innerHTML = `${tipeeeStreamIcon} ${user} a fait un don de ${amount}€`;
 	else
-		titleDiv.innerHTML = `${tipeeeStreamIcon} ${user} a fait un don de ${currency} ${amount}`;
+		titleDiv.innerHTML = `${tipeeeStreamIcon} ${user} a fait un don de ${amount}${currency}`;
 
 	if (message != null)
 		contentDiv.innerHTML = `${message}`;
@@ -1857,18 +1871,18 @@ function FourthwallOrderPlaced(data) {
 
 	// If there user did not provide a username, just say "Someone"
 	if (user == undefined)
-		user = "Quelqu’un"
+		user = "Quelqu'un"
 
 	// If the user ordered more than one item, write how many items they ordered
 	contents += `${user} a commandé ${item}`;
 	if (itemsOrdered > 1)
-		contents += ` et ${itemsOrdered - 1} autre(s) article(s) !`
+		contents += ` et ${itemsOrdered - 1} autre(s) article(s)!`
 
 	// If the user spent money, put the order total
 	if (orderTotal == 0)
 		contents += ``;
-	else if (currency == "USD")
-		contents += ` ($${orderTotal})`;
+	else if (currency == "EUR")
+		contents += ` (${orderTotal}€)`;
 	else
 		contents += ` (${orderTotal} ${currency})`;
 
@@ -1916,10 +1930,10 @@ function FourthwallDonation(data) {
 	contents += `${user} a fait un don de`;
 
 	// If the user spent money, put the order total
-	if (currency == "USD")
-		contents += ` $${amount}`;
+	if (currency == "EUR")
+		contents += ` ${amount}€`;
 	else
-		contents += ` ${currency} ${amount}`;
+		contents += ` ${amount}${currency}`;
 
 	titleDiv.innerHTML = contents;
 
@@ -1961,13 +1975,13 @@ function FourthwallSubscriptionPurchased(data) {
 	let contents = "";
 
 	// If the user ordered more than one item, write how many items they ordered
-	contents += `${user} s’est abonné(e)`;
+	contents += `${user} a pris un abonnement`;
 
 	// If the user spent money, put the order total
-	if (currency == "USD")
-		contents += ` ($${amount})`;
+	if (currency == "EUR")
+		contents += ` (${amount}€)`;
 	else
-		contents += ` (${currency} ${amount})`;
+		contents += ` (${amount}${currency})`;
 
 	titleDiv.innerHTML = contents;
 	contentDiv.style.display = 'none'
@@ -2020,7 +2034,7 @@ function FourthwallGiftPurchase(data) {
 
 	// If the user ordered more than one item, write how many items they ordered
 	// contents += `${user} gifted`;
-	contents += `Quelqu’un a offert`;
+	contents += `Quelqu'un a offert`;
 
 	// If there is more than one gifted item, display the number of gifts
 	if (gifts > 1)
@@ -2030,10 +2044,10 @@ function FourthwallGiftPurchase(data) {
 	contents += ` ${itemName}`;
 
 	// If the user spent money, put the order total
-	if (currency == "USD")
-		contents += ` ($${total})`;
+	if (currency == "EUR")
+		contents += ` (${total}€)`;
 	else
-		contents += ` (${currency}${total})`;
+		contents += ` (${total}${currency})`;
 
 	titleDiv.innerHTML = contents;
 
@@ -2079,10 +2093,10 @@ function FourthwallGiftDrawStarted(data) {
 	let contents = "";
 
 	// If the user ordered more than one item, write how many items they ordered
-	contents += `🎁 ${itemName} à gagner !`;
+	contents += `🎁 Nouveau Givaway : ${itemName}`;
 
 	titleDiv.innerHTML = contents;
-	contentDiv.innerHTML = `Tape « join » dans les ${durationSeconds} prochaines secondes pour tenter ta chance !`;
+	contentDiv.innerHTML = `Tape 'join' dans les prochaines ${durationSeconds} secondes pour tenter de remporter!`;
 	//contentDiv.style.display = `none`;
 
 	AddMessageItem(instance, data.id);
@@ -2117,11 +2131,11 @@ function FourthwallGiftDrawEnded(data) {
 	let contents = "";
 
 	// If the user ordered more than one item, write how many items they ordered
-	contents += `🥳 GIVEAWAY TERMINÉ 🥳`;
+	contents += `🥳 FIN DU GIVAWAY 🥳`;
 	//contents += `Congratulations ${GetWinnersList(data.gifts)}!`
 
 	titleDiv.innerHTML = contents;
-	contentDiv.innerHTML = `Félicitations ${GetWinnersList(data.gifts)} !`;
+	contentDiv.innerHTML = `Félicitations à ${GetWinnersList(data.gifts)}!`;
 	//contentDiv.style.display = `none`;
 
 	AddMessageItem(instance, data.id);
@@ -2226,6 +2240,9 @@ async function KickChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		// Ajuste la marge des gélules pour le mode inline
+		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
+		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
 	}
 
 	// Render platform
@@ -2368,9 +2385,9 @@ async function KickSubscription(data) {
 	const months = data.months;
 
 	if (months <= 1)
-		titleDiv.innerText = `${username} vient de s’abonner pour la première fois !`;
+		titleDiv.innerText = `${username} s'abonne`;
 	else
-		titleDiv.innerText = `${username} s’est réabonné(e) ! (${months} mois)`;
+		titleDiv.innerText = `${username} se réabonne! (${months} mois)`;
 
 	AddMessageItem(instance);
 }
@@ -2406,8 +2423,8 @@ async function KickGiftedSubscriptions(data) {
 	const gifter = data.gifter_username;
 	const gifts = data.gifter_total;
 	const giftedUsers = data.gifted_usernames;
-	titleDiv.innerText = `${gifter} a offert ${giftedUsers.length} abonnement${giftedUsers.length === 1 ? '' : 's'} à la communauté !`;
-	contentDiv.innerText = `${gifts === 1 ? '' : "A déjà offert " + gifts + " abonnement(s) sur la chaîne."}`;
+	titleDiv.innerText = `${gifter} a offert ${giftedUsers.length} abonnement${giftedUsers.length === 1 ? '' : 's'} à la communauté`;
+	contentDiv.innerText = `${gifts === 1 ? '' : "C'est son " + gifts + "e abonnement offert."}`;
 
 	if (giftedUsers.length > 1)
 		AddMessageItem(instance);
@@ -2445,7 +2462,7 @@ async function KickGiftToUser(gifter, username) {
 	iconDiv.appendChild(badge);
 
 	// Set the text
-	titleDiv.innerText = `${gifter} a offert un abonnement à ${username}`;
+	titleDiv.innerText = `${gifter} offre un abonnement à ${username}`;
 
 	AddMessageItem(instance);
 }
@@ -2486,7 +2503,7 @@ async function KickRewardRedeemed(data) {
 	const rewardName = data.reward_title;
 	const userInput = data.user_input;
 
-	titleDiv.innerHTML = `${username} a utilisé ${rewardName}`;
+	titleDiv.innerHTML = `${username} réclamme ${rewardName}`;
 	contentDiv.innerText = `${userInput}`;
 
 	AddMessageItem(instance, data.redeemId);
@@ -2527,8 +2544,8 @@ async function KickStreamHost(data) {
 	const username = data.host_username;
 	const viewers = data.number_viewers;
 
-	titleDiv.innerText = `${username} lance un raid`;
-	contentDiv.innerText = `avec ${viewers} personnes`;
+	titleDiv.innerText = `${username} raid`;
+	contentDiv.innerText = `avec ses ${viewers} viewers`;
 
 	AddMessageItem(instance);
 }
@@ -2690,6 +2707,9 @@ async function TikTokChat(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		// Ajuste la marge des gélules pour le mode inline
+		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
+		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
 	}
 
 	// Render platform
@@ -2849,7 +2869,7 @@ function TikTokLikes(data) {
 
 		avatarImg.src = data.profilePictureUrl;
 		usernameSpan.innerText = data.nickname;
-		giftNameSpan.innerText = 'J’aime';
+		giftNameSpan.innerText = 'Likes';
 		stickerImg.src = '';
 		repeatCountDiv.innerText = `x${likeCount}`;
 
@@ -2863,12 +2883,12 @@ function TikTokGift(data) {
 
 	if (data.giftType === 1 && !data.repeatEnd) {
 		// Streak in progress => show only temporary
-		console.debug(`${data.uniqueId} is sending gift ${data.giftName} x${data.repeatCount}`);
+		console.debug(`${data.uniqueId} envoie un cadeau ${data.giftName} x${data.repeatCount}`);
 		return;
 	}
 
 	// Streak ended or non-streakable gift => process the gift with final repeat_count
-	console.debug(`${data.uniqueId} has sent gift ${data.giftName} x${data.repeatCount}`);
+	console.debug(`${data.uniqueId} envoie un cadeau ${data.giftName} x${data.repeatCount}`);
 
 	// Get a reference to the template
 	const template = document.getElementById('tiktok-gift-template');
@@ -2919,7 +2939,7 @@ function TikTokSubscribe(data) {
 	const tiktokIcon = `<img src="icons/platforms/tiktok.png" class="platform"/>`;
 
 	//titleDiv.innerHTML = `${tiktokIcon} ${user} subscribed on TikTok`;
-	titleDiv.innerHTML = `${tiktokIcon} ${user} s’est abonné(e) pour ${data.subMonth} mois`;
+	titleDiv.innerHTML = `${tiktokIcon} ${user} s'abonne pour son ${data.subMonth}e mois`;
 
 	AddMessageItem(instance, data.msgId, 'tiktok', data.userId);
 }
@@ -2954,7 +2974,7 @@ function YouTubeThumbnailPreview(data) {
 
 	avatarDiv.innerHTML = thumbnail;
 	titleDiv.innerHTML = `${title}`;
-	contentDiv.innerHTML = `par ${author}`;
+	contentDiv.innerHTML = `by ${author}`;
 
 	AddMessageItem(instance);
 }
@@ -3159,7 +3179,7 @@ function SetConnectionStatus(connected) {
 	let statusContainer = document.getElementById("statusContainer");
 	if (connected) {
 		statusContainer.style.background = "#2FB774";
-		statusContainer.innerText = "Connecté !";
+		statusContainer.innerText = "Connected!";
 		statusContainer.style.opacity = 1;
 		setTimeout(() => {
 			statusContainer.style.transition = "all 2s ease";
@@ -3168,7 +3188,7 @@ function SetConnectionStatus(connected) {
 	}
 	else {
 		statusContainer.style.background = "#D12025";
-		statusContainer.innerText = "Connexion en cours...";
+		statusContainer.innerText = "Connecting...";
 		statusContainer.style.transition = "";
 		statusContainer.style.opacity = 1;
 	}
