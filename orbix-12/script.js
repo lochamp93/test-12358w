@@ -631,9 +631,12 @@ async function TwitchChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
-		// Ajuste la marge des gélules pour le mode inline
-		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
-		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
+	// Marge des gélules, seulement si elles existent
+		const ts = instance.querySelector(".timestamp");
+	if (ts) ts.style.marginBottom = "0.65em";
+
+		const pr = instance.querySelector(".pronouns");
+	if (pr) pr.style.marginBottom = "0.65em";
 	}
 
 	// Render platform
@@ -1292,10 +1295,12 @@ async function YouTubeMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
-		// Ajuste la marge des gélules pour le mode inline
-		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
-		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
-	}
+	// Marge des gélules, seulement si elles existent
+		const ts = instance.querySelector(".timestamp");
+	if (ts) ts.style.marginBottom = "0.65em";
+
+		const pr = instance.querySelector(".pronouns");
+	if (pr) pr.style.marginBottom = "0.65em";	}
 
 	// Render platform
 	if (showPlatform) {
@@ -2240,10 +2245,12 @@ async function KickChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
-		// Ajuste la marge des gélules pour le mode inline
-		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
-		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
-	}
+	// Marge des gélules, seulement si elles existent
+		const ts = instance.querySelector(".timestamp");
+	if (ts) ts.style.marginBottom = "0.65em";
+
+		const pr = instance.querySelector(".pronouns");
+	if (pr) pr.style.marginBottom = "0.65em";	}
 
 	// Render platform
 	if (showPlatform) {
@@ -2707,10 +2714,12 @@ async function TikTokChat(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
-		// Ajuste la marge des gélules pour le mode inline
-		instance.querySelector(".timestamp").style.marginBottom = "0.65em";
-		instance.querySelector(".pronouns").style.marginBottom = "0.65em";
-	}
+	// Marge des gélules, seulement si elles existent
+		const ts = instance.querySelector(".timestamp");
+	if (ts) ts.style.marginBottom = "0.65em";
+
+		const pr = instance.querySelector(".pronouns");
+	if (pr) pr.style.marginBottom = "0.65em";	}
 
 	// Render platform
 	if (showPlatform) {
