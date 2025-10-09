@@ -159,16 +159,13 @@ async function GetPronouns(platform, username) {
 	}
 }
 
+// CORRECTION : Format d'heure français (24h)
 function GetCurrentTimeFormatted() {
 	const now = new Date();
-	let hours = now.getHours();
+	const hours = String(now.getHours()).padStart(2, '0');
 	const minutes = String(now.getMinutes()).padStart(2, '0');
-	const ampm = hours >= 12 ? 'PM' : 'AM';
 
-	hours = hours % 12;
-	hours = hours ? hours : 12; // the hour '0' should be '12'
-
-	const formattedTime = `${hours}:${minutes} ${ampm}`;
+	const formattedTime = `${hours}:${minutes}`;
 	return formattedTime;
 }
 
