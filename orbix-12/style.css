@@ -62,7 +62,7 @@ li {
 	list-style: none;
 	/* overflow: hidden; */
 	max-height: 0;
-	margin: 1em 0px 0px 0px;
+	margin: 0.5em 0px 0px 0px; /* espace entre les messages*/
 	transition: all 1s ease-in-out;
 }
 
