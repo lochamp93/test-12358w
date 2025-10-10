@@ -142,7 +142,7 @@ li {
 	font-size: 0.7em;
 	padding: 0.2em 0.65em;
 	display: inline-block;    /* <-- rend les marges verticales actives */
-	margin-bottom: 0.45em;    /* <-- le “jeu” que tu veux sous la gélule */
+	margin-bottom: 0.35em;    /* <-- le “jeu” que tu veux sous la gélule */
 	vertical-align: bottom;   /* <-- la maintient alignée en bas du reste */
 }
 
