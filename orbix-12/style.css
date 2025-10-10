@@ -180,14 +180,6 @@ li {
 	flex-shrink: 0; /* évite qu’ils se compressent si la ligne est pleine */
 }
 
-/* .badge {
-	height: 1em;
-	
-	/* margin: 0, 10em, 0, 2em; */
-	/* transform: translate(0, 0,25em); */
-  /* padding-inline-start: 0.5em; */
-/* } */ */
-
 .emote {
 	height: 1.5em;
 	margin: 1px;
