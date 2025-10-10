@@ -165,14 +165,28 @@ li {
 .platform {
   height: 1.2em;
 	margin: 0, 0, 0, 0;
-  transform: translate(0, 0,25em);
+  /* transform: translate(0, 0,25em); */
   }
+
+#badgeList {
+	display: inline-flex;
+	align-items: center;
+	column-gap: 0.2em; /* espace horizontal entre badges */
+}
+
 .badge {
 	height: 1em;
-	margin: 0, 10em, 0, 2em;
-	transform: translate(0, 0,25em);
-  padding-inline-start: 0.5em;
+	width: auto;
+	flex-shrink: 0; /* évite qu’ils se compressent si la ligne est pleine */
 }
+
+/* .badge {
+	height: 1em;
+	
+	/* margin: 0, 10em, 0, 2em; */
+	/* transform: translate(0, 0,25em); */
+  /* padding-inline-start: 0.5em; */
+/* } */ */
 
 .emote {
 	height: 1.5em;
@@ -320,8 +334,8 @@ li {
 }
 
 /* Couleurs fixes */
-#card.announcementBlue::before   { background: linear-gradient(#03d3d7, #8d49fe); }
-#card.announcementGreen::before  { background: linear-gradient(#01da86, #55bee4); }
+#card.announcementBlue::before   { background: linear-gradient(#0d3d37, #8d49fe); }
+#card.announcementGreen::before  { background: linear-gradient(#10da86, #55bee4); }
 #card.announcementOrange::before { background: linear-gradient(#feb419, #e1df00); }
 #card.announcementPurple::before { background: linear-gradient(#9548ff, #fc74e6); }
 
