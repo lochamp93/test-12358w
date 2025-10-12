@@ -2983,7 +2983,7 @@ function YouTubeThumbnailPreview(data) {
 
 	avatarDiv.innerHTML = thumbnail;
 	titleDiv.innerHTML = `${title}`;
-	contentDiv.innerHTML = `by ${author}`;
+	contentDiv.innerHTML = `de ${author}`;
 
 	AddMessageItem(instance);
 }
