@@ -326,7 +326,7 @@ li {
 }
 
 /* Couleurs fixes */
-#card.announcementBlue::before   { background: linear-gradient(#0d3d37, #8d49fe); }
+#card.announcementBlue::before   { background: linear-gradient(#03d3d7, #8d49fe); }
 #card.announcementGreen::before  { background: linear-gradient(#10da86, #55bee4); }
 #card.announcementOrange::before { background: linear-gradient(#feb419, #e1df00); }
 #card.announcementPurple::before { background: linear-gradient(#9548ff, #fc74e6); }
