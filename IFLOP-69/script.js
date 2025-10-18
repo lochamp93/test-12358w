@@ -19,7 +19,7 @@ const defaultDuration = GetIntParam("defaultDuration", 60);
 
 // Appearance
 const decimalPlaces = GetIntParam("decimalPlaces", 1);
-const fontSize = GetIntParam("vmFontSize", GetIntParam("fontSize", 150));;
+const fontSize = GetIntParam("fontSize", 150);   // (tout en haut, bloc “Appearance”)
 
 // === SubGoal / Icon (depuis la fenêtre de settings) ===
 const subgoalTarget = GetIntParam("subGoal", null);   // null = on ne force rien si absent
