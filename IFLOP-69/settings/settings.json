@@ -42,16 +42,6 @@
 			"group": "Sub Goal"
 		},
 		{
-			"id": "fontSize",
-			"label": "Taille de police",
-			"description": "",
-			"type": "number",
-			"min": 1,
-			"max": 120,
-			"defaultValue": 20,
-			"group": "Sub Goal"
-		},
-		{
 			"id": "fontbgColor",
 			"label": "Couleur de la police / du vide de la barre",
 			"description": "",
@@ -118,13 +108,14 @@
 		},		
 		{
 			"id": "fontSize",
-			"label": "Taille de la police",
-			"description": "Taille du texte dans l’overlay (px)",
+			"label": "Taille de police",
+			"description": "",
 			"type": "number",
 			"min": 1,
-			"max": 600,
-			"defaultValue": 150,
+			"max": 120,
+			"defaultValue": 20,
 			"group": "Vibemeter"
+		},
 		}
 	]
 }
