@@ -83,6 +83,14 @@
 			"group": "Sub Goal"
 		},
 		{
+			"id": "goalLabel",
+			"label": "Texte du label",
+    		"description": "Texte affiché avant le compteur",
+			"type": "text",
+			"defaultValue": "SUB",
+			"group": "Sub Goal"
+		},		
+		{
 			"id": "chatCommand",
 			"label": "Commande à utiliser dans le chat",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
@@ -108,8 +116,8 @@
 		},		
 		{
 			"id": "fontSize",
-			"label": "Taille de police",
-			"description": "",
+			"label": "Taille de la police",
+			"description": "Taille du texte dans l’overlay (px)",
 			"type": "number",
 			"min": 1,
 			"max": 600,
