@@ -229,8 +229,33 @@ body {
 }
 
 
-.sg_icon {
+/* Icône dessinée par MASQUE → on peint avec un background */
+.sg_text .sg_icon{
+  display:inline-block;
+  width: 1em;
+  height: 1em;
   margin-right: 8px;
+
+  /* le masque sera injecté en JS dans --icon-mask */
+  -webkit-mask-image: var(--icon-mask);
+  mask-image: var(--icon-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Couleurs “peinture” de l’icône selon la couche */
+.sg_text-base .sg_icon{
+  /* sur fond blanc → icône en dégradé, comme le texte */
+  background: var(--grad);
+}
+
+.sg_text-white .sg_icon{
+  /* sur fond coloré → icône couleur crème (comme le texte) */
+  background: var(--color3);
 }
 
 .sg_descr {
