@@ -24,7 +24,7 @@ html {
   --color2: #27835d;
   --color3: #d4ddb9;
   --grad: linear-gradient(90deg, var(--color1), var(--color2));
-  --bgtest: rgb(55, 39, 77);  /* POUR PARAMETRER LA COULEUR DU FOND - Rajouter ,0 à la fin pour transparent */
+  --bgtest: rgb(55, 39, 77, 0);  /* POUR PARAMETRER LA COULEUR DU FOND - Rajouter ,0 à la fin pour transparent */
   --font: "Inter", system-ui, -apple-system, sans-serif;
 
   /* Couleurs Réseaux (NON PERSONNALISABLES) */
