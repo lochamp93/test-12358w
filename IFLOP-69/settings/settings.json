@@ -112,11 +112,10 @@
 			"description": "",
 			"type": "number",
 			"min": 1,
-			"max": 120,
-			"defaultValue": 20,
+			"max": 600,
+			"defaultValue": 150,
 			"group": "Vibemeter"
 		},
-		}
 	]
 }
 		
