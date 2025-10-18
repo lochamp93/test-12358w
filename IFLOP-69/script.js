@@ -32,6 +32,7 @@ const sgFontSize   = GetIntParam("sgFontSize", null);            // taille en px
 const sgVoidColor  = GetStringParam("fontbgColor", "");          // couleur “vide” (zone blanche/texte)
 const sgGradIn     = GetStringParam("gradientIn",  "");          // couleur dégradé 1
 const sgGradOut    = GetStringParam("gradientOut", "");          // couleur dégradé 2
+const goalLabel    = GetStringParam("goalLabel", null);
 
 
 // ==== DecAPI config (Subcount) ====
@@ -553,6 +554,31 @@ if (subgoalTarget !== null) {
   pill.querySelectorAll('.sg_target').forEach(el => { el.textContent = String(subgoalTarget); });
 }
 
+// === APPLY SETTINGS: label "SUB" -> goalLabel ===
+if (goalLabel !== null) {
+  // tes deux couches de texte ont .sg_descr
+  pill.querySelectorAll('.sg_descr').forEach(el => { el.textContent = goalLabel; });
+}
+
+
+// === APPLY SETTINGS: label "SUB" → goalLabel ===
+// Essaie plusieurs sélecteurs possibles (adapte si ton HTML est différent)
+if (goalLabel !== null) {
+  const nodes = pill.querySelectorAll('.sg_label, .sg-prefix, #goalLabel');
+  if (nodes.length) {
+    nodes.forEach(n => { n.textContent = goalLabel; });
+  } else {
+    // fallback si ton label est injecté via un data-attr dans le CSS
+    const subgoalSection = pill.querySelector('.pill_subgoal');
+    if (subgoalSection) subgoalSection.setAttribute('data-label', goalLabel);
+  }
+}
+
+// recalcul immédiat de la barre si tu veux le faire maintenant
+// (si tu préfères, tu peux ne PAS ajouter cette ligne : la formule est déjà appelée plus bas)
+try { applySubgoalFormula && applySubgoalFormula(); } catch {}
+
+
 // === APPLY SETTINGS: couleurs & police ===
 // On pousse dans tes variables CSS existantes (ne casse pas les anims)
 const root = document.documentElement;
@@ -594,13 +620,20 @@ function applySubgoalFormula() {
   section.style.setProperty('--value', String(value));
 }
 
-// === ICONIFY (mdi:...) → injecte le SVG inline dans toutes les .sg_icon ===
+
+
+// === ICONIFY (mdi:...) via CSS MASK (permet dégradé) ===
 async function setIconifyIcon(name){
-  const icons = pill.querySelectorAll('.sg_icon');
+  const icons = pill.querySelectorAll('.sg_text .sg_icon');
   if (!icons.length) return;
 
+  // Rien saisi → on cache les spans
   if (!name) {
-    icons.forEach(el => { el.style.display = 'none'; el.innerHTML = ''; });
+    icons.forEach(el => {
+      el.style.display = 'none';
+      el.style.removeProperty('--icon-mask');
+      el.innerHTML = '';
+    });
     return;
   }
 
@@ -611,20 +644,33 @@ async function setIconifyIcon(name){
 
     let svg = await res.text();
 
-    // Forcer un rendu “1em” + couleur héritée (currentColor) pour matcher tes 2 couches de texte
-    svg = svg
-      .replace(/<svg /, "<svg style=\"width:1em;height:1em;vertical-align:-0.125em;display:inline-block;\" ")
-      .replace(/fill="[^"]*"/g, 'fill="currentColor"');
+    // Nettoyage rapide (enlève éventuels entêtes, espaces)
+    svg = svg.replace(/[\r\n]+/g, ' ').trim();
+
+    // Encodage pour data: URL
+    const encoded = svg
+      .replace(/"/g, '%22')
+      .replace(/#/g, '%23')
+      .replace(/</g, '%3C')
+      .replace(/>/g, '%3E');
+
+    const dataUrl = `url("data:image/svg+xml;utf8,${encoded}")`;
 
     icons.forEach(el => {
-      el.style.display = '';
-      el.innerHTML = svg;
+      el.style.display = '';                 // visible
+      el.innerHTML = '';                     // on n’injecte plus le SVG inline
+      el.style.setProperty('--icon-mask', dataUrl); // masque appliqué
     });
   } catch (e) {
     console.debug('[iconify] load failed', e);
-    icons.forEach(el => { el.style.display = 'none'; el.innerHTML = ''; });
+    icons.forEach(el => {
+      el.style.display = 'none';
+      el.style.removeProperty('--icon-mask');
+      el.innerHTML = '';
+    });
   }
 }
+
 
 
 // ==== DecAPI Subcount module (ADD-ONLY) ====
@@ -927,9 +973,6 @@ window.setState = function setState(state){
   }
 };
 
-// (facultatif) Boutons de test
-document.querySelectorAll('[data-go]').forEach(btn => {
-  btn.addEventListener('click', () => window.setState(btn.dataset.go));
-});
+
 
 })(); // <-- fermeture propre de l'IIFE
