@@ -94,7 +94,7 @@
 		},
 		{
 			"id": "chatCommand",
-			"label": "Port",
+			"label": "Commande à utiliser dans le chat",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
 			"type": "text",
 			"defaultValue": "!vibemeter",
