@@ -83,16 +83,8 @@
 			"group": "Sub Goal"
 		},
 		{
-			"id": "goalLabel",
-			"label": "Texte du label",
-    		"description": "Texte affiché avant le compteur",
-			"type": "text",
-			"defaultValue": "SUB",
-			"group": "Sub Goal"
-		},		
-		{
 			"id": "chatCommand",
-			"label": "Commande à utiliser dans le chat",
+			"label": "Port",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
 			"type": "text",
 			"defaultValue": "!vibemeter",
@@ -116,8 +108,8 @@
 		},		
 		{
 			"id": "fontSize",
-			"label": "Taille de la police",
-			"description": "Taille du texte dans l’overlay (px)",
+			"label": "Taille de police",
+			"description": "",
 			"type": "number",
 			"min": 1,
 			"max": 600,
@@ -137,7 +129,7 @@
 			"label": "Nom du server Discord",
 			"description": "",
 			"type": "text",
-			"defaultValue": "discord.gg/feur",
+			"defaultValue": "discord.gg/lien",
 			"showIf": "enableDiscord",
 			"group": "Réseaux"
 		},
@@ -152,10 +144,10 @@
 		},
 		{
 			"id": "enableInstagram",
-			"label": "Afficher Discord",
+			"label": "Afficher Instagram",
 			"description": "",
 			"type": "checkbox",
-			"defaultValue": true,
+			"defaultValue": false,
 			"group": "Réseaux"
 		},
 		{
@@ -163,7 +155,7 @@
 			"label": "Nom du profil Instagram",
 			"description": "",
 			"type": "text",
-			"defaultValue": "lochamp93",
+			"defaultValue": "",
 			"showIf": "enableInstagram",
 			"group": "Réseaux"
 		},
@@ -189,7 +181,7 @@
 			"label": "Nom de la chaine TikTok",
 			"description": "",
 			"type": "text",
-			"defaultValue": "@lochamp93",
+			"defaultValue": "",
 			"showIf": "enableTikTok",
 			"group": "Réseaux"
 		},
@@ -215,7 +207,7 @@
 			"label": "Nom de la chaine Twitch",
 			"description": "",
 			"type": "text",
-			"defaultValue": "lochamp93",
+			"defaultValue": "",
 			"showIf": "enableTwitch",
 			"group": "Réseaux"
 		},
@@ -241,7 +233,7 @@
 			"label": "Nom du profil Twitter",
 			"description": "",
 			"type": "text",
-			"defaultValue": "@lochamp93",
+			"defaultValue": "",
 			"showIf": "enableTwitter",
 			"group": "Réseaux"
 		},
@@ -267,7 +259,7 @@
 			"label": "Nom de la chaine YouTube",
 			"description": "",
 			"type": "text",
-			"defaultValue": "@lochamp93",
+			"defaultValue": "",
 			"showIf": "enableYouTube",
 			"group": "Réseaux"
 		},
@@ -282,23 +274,23 @@
 		},
 		{
 			"id": "enableYouTubeVOD",
-			"label": "Afficher YouTube",
+			"label": "Afficher YouTube VOD",
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
 			"group": "Réseaux"
 		},
 		{
-			"id": "YouTubechannel",
+			"id": "YouTubeVODchannel",
 			"label": "Nom de la chaine YouTubeVOD",
 			"description": "",
 			"type": "text",
-			"defaultValue": "@lochamp93 VOD",
+			"defaultValue": "",
 			"showIf": "enableYouTubeVOD",
 			"group": "Réseaux"
 		},
 		{
-			"id": "YouTubecommand",
+			"id": "YouTubeVODcommand",
 			"label": "Quelle est la commande YouTube VOD dans le chat ?",
 			"description": "",
 			"type": "text",
