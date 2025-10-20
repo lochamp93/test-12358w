@@ -72,13 +72,13 @@ const youtubeVodHandle = GetStringParam('YouTubeVODchannel', GetStringParam('You
 
 // Table de vérité des réseaux
 const SOCIALS = {
-  discord:   { enabled: enableDiscord,   cmd: discordCmd,   handle: discordHandle,   gradVar: '--g_discord',   icon: 'mdi:discord' },
-  instagram: { enabled: enableInstagram, cmd: instagramCmd, handle: instagramHandle, gradVar: '--g_instagram', icon: 'mdi:instagram' },
-  tiktok:    { enabled: enableTikTok,    cmd: tiktokCmd,    handle: tiktokHandle,    gradVar: '--g_tiktok',    icon: 'mdi:tiktok' },
-  twitch:    { enabled: enableTwitch,    cmd: twitchCmd,    handle: twitchHandle,    gradVar: '--g_twitch',    icon: 'mdi:twitch' },
-  twitter:   { enabled: enableTwitter,   cmd: twitterCmd,   handle: twitterHandle,   gradVar: '--g_twitter',   icon: 'mdi:twitter' },
-  youtube:   { enabled: enableYouTube,   cmd: youtubeCmd,   handle: youtubeHandle,   gradVar: '--g_youtube',   icon: 'mdi:youtube' },
-  youtubeVOD:{ enabled: enableYouTubeVOD,cmd: youtubeVodCmd,handle: youtubeVodHandle,gradVar: '--g_youtube',   icon: 'mdi:youtube' },
+  discord:   { enabled: enableDiscord,   cmd: discordCmd,   handle: discordHandle,   gradVar: '--g_discord',   icon: 'fa7-brands:discord' },
+  instagram: { enabled: enableInstagram, cmd: instagramCmd, handle: instagramHandle, gradVar: '--g_instagram', icon: 'fa7-brands:instagram' },
+  tiktok:    { enabled: enableTikTok,    cmd: tiktokCmd,    handle: tiktokHandle,    gradVar: '--g_tiktok',    icon: 'fa7-brands:tiktok' },
+  twitch:    { enabled: enableTwitch,    cmd: twitchCmd,    handle: twitchHandle,    gradVar: '--g_twitch',    icon: 'fa7-brands:twitch' },
+  twitter:   { enabled: enableTwitter,   cmd: twitterCmd,   handle: twitterHandle,   gradVar: '--g_twitter',   icon: 'fa7-brands:twitter' },
+  youtube:   { enabled: enableYouTube,   cmd: youtubeCmd,   handle: youtubeHandle,   gradVar: '--g_youtube',   icon: 'fa7-brands:youtube' },
+  youtubeVOD:{ enabled: enableYouTubeVOD,cmd: youtubeVodCmd,handle: youtubeVodHandle,gradVar: '--g_youtube',   icon: 'fa7-brands:youtube' },
 };
 
 
