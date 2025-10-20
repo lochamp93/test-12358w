@@ -18,7 +18,7 @@
 		},
 		{
 			"id": "decapiUsername",
-			"label": "Chaïne Twitch (autoriser decAPI)",
+			"label": "Chaine Twitch (autoriser decAPI)",
 			"description": "<a href=\"https://decapi.me/auth/twitch?redirect=subcount&scopes=channel:read:subscriptions+user:read:email+moderator:read:followers+user:read:email\" target=\"_blank\">Cliquer et Autoriser",
 			"type": "text",
 			"defaultValue": "",
@@ -84,7 +84,7 @@
 		},
 		{
 			"id": "chatCommand",
-			"label": "Port",
+			"label": "Commande vibemeter dans le chat",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
 			"type": "text",
 			"defaultValue": "!vibemeter",
