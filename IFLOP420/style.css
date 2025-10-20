@@ -1,0 +1,918 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  scroll-behavior: smooth;
+  background: var(--bgtest);  /* Ton arrière-plan d'origine */
+  font-size: 30px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: white;
+  overflow-wrap: break-word;
+}
+
+/* ========================================
+   VARIABLES CSS PERSONNALISABLES
+   ======================================== */
+:root {
+  /* Couleurs (personnalisables via interface) */
+  --color1: #0e2219;
+  --color2: #27835d;
+  --color3: #d4ddb9;
+  --grad: linear-gradient(90deg, var(--color1), var(--color2));
+  --bgtest: rgb(55, 39, 77);  /* POUR PARAMETRER LA COULEUR DU FOND - Rajouter ,0 à la fin pour transparent */
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Couleurs Réseaux (NON PERSONNALISABLES) */
+  --g_tiktok: linear-gradient(90deg, #000000, #343434);
+  --g_instagram: linear-gradient(90deg, #f40003, #bc00ac);
+  --g_twitter: linear-gradient(90deg, #1d7499, #2aa9e0);
+  --g_youtube: linear-gradient(90deg, #c60028, #ff0033);
+  --g_discord: linear-gradient(90deg, #3b45ac, #5865f2);
+  --g_twitch: linear-gradient(90deg, #6430b3, #9146ff);
+
+
+  /* Tailles de base (ajustables via interface) */
+  --base-font-size: 56px;  /* Taille de police par défaut */
+  
+  /* Calculs responsives automatiques */
+  /* La largeur de la pilule = 70% de la largeur viewport, 
+     avec min 300px (lisibilité) et max 600px (pas trop gros) */
+  --pill-width: clamp(300px, 90vw, 600px);
+  
+  /* Le padding = 8% de la largeur de la pilule 
+     (proportionnel, pour l'animation pulse) */
+  --padding: clamp(20px, 8vw, 60px);
+  
+  /* Hauteur de la pilule en mode Subgoal (horizontal) */
+  --pill-height-subgoal: calc(var(--pill-width) * 0.22);
+  
+  /* Hauteur de la pilule en mode Vibemeter (horizontal) */
+  --pill-height-vibemeter: calc(var(--pill-width));
+
+  /* Rayon de bordure proportionnel */
+  --R: calc(var(--pill-height-subgoal) / 2);
+  
+  /* Marges internes pour le contour de la pilule 
+     RÉDUIT de 5px à 2px pour un contour moins épais */
+  --inset: 2px;
+  
+  /* Marges pour les layers intérieurs 
+     NOUVEAU : marge plus fine entre les couches */
+  --layer-inset: 2px;
+  
+  /* Ajustements fins pour éviter les artefacts visuels */
+  --eps-ui: 0.5px;  /* débord du blanc pour masquer les coutures */
+  --eps: 1.5px;     /* chevauchement des couches de texte */
+  
+  /* Font-size responsive : proportionnel à la largeur de la pilule */
+  /* Base de 56px pour une pilule de 550px, donc ~10.2% */
+  --responsive-font-size: clamp(28px, calc(var(--pill-width) * 0.102), 72px);
+
+ /* Courbes de bezier pour anim */
+  --ease-inout: cubic-bezier(.22,.61,.36,1);
+  --ease-spring: cubic-bezier(.2,.8,.2,1.2);
+  --ease-pop: cubic-bezier(.34,1.56,.64,1);
+
+}
+
+/* ========================================
+   BODY : CONFIGURATION DE LA ZONE
+   ======================================== */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bgtest);  /* ← Ton arrière-plan violet d'origine */
+  
+  /* Flexbox pour centrer la pilule */
+  display: flex;
+  justify-content: center;  /* Centre horizontalement */
+  align-items: flex-end;    /* Aligne en bas */
+  
+  /* Padding responsive : identique sur 3 côtés */
+  padding: var(--padding);
+  padding-top: 0;  /* Pas de padding en haut (optionnel) */
+  
+  /* Réserve l'espace vertical pour le mode vibemeter */
+  /* Hauteur min = hauteur vibementer + padding bas */
+  min-height: calc(var(--pill-height-vibemeter) + var(--padding));
+  
+  overflow: hidden;
+}
+
+/* ========================================
+   CONTENEUR PRINCIPAL DE LA PILULE
+   ======================================== */
+.pill_main{
+  position: fixed;
+  bottom: var(--padding);
+  left: 50%;
+  transform: translateX(-50%);
+
+  /* largeur fixe pilotée par var → plus de “sauts” */
+  width: var(--pill-width);
+
+  height: var(--pill-height-subgoal);
+  border-radius: var(--R);
+  overflow: hidden;
+  background: var(--grad);
+  display:flex; align-items:center; justify-content:center;
+  filter: drop-shadow(0 0 10px #000);
+  z-index:100;
+  padding-inline: clamp(24px, 6vw, 48px);
+  box-sizing: border-box;
+
+  /* aide les transitions (pas obligatoire mais propre) */
+  transform-origin: center center;
+  will-change: width, height, border-radius;
+  /* ⬇️ Verrouille le centre pendant les transitions */
+  right: auto;
+  margin: 0;
+  translate: none;
+
+}
+
+
+
+/* ========================================
+   COUCHES VISUELLES (LAYERS)
+   ======================================== */
+
+/* Conteneur des layers : plus petit que .pill_main pour créer le contour 
+   RÉDUIT de 5px à 2px pour un contour moins visible */
+.sg_layers {
+  position: absolute;
+  inset: var(--layer-inset);  /* 2px au lieu de 5px */
+  border-radius: calc(var(--R) - var(--layer-inset));
+  overflow: hidden;
+}
+
+/* Chaque layer est positionné absolument dans .sg_layers */
+.sg_layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+/* Layer 1 : Fond dégradé (derrière tout) */
+.sg_layer-bg {
+  background: var(--grad);
+  z-index: 0;
+}
+
+/* Layer 2 : Pilule intérieure avec contour 
+   C'est cette couche qui crée l'effet de "bordure" */
+.sg_layer-pill {
+  /* Retrait de 2px par rapport au layer-bg */
+  inset: var(--inset);
+  background: var(--grad);
+  
+  /* Important : on recalcule le border-radius 
+     pour qu'il soit proportionnel au retrait */
+  border-radius: calc(var(--R) - var(--inset));
+  z-index: 1;
+}
+
+/* ========================================
+   MASQUE DE PROGRESSION (partie blanche)
+   ======================================== */
+
+/* Conteneur du masque */
+.sg_progress-mask {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  border-radius: 0;
+  width: auto;
+  z-index: 3;
+}
+
+/* Layer 3 : Zone blanche (partie "remplie") 
+   Cette couche sera "découpée" via clip-path 
+   en fonction de --value (0 à 1) */
+.sg_layer-white {
+  position: absolute;
+  inset: var(--inset);
+  background: var(--color3);  /* Couleur crème/blanc */
+  border-radius: calc(var(--R) - var(--inset));
+  
+  /* CLIP-PATH : découpe la partie droite 
+     --value=0 → tout blanc visible
+     --value=1 → tout caché (découpé)
+     
+     La formule : on coupe depuis la droite de (1 - value) × 100%
+     Le + var(--eps-ui) masque les artefacts de rendu */
+  clip-path: inset(
+    0                                           /* top */
+    0                                           /* right */
+    0                                           /* bottom */
+    calc((1 - var(--value, 0)) * 100% + var(--eps-ui))  /* left */
+  );
+}
+
+/* ========================================
+   TEXTE : DOUBLE COUCHE POUR INVERSION
+   ======================================== */
+
+/* Conteneur du texte : même zone que .sg_layers */
+.sg_textbox {
+  position: absolute;
+  inset: var(--layer-inset);  /* Cohérent avec .sg_layers */
+  border-radius: calc(var(--R) - var(--layer-inset));
+  z-index: 10;  /* Au-dessus des layers visuels */
+  pointer-events: none;  /* Ne bloque pas les clics */
+}
+
+
+/* Icône dessinée par MASQUE → on peint avec un background */
+.sg_text .sg_icon{
+  display:inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 8px;
+
+  /* le masque sera injecté en JS dans --icon-mask */
+  -webkit-mask-image: var(--icon-mask);
+  mask-image: var(--icon-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+/* Couleurs “peinture” de l’icône selon la couche */
+.sg_text-base .sg_icon{
+  /* sur fond blanc → icône en dégradé, comme le texte */
+  background: var(--grad);
+}
+
+.sg_text-white .sg_icon{
+  /* sur fond coloré → icône couleur crème (comme le texte) */
+  background: var(--color3);
+}
+
+.sg_descr {
+  margin-right: 16px;
+}
+
+/* Base commune aux deux couches de texte */
+.sg_text {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  
+  /* Centre le texte */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Font responsive */
+  font-size: var(--responsive-font-size);
+  font-weight: 700;
+  line-height: 1;
+  font-family: var(--font);
+  
+  /* Améliore le rendu des polices */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  
+  /* Le texte ne doit jamais passer à la ligne */
+  white-space: nowrap;
+}
+
+
+/* ----------------------------------------
+   TEXTE BLANC (visible sur fond coloré)
+   ---------------------------------------- */
+.sg_text-white {
+  color: var(--color3);
+  
+  /* CLIP-PATH : on affiche uniquement la partie GAUCHE
+     --value=0 → rien d'affiché
+     --value=0.5 → 50% du texte visible (côté gauche)
+     --value=1 → tout le texte visible
+     
+     La formule : on coupe depuis la droite de value × 100%
+     Le - var(--eps) crée un léger chevauchement avec l'autre couche */
+  clip-path: inset(
+    var(--inset)                                        /* top */
+    calc(var(--inset) + var(--value, 0) * 100% - var(--eps))  /* right */
+    var(--inset)                                        /* bottom */
+    var(--inset)                                        /* left */
+  );
+} 
+
+/* ----------------------------------------
+   TEXTE DÉGRADÉ (visible sur fond blanc)
+   ---------------------------------------- */
+.sg_text-base {
+  /* On applique le dégradé comme fond du texte */
+  background: var(--grad);
+  
+  /* Ces propriétés rendent le texte transparent 
+     et laissent voir le dégradé en arrière-plan */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  
+  /* Ajuste la taille du dégradé pour compenser les insets 
+     Sinon le dégradé serait décalé par rapport aux layers */
+  background-size: calc(100% + 2 * var(--inset)) 
+                   calc(100% + 2 * var(--inset));
+  background-position: calc(-1 * var(--inset)) 
+                       calc(-1 * var(--inset));
+  
+  /* PAS de clip-path ici : on laisse le texte visible partout
+     La séparation visuelle est gérée uniquement par .sg_text-white 
+     et le masque blanc .sg_layer-white */
+}
+
+/* ========================================
+   AJUSTEMENTS POUR PETITS ÉCRANS
+   ======================================== */
+
+/* ========================================
+   MEDIA QUERIES - Contrainte de hauteur
+   ======================================== */
+
+/* On ajuste --pill-max-width selon la hauteur viewport
+   Formule approximative : max-width ≈ (hauteur - 160px) / 1.3 */
+
+@media (max-height: 900px) {
+  :root {
+    --pill-max-width: 450px;
+    --pill-height-subgoal: 99px;
+    --R: 50px;
+    --responsive-font-size: 46px;
+    --layer-inset: 1.8px;
+  }
+}
+
+@media (max-height: 750px) {
+  :root {
+    --pill-max-width: 380px;
+    --pill-height-subgoal: 84px;
+    --R: 42px;
+    --responsive-font-size: 39px;
+    --layer-inset: 1.5px;
+  }
+}
+
+@media (max-height: 650px) {
+  :root {
+    --pill-max-width: 320px;
+    --pill-height-subgoal: 70px;
+    --R: 35px;
+    --responsive-font-size: 33px;
+    --layer-inset: 1.3px;
+  }
+}
+
+@media (max-height: 550px) {
+  :root {
+    --pill-max-width: 280px;
+    --pill-height-subgoal: 62px;
+    --R: 31px;
+    --responsive-font-size: 29px;
+    --layer-inset: 1.1px;
+    --padding: 50px;
+  }
+}
+
+@media (max-height: 450px) {
+  :root {
+    --padding: 40px;
+  }
+}
+
+@media (max-height: 380px) {
+  :root {
+    --padding: 30px;
+  }
+}
+
+/* Ajustement du padding sur petits écrans en largeur */
+@media (max-width: 600px) {
+  :root {
+    --padding: 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --padding: 20px;
+  }
+}
+
+/* ========================================
+   CSS pour VIBEMETER
+   ======================================== */
+
+/* fait occuper tout l’espace carré à la section vibemeter */
+.pill_vibemeter{
+  position:absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  display:grid;
+  place-items:center;
+  z-index: 5;
+  font-family: var(--font);
+  font-weight: 700;
+
+  /* anim d’apparition quand on passe à [data-state="vibemeter"] */
+  opacity: 0;
+  transform: scale(.96);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.pill_main[data-state="vibemeter"] .pill_vibemeter{
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Maintient le vibemeter visible pendant le morph back */
+.pill_vibemeter.hold{
+  opacity: 1 !important;
+  transition: none !important; /* pas de fade pendant le morph */
+}
+
+
+/* wrapper plein pot dans le carré */
+.pill_vibemeter #ratingBoxWrapper{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: none;               /* la drop-shadow peut rester côté pilule */
+  transform: none;
+  background: transparent;
+  border-radius: inherit;                          /* coins = pilule */
+
+}
+
+
+
+/* Le fond pulse doit être invisible tant que le verdict n'a pas démarré */
+/* le widget occupe le carré et PEUT déborder pour le pulse */
+.pill_vibemeter{
+  position:absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  display:grid;
+  place-items:center;
+  z-index: 5;
+  opacity: 0;
+  transform: scale(.96);
+  transition: opacity .2s ease, transform .2s ease;
+  overflow: visible;               /* ⬅ pour laisser le pulse dépasser */
+}
+.pill_main[data-state="vibemeter"] .pill_vibemeter{
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pill_main[data-state="vibemeter"]{
+  overflow: visible;
+}
+
+/* --- géométrie commune : plein cadre + coins de la pilule --- */
+.pill_vibemeter #ratingBox,
+.pill_vibemeter #loadingBarWrapper,
+.pill_vibemeter #ratingBoxBackground{
+  position: absolute;
+  overflow: hidden;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: none;
+  border-radius: inherit;     /* ⬅ suit les coins de la pilule */
+}
+
+.pill_vibemeter #loadingBar{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: none;
+  overflow: hidden;
+  border-radius: 0;
+  
+}
+
+
+/* --- socle couleur vibe --- */
+.pill_vibemeter #ratingBox{
+  background: var(--vibeColor, rgba(255,0,0,0));
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* --- voile noir qui RECULE --- */
+.pill_vibemeter #loadingBarWrapper{
+  z-index: 2;                 /* au-dessus du socle, sous le label */
+  overflow: hidden;
+}
+.pill_vibemeter #loadingBar{
+  background: rgba(0,0,0,.35);
+  transform-origin: right center;
+  transform: scaleX(1);       /* départ voilé à 100% */
+  opacity: 0;                 /* armé par le JS au démarrage */
+  transition: transform var(--vibeDur,60s) linear, opacity .2s;
+  z-index: 2;
+}
+
+/* --- pulse derrière tout --- */
+.pill_vibemeter #ratingBoxBackground{
+  opacity: 0;                 /* visible seulement au verdict */
+  z-index: 0;
+}
+
+/* le chiffre tout au-dessus */
+.pill_vibemeter #ratingLabel{ 
+  position: absolute; inset: 0;
+  display:flex; align-items:center; justify-content:center;
+  filter: drop-shadow(0 0 10px #000);
+  z-index: 10 !important;
+  opacity: 1 !important;
+}
+
+/* Le label reste devant tout */
+#ratingLabel{ z-index: 3; }
+
+
+/* le label suit */
+.pill_vibemeter #ratingLabel{ 
+  position: absolute; inset: 0;
+  display:flex; align-items:center; justify-content:center; 
+  filter: drop-shadow(0 0 10px #000);
+}
+
+
+ 
+/* ========================================
+   ÉTATS DIFFÉRENTS (pour animations futures)
+   ======================================== */
+
+/* mêmes dimensions pour subgoal ET socials */
+.pill_main[data-state="subgoal"],
+.pill_main[data-state="socials"]{
+  width: var(--pill-width);
+  height: var(--pill-height-subgoal);
+  border-radius: var(--R);
+  transition: width .6s ease-in-out,
+              height .6s ease-in-out,
+              border-radius .6s ease-in-out;
+}
+
+/* carré pour vibemeter */
+.pill_main[data-state="vibemeter"]{
+  width: var(--pill-width);
+  height: var(--pill-width);
+  border-radius: var(--R);
+  transition: width .6s ease-in-out,
+              height .6s ease-in-out,
+              border-radius .6s ease-in-out;
+}
+
+/* vrai morph en rond centré */
+.pill_main.to-circle{
+  width: var(--pill-height-subgoal);
+  height: var(--pill-height-subgoal);
+  border-radius: 9999px;
+  transition:
+    width .38s var(--ease-inout),
+    height .38s var(--ease-inout),
+    border-radius .38s var(--ease-inout);
+
+  /* ⬇️ Garde le rond parfaitement centré */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+
+
+/* ========================================
+   ANIMATION PULSE (pour vibemeter)
+   ======================================== */
+.pill_vibemeter { overflow: visible; }
+
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* ========================================
+   ANIMATION COULEURS PILL
+   ======================================== */
+
+/* le fond "par défaut" reste ton dégradé subgoal */
+.pill_main {
+  background: var(--grad); overflow: hidden; 
+  position: fixed;            /* (déjà chez toi) */
+  /* ... le reste inchangé ... */
+  --state-bg: transparent;    /* gradient cible (overlay) */
+  --bgAlpha: 0;               /* opacité de l’overlay */
+}
+
+.pill_main[data-state="vibemeter"]{ overflow: visible; }
+
+
+
+/* overlay qui crossfade vers le fond d'état */
+.pill_main::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--state-bg);
+  opacity: var(--bgAlpha);
+  border-radius: inherit;
+  overflow: hidden;
+  transition: opacity .6s ease;       /* même durée que resize si tu veux */
+  pointer-events:none;
+  z-index: 0;                          /* SOUS les layers */
+}
+ 
+/* on met les layers au-dessus de l'overlay */
+.sg_layers{ 
+  position:absolute; 
+  inset:var(--layer-inset); 
+  border-radius: calc(var(--R) - var(--layer-inset)); 
+  overflow:hidden; 
+  z-index: 1;
+}
+
+/* le texte est déjà au-dessus (z-index:10 chez toi), nickel */
+
+/* Le fade s'applique SEULEMENT aux layers décoratifs (pas à la barre) */
+.sg_layers {
+  transition: opacity .2s ease, transform .2s ease;
+}
+.sg_layers.is-hidden{
+  opacity: 0;
+  transform: translateY(16px) scale(.9);
+}
+ 
+/* Le masque (barre) ne fade JAMAIS */
+.sg_progress-mask {
+  transition: none;
+}
+
+
+/* ========================================
+   CSS pour SOCIALS
+   ======================================== */
+
+/* Utilitaires de fade qui n’écrasent PAS transform du conteneur */
+.is-fade-out{
+  opacity: 0 !important;
+  transform: translateY(16px) scale(.96) !important; /* descend, pas de slide X */
+  transition: opacity .18s var(--ease-inout),
+              transform .24s var(--ease-inout) !important;
+}
+.is-fade-in{
+  opacity: 1 !important;
+  transform: translateY(0) scale(1) !important;      /* remonte, pas de slide X */
+  transition: opacity .18s var(--ease-pop),
+              transform .28s var(--ease-pop) !important;
+}
+
+
+/* Si tu veux le petit mouvement en Y: on le limite au contenu interne */
+.sg_textbox.is-fade-out,
+.pill_socials .soc_textbox.is-fade-out { transform: translateY(12px) scale(.94) !important; }
+.sg_textbox.is-fade-in,
+.pill_socials .soc_textbox.is-fade-in  { transform: translateY(0)   scale(1)    !important; }
+
+
+/* Pop du rond social (overshoot 1.06) */
+.pop-in {
+  animation: socPop .34s var(--ease-pop) 1 both;
+}
+@keyframes socPop {
+  0%   { transform: scale(.92); opacity: 0; }
+  60%  { transform: scale(1.06); opacity: 1; }
+  100% { transform: scale(1.0);  opacity: 1; }
+}
+
+/* Stretch lors du déploiement en pilule */
+.stretch {
+  animation: stretchX .46s var(--ease-spring) 1 both;
+}
+@keyframes stretchX {
+  /* on conserve la translation de centrage pendant tout le stretch */
+  0%   { transform: translateX(-50%) scaleX(.96); }
+  60%  { transform: translateX(-50%) scaleX(1.02); }
+  100% { transform: translateX(-50%) scaleX(1); }
+}
+
+
+
+/* -------- Socials -------- */
+.pill_socials {
+  position: absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  z-index: 6;
+  opacity: 0;
+  transform: scale(.96);
+  transition: opacity .2s ease, transform .2s ease;
+
+  /* ⬇️ on pose du padding pour l’icône/texte à gauche */
+  padding-inline: clamp(24px, 6vw, 48px);
+  display: block; /* on pilote le contenu avec .soc_textbox */
+}
+
+
+/* fond social (dégradé selon réseau) */
+.soc_layers, .soc_bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.soc_bg{
+  background: var(--g_instagram);
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.45));  /* ombre plus profonde */
+  position: relative;
+}
+
+/* Reflet doux (specular) */
+.soc_bg::before{
+  content:"";
+  position:absolute; inset:2px;
+  border-radius: inherit;
+  background: radial-gradient(120% 140% at 20% 0%,
+              rgba(255,255,255,.28) 0%,
+              rgba(255,255,255,.10) 28%,
+              rgba(255,255,255,0) 60%);
+  mix-blend-mode: screen; pointer-events:none;
+}
+
+/* Highlight de tranche (subtil) */
+.soc_bg::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.10),
+              inset 0 -12px 18px rgba(0,0,0,.16);
+  pointer-events:none;
+}
+
+/* Texte + icône (stagger possible) */
+.soc_textbox{
+  gap: .45em;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+}
+.soc_icon{
+  transform-origin: center;
+}
+.soc_handle{
+  transform-origin: left center;
+}
+
+/* texte/icone */
+.soc_textbox{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;      /* ⬅️ ferré à gauche */
+  gap: .5em;
+  padding-left: clamp(24px, 6vw, 48px); /* marge gauche pour l’icône */
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: calc(var(--responsive-font-size) * .92);
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+  opacity: 0;
+  transform: translateY(16px) scale(.96);
+}
+
+/* icône via CSS mask (comme Subgoal) */
+.soc_icon{
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+  -webkit-mask-image: var(--soc-icon-mask);
+  mask-image: var(--soc-icon-mask);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center;   mask-position: center;
+  -webkit-mask-size: contain;      mask-size: contain;
+  background: white;
+  flex: 0 0 auto;
+}
+.soc_handle { white-space: nowrap; }
+
+
+
+/* ========================================
+   ANIMATIONS DE FADEIN / OUT TEXTE SUBGOAL
+   ======================================== */
+
+/* visible par défaut */
+.sg_textbox{
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+/* état masqué (utilisé juste avant vibemeter) */
+.sg_textbox.is-hidden{
+  opacity: 0;
+  transform: translateY(16px) scale(.9);
+}
+
+/* ========================================
+   Remplisage de la barre avant changement de taille
+   ======================================== */
+
+/* on veut que le clip-path bouge quand --value change */
+.sg_layer-white{
+  transition: clip-path .30s ease;
+}
+.sg_text-white{
+  transition: clip-path .30s ease;
+}
+
+/* sécurité accessibilité */
+@media (prefers-reduced-motion: reduce){
+  .sg_layer-white,
+  .sg_text-white{ transition: none; }
+}
+
+
+
+/* ========================================
+   ANIMATIONS DE CONNEXION
+   ======================================== */
+
+.statusConnected {
+  animation-name: statusConnected;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+.statusDisconnected {
+  animation-name: statusDisconnected;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes statusConnected {
+  0% {
+    opacity: 1;
+    background-color: #2FB774;
+  }
+  100% {
+    opacity: 0;
+    background-color: #2FB774;
+  }
+}
+
+@keyframes statusDisconnected {
+  0% {
+    background-color: #D12025;
+  }
+  100% {
+    background-color: #D12025;
+  }
+}
+
+
+/* ========================================
+   CONTENEUR DE STATUT (message de connexion)
+   ======================================== */
+
+#statusContainer {
+  font-weight: 500;
+  font-size: 30px;
+  text-align: center;
+  background-color: #D12025;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+/* coupe les transitions de la barre/texte quand on veut "réarmer" la valeur */
+.pill_subgoal.no-anim .sg_layer-white,
+.pill_subgoal.no-anim .sg_text-white {
+  transition: none !important;
+} 
