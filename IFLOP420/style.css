@@ -24,7 +24,7 @@ html {
   --color2: #27835d;
   --color3: #d4ddb9;
   --grad: linear-gradient(90deg, var(--color1), var(--color2));
-  --bgtest: rgb(55, 39, 77);  /* POUR PARAMETRER LA COULEUR DU FOND - Rajouter ,0 à la fin pour transparent */
+  --bgtest: rgb(55, 39, 77, 0);  /* POUR PARAMETRER LA COULEUR DU FOND - Rajouter ,0 à la fin pour transparent */
   --font: "Inter", system-ui, -apple-system, sans-serif;
 
   /* Couleurs Réseaux (NON PERSONNALISABLES) */
@@ -697,6 +697,17 @@ body {
 .pill_socials .soc_textbox.is-fade-in  { transform: translateY(0)   scale(1)    !important; }
 
 
+/* le conteneur coupe ce qui dépasserait pendant la mesure/scale */
+.pill_socials .soc_textbox { overflow: hidden; }
+
+/* le handle peut être réduit par JS sans casser la ligne */
+.pill_socials .soc_handle{
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+
 /* Pop du rond social (overshoot 1.06) */
 .pop-in {
   animation: socPop .34s var(--ease-pop) 1 both;
@@ -779,8 +790,11 @@ body {
 .soc_icon{
   transform-origin: center;
 }
+/* handle : taille normale par défaut, mais peut être réduit si overflow */
 .soc_handle{
+  white-space: nowrap;
   transform-origin: left center;
+  transform: scale(var(--soc-scale, 1));
 }
 
 /* texte/icone */
@@ -814,7 +828,6 @@ body {
   background: white;
   flex: 0 0 auto;
 }
-.soc_handle { white-space: nowrap; }
 
 
 
