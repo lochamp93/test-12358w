@@ -602,12 +602,50 @@ function prepareSocials(networkKey){
   sect.dataset.network = networkKey;
   const grad = cssVar(cfg.gradVar) || cssVar('--g_instagram');
   socBg.style.background = grad;
-  handle.textContent = cfg.handle.startsWith('@') || cfg.handle.startsWith('discord.gg') ? cfg.handle : '@'+cfg.handle;
+  handle.textContent = String(cfg.handle || '').trim();
   setSocialIcon(cfg.icon);
 
-  sect.hidden = false;            // présent dans le DOM mais invisible (opacity géré par anim)
+  sect.hidden = false;
   socTxt.classList.remove('is-fade-in','is-fade-out');
+
+  // ajuste la taille du handle pour qu'il tienne
+  requestAnimationFrame(() => fitSocialHandle());
 }
+
+// === AUTOFIT du handle pour qu'il tienne dans la gélule ===
+function fitSocialHandle() {
+  const pill   = document.querySelector('.pill_main');
+  const box    = pill?.querySelector('.pill_socials .soc_textbox');
+  const iconEl = pill?.querySelector('.pill_socials .soc_icon');
+  const handle = pill?.querySelector('.pill_socials .soc_handle');
+  if (!pill || !box || !handle) return;
+
+  // taille de base (celle que tu as dans le CSS)
+  const basePx = parseFloat(getComputedStyle(box).fontSize) || 48;
+  handle.style.fontSize = basePx + 'px';
+  handle.style.transform = 'none';
+
+  // largeur dispo = largeur pilule - paddings internes - icône - gap
+  const cs       = getComputedStyle(box);
+  const padLeft  = parseFloat(cs.paddingLeft)  || 0;
+  const padRight = parseFloat(cs.paddingRight) || 0;
+  const gap      = parseFloat(cs.columnGap || cs.gap) || 0;
+  const iconW    = iconEl ? (iconEl.getBoundingClientRect().width || 0) : 0;
+
+  const avail = box.getBoundingClientRect().width - padLeft - padRight - iconW - gap - 4; // marge
+  const need  = handle.getBoundingClientRect().width;
+
+  if (need <= avail) return; // ça tient déjà
+
+  // ratio de réduction (limité)
+  const ratio = Math.max(0.6, Math.min(1, avail / Math.max(1, need)));
+  handle.style.transformOrigin = 'left center';
+  handle.style.transform = `scale(${ratio})`;
+}
+
+// on ajuste à chaque préparation des socials + au resize
+window.addEventListener('resize', () => { try { fitSocialHandle(); } catch {} });
+
 
 function requestShowSocial(networkKey){
   // règle #1 : le vibemeter tue l’interaction socials (pendant ET après)
@@ -1018,11 +1056,14 @@ document.documentElement.style.setProperty('--ease-pop',     E_POP);
       pill.classList.add('stretch');
 
       afterTransition(pill, 'width', 420, () => {
-        pill.classList.remove('stretch');
-        commitBaseBackground(g);
+      pill.classList.remove('stretch');
+      commitBaseBackground(g);
 
-        const DISPLAY_SECS = 4;
-        setTimeout(() => backFromSocialsToSubgoal(), DISPLAY_SECS * 1000);
+      // ajuste la place du handle seulement si ça dépasse
+      try { fitSocialHandle(); } catch {}
+
+      const DISPLAY_SECS = 4;
+      setTimeout(() => backFromSocialsToSubgoal(), DISPLAY_SECS * 1000);
       });
     }, 180); // durée du fade down
   });
@@ -1062,6 +1103,46 @@ function startSocialsTransition(networkKey, done){
         // préparer socials
         prepareSocials(networkKey);
 
+        // --- Auto-fit du texte Socials (réduit seulement si ça dépasse)
+        let _fitBound = false;
+        function fitSocialText(){
+          const pill     = document.querySelector('.pill_main');
+          const socials  = pill?.querySelector('.pill_socials');
+          const box      = socials?.querySelector('.soc_textbox');
+          const icon     = socials?.querySelector('.soc_icon');
+          const handle   = socials?.querySelector('.soc_handle');
+          if (!pill || !socials || !box || !icon || !handle) return;
+
+          // reset d'abord (taille “normale”)
+          socials.style.setProperty('--soc-scale', '1');
+
+          // calcul de l'espace dispo pour le texte (sans l'icône)
+          const styles = getComputedStyle(box);
+          const padL = parseFloat(styles.paddingLeft) || 0;
+          const padR = parseFloat(styles.paddingRight) || 0;
+          const gap  = parseFloat(styles.columnGap || styles.gap) || 0;
+
+          const totalW     = box.clientWidth;
+          const iconW      = icon.getBoundingClientRect().width;
+          const available  = totalW - padL - padR - iconW - gap;
+
+          // largeur réelle du handle au scale=1
+          const needed = handle.scrollWidth;
+
+          if (available > 0 && needed > available){
+            const scale = Math.max(0.6, available / needed); // borne mini 0.6 pour rester lisible
+            socials.style.setProperty('--soc-scale', String(scale));
+          } else {
+            socials.style.setProperty('--soc-scale', '1');
+          }
+
+          // binder le resize une seule fois
+          if (!_fitBound){
+            window.addEventListener('resize', () => fitSocialText(), { passive:true });
+            _fitBound = true;
+          }
+        }
+
         // 5) fin du fade down → FADE UP du rond socials
         setTimeout(() => {
           layers?.classList.add('is-hidden');
@@ -1086,11 +1167,14 @@ function startSocialsTransition(networkKey, done){
           pill.classList.add('stretch');
 
           afterTransition(pill, 'width', 380, () => {
-            pill.classList.remove('stretch');
-            commitBaseBackground(grad);
+          pill.classList.remove('stretch');
+          commitBaseBackground(grad);
 
-            const DISPLAY_SECS = 4;
-            setTimeout(() => { backFromSocialsToSubgoal(done); }, DISPLAY_SECS * 1000);
+          // ajuste seulement si nécessaire (sinon garde la taille normale)
+          try { fitSocialHandle(); } catch {}
+
+          const DISPLAY_SECS = 4;
+          setTimeout(() => { backFromSocialsToSubgoal(done); }, DISPLAY_SECS * 1000);
           });
         }, 180);
       });
@@ -1100,64 +1184,72 @@ function startSocialsTransition(networkKey, done){
 
 function backFromSocialsToSubgoal(done){
   const pill    = document.querySelector('.pill_main');
-  const socials = pill.querySelector('.pill_socials');
-  const socText = socials?.querySelector('.soc_textbox');
   const section = pill.querySelector('.pill_subgoal');
   const layers  = pill.querySelector('.sg_layers');
   const textbox = pill.querySelector('.sg_textbox');
+  const socials = pill.querySelector('.pill_socials');
+  const socText = socials?.querySelector('.soc_textbox');
+  if (!pill || !section) { done && done(); return; }
 
-  if (!pill || !socials) { done && done(); return; }
+  // 1) fade-out du contenu Socials
+  if (socText){
+    socText.classList.remove('is-fade-in');
+    socText.classList.add('is-fade-out');
+  }
+    // remet l’échelle par défaut pour le prochain réseau
+    document.querySelector('.pill_socials')?.style.setProperty('--soc-scale', '1');
 
-  // 1) fade out texte/logo réseau
-  socText?.classList.remove('is-fade-in');
-  socText?.classList.add('is-fade-out');
-
+  // 2) gélule socials → rond (centré)
   setTimeout(() => {
-    // 2) gélule → rond
     pill.classList.add('to-circle');
 
+    // 3) fade-out du rond social (descend)
     setTimeout(() => {
-      // 3) fade out du rond social
       socials.style.opacity   = '0';
       socials.style.transform = 'scale(.96) translateY(16px)';
 
+      // 4) overlay → dégradé Subgoal
       setTimeout(() => {
-        // 4) overlay back to subgoal + fade in du rond subgoal
         const grad = cssVar('--grad');
         setCSSVar(pill, '--state-bg', grad);
         setCSSVar(pill, '--bgAlpha', '1');
 
+        // 5) rond → gélule subgoal (centré)
         setTimeout(() => {
-          // 5) rond → gélule subgoal
           pill.classList.remove('to-circle');
           pill.setAttribute('data-state', 'subgoal');
-          pill.classList.add('stretch');
-          afterTransition(pill, 'width', 380, () => {
-            pill.classList.remove('stretch');
-            // suite inchangée…
-          });
 
           afterTransition(pill, 'width', 380, () => {
+            // base = gradient subgoal
             commitBaseBackground(grad);
 
-            // 6) texte + barre subgoal (valeur recalculée)
+            // 6) ré-apparition progressive : texte PUIS barre (comme vibemeter→subgoal)
             socials.hidden = true;
             layers?.classList.remove('is-hidden');
 
+            // 6a) texte : fade-in
             textbox?.classList.remove('is-hidden');
+
+            // 6b) barre : 0 → valeur courante
             section.classList.add('no-anim');
-            try { applySubgoalFormula && applySubgoalFormula(); } catch {}
-            section.offsetWidth;
+            section.style.setProperty('--value','0');
+            section.offsetWidth;               // reflow
             section.classList.remove('no-anim');
 
-            setTimeout(() => setCSSVar(pill, '--bgAlpha', '0'), 100);
-            done && done();
+            // petit délai pour que le texte soit visible avant la barre
+            setTimeout(() => {
+              try { applySubgoalFormula && applySubgoalFormula(); } catch {}
+              // coupe l’overlay doucement
+              setTimeout(() => setCSSVar(pill, '--bgAlpha', '0'), 100);
+              done && done();
+            }, 300);
           });
         }, 150);
       }, 150);
-    }, 200);
+    }, 180);
   }, 180);
 }
+
 
 function runBackToSubgoal(){
   const pill    = document.querySelector('.pill_main');
