@@ -42,16 +42,6 @@
 			"group": "Sub Goal"
 		},
 		{
-			"id": "fontSize",
-			"label": "Taille de police",
-			"description": "",
-			"type": "number",
-			"min": 1,
-			"max": 120,
-			"defaultValue": 20,
-			"group": "Sub Goal"
-		},
-		{
 			"id": "fontbgColor",
 			"label": "Couleur de la police / du vide de la barre",
 			"description": "",
@@ -93,8 +83,16 @@
 			"group": "Sub Goal"
 		},
 		{
+			"id": "goalLabel",
+			"label": "Texte du label",
+    		"description": "Texte affiché avant le compteur",
+			"type": "text",
+			"defaultValue": "SUB",
+			"group": "Sub Goal"
+		},		
+		{
 			"id": "chatCommand",
-			"label": "Port",
+			"label": "Commande à utiliser dans le chat",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
 			"type": "text",
 			"defaultValue": "!vibemeter",
