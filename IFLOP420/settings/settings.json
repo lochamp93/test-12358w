@@ -83,11 +83,20 @@
 			"group": "Sub Goal"
 		},
 		{
+			"id": "enableVibemeter",
+			"label": "Activer le vibemeter",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Vibemeter"
+		},		
+		{
 			"id": "chatCommand",
 			"label": "Commande vibemeter dans le chat",
     		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
 			"type": "text",
 			"defaultValue": "!vibemeter",
+			"showIf": "enableVibemeter",
 			"group": "Vibemeter"
 		},		
 		{
@@ -104,6 +113,7 @@
 				{ "value": 69420, "label": "Personne" }
 			],
 			"defaultValue": 30,
+			"showIf": "enableVibemeter",
 			"group": "Vibemeter"
 		},		
 		{
@@ -114,14 +124,23 @@
 			"min": 1,
 			"max": 600,
 			"defaultValue": 150,
+			"showIf": "enableVibemeter",
 			"group": "Vibemeter"
 		},
 		{
+			"id": "enableSocials",
+			"label": "Afficher les réseaux",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},		{
 			"id": "enableDiscord",
 			"label": "Afficher Discord",
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -148,6 +167,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -174,6 +194,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -200,6 +221,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -226,6 +248,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -252,6 +275,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
@@ -278,6 +302,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
+			"showIf": "enableSocials",
 			"group": "Réseaux"
 		},
 		{
