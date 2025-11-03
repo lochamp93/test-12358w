@@ -1,0 +1,787 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  scroll-behavior: smooth;
+  background: var(--bgtest);
+  font-size: 30px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: white;
+  overflow-wrap: break-word;
+}
+
+/* ========================================
+   VARIABLES CSS PERSONNALISABLES
+   ======================================== */
+:root {
+  /* Couleurs (personnalisables via interface) */
+  --color1: #0e2219;
+  --color2: #27835d;
+  --color3: #d4ddb9;
+  --grad: linear-gradient(90deg, var(--color1), var(--color2));
+  --bgtest: rgb(55, 39, 77);
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Couleurs Réseaux (NON PERSONNALISABLES) */
+  --g_tiktok: linear-gradient(90deg, #000000, #343434);
+  --g_instagram: linear-gradient(90deg, #f40003, #bc00ac);
+  --g_twitter: linear-gradient(90deg, #1d7499, #2aa9e0);
+  --g_youtube: linear-gradient(90deg, #c60028, #ff0033);
+  --g_discord: linear-gradient(90deg, #3b45ac, #5865f2);
+  --g_twitch: linear-gradient(90deg, #6430b3, #9146ff);
+
+  /* Tailles de base */
+  --base-font-size: 56px;
+  --pill-width: clamp(300px, 90vw, 600px);
+  --padding: clamp(20px, 8vw, 60px);
+  --pill-height-subgoal: calc(var(--pill-width) * 0.22);
+  --pill-height-vibemeter: calc(var(--pill-width));
+  --R: calc(var(--pill-height-subgoal) / 2);
+  --inset: 2px;
+  --layer-inset: 2px;
+  --eps-ui: 0.5px;
+  --eps: 1.5px;
+  --responsive-font-size: clamp(28px, calc(var(--pill-width) * 0.102), 72px);
+
+  /* Courbes de bezier pour anim */
+  --ease-inout: cubic-bezier(.22,.61,.36,1);
+  --ease-spring: cubic-bezier(.2,.8,.2,1.2);
+  --ease-pop: cubic-bezier(.34,1.56,.64,1);
+
+  /* VALDEZ*/
+    --g_valdez: linear-gradient(90deg, #b4232a, #7f0006);
+
+}
+
+/* ========================================
+   BODY : CONFIGURATION DE LA ZONE
+   ======================================== */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bgtest);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: var(--padding);
+  padding-top: 0;
+  min-height: calc(var(--pill-height-vibemeter) + var(--padding));
+  overflow: hidden;
+}
+
+/* ========================================
+   CONTENEUR PRINCIPAL DE LA PILULE
+   ======================================== */
+.pill_main{
+  position: fixed;
+  bottom: var(--padding);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--pill-width);
+  height: var(--pill-height-subgoal);
+  border-radius: var(--R);
+  overflow: hidden;
+  background: var(--grad);
+  display:flex; align-items:center; justify-content:center;
+  filter: drop-shadow(0 0 10px #000);
+  z-index:100;
+  padding-inline: clamp(24px, 6vw, 48px);
+  box-sizing: border-box;
+  transform-origin: center center;
+  will-change: width, height, border-radius;
+  right: auto;
+  margin: 0;
+  translate: none;
+  --state-bg: transparent;
+  --bgAlpha: 0;
+}
+
+/* ========================================
+   COUCHES VISUELLES (LAYERS)
+   ======================================== */
+.sg_layers {
+  position: absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  overflow: hidden;
+  z-index: 1;
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.sg_layers.is-hidden{
+  opacity: 0;
+  transform: translateY(16px) scale(.9);
+}
+
+.sg_layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.sg_layer-bg {
+  background: var(--grad);
+  z-index: 0;
+}
+
+.sg_layer-pill {
+  inset: var(--inset);
+  background: var(--grad);
+  border-radius: calc(var(--R) - var(--inset));
+  z-index: 1;
+}
+
+/* ========================================
+   MASQUE DE PROGRESSION (partie blanche)
+   ======================================== */
+.sg_progress-mask {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  border-radius: 0;
+  width: auto;
+  z-index: 3;
+  transition: none;
+}
+
+.sg_layer-white {
+  position: absolute;
+  inset: var(--inset);
+  background: var(--color3);
+  border-radius: calc(var(--R) - var(--inset));
+  clip-path: inset(
+    0
+    0
+    0
+    calc((1 - var(--value, 0)) * 100% + var(--eps-ui))
+  );
+  transition: clip-path .30s ease;
+}
+
+/* ========================================
+   TEXTE : DOUBLE COUCHE POUR INVERSION
+   ======================================== */
+.sg_textbox {
+  position: absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  z-index: 10;
+  pointer-events: none;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .2s ease, transform .2s ease;
+}
+
+.sg_textbox.is-hidden{
+  opacity: 0;
+  transform: translateY(16px) scale(.9);
+}
+
+.sg_text .sg_icon{
+  display:inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: 8px;
+  -webkit-mask-image: var(--icon-mask);
+  mask-image: var(--icon-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.sg_text-base .sg_icon{
+  background: var(--grad);
+}
+
+.sg_text-white .sg_icon{
+  background: var(--color3);
+}
+
+.sg_descr {
+  margin-right: 16px;
+}
+
+.sg_text {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--responsive-font-size);
+  font-weight: 700;
+  line-height: 1;
+  font-family: var(--font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  white-space: nowrap;
+}
+
+.sg_text-white {
+  color: var(--color3);
+  clip-path: inset(
+    var(--inset)
+    calc(var(--inset) + var(--value, 0) * 100% - var(--eps))
+    var(--inset)
+    var(--inset)
+  );
+  transition: clip-path .30s ease;
+} 
+
+.sg_text-base {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  background-size: calc(100% + 2 * var(--inset)) 
+                   calc(100% + 2 * var(--inset));
+  background-position: calc(-1 * var(--inset)) 
+                       calc(-1 * var(--inset));
+}
+
+/* ========================================
+   MEDIA QUERIES
+   ======================================== */
+@media (max-height: 900px) {
+  :root {
+    --pill-max-width: 450px;
+    --pill-height-subgoal: 99px;
+    --R: 50px;
+    --responsive-font-size: 46px;
+    --layer-inset: 1.8px;
+  }
+}
+
+@media (max-height: 750px) {
+  :root {
+    --pill-max-width: 380px;
+    --pill-height-subgoal: 84px;
+    --R: 42px;
+    --responsive-font-size: 39px;
+    --layer-inset: 1.5px;
+  }
+}
+
+@media (max-height: 650px) {
+  :root {
+    --pill-max-width: 320px;
+    --pill-height-subgoal: 70px;
+    --R: 35px;
+    --responsive-font-size: 33px;
+    --layer-inset: 1.3px;
+  }
+}
+
+@media (max-height: 550px) {
+  :root {
+    --pill-max-width: 280px;
+    --pill-height-subgoal: 62px;
+    --R: 31px;
+    --responsive-font-size: 29px;
+    --layer-inset: 1.1px;
+    --padding: 50px;
+  }
+}
+
+@media (max-height: 450px) {
+  :root {
+    --padding: 40px;
+  }
+}
+
+@media (max-height: 380px) {
+  :root {
+    --padding: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --padding: 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  :root {
+    --padding: 20px;
+  }
+}
+
+/* ========================================
+   CSS pour VIBEMETER
+   ======================================== */
+.pill_vibemeter{
+  position:absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  display:grid;
+  place-items:center;
+  z-index: 5;
+  font-family: var(--font);
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(.96);
+  transition: opacity .2s ease, transform .2s ease;
+  overflow: visible;
+}
+
+.pill_main[data-state="vibemeter"] .pill_vibemeter{
+  opacity: 1;
+  transform: scale(1);
+}
+
+.pill_vibemeter.hold{
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.pill_vibemeter #ratingBoxWrapper{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: none;
+  transform: none;
+  background: transparent;
+  border-radius: inherit;
+}
+
+.pill_vibemeter #ratingBox,
+.pill_vibemeter #loadingBarWrapper,
+.pill_vibemeter #ratingBoxBackground{
+  position: absolute;
+  overflow: hidden;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: none;
+  border-radius: inherit;
+}
+
+.pill_vibemeter #loadingBar{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: none;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.pill_vibemeter #ratingBox{
+  background: var(--vibeColor, rgba(255,0,0,0));
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.pill_vibemeter #loadingBarWrapper{
+  z-index: 2;
+  overflow: hidden;
+}
+
+.pill_vibemeter #loadingBar{
+  background: rgba(0,0,0,.35);
+  transform-origin: right center;
+  transform: scaleX(1);
+  opacity: 0;
+  transition: transform var(--vibeDur,60s) linear, opacity .2s;
+  z-index: 2;
+}
+
+.pill_vibemeter #ratingBoxBackground{
+  opacity: 0;
+  z-index: 0;
+}
+
+.pill_vibemeter #ratingLabel{ 
+  position: absolute; inset: 0;
+  display:flex; align-items:center; justify-content:center;
+  filter: drop-shadow(0 0 10px #000);
+  z-index: 10 !important;
+  opacity: 1 !important;
+}
+
+/* ========================================
+   ÉTATS DIFFÉRENTS
+   ======================================== */
+.pill_main[data-state="subgoal"],
+.pill_main[data-state="socials"]{
+  width: var(--pill-width);
+  height: var(--pill-height-subgoal);
+  border-radius: var(--R);
+  transition: width .6s ease-in-out,
+              height .6s ease-in-out,
+              border-radius .6s ease-in-out;
+}
+
+.pill_main[data-state="vibemeter"]{
+  width: var(--pill-width);
+  height: var(--pill-width);
+  border-radius: var(--R);
+  transition: width .6s ease-in-out,
+              height .6s ease-in-out,
+              border-radius .6s ease-in-out;
+  overflow: visible;
+}
+
+.pill_main.to-circle{
+  width: var(--pill-height-subgoal);
+  height: var(--pill-height-subgoal);
+  border-radius: 9999px;
+  transition:
+    width .38s var(--ease-inout),
+    height .38s var(--ease-inout),
+    border-radius .38s var(--ease-inout);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ========================================
+   ANIMATION PULSE
+   ======================================== */
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* ========================================
+   ANIMATION COULEURS PILL
+   ======================================== */
+.pill_main::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--state-bg);
+  opacity: var(--bgAlpha);
+  border-radius: inherit;
+  overflow: hidden;
+  transition: opacity .6s ease;
+  pointer-events:none;
+  z-index: 0;
+}
+
+/* ========================================
+   CSS pour SOCIALS 
+   ======================================== */
+.is-fade-out{
+  opacity: 0 !important;
+  transform: translateY(16px) !important;
+  transition: opacity .18s var(--ease-inout), transform .24s var(--ease-inout) !important;
+}
+
+.is-fade-in{
+  opacity: 1 !important;
+  transform: translateY(0px) !important;
+  transition: opacity .18s var(--ease-inout), transform .24s var(--ease-inout) !important;
+}
+
+.pill_socials .soc_textbox{
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .24s var(--ease-inout), transform .32s var(--ease-spring);
+  z-index: 10; 
+}
+
+.pill_socials .soc_textbox.is-visible{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* fit via font-size pour que le layout suive */
+.pill_socials .soc_handle{
+  display: inline-block;
+  white-space: nowrap;
+  /* pas de transform ici */
+  font-size: calc(1em * var(--soc-scale, 1));
+  line-height: 1;
+  min-width: 0;
+  transition: none;           /* empêche tout pop lié aux transitions */
+}
+
+.pill_socials .soc_textbox.is-fade-out { 
+  opacity: 0 !important; 
+  transform: translateY(12px) !important; 
+}
+
+.pill_socials .soc_textbox.is-fade-in  { 
+  opacity: 1 !important; 
+  transform: translateY(0) !important; 
+}
+
+.pill_socials .soc_textbox { 
+  overflow: hidden; 
+}
+
+/* Pop du rond social */
+.pop-in {
+  animation: socPop .42s var(--ease-pop) 1 both;
+}
+
+@keyframes socPop {
+  0%   { transform: scale(.90); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1.0);  opacity: 1; }
+}
+
+/* Stretch lors du déploiement */
+.stretch {
+  animation: stretchX .52s var(--ease-spring) 1 both;
+}
+
+@keyframes stretchX {
+  0%   { transform: translateX(-50%) scaleX(.94); }
+  60%  { transform: translateX(-50%) scaleX(1.02); }
+  100% { transform: translateX(-50%) scaleX(1); }
+}
+
+.pill_socials {
+  position: absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  z-index: 6;
+  opacity: 0;
+  transform: none;
+  transition: opacity .2s ease;
+  padding-inline: clamp(24px, 6vw, 48px);
+  display: block;
+}
+
+.soc_layers, .soc_bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 6;
+}
+
+.soc_bg{
+  background: var(--g_instagram);
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.45));
+  position: relative;
+  z-index: 0;             /* + AJOUT */
+}
+
+.soc_bg::before{
+  content:"";
+  position:absolute; inset:2px;
+  border-radius: inherit;
+  background: radial-gradient(120% 140% at 20% 0%,
+              rgba(255,255,255,.28) 0%,
+              rgba(255,255,255,.10) 28%,
+              rgba(255,255,255,0) 60%);
+  mix-blend-mode: screen; pointer-events:none;
+}
+
+.soc_bg::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.10),
+              inset 0 -12px 18px rgba(0,0,0,.16);
+  pointer-events:none;
+}
+
+.soc_textbox{
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .5em;
+  padding-left: clamp(24px, 6vw, 48px);
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: calc(var(--responsive-font-size) * .92);
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+  z-index: 10;
+  min-width: 0;       /* ← IMPORTANT pour que le contenu puisse shrink */
+  overflow: hidden;   /* tu l’avais déjà plus bas, on peut le garder ici aussi */
+}
+
+.soc_icon{
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+  -webkit-mask-image: var(--soc-icon-mask);
+  mask-image: var(--soc-icon-mask);
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center;   mask-position: center;
+  -webkit-mask-size: contain;      mask-size: contain;
+  background: white;
+  flex: 0 0 auto;
+}
+
+.pill_socials.no-anim .soc_textbox,
+.pill_socials.no-anim .soc_handle {
+  transition: none !important;
+}
+
+/* ========================================
+   VALDEZ
+   ======================================== */
+
+.pill_valdez {
+  position: absolute;
+  inset: var(--layer-inset);
+  border-radius: calc(var(--R) - var(--layer-inset));
+  z-index: 7;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pill_valdez .valdez_bg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--g_valdez);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+}
+
+.pill_valdez .valdez_textbox {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  gap: .5em;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font);
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 2px 8px rgba(0,0,0,.45);
+  font-size: calc(var(--responsive-font-size) * .8);
+  transform: translateY(10px);
+  opacity: 0;
+  transition: opacity .25s var(--ease-inout), transform .25s var(--ease-inout);
+}
+
+.pill_valdez .valdez_icon {
+  width: 2.1em;
+  height: 2.1em;
+  display: inline-block;
+  background: #ffb347; /* orangé */
+  -webkit-mask-image: var(--valdez-icon-mask);
+  mask-image: var(--valdez-icon-mask);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.pill_main[data-state="valdez"] .pill_valdez {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pill_main[data-state="valdez"] .pill_valdez .valdez_textbox {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* PIMENT */
+.pill_bg {
+  position: relative;
+}
+
+.valdez_pepper {
+  position: fixed;
+  bottom: calc(var(--padding) - 40px);
+  left: 50%;
+  transform: translateX(180px) scale(.3) rotate(-6deg); /* décale à droite de la pilule */
+  width: 200px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform .35s var(--ease-pop), opacity .35s ease-out;
+}
+
+.valdez_pepper.is-shown {
+  opacity: 1;
+  transform: translateX(180px) scale(1) rotate(-3deg);
+}
+
+.valdez_pepper.is-hidden {
+  opacity: 0;
+  transform: translateX(180px) scale(.3) rotate(-6deg);
+}
+
+
+
+/* ========================================
+   REMPLISSAGE BARRE
+   ======================================== */
+.pill_subgoal.no-anim .sg_layer-white,
+.pill_subgoal.no-anim .sg_text-white {
+  transition: none !important;
+}
+
+/* ========================================
+   ANIMATIONS DE CONNEXION
+   ======================================== */
+.statusConnected {
+  animation-name: statusConnected;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+.statusDisconnected {
+  animation-name: statusDisconnected;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes statusConnected {
+  0% {
+    opacity: 1;
+    background-color: #2FB774;
+  }
+  100% {
+    opacity: 0;
+    background-color: #2FB774;
+  }
+}
+
+@keyframes statusDisconnected {
+  0% {
+    background-color: #D12025;
+  }
+  100% {
+    background-color: #D12025;
+  }
+}
+
+#statusContainer {
+  font-weight: 500;
+  font-size: 30px;
+  text-align: center;
+  background-color: #D12025;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .sg_layer-white,
+  .sg_text-white{ transition: none; }
+}

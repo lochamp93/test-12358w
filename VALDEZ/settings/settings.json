@@ -1,0 +1,303 @@
+{
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse IP",
+			"description": "",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Paramètres du serveur Websocket Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port",
+			"description": "",
+			"type": "text",
+			"defaultValue": "8080",
+			"group": "Paramètres du serveur Websocket Streamer.bot"
+		},
+		{
+			"id": "decapiUsername",
+			"label": "Chaine Twitch (autoriser decAPI)",
+			"description": "<a href=\"https://decapi.me/auth/twitch?redirect=subcount&scopes=channel:read:subscriptions+user:read:email+moderator:read:followers+user:read:email\" target=\"_blank\">Cliquer et Autoriser",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "subGoal",
+			"label": "Objectif d'abonnements",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"defaultValue": 420,
+			"group": "Sub Goal"
+		},
+		{
+			"id": "font",
+			"label": "Police d’écriture",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "fontbgColor",
+			"label": "Couleur de la police / du vide de la barre",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "gradientIn",
+			"label": "Dégradé - Couleur 1",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "gradientOut",
+			"label": "Dégradé - Couleur 2", 
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "enableIcon",
+			"label": "Afficher une icône",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Sub Goal"
+		},
+		{
+			"id": "SelectedIcon", 
+			"label": "Nom de l'icône",
+			"description": "<a href=\"https://icones.js.org/collection/mdi\" target=\"_blank\">Choisir une icône et entrer son nom (ex: mdi:lightning-bolt-outline)",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableIcon",
+			"group": "Sub Goal"
+		},
+		{
+			"id": "chatCommand",
+			"label": "Commande vibemeter dans le chat",
+    		"description": "Paramètres : on, off, {durée}<br>Exemples : !vibemeter on, !vibemeter off, !vibemeter 5",
+			"type": "text",
+			"defaultValue": "!vibemeter",
+			"group": "Vibemeter"
+		},		
+		{
+			"id": "permissionLevel",
+			"label": "Niveau de permission",
+			"description": "Ces utilisateurs peuvent démarrer/arrêter le Vibe Meter",
+			"type": "select",
+			"options": [
+				{ "value": 40, "label": "Streamer" },
+				{ "value": 30, "label": "Mods & Streamer" },
+				{ "value": 20, "label": "VIP, Mods & Streamer" },
+				{ "value": 15, "label": "Abonnés, VIP, Mods & Streamer" },
+				{ "value": 10, "label": "Tout le monde" },
+				{ "value": 69420, "label": "Personne" }
+			],
+			"defaultValue": 30,
+			"group": "Vibemeter"
+		},		
+		{
+			"id": "fontSize",
+			"label": "Taille de police",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 600,
+			"defaultValue": 150,
+			"group": "Vibemeter"
+		},
+		{
+			"id": "enableDiscord",
+			"label": "Afficher Discord",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "Discordchannel",
+			"label": "Nom du server Discord",
+			"description": "",
+			"type": "text",
+			"defaultValue": "discord.gg/lien",
+			"showIf": "enableDiscord",
+			"group": "Réseaux"
+		},
+		{
+			"id": "Discordcommand",
+			"label": "Quelle est la commande Discord dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!discord",
+			"showIf": "enableDiscord",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableInstagram",
+			"label": "Afficher Instagram",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "Instagramchannel",
+			"label": "Nom du profil Instagram",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableInstagram",
+			"group": "Réseaux"
+		},
+		{
+			"id": "Instagramcommand",
+			"label": "Quelle est la commande Instagram dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!instagram",
+			"showIf": "enableInstagram",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableTikTok",
+			"label": "Afficher TikTok",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "TikTokchannel",
+			"label": "Nom de la chaine TikTok",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableTikTok",
+			"group": "Réseaux"
+		},
+		{
+			"id": "TikTokcommand",
+			"label": "Quelle est la commande TikTok dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!tiktok",
+			"showIf": "enableTikTok",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableTwitch",
+			"label": "Afficher Twitch",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "Twitchchannel",
+			"label": "Nom de la chaine Twitch",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableTwitch",
+			"group": "Réseaux"
+		},
+		{
+			"id": "Twitchcommand",
+			"label": "Quelle est la commande Twitch dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!twitch",
+			"showIf": "enableTwitch",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableTwitter",
+			"label": "Afficher Twitter",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "Twitterchannel",
+			"label": "Nom du profil Twitter",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableTwitter",
+			"group": "Réseaux"
+		},
+		{
+			"id": "Twittercommand",
+			"label": "Quelle est la commande Twitter dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!twitter",
+			"showIf": "enableTwitter",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableYouTube",
+			"label": "Afficher YouTube",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "YouTubechannel",
+			"label": "Nom de la chaine YouTube",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableYouTube",
+			"group": "Réseaux"
+		},
+		{
+			"id": "YouTubecommand",
+			"label": "Quelle est la commande YouTube dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!youtube",
+			"showIf": "enableYouTube",
+			"group": "Réseaux"
+		},
+		{
+			"id": "enableYouTubeVOD",
+			"label": "Afficher YouTube VOD",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Réseaux"
+		},
+		{
+			"id": "YouTubeVODchannel",
+			"label": "Nom de la chaine YouTubeVOD",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "enableYouTubeVOD",
+			"group": "Réseaux"
+		},
+		{
+			"id": "YouTubeVODcommand",
+			"label": "Quelle est la commande YouTube VOD dans le chat ?",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!replay",
+			"showIf": "enableYouTubeVOD",
+			"group": "Réseaux"
+		}		
+	]
+}
+		
