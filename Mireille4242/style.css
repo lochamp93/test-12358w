@@ -1,0 +1,400 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100vw;
+  height: 100vh;
+  scroll-behavior: smooth;
+  background: var(--bgtest);
+  font-size: 30px;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color: white;
+  overflow-wrap: break-word;
+}
+
+/* =========================
+   MINIMAL BAR (clean)
+   ========================= */
+
+/* Variables customisables */
+:root{
+  --bgtest: #ffffff00;
+  --ui-font: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Layout */
+  --padding: clamp(16px, 4vw, 56px);
+  --right-pad: clamp(16px, 3vw, 40px);
+  --bar-h: 72px;
+  --bar-max-w: calc(100vw - 2 * var(--padding));
+
+  /* Ligne décorative */
+  --line-w: clamp(260px, 42vw, 520px);
+  --line-gap: 10px; /* espace fixe entre texte et ligne */
+  --c-line: rgba(255,255,255,.9);
+
+  /* Anim */
+  --fade-dy: -12px; /* ✅ IMPORTANT : négatif = sort vers le haut, entre en descendant */
+  --ease-inout: cubic-bezier(.22,.61,.36,1);
+
+  /* Typo responsive */
+  --ui-font-size: clamp(22px, 2.3vw, 40px);
+
+  /* Spacing SUBGOAL (ta demande) */
+  --gap-long: clamp(24px, 3vw, 48px); /* entre subgoal et subs */
+  --gap-short: 8px;                   /* autour du séparateur */
+
+  /* Couleurs Subgoal */
+  --c-title: rgba(255,255,255,.70);
+  --c-current: rgba(255,255,255,.95);
+  --c-sep: rgba(255,255,255,.55);
+  --c-target: rgba(255,255,255,.70);
+
+  /* Couleurs Social */
+  --c-social: rgba(255,255,255,.80);
+  --c-icon: rgba(255,255,255,.95);
+
+  /* Couleurs Vibe */
+  --c-vibe-value: rgba(255,255,255,.95);
+  --c-ring-track: rgba(0,0,0,.35);
+  --c-ring-progress: rgba(255,255,255,.75);
+
+  /*Ombre portée légère*/
+  --text-shadow: 0 1px 2px rgba(0,0,0,.35);
+
+  /* ✅ Durées (plus lentes) */
+  --panel-op-ms: 320ms;
+  --panel-move-ms: 420ms;
+
+  /* délai d'entrée = durée de sortie (le max des 2) */
+  --panel-in-delay: 420ms;
+}
+
+
+/* Body zone */
+body{
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bgtest);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: var(--padding);
+  padding-top: 0;
+  overflow: hidden;
+}
+
+/* Conteneur principal (status bar) */
+.statusBar{
+  position: fixed;
+  bottom: var(--padding);
+
+  /* ancrage à droite */
+  right: var(--padding);
+  left: auto;
+  transform: none;
+
+  width: var(--bar-max-w);
+  height: var(--bar-h);
+
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+  filter: none;
+
+  display: block;
+}
+
+/* Ligne décorative (élément HTML) */
+.statusBarLine{
+  position: absolute;
+  right: var(--right-pad);
+
+  /* ancré au texte */
+  bottom: calc(var(--ui-font-size) + var(--line-gap));
+
+  width: var(--line-w);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), var(--c-line));
+  pointer-events: none;
+}
+
+/* Transition “de base” (quand data-mode change) */
+.panel{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+
+  opacity: 0;
+  transform: translateY(var(--fade-dy));
+  pointer-events: none;
+
+  /* SORTIE : pas de délai */
+  transition-property: opacity, transform;
+  transition-duration: var(--panel-op-ms), var(--panel-move-ms);
+  transition-timing-function: var(--ease-inout), var(--ease-inout);
+  transition-delay: 0ms, 0ms;
+}
+
+/* VISIBLE : ENTREE avec délai */
+.statusBar[data-mode="subgoal"] .panel--subgoal,
+.statusBar[data-mode="social"]  .panel--social,
+.statusBar[data-mode="vibe"]    .panel--vibe{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+
+  /* ENTREE : attend la sortie de l’autre */
+  transition-delay: var(--panel-in-delay), var(--panel-in-delay);
+}
+
+/* ========== SUBGOAL ========== */
+.subgoalRow{
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+
+  padding-right: var(--right-pad);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* GAP LONG entre titre et chiffres */
+.subgoalTitle{
+  color: var(--c-title);
+  font-weight: 300;
+  margin-right: var(--gap-long);
+}
+
+/* bloc chiffres = gère ses gaps internes */
+.subgoalNumbers{
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.subgoalCurrent{
+  color: var(--c-current);
+  font-weight: 600;
+}
+
+/* GAP COURT autour du séparateur */
+.subgoalSeparator{
+  color: var(--c-sep);
+  font-weight: 300;
+  margin-inline: var(--gap-short);
+  padding: 0; /* on évite de cumuler avec margin */
+}
+
+.subgoalTarget{
+  color: var(--c-target);
+  font-weight: 300;
+}
+
+/* ========== SOCIALS ========== */
+.socialRow{
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 16px;
+
+  padding-right: var(--right-pad);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.socialHandle{
+  color: var(--c-social);
+  font-style: italic;
+  font-weight: 300;
+
+  /* on garde la même taille de base */
+  font-size: 1em;
+
+  /* on scale le texte sans toucher à la taille de l'icône */
+  display: inline-block;
+  transform: scale(var(--soc-scale, 1));
+  transform-origin: right bottom;
+  white-space: nowrap;
+}
+
+.socialIcon{
+  /* carré strict = taille du texte */
+  width: 1em;
+  height: 1em;
+  flex: 0 0 1em;
+
+  display: inline-block;
+  background: var(--c-icon);
+
+  /* SVG en mask */
+  -webkit-mask-image: var(--soc-icon-mask);
+  mask-image: var(--soc-icon-mask);
+
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  -webkit-mask-position: center;
+  mask-position: center;
+
+  /* 🔑 CLÉ : jamais crop, jamais zoom */
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+
+/* ========== VIBEMETER ========== */
+.vibeRow{
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 14px;
+
+  padding-right: var(--right-pad);
+  font-family: var(--ui-font);
+  font-size: var(--ui-font-size);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.vibeValue{
+  color: var(--c-vibe-value);
+  font-weight: 700;
+}
+
+.vibeRing{
+  width: 1.15em;
+  height: 1.15em;
+  transform: rotate(-90deg);
+}
+
+.vibeRingTrack{
+  fill: none;
+  stroke: var(--c-ring-track);
+  stroke-width: 3.2;
+}
+
+.vibeRingProgress{
+  fill: none;
+  stroke: var(--c-ring-progress);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 999;
+  stroke-dashoffset: 0;
+  transition: stroke-dasharray .1s linear;
+}
+
+/* ========================================
+   LEGACY vibemeter (IDs conservés)
+   -> neutralisé pour éviter la superposition
+   ======================================== */
+#ratingBoxWrapper{
+  display: none !important;
+}
+
+/* ========================================
+   SOCIAL -> SOCIAL (swap sans flash subgoal)
+   ======================================== */
+
+:root{
+  /* durée du swap entre 2 réseaux */
+  --soc-swap-out-ms: 220ms;
+  --soc-swap-in-ms:  320ms;
+}
+
+.panel--social .socialRow{
+  will-change: opacity, transform;
+}
+
+@keyframes socialSwapOut{
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(var(--fade-dy)); }
+}
+
+@keyframes socialSwapIn{
+  from { opacity: 0; transform: translateY(var(--fade-dy)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.panel--social.is-swapping-out .socialRow{
+  animation: socialSwapOut var(--soc-swap-out-ms) var(--ease-inout) both;
+}
+
+.panel--social.is-swapping-in .socialRow{
+  animation: socialSwapIn var(--soc-swap-in-ms) var(--ease-inout) both;
+}
+
+/* ========================================
+   GESTION DES OMBRES
+   ======================================== */
+
+/* textes */
+.subgoalRow,
+.socialRow,
+.vibeRow{
+  text-shadow: var(--text-shadow);
+}
+
+/* icônes / ring */
+.socialIcon,
+.vibeRing{
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+}
+
+
+/* ========================================
+   ANIMATIONS DE CONNEXION
+   ======================================== */
+.statusConnected {
+  animation-name: statusConnected;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+.statusDisconnected {
+  animation-name: statusDisconnected;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes statusConnected {
+  0% { opacity: 1; background-color: #2FB774; }
+  100% { opacity: 0; background-color: #2FB774; }
+}
+
+@keyframes statusDisconnected {
+  0% { background-color: #D12025; }
+  100% { background-color: #D12025; }
+}
+
+#statusContainer {
+  font-weight: 500;
+  font-size: 30px;
+  text-align: center;
+  background-color: #D12025;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .panel{
+    transition: none;
+    transform: none;
+  }
+}
