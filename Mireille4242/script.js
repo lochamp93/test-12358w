@@ -20,20 +20,27 @@ const defaultDuration = GetIntParam("defaultDuration", 60);
 // Appearance
 const decimalPlaces = GetIntParam("decimalPlaces", 1);
 
+// === SubGoal — data (texte + target) ===
+const subGoalLabel  = GetStringParam("subGoalLabel", ""); // remplace "vidéo origami"
+const subgoalTarget = GetIntParam("subGoal", null);       // remplace "800" (objectif)
+
 // === SubGoal — apparence ===
-const sgFont       = GetStringParam("font", "");                 // ex: "Inter" ou "Metropolis"
-const sgFontSize   = GetIntParam("sgFontSize", null);            // taille en px (optionnel)
+const sgFont       = GetStringParam("font", "");
+const sgFontSize   = GetIntParam("sgFontSize", null);
+
 const subTitleColor     = GetStringParam("subTitleColor", "");
 const subCurrentColor   = GetStringParam("subCurrentColor", "");
 const subSeparatorColor = GetStringParam("subSeparatorColor", "");
 const subGoalColor      = GetStringParam("subGoalColor", "");
 const decorLineColor    = GetStringParam("decorLineColor", "");
 
+// Apply couleurs (inchangé)
 if (subTitleColor)     document.documentElement.style.setProperty('--c-title',  subTitleColor);
 if (subCurrentColor)   document.documentElement.style.setProperty('--c-current', subCurrentColor);
 if (subSeparatorColor) document.documentElement.style.setProperty('--c-sep',    subSeparatorColor);
 if (subGoalColor)      document.documentElement.style.setProperty('--c-target', subGoalColor);
 if (decorLineColor)    document.documentElement.style.setProperty('--c-line',   decorLineColor);
+
 
 
 
@@ -229,6 +236,8 @@ function setStatusMode(mode){
   }
 }
 
+applySubGoalLabelToDom(subGoalLabel);
+applySubGoalTargetToDom(subgoalTarget);
 
 
 /////////////////////////
@@ -292,23 +301,8 @@ async function initSubcountFromGlobal() {
   }
 }
 
-// met à jour le texte .sg_current + recalc formule (--value)
-function applySubcountToDom(val) {
-  const n = Math.max(0, parseInt(String(val), 10) || 0);
-  document.querySelectorAll('.sg_current').forEach(el => { el.textContent = String(n); });
-
-  // si ta fonction de formule est en place, on la réutilise
-  if (typeof applySubgoalFormula === 'function') {
-    applySubgoalFormula();
-  } else {
-    // mini-fallback local (sans toucher à tes anims)
-    const pill   = document.querySelector('.pill_main');
-    const sect   = pill?.querySelector('.pill_subgoal');
-    const target = parseFloat(pill?.querySelector('.sg_target')?.textContent?.trim() || '1') || 1;
-    const value  = Math.max(0, Math.min(1, 1 - (n / Math.max(1, target))));
-    sect?.style.setProperty('--value', String(value));
-  }
-}
+applySubGoalLabelToDom(subGoalLabel);
+applySubGoalTargetToDom(subgoalTarget);
 
 // écouter les updates des variables globales (quand tes actions Streamer.bot changent subcount)
 client.on('Misc.GlobalVariableUpdated', (evt) => {
@@ -935,17 +929,6 @@ try { applySubgoalFormula && applySubgoalFormula(); } catch {}
 // On pousse dans tes variables CSS existantes (ne casse pas les anims)
 const root = document.documentElement;
 
-// Dégradé (couleurs 1 & 2)
-if (sgGradIn)  setCSSVar(root, '--color1', sgGradIn);
-if (sgGradOut) setCSSVar(root, '--color2', sgGradOut);
-// Met à jour le fond gradient calculé
-if (sgGradIn || sgGradOut) {
-  setCSSVar(root, '--grad', `linear-gradient(90deg, var(--color1), var(--color2))`);
-}
-
-// Couleur “crème/blanc” (utilisée pour zone blanche + texte blanc)
-if (sgVoidColor) setCSSVar(root, '--color3', sgVoidColor);
-
 // Police (ta var --font est déjà utilisée par .sg_text)
 if (sgFont) setCSSVar(root, '--font', sgFont + ', system-ui, -apple-system, sans-serif');
 
@@ -1039,20 +1022,26 @@ function parseDecapiInt(text){
   return Number.isFinite(n) ? n : null;
 }
 
-// Écrit la valeur dans le DOM et recalcule --value via ta fonction
 function setSubcountInDom(n){
+  document.querySelectorAll('.subgoalCurrent').forEach(el => { el.textContent = String(n); });
   document.querySelectorAll('.sg_current').forEach(el => { el.textContent = String(n); });
+
   if (typeof applySubgoalFormula === 'function') {
     applySubgoalFormula();
-  } else {
-    // mini-fallback si la fonction n'est pas définie : calcule vite fait 1 - n/target
-    const pill   = document.querySelector('.pill_main');
-    const sect   = pill?.querySelector('.pill_subgoal');
-    const goalEl = pill?.querySelector('.sg_target');
-    const target = Math.max(1, parseFloat(goalEl?.textContent?.trim() || "1") || 1);
-    const value  = Math.max(0, Math.min(1, 1 - (n / target)));
-    sect?.style.setProperty('--value', String(value));
+    return;
   }
+
+  const pill   = document.querySelector('.pill_main');
+  const sect   = pill?.querySelector('.pill_subgoal');
+
+  const targetTxt =
+    document.querySelector('.subgoalTarget')?.textContent?.trim() ||
+    pill?.querySelector('.sg_target')?.textContent?.trim() ||
+    '1';
+
+  const target = Math.max(1, parseFloat(targetTxt) || 1);
+  const value  = Math.max(0, Math.min(1, 1 - (n / target)));
+  sect?.style.setProperty('--value', String(value));
 }
 
 async function fetchDecapiSubcountOnce(username, timeoutMs = 4500){
