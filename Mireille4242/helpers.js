@@ -73,3 +73,26 @@ function afterTransition(el, prop, ms, cb) {
 
   
 }
+
+function applySubGoalLabelToDom(labelText) {
+  const t = String(labelText || "").trim();
+  if (!t) return;
+
+  // Nouveau minimal bar
+  document.querySelectorAll('.subgoalTitle').forEach(el => { el.textContent = t; });
+
+  // Ancienne pilule (si encore présente)
+  document.querySelectorAll('.sg_descr, .sg_label, .sg-prefix, #goalLabel')
+    .forEach(el => { el.textContent = t; });
+}
+
+function applySubGoalTargetToDom(target) {
+  if (target == null) return;
+  const n = Math.max(1, parseInt(String(target), 10) || 1);
+
+  // Nouveau minimal bar
+  document.querySelectorAll('.subgoalTarget').forEach(el => { el.textContent = String(n); });
+
+  // Ancienne pilule (si encore présente)
+  document.querySelectorAll('.sg_target').forEach(el => { el.textContent = String(n); });
+}
