@@ -25,6 +25,14 @@
 			"group": "Sub Goal"
 		},
 		{
+			"id": "subGoalLabel",
+			"label": "Texte Sub Goal (titre)",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Sub Goal"
+		}
+		{
 			"id": "subGoal",
 			"label": "Objectif d'abonnements",
 			"description": "",
