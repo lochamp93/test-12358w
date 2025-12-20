@@ -40,7 +40,10 @@ if (subCurrentColor)   document.documentElement.style.setProperty('--c-current',
 if (subSeparatorColor) document.documentElement.style.setProperty('--c-sep',    subSeparatorColor);
 if (subGoalColor)      document.documentElement.style.setProperty('--c-target', subGoalColor);
 if (decorLineColor)    document.documentElement.style.setProperty('--c-line',   decorLineColor);
-
+// Apply police (NOUVEAU)
+if (sgFont && sgFont.trim() !== '') {
+  document.documentElement.style.setProperty('--ui-font', sgFont + ', system-ui, -apple-system, sans-serif');
+}
 
 
 
@@ -297,6 +300,103 @@ async function initSubcountFromGlobal() {
     console.debug('[subcount] no initial global yet?', err);
   }
 }
+
+// === FONCTIONS POUR METTRE À JOUR LE SUBGOAL ===
+function applySubGoalLabelToDom(label) {
+  if (!label || label.trim() === '') return;
+  document.querySelectorAll('.subgoalTitle').forEach(el => {
+    el.textContent = label;
+  });
+}
+
+function applySubGoalTargetToDom(target) {
+  if (target === null || target === undefined) return;
+  document.querySelectorAll('.subgoalTarget').forEach(el => {
+    el.textContent = String(target);
+  });
+}
+
+function applySubcountToDom(count) {
+  console.log('🔄 Mise à jour subgoalCurrent:', count); // Debug
+  
+  const elements = document.querySelectorAll('.subgoalCurrent');
+  console.log('📊 Éléments trouvés:', elements.length); // Debug
+  
+  elements.forEach(el => {
+    el.textContent = String(count);
+    console.log('✅ Valeur mise à jour:', el.textContent); // Debug
+  });
+}
+
+// Initialiser le titre et la cible au chargement
+applySubGoalLabelToDom(subGoalLabel);
+applySubGoalTargetToDom(subgoalTarget);
+
+// ==== DecAPI Subcount module ====
+function decapiSubcountUrl(channel){
+  return `https://decapi.me/twitch/subcount/${encodeURIComponent(channel)}`;
+}
+
+// Nettoie une réponse texte DecAPI en entier
+function parseDecapiInt(text){
+  const m = String(text).replace(/[^\d]/g, "");
+  const n = parseInt(m, 10);
+  return Number.isFinite(n) ? n : null;
+}
+
+async function fetchDecapiSubcountOnce(username, timeoutMs = 4500){
+  if (!username) return null;
+
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const resp = await fetch(decapiSubcountUrl(username), {
+      method: 'GET',
+      cache: 'no-store',
+      signal: ctrl.signal
+    });
+    if (!resp.ok) return null;
+    const txt = await resp.text();
+    const n = parseDecapiInt(txt);
+    console.log('📥 DecAPI reçu:', txt, '→ parsé:', n); // Debug
+    return n;
+  } catch(e){
+    console.debug('[DecAPI] fetch failed (CORS/timeout?)', e);
+    return null;
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+let _decapiTimer = null;
+async function startDecapiPolling(){
+  if (!decapiEnabled || !decapiUsername) {
+    console.warn('⚠️ DecAPI désactivé ou pas de username');
+    return;
+  }
+
+  console.log('🚀 Démarrage DecAPI polling pour:', decapiUsername);
+
+  // 1re lecture immédiate
+  const first = await fetchDecapiSubcountOnce(decapiUsername);
+  if (first != null) {
+    console.log('✅ Premier fetch DecAPI réussi:', first);
+    applySubcountToDom(first);
+  } else {
+    console.warn('❌ Premier fetch DecAPI échoué');
+  }
+
+  // Poll toutes les 60s
+  const every = Math.max(15, decapiEverySecs) * 1000;
+  clearInterval(_decapiTimer);
+  _decapiTimer = setInterval(async () => {
+    const n = await fetchDecapiSubcountOnce(decapiUsername);
+    if (n != null) applySubcountToDom(n);
+  }, every);
+}
+
+// Lancement auto
+startDecapiPolling();
 
 // écouter les updates des variables globales (quand tes actions Streamer.bot changent subcount)
 client.on('Misc.GlobalVariableUpdated', (evt) => {
@@ -988,19 +1088,6 @@ async function setIconifyIcon(name){
 
 
 
-// ==== DecAPI Subcount module (ADD-ONLY) ====
-// NB: n'altère aucune anim. Met juste à jour .sg_current puis relance la formule.
-function decapiSubcountUrl(channel){
-  return `https://decapi.me/twitch/subcount/${encodeURIComponent(channel)}`;
-}
-
-// Nettoie une réponse texte DecAPI en entier
-function parseDecapiInt(text){
-  // Certains endpoints renvoient du texte type "1234" ou "Subs: 1,234"
-  const m = String(text).replace(/[^\d]/g, "");
-  const n = parseInt(m, 10);
-  return Number.isFinite(n) ? n : null;
-}
 
 function setSubcountInDom(n){
   document.querySelectorAll('.sg_current').forEach(el => { el.textContent = String(n); });
