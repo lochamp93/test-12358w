@@ -31,7 +31,7 @@
 			"type": "text",
 			"defaultValue": "",
 			"group": "Sub Goal"
-		}
+		},
 		{
 			"id": "subGoal",
 			"label": "Objectif d'abonnements",
