@@ -50,14 +50,6 @@
 			"group": "Sub Goal"
 		},
 		{
-			"id": "fontbgColor",
-			"label": "Couleur de la police / du vide de la barre",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#000000",
-			"group": "Sub Goal"
-		},
-		{
 			"id": "subTitleColor",
 			"label": "Couleur — Subgoal (titre)",
 			"description": "",
