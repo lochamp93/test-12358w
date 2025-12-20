@@ -236,9 +236,6 @@ function setStatusMode(mode){
   }
 }
 
-applySubGoalLabelToDom(subGoalLabel);
-applySubGoalTargetToDom(subgoalTarget);
-
 
 /////////////////////////
 // STREAMER.BOT CLIENT //
@@ -300,9 +297,6 @@ async function initSubcountFromGlobal() {
     console.debug('[subcount] no initial global yet?', err);
   }
 }
-
-applySubGoalLabelToDom(subGoalLabel);
-applySubGoalTargetToDom(subgoalTarget);
 
 // écouter les updates des variables globales (quand tes actions Streamer.bot changent subcount)
 client.on('Misc.GlobalVariableUpdated', (evt) => {
@@ -900,25 +894,11 @@ if (subgoalTarget !== null) {
   pill.querySelectorAll('.sg_target').forEach(el => { el.textContent = String(subgoalTarget); });
 }
 
-// === APPLY SETTINGS: label "SUB" -> goalLabel ===
-if (goalLabel !== null) {
-  // tes deux couches de texte ont .sg_descr
-  pill.querySelectorAll('.sg_descr').forEach(el => { el.textContent = goalLabel; });
+// === APPLY SETTINGS: texte Sub Goal (titre) ===
+if (subGoalLabel) {
+  pill.querySelectorAll('.sg_descr').forEach(el => { el.textContent = subGoalLabel; });
 }
 
-
-// === APPLY SETTINGS: label "SUB" → goalLabel ===
-// Essaie plusieurs sélecteurs possibles (adapte si ton HTML est différent)
-if (goalLabel !== null) {
-  const nodes = pill.querySelectorAll('.sg_label, .sg-prefix, #goalLabel');
-  if (nodes.length) {
-    nodes.forEach(n => { n.textContent = goalLabel; });
-  } else {
-    // fallback si ton label est injecté via un data-attr dans le CSS
-    const subgoalSection = pill.querySelector('.pill_subgoal');
-    if (subgoalSection) subgoalSection.setAttribute('data-label', goalLabel);
-  }
-}
 
 // recalcul immédiat de la barre si tu veux le faire maintenant
 // (si tu préfères, tu peux ne PAS ajouter cette ligne : la formule est déjà appelée plus bas)
@@ -1023,26 +1003,10 @@ function parseDecapiInt(text){
 }
 
 function setSubcountInDom(n){
-  document.querySelectorAll('.subgoalCurrent').forEach(el => { el.textContent = String(n); });
   document.querySelectorAll('.sg_current').forEach(el => { el.textContent = String(n); });
-
-  if (typeof applySubgoalFormula === 'function') {
-    applySubgoalFormula();
-    return;
-  }
-
-  const pill   = document.querySelector('.pill_main');
-  const sect   = pill?.querySelector('.pill_subgoal');
-
-  const targetTxt =
-    document.querySelector('.subgoalTarget')?.textContent?.trim() ||
-    pill?.querySelector('.sg_target')?.textContent?.trim() ||
-    '1';
-
-  const target = Math.max(1, parseFloat(targetTxt) || 1);
-  const value  = Math.max(0, Math.min(1, 1 - (n / target)));
-  sect?.style.setProperty('--value', String(value));
+  applySubgoalFormula();
 }
+
 
 async function fetchDecapiSubcountOnce(username, timeoutMs = 4500){
   if (!username) return null;
@@ -1097,12 +1061,6 @@ pill.querySelectorAll('.sg_current, .sg_target').forEach(node => {
 // Run au chargement
 applySubgoalFormula();
 
-// Appliquer l'icône au chargement (si activée)
-if (enableIcon && selectedIcon) {
-  setIconifyIcon(selectedIcon);
-} else {
-  pill.querySelectorAll('.sg_icon').forEach(el => { el.style.display = 'none'; el.innerHTML = ''; });
-}
 
 // === END SUBGOAL FORMULA ===
 
