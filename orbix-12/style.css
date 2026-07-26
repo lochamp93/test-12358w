@@ -112,6 +112,11 @@ li {
 	gap: .5em; /*espace entre PP et le reste*/
 }
 
+.message-contents > div:not(#avatar) {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
 } */
