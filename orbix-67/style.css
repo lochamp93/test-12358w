@@ -1,7 +1,7 @@
 * {
 	margin: 0;
 	padding: 0;
-	--margin: 20px;
+	--margin: 1em;
 	--border-radius: 0.5em;
 }
 
@@ -44,7 +44,7 @@ html {
 
 #messageList {
 	position: absolute;
-	left: 0;
+	left: 0em;
 	width: 100%;
 }
 
@@ -62,7 +62,7 @@ li {
 	list-style: none;
 	/* overflow: hidden; */
 	max-height: 0;
-	margin: 10px 0px 0px 0px;
+	margin: 0.5em 0px 0px 0px; /* espace entre les messages*/
 	transition: all 1s ease-in-out;
 }
 
@@ -109,16 +109,21 @@ li {
 .message-contents {
 	display: flex;
 	flex-direction: row;
-	gap: 0.5em;
+	gap: .5em; /*espace entre PP et le reste*/
 }
 
-.add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
+.message-contents > div:not(#avatar) {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
-}
+} */
 
-#avatar {
+/* #avatar {
 	width: 2em;
-}
+} */
 
 #avatar:empty {
 	display: none;
@@ -127,8 +132,8 @@ li {
 .avatar {
     width: 2em;                /* Set width equal to height */
     height: 2em;
-    margin: 1px;
-    transform: translate(0px, 0.25em);
+    margin: 0;
+    transform: translate(10em, -1,8em);
     border-radius: 50%;
     object-fit: cover;         /* Crop to fill the circle */
     overflow: hidden;          /* Ensure no overflow outside the circle */
@@ -138,25 +143,46 @@ li {
 .timestamp,
 .pronouns {
 	background: #adadad46;
-	/* border-radius: var(--border-radius); */
 	border-radius: 1em;
 	font-size: 0.7em;
-	/* padding: 5px 15px; */
-	padding: 0.15em 0.5em;
+	padding: 0.2em 0.65em;
+	display: inline-block;    /* <-- rend les marges verticales actives */
+	margin-bottom: 0.35em;    /* <-- le “jeu” que tu veux sous la gélule */
+	vertical-align: bottom;   /* <-- la maintient alignée en bas du reste */
 }
+
+/* .timestamp,
+.pronouns {
+	background: #adadad46;
+	border-radius: 1em;
+	font-size: 0.7em;
+	padding: 0.2em 0.65em;
+	margin-bottom: 0.3em;
+} */
 
 .bits {
 	background: #adadad46;
 	border-radius: calc(var(--border-radius) / 2);
 	font-size: 0.7em;
-	padding: 5px 10px;
+	padding: 0.2em 0.65em;
 }
 
-.platform,
+.platform {
+  height: 1.2em;
+	margin: 0, 0, 0, 0;
+  /* transform: translate(0, 0,25em); */
+  }
+
+#badgeList {
+	display: inline-flex;
+	align-items: center;
+	column-gap: 0.2em; /* espace horizontal entre badges */
+}
+
 .badge {
 	height: 1em;
-	margin: 1px;
-	transform: translate(0px, 0.25em);
+	width: auto;
+	flex-shrink: 0; /* évite qu’ils se compressent si la ligne est pleine */
 }
 
 .emote {
@@ -184,7 +210,7 @@ li {
 } */
 
 #badgeList {
-	margin: 0px 5px;
+	margin: 10em,2em;
 }
 
 #username,
@@ -212,10 +238,12 @@ li {
 }
 
 #card {
-	background: #adadad46;
+	position:relative;
+  background: transparent;
 	padding: 0.5em 1em;
 	border-radius: var(--border-radius);
 }
+
 
 .youtube-super-sticker {
 	height: 2em;
@@ -287,20 +315,31 @@ li {
 /** CARD COLORS **/
 /*****************/
 
-.announcementBlue {
-	background: linear-gradient(#03d3d7, #8d49fe) !important;
+/* ► Annonces : liseré dégradé à gauche (coins arrondis par défaut)
+   Pour une version “droite” : commente les 2 border-radius du ::before */
+#card.announcementBlue::before,
+#card.announcementGreen::before,
+#card.announcementOrange::before,
+#card.announcementPurple::before,
+#card.announcementDefault::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.4em;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
 }
 
-.announcementGreen {
-	background: linear-gradient(#01da86, #55bee4) !important;
-}
+/* Couleurs fixes */
+#card.announcementBlue::before   { background: linear-gradient(#03d3d7, #8d49fe); }
+#card.announcementGreen::before  { background: linear-gradient(#10da86, #55bee4); }
+#card.announcementOrange::before { background: linear-gradient(#feb419, #e1df00); }
+#card.announcementPurple::before { background: linear-gradient(#9548ff, #fc74e6); }
 
-.announcementOrange {
-	background: linear-gradient(#feb419, #e1df00) !important;
-}
-
-.announcementPurple {
-	background: linear-gradient(#9548ff, #fc74e6) !important;
+/* Couleur dynamique (= couleur du pseudo) */
+#card.announcementDefault::before { 
+  /* simple aplat */
+  background: var(--userColor, #888888);
 }
 
 .twitch {
