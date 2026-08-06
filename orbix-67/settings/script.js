@@ -1,7 +1,7 @@
+// /orbix-12/settings/script.js  (LOADER)
 const widgetContainer = document.getElementById('widgetContainer');
-
-const settingsPageURL = '../../.common/core/settings-core';
-
+// Chemin vers le core réutilisable (note le _common)
+const settingsPageURL = '../../-common/core/settings-core';
 const currentURL = window.location.href;
 
 let settingsJSON;
@@ -9,7 +9,7 @@ let baseURL = currentURL;
 
 if (baseURL.endsWith("index.html"))
     baseURL = baseURL.replace("index.html", "");
-
+// Construit les paramètres que le core attend
 settingsJSON = "?settingsJson=" + baseURL + "settings.json";
 
 const lastSlashIndex = baseURL.lastIndexOf("/");
