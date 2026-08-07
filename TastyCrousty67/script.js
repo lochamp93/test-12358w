@@ -493,13 +493,13 @@ client.options.onConnect = (info) => {
 function TwitchChatMessage(data) {
 	const platform = `twitch`;
 	const userID = data.user.id;
-	const message = data.message.message;
+	const message = data.text;
 
 	CheckInput(platform, userID, message, data);
 }
 
 function YouTubeMessage(data) {
-	const platform = `twitch`;
+	const platform = `youtube`;
 	const userID = data.user.id;
 	const message = data.message;
 
@@ -539,199 +539,6 @@ function CheckInput(platform, userID, message, data) {
   try { CalculateAverage(); } catch (error) { console.error(error); }
 }
 
-/////////////////////////////
-// MINIMAL BAR (NEW WIDGET) //
-/////////////////////////////
-
-function getStatusBar(){
-  return document.querySelector('.statusBar');
-}
-
-function setBarMode(mode){
-  const bar = getStatusBar();
-  if (!bar) return;
-  bar.setAttribute('data-mode', mode); // "subgoal" | "vibe" | "social"
-}
-
-// === RING (nouvelle classe: .vibeRingProgress) ===
-function initVibeRing(){
-  const circle = document.querySelector('.vibeRingProgress');
-  if (!circle) return null;
-
-  const r = parseFloat(circle.getAttribute('r')) || 15.5;
-  const C = 2 * Math.PI * r;
-
-  circle.style.strokeDasharray = `0 ${C}`;
-  circle.dataset.circumference = String(C);
-  return circle;
-}
-
-function setVibeRingProgress(el, t){
-  if (!el) return;
-
-  const C = parseFloat(el.dataset.circumference || "0") || 0;
-  const frac = Math.max(0, Math.min(1, t));
-  const filled = frac * C;
-
-  el.style.strokeDasharray = `${filled} ${Math.max(0, C - filled)}`;
-}
-
-// === VALUE (nouvelle classe: .vibeValue) ===
-function UpdateRatingBox(newValue, duration = 200){
-  const valueEl = document.querySelector('.vibeValue');
-  if (!valueEl) return;
-
-  const start = parseFloat(valueEl.textContent) || minRating;
-  const startTime = performance.now();
-
-  function update(now){
-    const elapsed = now - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const value = start + (newValue - start) * progress;
-
-    valueEl.textContent = Number.isInteger(value) ? value.toString() : value.toFixed(decimalPlaces);
-
-    const clampedValue = Math.min(Math.max(value, minRating), maxRating);
-    const range = maxRating - minRating;
-    const percent = range === 0 ? 1 : (clampedValue - minRating) / range;
-    const red = Math.round(255 * (1 - percent));
-    const green = Math.round(255 * percent);
-    const color = `rgba(${red}, ${green}, 0, 1)`;
-    document.documentElement.style.setProperty('--vibeColor', color);
-
-    if (progress < 1) requestAnimationFrame(update);
-  }
-
-  requestAnimationFrame(update);
-}
-
-function ShowWidget(){ setBarMode('vibe'); }
-function HideWidget(){ setBarMode('subgoal'); }
-
-
-function _startVibeCore(duration) {
-  // afficher panel vibe
-  ShowWidget();
-
-  if (isAcceptingSubmissions || isInFinalAnimation) return;
-  VBM._running = true;
-  isAcceptingSubmissions = true;
-
-  // reset value
-  const valueEl = document.querySelector('.vibeValue');
-  if (valueEl) {
-    const startTxt = Number.isInteger(minRating) ? String(minRating) : minRating.toFixed(decimalPlaces);
-    valueEl.textContent = startTxt;
-  }
-
-  // reset ring
-  const ring = initVibeRing();
-  setVibeRingProgress(ring, 0);
-
-  // Messages
-  client.sendMessage('twitch', `/me VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
-  client.sendMessage('youtube', `VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
-
-  // Reset des notes
-  ratingsMap.clear();
-
-  const dur = (typeof duration === 'number' ? duration : defaultDuration);
-
-  // animation du ring
-  const t0 = performance.now();
-  (function tick(now){
-    if (!VBM._running) return;
-    const elapsed = (now - t0) / 1000;
-    const frac = dur > 0 ? Math.min(elapsed / dur, 1) : 1;
-    setVibeRingProgress(ring, frac);
-    if (frac < 1) requestAnimationFrame(tick);
-  })(t0);
-
-  // arrêt auto
-  if (dur > 0) {
-    setTimeout(() => { EndVibeMeter(); }, dur * 1000);
-  }
-}
-
-function _endVibeCore(silent = false) {
-if (!isAcceptingSubmissions) {
-  if (!silent) {
-    client.sendMessage('twitch', `/me Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
-    client.sendMessage('youtube', `Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
-  }
-
-  // ✅ revient visuellement au subgoal
-  setStatusMode('subgoal');
-
-  // tu peux laisser HideWidget si tu veux, mais dans ton CSS il est display:none
-  // HideWidget();
-
-  document.dispatchEvent(new CustomEvent('vbm:hidden'));
-  VBM._running = false;
-  return;
-}
-
-  isInFinalAnimation = true;
-  isAcceptingSubmissions = false;
-
-  const finalRating = CalculateAverage();
-
-  client.sendMessage('twitch', `/me VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
-  client.sendMessage('youtube', `VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
-
-  isInFinalAnimation = false;
-  VBM._running = false;
-
-  // ✅ on laisse le résultat visible 3 secondes
-  setTimeout(() => {
-    // reset ring APRES l'affichage du verdict
-    const ring = document.querySelector('.vibeRingProgress');
-    if (ring) {
-      const C = parseFloat(ring.dataset.circumference || "0") || 0;
-      if (C > 0) ring.style.strokeDasharray = `0 ${C}`;
-    }
-
-    HideWidget();
-    document.dispatchEvent(new CustomEvent('vbm:hidden'));
-  }, 5000);
-}
-
-
-
-function StartVibeMeter(duration){
-  // ✅ coupe net socials (queue + anim en cours)
-  cancelSocialsQueue({ clearQueue: true });
-
-  window.VBM = window.VBM || {};
-  window.VBM._pendingDuration = Number.isInteger(duration) ? duration : undefined;
-
-  // ✅ passe en mode VIBE (affichage)
-  setStatusMode('vibe');
-
-  // démarre le core
-  const d = window.VBM?._pendingDuration;
-  if (window.VBM) window.VBM._pendingDuration = undefined;
-  _startVibeCore(d);
-}
-
-
-
-function EndVibeMeter(silent=false){
-  // on garde ta logique d’origine pour arrêter le widget
-  _endVibeCore(silent);
-}
-
-// Exposition publique (si ailleurs on appelle VBM.StartVibeMeter/EndVibeMeter)
-window.VBM = window.VBM || {};
-VBM.StartVibeMeter = (dur) => StartVibeMeter(dur);
-VBM.EndVibeMeter   = (silent=false) => EndVibeMeter(silent);
-
-
-// expose proprement
-VBM.StartVibeMeter = (dur) => StartVibeMeter(dur);
-VBM.EndVibeMeter   = (silent=false) => EndVibeMeter(silent);
-
-
 //////////////////////
 // HELPER FUNCTIONS //
 //////////////////////
@@ -762,13 +569,13 @@ function IsThisUserAllowedToTypeCommandsReturnTrueIfTheyCanReturnFalseIfTheyCann
 function GetPermissionLevel(data, platform) {
 	switch (platform) {
 		case 'twitch':
-			if (data.message.role >= 4)
+			if (data.user.role >= 4)
 				return 40;
-			else if (data.message.role >= 3)
+			else if (data.user.role >= 3)
 				return 30;
-			else if (data.message.role >= 2)
+			else if (data.user.role >= 2)
 				return 20;
-			else if (data.message.role >= 2 || data.message.subscriber)
+			else if (data.user.role >= 2 || data.user.subscribed)
 				return 15;
 			else
 				return 10;
