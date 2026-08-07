@@ -33,13 +33,21 @@ const subCurrentColor   = GetStringParam("subCurrentColor", "");
 const subSeparatorColor = GetStringParam("subSeparatorColor", "");
 const subGoalColor      = GetStringParam("subGoalColor", "");
 const decorLineColor    = GetStringParam("decorLineColor", "");
+const decorLineOpacity  = GetStringParam("decorLineOpacity", "1");
 
 // Apply couleurs (inchangé)
 if (subTitleColor)     document.documentElement.style.setProperty('--c-title',  subTitleColor);
 if (subCurrentColor)   document.documentElement.style.setProperty('--c-current', subCurrentColor);
 if (subSeparatorColor) document.documentElement.style.setProperty('--c-sep',    subSeparatorColor);
 if (subGoalColor)      document.documentElement.style.setProperty('--c-target', subGoalColor);
-if (decorLineColor)    document.documentElement.style.setProperty('--c-line',   decorLineColor);
+if (decorLineColor) {
+	// L'input color natif ne gère pas l'opacité : on combine avec decorLineOpacity (0-1)
+	// en 8e/9e caractères hexa (RRGGBBAA), même technique que bubbleColor/bubbleOpacity.
+	const decorAlpha255 = Math.round(parseFloat(decorLineOpacity) * 255);
+	let decorHexOpacity = decorAlpha255.toString(16);
+	if (decorHexOpacity.length < 2) decorHexOpacity = "0" + decorHexOpacity;
+	document.documentElement.style.setProperty('--c-line', `${decorLineColor}${decorHexOpacity}`);
+}
 // Apply police (NOUVEAU)
 if (sgFont && sgFont.trim() !== '') {
   document.documentElement.style.setProperty('--ui-font', sgFont + ', system-ui, -apple-system, sans-serif');
@@ -538,6 +546,121 @@ function CheckInput(platform, userID, message, data) {
   console.log(`${userID}: ${rating}`);
   try { CalculateAverage(); } catch (error) { console.error(error); }
 }
+
+/////////////////////////////
+// MINIMAL BAR (NEW WIDGET) //
+/////////////////////////////
+
+function _startVibeCore(duration) {
+  // afficher panel vibe
+  ShowWidget();
+
+  if (isAcceptingSubmissions || isInFinalAnimation) return;
+  VBM._running = true;
+  isAcceptingSubmissions = true;
+
+  // reset value
+  const valueEl = document.querySelector('.vibeValue');
+  if (valueEl) {
+    const startTxt = Number.isInteger(minRating) ? String(minRating) : minRating.toFixed(decimalPlaces);
+    valueEl.textContent = startTxt;
+  }
+
+  // reset ring
+  const ring = initVibeRing();
+  setVibeRingProgress(ring, 0);
+
+  // Messages
+  client.sendMessage('twitch', `/me VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
+  client.sendMessage('youtube', `VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
+
+  // Reset des notes
+  ratingsMap.clear();
+
+  const dur = (typeof duration === 'number' ? duration : defaultDuration);
+
+  // animation du ring
+  const t0 = performance.now();
+  (function tick(now){
+    if (!VBM._running) return;
+    const elapsed = (now - t0) / 1000;
+    const frac = dur > 0 ? Math.min(elapsed / dur, 1) : 1;
+    setVibeRingProgress(ring, frac);
+    if (frac < 1) requestAnimationFrame(tick);
+  })(t0);
+
+  // arrêt auto
+  if (dur > 0) {
+    setTimeout(() => { EndVibeMeter(); }, dur * 1000);
+  }
+}
+
+function _endVibeCore(silent = false) {
+if (!isAcceptingSubmissions) {
+  if (!silent) {
+    client.sendMessage('twitch', `/me Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
+    client.sendMessage('youtube', `Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
+  }
+
+  // ✅ revient visuellement au subgoal
+  setStatusMode('subgoal');
+
+  document.dispatchEvent(new CustomEvent('vbm:hidden'));
+  VBM._running = false;
+  return;
+}
+
+  isInFinalAnimation = true;
+  isAcceptingSubmissions = false;
+
+  const finalRating = CalculateAverage();
+
+  client.sendMessage('twitch', `/me VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
+  client.sendMessage('youtube', `VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
+
+  isInFinalAnimation = false;
+  VBM._running = false;
+
+  // ✅ on laisse le résultat visible
+  setTimeout(() => {
+    // reset ring APRES l'affichage du verdict
+    const ring = document.querySelector('.vibeRingProgress');
+    if (ring) {
+      const C = parseFloat(ring.dataset.circumference || "0") || 0;
+      if (C > 0) ring.style.strokeDasharray = `0 ${C}`;
+    }
+
+    HideWidget();
+    document.dispatchEvent(new CustomEvent('vbm:hidden'));
+  }, 5000);
+}
+
+function StartVibeMeter(duration){
+  // ✅ coupe net socials (queue + anim en cours)
+  cancelSocialsQueue({ clearQueue: true });
+
+  window.VBM = window.VBM || {};
+  window.VBM._pendingDuration = Number.isInteger(duration) ? duration : undefined;
+
+  // ✅ passe en mode VIBE (affichage)
+  setStatusMode('vibe');
+
+  // démarre le core
+  const d = window.VBM?._pendingDuration;
+  if (window.VBM) window.VBM._pendingDuration = undefined;
+  _startVibeCore(d);
+}
+
+function EndVibeMeter(silent=false){
+  // on garde ta logique d’origine pour arrêter le widget
+  _endVibeCore(silent);
+}
+
+// Exposition publique (si ailleurs on appelle VBM.StartVibeMeter/EndVibeMeter)
+window.VBM = window.VBM || {};
+VBM.StartVibeMeter = (dur) => StartVibeMeter(dur);
+VBM.EndVibeMeter   = (silent=false) => EndVibeMeter(silent);
+
 
 //////////////////////
 // HELPER FUNCTIONS //
