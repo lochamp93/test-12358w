@@ -142,7 +142,6 @@ const client = new StreamerbotClient({
 		console.log(`Streamer.bot successfully connected to ${sbServerAddress}:${sbServerPort}`)
 		console.debug(data);
 		SetConnectionStatus(true);
-		KickConnect();
 	},
 
 	onDisconnect: () => {
@@ -506,11 +505,11 @@ async function TwitchChatMessage(data) {
 		return;
 
 	// Don't post messages starting with "!"
-	if (data.text.startsWith("!") && excludeCommands)
+	if (data.message.message.startsWith("!") && excludeCommands)
 		return;
 
 	// Don't post messages from users from the ignore list
-	if (ignoreUserList.includes(data.user.login.toLowerCase()))
+	if (ignoreUserList.includes(data.message.username.toLowerCase()))
 		return;
 
 	// Get a reference to the template
@@ -548,7 +547,7 @@ async function TwitchChatMessage(data) {
 	}
 
 	// Set First Time Chatter
-	const firstMessage = data.meta.firstMessage;
+	const firstMessage = data.message.firstMessage;
 	if (firstMessage && showMessage) {
 		firstMessageDiv.style.display = 'block';
 		messageContainerDiv.classList.add("highlightMessage");
@@ -577,10 +576,10 @@ async function TwitchChatMessage(data) {
 	}
 
 	// Set Reply Message
-	const isReply = data.isReply;
+	const isReply = data.message.isReply;
 	if (isReply && showMessage) {
-		const replyUser = data.reply.userName;
-		const replyMsg = data.reply.msgBody;
+		const replyUser = data.message.reply.userName;
+		const replyMsg = data.message.reply.msgBody;
 
 		replyDiv.style.display = 'block';
 		replyUserDiv.innerText = replyUser;
@@ -595,24 +594,24 @@ async function TwitchChatMessage(data) {
 
 	// Set the username info
 	if (showUsername) {
-		if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
-			usernameDiv.innerText = data.user.name;
+		if (data.message.displayName.toLowerCase() == data.message.username.toLowerCase())
+			usernameDiv.innerText = data.message.displayName;
 		else
-			usernameDiv.innerText = `${data.user.name} (${data.user.login})`;
-		usernameDiv.style.color = data.user.color;
+			usernameDiv.innerText = `${data.message.displayName} (${data.message.username})`;
+		usernameDiv.style.color = data.message.color;
 	}
 
 	// Set pronouns
-	const pronouns = await GetPronouns('twitch', data.user.login);
+	const pronouns = await GetPronouns('twitch', data.message.username);
 	if (pronouns && showPronouns) {
 		pronounsDiv.classList.add("pronouns");
 		pronounsDiv.innerText = pronouns;
 	}
 
 	// Set the message data
-	let message = ConstructMessageFromParts(data.parts);
-	const messageColor = data.user.color;
-	const role = data.user.role;
+	let message = data.message.message;
+	const messageColor = data.message.color;
+	const role = data.message.role;
 
 	// Set furry mode
 	if (furryMode)
@@ -620,11 +619,11 @@ async function TwitchChatMessage(data) {
 
 	// Set message text
 	if (showMessage) {
-		messageDiv.innerHTML = message;
+		messageDiv.innerText = message;
 	}
 
 	// Set the "action" color
-	if (data.meta.isMe)
+	if (data.message.isMe)
 		messageDiv.style.color = messageColor;
 
 	// Remove the line break
@@ -643,17 +642,47 @@ async function TwitchChatMessage(data) {
 	// Render badges
 	if (showBadges) {
 		badgeListDiv.innerHTML = "";
-		for (i in data.user.badges) {
+		for (i in data.message.badges) {
 			const badge = new Image();
-			badge.src = data.user.badges[i].imageUrl;
+			badge.src = data.message.badges[i].imageUrl;
 			badge.classList.add("badge");
 			badgeListDiv.appendChild(badge);
 		}
 	}
 
+	// Render emotes
+	for (i in data.emotes) {
+		const emoteElement = `<img src="${data.emotes[i].imageUrl}" class="emote"/>`;
+		const emoteName = EscapeRegExp(data.emotes[i].name);
+
+		let regexPattern = emoteName;
+
+		// Check if the emote name consists only of word characters (alphanumeric and underscore)
+		if (/^\w+$/.test(emoteName)) {
+			regexPattern = `\\b${emoteName}\\b`;
+		}
+		else {
+			// For non-word emotes, ensure they are surrounded by non-word characters or boundaries
+			regexPattern = `(?<=^|[^\\w])${emoteName}(?=$|[^\\w])`;
+		}
+
+		const regex = new RegExp(regexPattern, 'g');
+		messageDiv.innerHTML = messageDiv.innerHTML.replace(regex, emoteElement);
+	}
+
+	// Render cheermotes
+	for (i in data.cheerEmotes) {
+		const bits = data.cheerEmotes[i].bits;
+		const imageUrl = data.cheerEmotes[i].imageUrl;
+		const name = data.cheerEmotes[i].name;
+		const cheerEmoteElement = `<img src="${imageUrl}" class="emote"/>`;
+		const bitsElements = `<span class="bits">${bits}</span>`
+		messageDiv.innerHTML = messageDiv.innerHTML.replace(new RegExp(`\\b${name}${bits}\\b`, 'i'), cheerEmoteElement + bitsElements);
+	}
+
 	// Render avatars
 	if (showAvatar) {
-		const username = data.user.login;
+		const username = data.message.username;
 		const avatarURL = await GetAvatar(username, 'twitch');
 		const avatar = new Image();
 		avatar.src = avatarURL;
@@ -662,7 +691,7 @@ async function TwitchChatMessage(data) {
 	}
 
 	// Custom styling for subs
-	if (data.user.subscribed) {
+	if (data.message.subscriber) {
 		usernameDiv.classList.add('sub-glow')
 	}
 
@@ -694,7 +723,7 @@ async function TwitchChatMessage(data) {
 			messageDiv.innerHTML = '';
 			messageDiv.appendChild(image);
 
-			AddMessageItem(instance, data.messageId, 'twitch', data.user.id);
+			AddMessageItem(instance, data.message.msgId, 'twitch', data.user.id);
 		};
 
 		const urlObj = new URL(message);
@@ -704,7 +733,7 @@ async function TwitchChatMessage(data) {
 		image.src = "https://external-content.duckduckgo.com/iu/?u=" + urlObj.toString();
 	}
 	else {
-		AddMessageItem(instance, data.messageId, 'twitch', data.user.id);
+		AddMessageItem(instance, data.message.msgId, 'twitch', data.user.id);
 	}
 
 	// Render YouTube links
@@ -789,6 +818,11 @@ async function TwitchAnnouncement(data) {
 			break;
 		case "PURPLE":
 			cardDiv.classList.add('announcementPurple');
+			break;
+		default:
+			// PRIMARY (ou toute autre valeur non gérée) : barre à la couleur du pseudo
+			cardDiv.classList.add('announcementDefault');
+			cardDiv.style.setProperty('--userColor', data.user.color);
 			break;
 	}
 
@@ -3048,13 +3082,13 @@ function IsThisUserAllowedToPostImagesOrNotReturnTrueIfTheyCanReturnFalseIfTheyC
 function GetPermissionLevel(data, platform) {
 	switch (platform) {
 		case 'twitch':
-			if (data.user.role >= 4)
+			if (data.message.role >= 4)
 				return 40;
-			else if (data.user.role >= 3)
+			else if (data.message.role >= 3)
 				return 30;
-			else if (data.user.role >= 2)
+			else if (data.message.role >= 2)
 				return 20;
-			else if (data.user.role >= 2 || data.user.subscribed)
+			else if (data.message.role >= 2 || data.message.subscriber)
 				return 15;
 			else
 				return 10;
