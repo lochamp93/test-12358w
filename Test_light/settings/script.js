@@ -1,4 +1,4 @@
-// /orbix-12/settings/script.js  (LOADER)
+//   (LOADER)
 const widgetContainer = document.getElementById('widgetContainer');
 // Chemin vers le core réutilisable (note le _common)
 const settingsPageURL = '../../-common/core/settings-core';
