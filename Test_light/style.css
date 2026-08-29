@@ -213,20 +213,39 @@ body.pillTheme-dark {
 body.pillMode #userInfo {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: stretch;
 	gap: 0.4em;
+}
+
+/* Elements with nothing in them (timestamp/pronouns/platform disabled or empty)
+   must not take part in the flex layout, or they'd still eat up a "gap" on
+   either side and throw off the spacing / alignment. */
+body.pillMode #userInfo > *:empty {
+	display: none;
 }
 
 body.pillMode #timestamp {
 	order: 1;
+	align-self: center;
+	text-shadow: none;
 }
 
 body.pillMode #platform {
 	order: 2;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+body.pillMode #platform .platform {
+	height: 100%;
+	width: auto;
+	transform: none;
 }
 
 body.pillMode #username {
 	order: 3;
+	align-self: center;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4em;
@@ -234,6 +253,7 @@ body.pillMode #username {
 	border-radius: 999px;
 	background: var(--pill-bg-color);
 	color: var(--pill-text-color) !important;
+	text-shadow: none;
 }
 
 body.pillMode #username::before {
@@ -247,6 +267,7 @@ body.pillMode #username::before {
 
 body.pillMode #badgeList {
 	order: 4;
+	align-self: center;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.2em;
@@ -254,6 +275,8 @@ body.pillMode #badgeList {
 
 body.pillMode #pronouns {
 	order: 5;
+	align-self: center;
+	text-shadow: none;
 }
 
 body.pillMode #colon-separator {
@@ -264,7 +287,6 @@ body.pillMode #line-space {
 	order: 7;
 }
 
-body.pillMode .platform,
 body.pillMode .badge {
 	transform: none;
 }
