@@ -159,7 +159,6 @@ const client = new StreamerbotClient({
 		console.log(`Streamer.bot successfully connected to ${sbServerAddress}:${sbServerPort}`)
 		console.debug(data);
 		SetConnectionStatus(true);
-		KickConnect();
 	},
 
 	onDisconnect: () => {
