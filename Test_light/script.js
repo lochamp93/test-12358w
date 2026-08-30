@@ -94,7 +94,7 @@ const pillTextColor = urlParams.get("pillTextColor") || "";
 
 const animationSpeed = GetIntParam("animationSpeed", 0.1);
 const randomYouTubeColors = GetBooleanParam("randomYouTubeColors", false);
-const youtubeColor = urlParams.get("youtubeColor") || "#f70000";
+const youtubeColor = urlParams.get("youtubeColor") || "#FF0033";
 const youtubeCustomSubIcon = urlParams.get("youtubeCustomSubIcon") || "";
 
 
@@ -1254,7 +1254,7 @@ async function YouTubeMessage(data) {
 		if (randomYouTubeColors)
 			usernameDiv.style.setProperty('--user-color', StringToHex(data.user.name));
 		else
-			usernameDiv.style.setProperty('--user-color', youtubeColor);	// YouTube users do not have colors, so just set it to red
+			usernameDiv.style.setProperty('--user-color', youtubeColor);	// YouTube users do not have colors, so just use the platform brand color
 	}
 
 	if (showMessage) {
@@ -2188,7 +2188,7 @@ async function KickChatMessage(data) {
 	// Set the username info
 	if (showUsername) {
 		usernameDiv.innerText = data.sender.username;
-		usernameDiv.style.setProperty('--user-color', data.sender.identity.color);
+		usernameDiv.style.setProperty('--user-color', '#53fc18');	// Kick brand color
 	}
 
 	// Set the message data
@@ -2658,7 +2658,7 @@ async function TikTokChat(data) {
 	// Set the username info
 	if (showUsername) {
 		usernameDiv.innerText = data.nickname;
-		usernameDiv.style.setProperty('--user-color', '#9e9e9e');
+		usernameDiv.style.setProperty('--user-color', '#2DCCD3');	// TikTok brand color
 	}
 
 	// Set the message data
