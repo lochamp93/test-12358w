@@ -213,8 +213,9 @@ body.pillTheme-dark {
 body.pillMode #userInfo {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: stretch;
+	align-items: center;
 	gap: 0.4em;
+	--pill-height: 1.7em;
 }
 
 /* Elements with nothing in them (timestamp/pronouns/platform disabled or empty)
@@ -226,12 +227,12 @@ body.pillMode #userInfo > *:empty {
 
 body.pillMode #timestamp {
 	order: 1;
-	align-self: center;
 	text-shadow: none;
 }
 
 body.pillMode #platform {
 	order: 2;
+	height: var(--pill-height);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -240,16 +241,18 @@ body.pillMode #platform {
 body.pillMode #platform .platform {
 	height: 100%;
 	width: auto;
+	max-width: none;
 	transform: none;
 }
 
 body.pillMode #username {
 	order: 3;
-	align-self: center;
+	height: var(--pill-height);
+	box-sizing: border-box;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4em;
-	padding: 0.15em 0.7em 0.15em 0.55em;
+	padding: 0 0.6em;
 	border-radius: 999px;
 	background: var(--pill-bg-color);
 	color: var(--pill-text-color) !important;
@@ -267,7 +270,6 @@ body.pillMode #username::before {
 
 body.pillMode #badgeList {
 	order: 4;
-	align-self: center;
 	display: inline-flex;
 	align-items: center;
 	gap: 0.2em;
@@ -275,12 +277,15 @@ body.pillMode #badgeList {
 
 body.pillMode #pronouns {
 	order: 5;
-	align-self: center;
 	text-shadow: none;
 }
 
+/* Announcements force the colon separator on regardless of the "inline chat"
+   setting — pull it back against the pill instead of leaving it floating
+   with a stray gap. */
 body.pillMode #colon-separator {
 	order: 6;
+	margin-left: -0.3em;
 }
 
 body.pillMode #line-space {
