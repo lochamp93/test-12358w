@@ -214,15 +214,26 @@ body.pillMode #userInfo {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
-	gap: 0.4em;
 	--pill-height: 1.7em;
 }
 
 /* Elements with nothing in them (timestamp/pronouns/platform disabled or empty)
-   must not take part in the flex layout, or they'd still eat up a "gap" on
+   must not take part in the flex layout, or they'd still eat up a margin on
    either side and throw off the spacing / alignment. */
 body.pillMode #userInfo > *:empty {
 	display: none;
+}
+
+/* Spacing between the row's items is done with margin-right rather than the
+   flexbox "gap" property, since gap on flex containers isn't reliably
+   supported by every embedded browser engine (e.g. OBS's browser source on
+   older builds) — margins work everywhere. */
+body.pillMode #timestamp,
+body.pillMode #platform,
+body.pillMode #username,
+body.pillMode #badgeList,
+body.pillMode #pronouns {
+	margin-right: 0.4em;
 }
 
 body.pillMode #timestamp {
@@ -251,7 +262,6 @@ body.pillMode #username {
 	box-sizing: border-box;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.4em;
 	padding: 0 0.6em;
 	border-radius: 999px;
 	background: var(--pill-bg-color);
@@ -263,6 +273,7 @@ body.pillMode #username::before {
 	content: '';
 	width: 0.55em;
 	height: 0.55em;
+	margin-right: 0.4em;
 	flex-shrink: 0;
 	border-radius: 50%;
 	background: var(--user-color, currentColor);
@@ -272,7 +283,14 @@ body.pillMode #badgeList {
 	order: 4;
 	display: inline-flex;
 	align-items: center;
-	gap: 0.2em;
+}
+
+body.pillMode #badgeList .badge {
+	margin-right: 0.2em;
+}
+
+body.pillMode #badgeList .badge:last-child {
+	margin-right: 0;
 }
 
 body.pillMode #pronouns {
