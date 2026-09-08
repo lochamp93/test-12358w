@@ -28,7 +28,7 @@ function GetBooleanParam(paramName, defaultValue) {
 	} else if (lowercaseValue === 'false') {
 		return false;
 	} else {
-		return paramValue; // Return original string if not 'true' or 'false' 
+		return paramValue; // Return original string if not 'true' or 'false'
 	}
 }
 
@@ -184,6 +184,14 @@ function EscapeHTML(str) {
 		const escape = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 		return escape[match];
 	});
+}
+
+// Detects whether a Twitch "parts" array contains a native GIF fragment (Tier 2/3
+// subs). Shares its detection logic with ConstructMessageFromParts below.
+function MessageContainsGif(parts) {
+	if (!Array.isArray(parts))
+		return false;
+	return parts.some(part => (part.type && part.type.toLowerCase().includes('gif')) || part.gif);
 }
 
 // Used to construct a message from "parts" variable commonly found in Streamer.bot chat messages (EventSub)
