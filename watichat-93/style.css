@@ -322,7 +322,7 @@ li {
 :root.showUsernameFrame #username {
 	display: inline-block;
 	background: var(--username-frame-color);
-	border-radius: 1em;
+	border-radius: var(--border-radius); /* rectangle w/ rounded corners, not a full pill — matches the avatar/cards elsewhere */
 	padding: 0.15em 0.6em;
 }
 
