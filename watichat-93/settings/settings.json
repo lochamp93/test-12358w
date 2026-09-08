@@ -84,6 +84,25 @@
 			"group": "Apparence"
 		},
 		{
+			"id": "usernameFontWeight",
+			"label": "Épaisseur du pseudo",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": 100, "label": "100 - Très fin" },
+				{ "value": 200, "label": "200 - Extra léger" },
+				{ "value": 300, "label": "300 - Léger" },
+				{ "value": 400, "label": "400 - Normal" },
+				{ "value": 500, "label": "500 - Moyen" },
+				{ "value": 600, "label": "600 - Semi-gras" },
+				{ "value": 700, "label": "700 - Gras" },
+				{ "value": 800, "label": "800 - Extra gras" },
+				{ "value": 900, "label": "900 - Noir / Très gras" }
+			],
+			"defaultValue": 700,
+			"group": "Apparence"
+		},
+		{
 			"id": "showMessage",
 			"label": "Afficher le message",
 			"description": "Franchement, si tu désactives ça t’es bête mdr",
@@ -97,6 +116,25 @@
 			"description": "S’applique aussi aux « : » après le pseudo",
 			"type": "color",
 			"defaultValue": "#FFFFFF",
+			"group": "Apparence"
+		},
+		{
+			"id": "messageFontWeight",
+			"label": "Épaisseur du message",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": 100, "label": "100 - Très fin" },
+				{ "value": 200, "label": "200 - Extra léger" },
+				{ "value": 300, "label": "300 - Léger" },
+				{ "value": 400, "label": "400 - Normal" },
+				{ "value": 500, "label": "500 - Moyen" },
+				{ "value": 600, "label": "600 - Semi-gras" },
+				{ "value": 700, "label": "700 - Gras" },
+				{ "value": 800, "label": "800 - Extra gras" },
+				{ "value": 900, "label": "900 - Noir / Très gras" }
+			],
+			"defaultValue": 400,
 			"group": "Apparence"
 		},
 		{

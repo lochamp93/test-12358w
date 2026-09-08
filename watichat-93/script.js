@@ -30,8 +30,10 @@ const showPronouns = GetBooleanParam("showPronouns", true);
 const showUsername = GetBooleanParam("showUsername", true);
 const useCustomUsernameColor = GetBooleanParam("useCustomUsernameColor", false);
 const usernameColor = urlParams.get("usernameColor") || "#FFFFFF";
+const usernameFontWeight = GetIntParam("usernameFontWeight", 700);
 const showMessage = GetBooleanParam("showMessage", true);
 const messageColor = urlParams.get("messageColor") || "#FFFFFF";
+const messageFontWeight = GetIntParam("messageFontWeight", 400);
 const useCustomCardColor = GetBooleanParam("useCustomCardColor", false);
 const cardColor = urlParams.get("cardColor") || "#1D1D1D";
 const font = urlParams.get("font") || "";
@@ -127,6 +129,10 @@ document.documentElement.style.setProperty('--avatar-frame-color', avatarFrameCo
 
 // Message color (also used for the ":" separator)
 document.documentElement.style.setProperty('--message-color', messageColor);
+
+// Font weights
+document.documentElement.style.setProperty('--username-font-weight', usernameFontWeight);
+document.documentElement.style.setProperty('--message-font-weight', messageFontWeight);
 
 // Card background color
 document.documentElement.style.setProperty('--card-color', cardColor);
@@ -811,24 +817,32 @@ async function TwitchAnnouncement(data) {
 	const contentDiv = instance.querySelector("#contentDiv");
 
 	// Set the card background colors
-	switch (data.announcementColor) {
-		case "BLUE":
-			cardDiv.classList.add('announcementBlue');
-			break;
-		case "GREEN":
-			cardDiv.classList.add('announcementGreen');
-			break;
-		case "ORANGE":
-			cardDiv.classList.add('announcementOrange');
-			break;
-		case "PURPLE":
-			cardDiv.classList.add('announcementPurple');
-			break;
-		default:
-			// PRIMARY (ou toute autre valeur non gérée) : barre à la couleur du pseudo
-			cardDiv.classList.add('announcementDefault');
-			cardDiv.style.setProperty('--userColor', data.user.color);
-			break;
+	if (useCustomCardColor) {
+		// Custom card color overrides Twitch's announcement color entirely,
+		// so the bar always matches the rest of the alert cards
+		cardDiv.classList.add('announcementDefault');
+		cardDiv.style.setProperty('--userColor', cardColor);
+	}
+	else {
+		switch (data.announcementColor) {
+			case "BLUE":
+				cardDiv.classList.add('announcementBlue');
+				break;
+			case "GREEN":
+				cardDiv.classList.add('announcementGreen');
+				break;
+			case "ORANGE":
+				cardDiv.classList.add('announcementOrange');
+				break;
+			case "PURPLE":
+				cardDiv.classList.add('announcementPurple');
+				break;
+			default:
+				// PRIMARY (ou toute autre valeur non gérée) : barre à la couleur du pseudo
+				cardDiv.classList.add('announcementDefault');
+				cardDiv.style.setProperty('--userColor', data.user.color);
+				break;
+		}
 	}
 
 	// Set the card header
@@ -850,7 +864,7 @@ async function TwitchAnnouncement(data) {
 		content.querySelector("#username").innerText = data.user.name;
 	else
 		content.querySelector("#username").innerText = `${data.user.name} (${data.user.login})`;
-	content.querySelector("#username").style.color = data.user.color;
+	content.querySelector("#username").style.color = useCustomCardColor ? cardColor : (useCustomUsernameColor ? usernameColor : data.user.color);
 	content.querySelector("#message").innerText = data.text;
 
 	// Remove the line break
@@ -874,7 +888,7 @@ async function TwitchAnnouncement(data) {
 
 	// Set pronouns
 	const pronouns = await GetPronouns('twitch', data.user.login);
-	if (pronouns) {
+	if (pronouns && showPronouns) {
 		content.querySelector("#pronouns").classList.add("pronouns");
 		content.querySelector("#pronouns").innerText = pronouns;
 	}

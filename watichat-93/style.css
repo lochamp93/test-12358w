@@ -6,6 +6,8 @@
 	--avatar-frame-color: #FFD400;
 	--message-color: #ffffff;
 	--card-color: #1d1d1d;
+	--username-font-weight: 700;
+	--message-font-weight: 400;
 }
 
 body {
@@ -159,13 +161,13 @@ li {
 
 :root.showAvatarFrame #avatarFrame {
 	background: var(--avatar-frame-color);
-	border-radius: calc(var(--border-radius) + 0.15em);
-	padding: 0.15em;
+	border-radius: calc(var(--border-radius) + 0.1em);
+	padding: 0.08em;
 }
 
 :root.showAvatarFrame #avatarFrame .avatar {
-	width: 1.7em;
-	height: 1.7em;
+	width: 1.85em;
+	height: 1.85em;
 }
 
 .timestamp,
@@ -254,7 +256,10 @@ li {
 	margin: 10em,2em;
 }
 
-#username,
+#username {
+	font-weight: var(--username-font-weight);
+}
+
 #title {
 	font-weight: 700;
 }
@@ -274,7 +279,7 @@ li {
 }
 
 #message {
-	font-weight: 400;
+	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
 	color: var(--message-color);
 }
