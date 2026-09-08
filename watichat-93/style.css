@@ -128,15 +128,31 @@ li {
 	min-width: 0;
 }
 
-/* #avatarFrame now sits as its own column (sibling of .message-right), so
-   #userInfo and #message both start at the same left edge — the pseudo row
-   is reserved the same height as the avatar so it centers against it. */
+/* #avatarFrame lives INSIDE #userInfo but is taken OUT of its flex flow
+   (position: absolute below) — otherwise the avatar (2em) would force the
+   whole pseudo row to be as tall as itself, even though the badges/text
+   are only ~1.1em tall, leaving a big empty gap before the message.
+   Instead #userInfo is only ever as tall as its actual text content, and
+   the avatar is centered against THAT (real) height via top:50%, simply
+   overlapping the row above/below by the small remaining difference —
+   normal for a chat avatar that's a bit taller than one line of text.
+   #message/#reply get a matching left offset so they still start at the
+   same x as the pseudo, and since the avatar's size has nothing to do
+   with #message's height anymore, it can't stretch on a long message. */
 #userInfo {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.4em;
-	min-height: 2em;
+	padding-left: 2.4em; /* reserve room for the absolutely-positioned avatar */
+}
+
+/* Matches #userInfo's padding-left above, so #reply lines up with where
+   the pseudo starts too (#message has its own margin-left further down,
+   next to the display:block it needs — see the comment there). */
+#reply {
+	margin-left: 2.4em;
 }
 
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
@@ -167,8 +183,15 @@ li {
    Off by default (#avatarFrame is a plain transparent wrapper, so the
    avatar renders at full size); when "showAvatarFrame" is toggled on in
    the settings, the html element gets the .showAvatarFrame class and the
-   avatar shrinks slightly to reveal the colored frame around it. */
+   avatar shrinks slightly to reveal the colored frame around it.
+   Positioned absolutely within #userInfo — see the comment above
+   #userInfo for why (avoids forcing the pseudo row to the avatar's
+   height). */
 #avatarFrame {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
@@ -300,6 +323,13 @@ li {
 }
 
 #message {
+	/* block (not the default inline, since #message is a <span>) so that
+	   EVERY wrapped line respects margin-left below, not just the first —
+	   an inline element's margin only offsets its first line, so wrapped
+	   continuation lines were falling back to the far left edge. Switched
+	   back to inline for "chat en ligne" mode in script.js. */
+	display: block;
+	margin-left: 2.4em;
 	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
 	color: var(--message-color);

@@ -672,6 +672,7 @@ async function TwitchChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		instance.querySelector("#message").style.display = `inline`;
 	}
 
 	// Render platform
@@ -1308,6 +1309,7 @@ async function YouTubeMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		instance.querySelector("#message").style.display = `inline`;
 	}
 
 	// Render platform
@@ -2252,6 +2254,7 @@ async function KickChatMessage(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		instance.querySelector("#message").style.display = `inline`;
 	}
 
 	// Render platform
@@ -2716,6 +2719,7 @@ async function TikTokChat(data) {
 		instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
+		instance.querySelector("#message").style.display = `inline`;
 	}
 
 	// Render platform
