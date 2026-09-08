@@ -28,7 +28,7 @@ function GetBooleanParam(paramName, defaultValue) {
 	} else if (lowercaseValue === 'false') {
 		return false;
 	} else {
-		return paramValue; // Return original string if not 'true' or 'false'
+		return paramValue; // Return original string if not 'true' or 'false' 
 	}
 }
 
