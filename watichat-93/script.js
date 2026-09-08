@@ -57,24 +57,24 @@ const showYouTubeLinkPreviews = GetBooleanParam("showYouTubeLinkPreviews", true)
 const showTwitchMessages = GetBooleanParam("showTwitchMessages", true);
 const showTwitchAnnouncements = GetBooleanParam("showTwitchAnnouncements", true);
 const showTwitchFollows = GetBooleanParam("showTwitchFollows", false);
-const showTwitchSubs = GetBooleanParam("showTwitchSubs", true);
-const showTwitchChannelPointRedemptions = GetBooleanParam("showTwitchChannelPointRedemptions", true);
-const showTwitchRaids = GetBooleanParam("showTwitchRaids", true);
+const showTwitchSubs = GetBooleanParam("showTwitchSubs", false);
+const showTwitchChannelPointRedemptions = GetBooleanParam("showTwitchChannelPointRedemptions", false);
+const showTwitchRaids = GetBooleanParam("showTwitchRaids", false);
 const showTwitchSharedChat = GetIntParam("showTwitchSharedChat", 2);
 const showTwitchGifs = GetBooleanParam("showTwitchGifs", true);
 
 const kickUsername = urlParams.get("kickUsername") || "";
 const showKickMessages = GetBooleanParam("showKickMessages", true);
 // const showKickFollows = GetBooleanParam("showKickFollows", false);
-const showKickSubs = GetBooleanParam("showKickSubs", true);
-const showKickChannelPointRedemptions = GetBooleanParam("showKickChannelPointRedemptions", true);
-const showKickHosts = GetBooleanParam("showKickHosts", true);
-const showKickGifts = GetBooleanParam("showKickGifts", true);
+const showKickSubs = GetBooleanParam("showKickSubs", false);
+const showKickChannelPointRedemptions = GetBooleanParam("showKickChannelPointRedemptions", false);
+const showKickHosts = GetBooleanParam("showKickHosts", false);
+const showKickGifts = GetBooleanParam("showKickGifts", false);
 
 const showYouTubeMessages = GetBooleanParam("showYouTubeMessages", true);
-const showYouTubeSuperChats = GetBooleanParam("showYouTubeSuperChats", true);
-const showYouTubeSuperStickers = GetBooleanParam("showYouTubeSuperStickers", true);
-const showYouTubeMemberships = GetBooleanParam("showYouTubeMemberships", true);
+const showYouTubeSuperChats = GetBooleanParam("showYouTubeSuperChats", false);
+const showYouTubeSuperStickers = GetBooleanParam("showYouTubeSuperStickers", false);
+const showYouTubeMemberships = GetBooleanParam("showYouTubeMemberships", false);
 
 const enableTikTokSupport = GetBooleanParam("enableTikTokSupport", false);
 const showTikTokFollows = GetBooleanParam("showTikTokFollows", false);
