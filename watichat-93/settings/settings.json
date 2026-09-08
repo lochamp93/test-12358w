@@ -349,38 +349,6 @@
 			"group": "Quels messages Twitch voulez-vous voir ?"
 		},
 		{
-			"id": "showTwitchFollows",
-			"label": "Nouveaux follows",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": false,
-			"group": "Quels messages Twitch voulez-vous voir ?"
-		},
-		{
-			"id": "showTwitchSubs",
-			"label": "Nouveaux abonnements",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Twitch voulez-vous voir ?"
-		},
-		{
-			"id": "showTwitchChannelPointRedemptions",
-			"label": "Récompenses de points de chaîne",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Twitch voulez-vous voir ?"
-		},
-		{
-			"id": "showTwitchRaids",
-			"label": "Raids",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Twitch voulez-vous voir ?"
-		},
-		{
 			"id": "showTwitchSharedChat",
 			"label": "Chat partagé",
 			"description": "",
@@ -419,30 +387,6 @@
 			"group": "Quels messages YouTube voulez-vous voir ?"
 		},
 		{
-			"id": "showYouTubeSuperChats",
-			"label": "Super Chats",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages YouTube voulez-vous voir ?"
-		},
-		{
-			"id": "showYouTubeSuperStickers",
-			"label": "Super Stickers",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages YouTube voulez-vous voir ?"
-		},
-		{
-			"id": "showYouTubeMemberships",
-			"label": "Abonnements",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages YouTube voulez-vous voir ?"
-		},
-		{
 			"id": "kickUsername",
 			"label": "Pseudo Kick",
 			"description": "",
@@ -459,38 +403,6 @@
 			"group": "Quels messages Kick voulez-vous voir ?"
 		},
 		{
-			"id": "showKickSubs",
-			"label": "Nouveaux abonnements",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Kick voulez-vous voir ?"
-		},
-		{
-			"id": "showKickChannelPointRedemptions",
-			"label": "Récompenses de points de chaîne",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Kick voulez-vous voir ?"
-		},
-		{
-			"id": "showKickHosts",
-			"label": "Hosts",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Kick voulez-vous voir ?"
-		},
-		{
-			"id": "showKickGifts",
-			"label": "Cadeaux",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Quels messages Kick voulez-vous voir ?"
-		},
-		{
 			"id": "enableTikTokSupport",
 			"label": "Activer le support TikTok",
 			"description": "",
@@ -501,42 +413,6 @@
 		{
 			"id": "showTikTokMessages",
 			"label": "Messages du chat",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"showIf": "enableTikTokSupport",
-			"group": "Quels messages TikTok voulez-vous voir ?"
-		},
-		{
-			"id": "showTikTokFollows",
-			"label": "Nouveaux follows",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"showIf": "enableTikTokSupport",
-			"group": "Quels messages TikTok voulez-vous voir ?"
-		},
-		{
-			"id": "showTikTokLikes",
-			"label": "Likes",
-			"description": "Likes en direct",
-			"type": "checkbox",
-			"defaultValue": true,
-			"showIf": "enableTikTokSupport",
-			"group": "Quels messages TikTok voulez-vous voir ?"
-		},
-		{
-			"id": "showTikTokGifts",
-			"label": "Cadeaux",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"showIf": "enableTikTokSupport",
-			"group": "Quels messages TikTok voulez-vous voir ?"
-		},
-		{
-			"id": "showTikTokSubs",
-			"label": "Nouveaux abonnements",
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
@@ -590,14 +466,6 @@
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Quels messages de dons voulez-vous voir ?"
-		},
-		{
-			"id": "furryMode",
-			"label": "Mode Furry",
-			"description": "Miaou",
-			"type": "checkbox",
-			"defaultValue": false,
-			"group": "Trucs très importants"
 		},
 		{
 			"id": "address",
