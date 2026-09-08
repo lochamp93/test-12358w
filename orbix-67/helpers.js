@@ -178,6 +178,8 @@ function DecodeHTMLString(html) {
 
 // Simple HTML escape function to prevent XSS attacks
 function EscapeHTML(str) {
+	if (str === undefined || str === null)
+		return '';
 	return str.replace(/[&<>"']/g, match => {
 		const escape = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
 		return escape[match];
@@ -189,6 +191,25 @@ function ConstructMessageFromParts(parts) {
 	return parts.map(part => {
 		if (part.emoji)
 			return ` <img src="${EscapeHTML(part.image)}" alt="${EscapeHTML(part.text)}" title="${EscapeHTML(part.text)}" class="emote"> `;
+
+		// Twitch's Tier 2/3 "GIF in chat" feature (Sept 2026) is very new, so the exact
+		// field name Streamer.bot uses for the type/URL isn't confirmed from docs — this
+		// checks a few likely shapes defensively rather than assuming one.
+		const looksLikeGif = (part.type && part.type.toLowerCase().includes('gif')) || part.gif;
+		if (looksLikeGif) {
+			const gifUrl = part.imageUrl || part.url
+				|| part.gif?.url || part.gif?.gifUrl
+				|| part.gif?.images?.original?.url || part.gif?.images?.fixed_height?.url;
+
+			if (gifUrl)
+				return `<img src="${EscapeHTML(gifUrl)}" alt="${EscapeHTML(part.text || 'GIF')}" title="${EscapeHTML(part.text || 'GIF')}" class="emote gif-emote">`;
+
+			// Couldn't find a URL in any of the expected places — log the raw fragment so
+			// its real shape can be inspected in DevTools instead of silently dropping it.
+			console.warn('Fragment GIF détecté mais URL introuvable, structure reçue :', part);
+			return EscapeHTML(part.text || '');
+		}
+
 		if (!part.type)
 			return EscapeHTML(part.text);
 		if (part.source == 'Twemoji')
@@ -214,6 +235,8 @@ function ConstructMessageFromParts(parts) {
 			case "mention":
 				return part.text;
 			default:
+				if (!part.imageUrl)
+					console.warn('Fragment de type inconnu reçu sans imageUrl, structure :', part);
 				return `<img src="${EscapeHTML(part.imageUrl)}" alt="${EscapeHTML(part.text)}" title="${EscapeHTML(part.text)}" class="emote">`;
 		}
 	}).join('');
