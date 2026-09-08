@@ -24,6 +24,7 @@
 			"defaultValue": true,
 			"group": "Apparence"
 		},
+		
 		{
 			"id": "showBadges",
 			"label": "Afficher les badges",
