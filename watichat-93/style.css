@@ -119,12 +119,24 @@ li {
 .message-contents {
 	display: flex;
 	flex-direction: row;
+	align-items: flex-start; /* avatar top-aligned, never stretched by a tall/wrapped message */
 	gap: .5em; /*espace entre PP et le reste*/
 }
 
 .message-contents > div:not(#avatar) {
 	flex: 1 1 auto;
 	min-width: 0;
+}
+
+/* #avatarFrame now sits as its own column (sibling of .message-right), so
+   #userInfo and #message both start at the same left edge — the pseudo row
+   is reserved the same height as the avatar so it centers against it. */
+#userInfo {
+	display: inline-flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4em;
+	min-height: 2em;
 }
 
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
@@ -184,9 +196,10 @@ li {
 	border-radius: 1em;
 	font-size: 0.7em;
 	padding: 0.2em 0.65em;
-	display: inline-block;    /* <-- rend les marges verticales actives */
-	margin-bottom: 0.35em;    /* <-- le “jeu” que tu veux sous la gélule */
-	vertical-align: bottom;   /* <-- la maintient alignée en bas du reste */
+	display: inline-block;
+	/* margin-bottom/vertical-align dropped: #userInfo is now a centered flex
+	   row (see below), which handles vertical alignment on its own — the old
+	   margin-bottom would just push the pill off-center again */
 }
 
 /* .timestamp,
