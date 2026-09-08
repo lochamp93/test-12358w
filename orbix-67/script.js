@@ -9,7 +9,7 @@ const sbServerAddress = urlParams.get("address") || "127.0.0.1";
 const sbServerPort = urlParams.get("port") || "8080";
 
 /////////////////
-// GLOBAL VARS //
+// GLOBAL VARS // 
 /////////////////
 
 const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[&?#].*)?$/;
