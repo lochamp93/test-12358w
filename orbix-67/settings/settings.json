@@ -305,6 +305,14 @@
 			"group": "Quels messages Twitch voulez-vous voir ?"
 		},
 		{
+			"id": "showTwitchGifs",
+			"label": "Faire apparaître les GIFs ?",
+			"description": "Affiche les GIFs natifs accessibles aux abos T2 / T3 Twitch dans le chat",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Quels messages Twitch voulez-vous voir ?"
+		},
+		{
 			"id": "showYouTubeMessages",
 			"label": "Messages du chat",
 			"description": "",
