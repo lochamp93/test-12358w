@@ -31,6 +31,8 @@ const showUsername = GetBooleanParam("showUsername", true);
 const useCustomUsernameColor = GetBooleanParam("useCustomUsernameColor", false);
 const usernameColor = urlParams.get("usernameColor") || "#FFFFFF";
 const usernameFontWeight = GetIntParam("usernameFontWeight", 700);
+const showUsernameFrame = GetBooleanParam("showUsernameFrame", false);
+const usernameFrameColor = urlParams.get("usernameFrameColor") || "#FFD400";
 const showMessage = GetBooleanParam("showMessage", true);
 const messageColor = urlParams.get("messageColor") || "#FFFFFF";
 const messageFontWeight = GetIntParam("messageFontWeight", 400);
@@ -133,6 +135,11 @@ document.documentElement.style.setProperty('--message-color', messageColor);
 // Font weights
 document.documentElement.style.setProperty('--username-font-weight', usernameFontWeight);
 document.documentElement.style.setProperty('--message-font-weight', messageFontWeight);
+
+// Username frame (badge background behind the pseudo)
+if (showUsernameFrame)
+	document.documentElement.classList.add('showUsernameFrame');
+document.documentElement.style.setProperty('--username-frame-color', usernameFrameColor);
 
 // Card background color
 document.documentElement.style.setProperty('--card-color', cardColor);
@@ -669,7 +676,10 @@ async function TwitchChatMessage(data) {
 
 	// Remove the line break
 	if (inlineChat) {
-		instance.querySelector("#colon-separator").style.display = `inline`;
+		// The username frame's own pill shape already visually separates
+		// the pseudo from the message, so the ":" is skipped in that case.
+		if (!showUsernameFrame)
+			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
 		instance.querySelector("#message").style.display = `inline`;
@@ -1306,7 +1316,10 @@ async function YouTubeMessage(data) {
 
 	// Remove the line break
 	if (inlineChat) {
-		instance.querySelector("#colon-separator").style.display = `inline`;
+		// The username frame's own pill shape already visually separates
+		// the pseudo from the message, so the ":" is skipped in that case.
+		if (!showUsernameFrame)
+			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
 		instance.querySelector("#message").style.display = `inline`;
@@ -2251,7 +2264,10 @@ async function KickChatMessage(data) {
 
 	// Remove the line break
 	if (inlineChat) {
-		instance.querySelector("#colon-separator").style.display = `inline`;
+		// The username frame's own pill shape already visually separates
+		// the pseudo from the message, so the ":" is skipped in that case.
+		if (!showUsernameFrame)
+			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
 		instance.querySelector("#message").style.display = `inline`;
@@ -2716,7 +2732,10 @@ async function TikTokChat(data) {
 
 	// Remove the line break
 	if (inlineChat) {
-		instance.querySelector("#colon-separator").style.display = `inline`;
+		// The username frame's own pill shape already visually separates
+		// the pseudo from the message, so the ":" is skipped in that case.
+		if (!showUsernameFrame)
+			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
 		instance.querySelector("#message").style.display = `inline`;

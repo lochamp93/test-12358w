@@ -16,6 +16,7 @@
 	--card-color: #1d1d1d;
 	--username-font-weight: 700;
 	--message-font-weight: 400;
+	--username-frame-color: #FFD400;
 }
 
 body {
@@ -311,6 +312,18 @@ li {
 
 #username {
 	font-weight: var(--username-font-weight);
+}
+
+/* Optional badge-style background behind the pseudo. Off by default; the
+   ": " that normally follows the pseudo in "chat en ligne" mode is
+   skipped by script.js when this is on (the pill itself already reads as
+   a separator). Padding is generous on purpose so the pill doesn't hug
+   the text too tightly. */
+:root.showUsernameFrame #username {
+	display: inline-block;
+	background: var(--username-frame-color);
+	border-radius: 1em;
+	padding: 0.15em 0.6em;
 }
 
 #title {

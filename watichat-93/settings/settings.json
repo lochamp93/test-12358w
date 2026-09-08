@@ -103,6 +103,23 @@
 			"group": "Apparence"
 		},
 		{
+			"id": "showUsernameFrame",
+			"label": "Afficher un cadre autour du pseudo",
+			"description": "Un fond en forme de badge derrière le pseudo (masque automatiquement le « : » qui suit habituellement)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Apparence"
+		},
+		{
+			"id": "usernameFrameColor",
+			"label": "Couleur du cadre de pseudo",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFD400",
+			"showIf": "showUsernameFrame",
+			"group": "Apparence"
+		},
+		{
 			"id": "showMessage",
 			"label": "Afficher le message",
 			"description": "Franchement, si tu désactives ça t’es bête mdr",
