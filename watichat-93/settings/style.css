@@ -3,6 +3,14 @@
 	padding: 0;
 	--margin: 1em;
 	--border-radius: 0.5em;
+}
+
+/* These are set dynamically (via document.documentElement.style.setProperty
+   in script.js) and must live on :root, NOT "*" — "*" matches every element,
+   so it would redeclare the variable locally on #username, #message, #card,
+   etc. themselves, which shadows the inline override and always wins over
+   whatever value should have been inherited from <html>. */
+:root {
 	--avatar-frame-color: #FFD400;
 	--message-color: #ffffff;
 	--card-color: #1d1d1d;
