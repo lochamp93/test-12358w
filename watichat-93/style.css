@@ -148,6 +148,15 @@ li {
 	padding-left: 2.4em; /* reserve room for the absolutely-positioned avatar */
 }
 
+/* flexbox's "gap" is inserted between EVERY pair of flex items, even ones
+   that are empty (e.g. #timestamp/#platform/#pronouns when those settings
+   are off, or #badgeList when a user has no badges) — so each disabled
+   element was still eating a 0.4em slot it never visually used. Dropping
+   empty ones out of layout entirely removes that dead gap. */
+#userInfo > *:empty {
+	display: none;
+}
+
 /* Matches #userInfo's padding-left above, so #reply lines up with where
    the pseudo starts too (#message has its own margin-left further down,
    next to the display:block it needs — see the comment there). */
