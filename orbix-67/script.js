@@ -9,7 +9,7 @@ const sbServerAddress = urlParams.get("address") || "127.0.0.1";
 const sbServerPort = urlParams.get("port") || "8080";
 
 /////////////////
-// GLOBAL VARS // 
+// GLOBAL VARS //
 /////////////////
 
 const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})(?:[&?#].*)?$/;
@@ -511,6 +511,12 @@ async function TwitchChatMessage(data) {
 
 	// Don't post messages from users from the ignore list
 	if (ignoreUserList.includes(data.user.login.toLowerCase()))
+		return;
+
+	// Twitch's T2/T3 GIF messages arrive as their own standalone message — if GIFs
+	// are toggled off, bail out completely before anything is built, so the message
+	// is treated as if it never happened (no username row, no empty space).
+	if (!showTwitchGifs && MessageContainsGif(data.parts))
 		return;
 
 	// Get a reference to the template
