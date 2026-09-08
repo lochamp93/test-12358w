@@ -191,6 +191,19 @@ li {
 	transform: translate(0px, 0.4em);
 }
 
+/* Twitch's Tier 2/3 GIF messages arrive as a single, standalone fragment —
+   sizing it like a tiny inline emote (1.5em) makes it unreadable, so it gets
+   its own larger, block-level treatment instead. Tweak the height to taste. */
+.gif-emote {
+	display: block;
+	height: 6em;
+	max-width: 100%;
+	width: auto;
+	margin: 0.3em 0 0 0;
+	border-radius: var(--border-radius);
+	transform: none;
+}
+
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
