@@ -3,6 +3,11 @@
 	padding: 0;
 	--margin: 1em;
 	--border-radius: 0.5em;
+	--avatar-frame-color: #FFD400;
+	--message-color: #ffffff;
+	--card-color: #1d1d1d;
+	--username-font-weight: 700;
+	--message-font-weight: 400;
 }
 
 body {
@@ -13,7 +18,7 @@ html {
 	width: 100vw;
 	height: 100vh;
 	scroll-behavior: smooth;
-	/* background: #000000d9; */
+	/* background:  #000000d9; */
 	font-size: 30px;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 	color: white;
@@ -75,10 +80,7 @@ li {
 .slide-fade li {
 	transition: all var(--animation-speed) ease-out;
 	/* opacity: 0; */
-}
-
-.slide-fade li.show {
-	/* opacity: 1; */
+	/* .slide-fade li.show { opacity: 1; } — re-add both if you want messages to fade in on arrival */
 }
 
 #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList {
@@ -133,11 +135,39 @@ li {
     width: 2em;                /* Set width equal to height */
     height: 2em;
     margin: 0;
-    transform: translate(10em, -1,8em);
-    border-radius: 50%;
-    object-fit: cover;         /* Crop to fill the circle */
-    overflow: hidden;          /* Ensure no overflow outside the circle */
-    display: inline-block;     /* Just in case */
+    border-radius: var(--border-radius);
+    object-fit: cover;         /* Crop to fill the shape */
+    overflow: hidden;          /* Ensure no overflow outside the shape */
+    display: block;            /* Avoids the inline "phantom descender space"
+                                   below the image, which threw off the
+                                   vertical centering inside #avatarFrame */
+}
+
+/* Chat-only: optional colored frame behind the profile picture.
+   Off by default (#avatarFrame is a plain transparent wrapper, so the
+   avatar renders at full size); when "showAvatarFrame" is toggled on in
+   the settings, the html element gets the .showAvatarFrame class and the
+   avatar shrinks slightly to reveal the colored frame around it. */
+#avatarFrame {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Collapse the frame along with the avatar when showAvatar is off */
+#avatarFrame:has(#avatar:empty) {
+	display: none;
+}
+
+:root.showAvatarFrame #avatarFrame {
+	background: var(--avatar-frame-color);
+	border-radius: calc(var(--border-radius) + 0.1em);
+	padding: 0.08em;
+}
+
+:root.showAvatarFrame #avatarFrame .avatar {
+	width: 1.85em;
+	height: 1.85em;
 }
 
 .timestamp,
@@ -191,6 +221,19 @@ li {
 	transform: translate(0px, 0.4em);
 }
 
+/* Twitch's Tier 2/3 GIF messages arrive as a single, standalone fragment —
+   sizing it like a tiny inline emote (1.5em) makes it unreadable, so it gets
+   its own larger, block-level treatment instead. Tweak the height to taste. */
+.gif-emote {
+	display: block;
+	height: 11em;
+	max-width: 100%;
+	width: auto;
+	margin: 0.3em 0 0 0;
+	border-radius: var(--border-radius);
+	transform: none;
+}
+
 .productImage {
 	height: 3em;
 	border-radius: 0.25em;
@@ -213,7 +256,10 @@ li {
 	margin: 10em,2em;
 }
 
-#username,
+#username {
+	font-weight: var(--username-font-weight);
+}
+
 #title {
 	font-weight: 700;
 }
@@ -233,8 +279,14 @@ li {
 }
 
 #message {
-	font-weight: 400;
+	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
+	color: var(--message-color);
+}
+
+/* The ":" separating pseudo and message (visible in "Chat en ligne" mode) */
+#colon-separator {
+	color: var(--message-color);
 }
 
 #card {
@@ -393,6 +445,13 @@ li {
 
 .blank {
 	background: #adadad00 !important;
+}
+
+/* Overrides every platform gradient above with one flat color, when
+   "useCustomCardColor" is enabled in the settings. Declared last so it
+   wins the cascade over the same-specificity platform classes. */
+.customCard {
+	background: var(--card-color) !important;
 }
 
 /****************/
