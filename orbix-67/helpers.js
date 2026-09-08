@@ -1,5 +1,5 @@
 //////////////////////
-// GLOBAL VARIABLES //
+// GLOBAL VARIABLES // 
 //////////////////////
 
 const avatarMap = new Map();
