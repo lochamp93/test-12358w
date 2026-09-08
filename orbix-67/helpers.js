@@ -1,5 +1,5 @@
 //////////////////////
-// GLOBAL VARIABLES  //
+// GLOBAL VARIABLES //
 //////////////////////
 
 const avatarMap = new Map();
@@ -197,6 +197,11 @@ function ConstructMessageFromParts(parts) {
 		// checks a few likely shapes defensively rather than assuming one.
 		const looksLikeGif = (part.type && part.type.toLowerCase().includes('gif')) || part.gif;
 		if (looksLikeGif) {
+			// Toggle-able from settings.json ("showTwitchGifs") — if disabled, fall back
+			// to whatever text label Twitch sent instead of rendering the image.
+			if (!showTwitchGifs)
+				return EscapeHTML(part.text || '');
+
 			const gifUrl = part.imageUrl || part.url
 				|| part.gif?.url || part.gif?.gifUrl
 				|| part.gif?.images?.original?.url || part.gif?.images?.fixed_height?.url;
