@@ -235,9 +235,22 @@ li {
 #avatarFrame {
 	position: absolute;
 	left: 0;
-	top: 50%;
-	transform: translateY(-50%);
-	display: inline-flex;
+	top: 0;
+	/* Fixed height matching a single #userInfo text line (measured: ~1.43em
+	   for platform icon + pseudo with no badges/pronouns/timestamp — a plain
+	   #username line is never taller than that). Deliberately NOT "top:50%;
+	   transform:translateY(-50%)" against #userInfo's OWN rendered height:
+	   #userInfo can wrap onto 2-3 lines when badges/pronouns/timestamp don't
+	   all fit on one line (flex-wrap: wrap, above), and that total height
+	   changes per message depending on how many of those happen to be shown
+	   and how long the username is — centering against it made the avatar
+	   land in a different spot relative to the pseudo every time, which is
+	   exactly what looked "random" from one message to the next. Pinning to
+	   a fixed line-height instead keeps the avatar centered on line 1 (where
+	   the platform icon + pseudo live) no matter how many extra lines the
+	   rest of the row wraps to underneath. */
+	height: 1.45em;
+	display: flex;
 	align-items: center;
 	justify-content: center;
 }
