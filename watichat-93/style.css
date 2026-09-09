@@ -106,20 +106,27 @@ li {
 }
 
 /* Animation d'arrivée des messages (reprise de l'ancien chat, puis affinée
-   sur deux retours : "un ralentissement à l'arrivée, plus smooth", puis
-   "encore plus lissé sur la fin"). Se joue quand le message passe en
+   sur plusieurs retours : "un ralentissement à l'arrivée, plus smooth",
+   puis "encore plus lissé", puis "vitesse normale au début, mais vraiment
+   atténué avant la position finale"). Se joue quand le message passe en
    ".show" (juste après son insertion), en parallèle de la transition de
    hauteur ci-dessus sur li.
    Deux animations séparées plutôt qu'une seule : le fondu (opacité + flou)
    se termine assez vite (0.7s) pour que le texte redevienne lisible sans
-   attendre — mais le GLISSEMENT (position) continue tout seul sur 1.8s,
-   avec une courbe à traîne encore plus longue que l'easeOutExpo standard
-   (0.16, 1, 0.3, 1) : ici (0.09, 1, 0.15, 1) — mêmes points de contrôle en
-   y (donc même "élan" initial très rapide), mais poussés encore plus tôt
-   en x, ce qui étire la fin de la courbe sur une portion plus grande de la
-   durée totale : la vitesse en fin de course est plus faible, donc le
-   ralentissement final est plus marqué et plus doux à l'œil.
-   Avec une seule animation (comme dans l'original), les deux se
+   attendre — mais le GLISSEMENT (position) continue tout seul sur 1.4s.
+   La courbe précédente, (0.09, 1, 0.15, 1) (une variante encore plus
+   extrême que l'easeOutExpo standard), allait en fait dans le mauvais
+   sens : ses points de contrôle en y=1 dès le départ créent un démarrage
+   "fusée" qui couvre déjà ~95% de la distance dans le premier tiers du
+   temps — mathématiquement ça continue de décélérer après, mais il ne
+   reste quasiment plus rien à parcourir, donc à l'œil ça ressemble à "déjà
+   arrivé", pas à un ralentissement. Nouvelle courbe (0.4, 0.05, 0.2, 1) :
+   démarrage volontairement proche du linéaire (vitesse "normale", pas de
+   ruée initiale), puis un gros freinage sur toute la seconde moitié —
+   environ 35% de la distance totale se joue dans les 50% de temps
+   restants, donc le ralentissement final couvre une distance qui se voit
+   vraiment, pas une fraction de pixel.
+   Avec une seule animation (comme dans l'original), fondu et glissement se
    terminaient ensemble : la décélération de la position était "masquée"
    par le fondu qui finissait au même rythme, donc peu perceptible. En les
    décorrélant, l'œil continue à suivre le message glisser doucement en
@@ -128,7 +135,7 @@ li {
 .slide-fade li.show {
 	animation:
 		slideInAerianFade 0.7s ease-out forwards,
-		slideInAerianSettle 1.8s cubic-bezier(0.09, 1, 0.15, 1) forwards;
+		slideInAerianSettle 1.4s cubic-bezier(0.4, 0.05, 0.2, 1) forwards;
 	/* Hints the browser to promote this to its own compositing layer up
 	   front, instead of deciding mid-animation — filter+transform running
 	   together can otherwise cause a brief hitch right as it starts. */
