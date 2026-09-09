@@ -228,6 +228,21 @@ li:has(#avatar:not(:empty)) + li {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.4em;
+	/* text-indent is inherited, and further down this file "chat en ligne"
+	   mode sets a (possibly negative) one on .message-right so wrapped
+	   message lines clear the avatar. #userInfo itself is a flex box, which
+	   simply ignores text-indent when placing ITS OWN flex children (avatar,
+	   pseudo, timestamp, badges, pronouns) — so that part is fine either
+	   way. But several of those children (#username with the pill/frame on,
+	   .timestamp, .pronouns) are individually display:inline-block, which
+	   DOES establish its own little text box with its own "first line" —
+	   and it was silently inheriting that same text-indent and applying it
+	   AGAIN, entirely on its own, shifting its text sideways by the same
+	   amount (this is what caused the pseudo pill to render with its first
+	   few letters pushed out of frame — reported as "amp93"/"t93" instead
+	   of "lochamp93"/"lobot93"). Resetting it here, once, cuts off the
+	   inheritance chain for all of #userInfo's descendants at the source. */
+	text-indent: 0;
 }
 
 /* Reserve room for the absolutely-positioned avatar ONLY when there's
