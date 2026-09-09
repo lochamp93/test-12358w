@@ -191,12 +191,6 @@ li:has(#avatar:not(:empty)) + li {
 	font-size: 0.7em;
 }
 
-.bubble {
-	background: var(--bubble-color) !important;
-	padding: 0.5em 1em;
-	border-radius: var(--border-radius);
-}
-
 .highlightMessage {
 	/* background: #adadad46 !important; */
 	/* background: #414141e5 !important;
@@ -426,8 +420,12 @@ li:has(#avatar:not(:empty)) + li {
   width: 1.2em; /* fixed, so #reply/#message below can offset by a known
                    amount instead of depending on the icon image's aspect
                    ratio or whether it's finished loading yet */
-	margin: 0, 0, 0, 0;
-  /* transform: translate(0, 0,25em); */
+	margin: 0;
+	display: block; /* Same fix as .avatar above: without this, the icon is
+	                    an inline replaced element and picks up the font's
+	                    phantom descender space below it, which is what was
+	                    pushing it visually toward the top of #userInfo's row
+	                    instead of sitting centered like the other elements. */
   }
 
 #badgeList {

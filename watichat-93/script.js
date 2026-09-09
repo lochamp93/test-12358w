@@ -46,9 +46,6 @@ const messageFont = urlParams.get("messageFont") || "";
 const useCustomMessageFontSize = GetBooleanParam("useCustomMessageFontSize", false);
 const messageFontSize = urlParams.get("messageFontSize") || "";
 const lineSpacing = urlParams.get("lineSpacing") || "1.7";
-const useChatBubbles = GetBooleanParam("useChatBubbles", false);
-const bubbleColor = urlParams.get("bubbleColor") || "#000000";
-const bubbleOpacity = urlParams.get("bubbleOpacity") || "0.9";
 const background = urlParams.get("background") || "#000000";
 const opacity = urlParams.get("opacity") || "0";
 
@@ -608,17 +605,6 @@ async function TwitchChatMessage(data) {
 	const pronounsDiv = instance.querySelector("#pronouns");
 	const usernameDiv = instance.querySelector("#username");
 	const messageDiv = instance.querySelector("#message");
-
-	// Render bubbles
-	if (useChatBubbles) {
-		const opacity255 = Math.round(parseFloat(bubbleOpacity) * 255);
-		let hexOpacity = opacity255.toString(16);
-		if (hexOpacity.length < 2) {
-			hexOpacity = "0" + hexOpacity;
-		}
-		document.documentElement.style.setProperty('--bubble-color', `${bubbleColor}${hexOpacity}`);
-		messageContainerDiv.classList.add("bubble");
-	}
 
 	// Set First Time Chatter
 	const firstMessage = data.meta.firstMessage;
@@ -1312,17 +1298,6 @@ async function YouTubeMessage(data) {
 	const badgeListDiv = instance.querySelector("#badgeList");
 	const usernameDiv = instance.querySelector("#username");
 	const messageDiv = instance.querySelector("#message");
-
-	// Render bubbles
-	if (useChatBubbles) {
-		const opacity255 = Math.round(parseFloat(bubbleOpacity) * 255);
-		let hexOpacity = opacity255.toString(16);
-		if (hexOpacity.length < 2) {
-			hexOpacity = "0" + hexOpacity;
-		}
-		document.documentElement.style.setProperty('--bubble-color', `${bubbleColor}${hexOpacity}`);
-		messageContainerDiv.classList.add("bubble");
-	}
 
 	// Set timestamp
 	if (showTimestamps) {
@@ -2239,17 +2214,6 @@ async function KickChatMessage(data) {
 	const usernameDiv = instance.querySelector("#username");
 	const messageDiv = instance.querySelector("#message");
 
-	// Render bubbles
-	if (useChatBubbles) {
-		const opacity255 = Math.round(parseFloat(bubbleOpacity) * 255);
-		let hexOpacity = opacity255.toString(16);
-		if (hexOpacity.length < 2) {
-			hexOpacity = "0" + hexOpacity;
-		}
-		document.documentElement.style.setProperty('--bubble-color', `${bubbleColor}${hexOpacity}`);
-		messageContainerDiv.classList.add("bubble");
-	}
-
 	// // Set First Time Chatter
 	// const firstMessage = data.firstMessage;
 	// if (firstMessage) {
@@ -2728,17 +2692,6 @@ async function TikTokChat(data) {
 	const pronounsDiv = instance.querySelector("#pronouns");
 	const usernameDiv = instance.querySelector("#username");
 	const messageDiv = instance.querySelector("#message");
-
-	// Render bubbles
-	if (useChatBubbles) {
-		const opacity255 = Math.round(parseFloat(bubbleOpacity) * 255);
-		let hexOpacity = opacity255.toString(16);
-		if (hexOpacity.length < 2) {
-			hexOpacity = "0" + hexOpacity;
-		}
-		document.documentElement.style.setProperty('--bubble-color', `${bubbleColor}${hexOpacity}`);
-		messageContainerDiv.classList.add("bubble");
-	}
 
 	// Set timestamp
 	if (showTimestamps) {

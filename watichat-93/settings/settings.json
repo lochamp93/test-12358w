@@ -20,35 +20,6 @@
 			"group": "Apparence"
 		},
 		{
-			"id": "useChatBubbles",
-			"label": "Bulles de chat",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": false,
-			"group": "Apparence"
-		},
-		{
-			"id": "bubbleColor",
-			"label": "Couleur des bulles",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#1d1d1d",
-			"showIf": "useChatBubbles",
-			"group": "Apparence"
-		},
-		{
-			"id": "bubbleOpacity",
-			"label": "Opacité des bulles",
-			"description": "",
-			"type": "number",
-			"defaultValue": "0.90",
-			"min": 0,
-			"max": 1,
-			"step": ".01",
-			"showIf": "useChatBubbles",
-			"group": "Apparence"
-		},
-		{
 			"id": "showAvatar",
 			"label": "Afficher l’avatar",
 			"description": "",
