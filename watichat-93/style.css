@@ -307,7 +307,77 @@ li:has(#avatar:not(:empty)) + li {
    above) — 2 IDs + 3 classes/attribute beats the 1 ID + 2 classes above,
    so this wins when it applies. */
 :root.inlineChat #reply[style*="display: block"] ~ #message {
-	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
+	/* Was "calc(avatar-offset + platform-offset)" — now 0, see the big
+	   comment block below: the hanging-indent rule's padding-left already
+	   supplies that exact offset uniformly (first line included, for this
+	   specific run), so keeping it here too just doubled it. */
+	margin-left: 0;
+}
+
+/* "Chat en ligne" + avatar/platform: #message is display:inline here (see
+   script.js), and an inline element's margin-left ONLY ever offsets its
+   own first rendered line — a wrapped continuation line has nothing to
+   inherit that from and falls back to this container's left edge (x:0),
+   exactly where the avatar/platform icon overhangs down from #userInfo
+   above. Short messages never wrap far enough to reach it, so this only
+   showed up on longer ones (reported: the second line of a wrapped inline
+   message rendering underneath/behind the avatar).
+   Classic "hanging indent" fix: push EVERY line of this container right
+   by the avatar/platform width (padding-left), then pull back the first
+   line by that same amount (negative text-indent) so it lands right back
+   where it always was.
+   IMPORTANT caveat that shapes every rule below: text-indent only ever
+   applies to the ONE genuinely first line of this whole container, not
+   to "the first line of each inline run" — so it only ever helps whichever
+   of sharedChat/userInfo/reply/message happens to be the very first thing
+   in the DOM (and only if it's actually visible). Everything that can
+   possibly come AFTER something else here (userInfo when sharedChat is
+   shown; message when reply is shown) needs its own EXPLICIT correction
+   below instead of being able to rely on this. Zero avatar/platform means
+   both vars are 0rem, making all of this a no-op outside that combo. */
+:root.inlineChat .message-right {
+	padding-left: calc(var(--avatar-offset) + var(--platform-offset));
+	text-indent: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
+}
+
+/* #reply and #sharedChat are real block-level children of .message-right,
+   not part of the userInfo/message run the hanging indent above is meant
+   for — but padding-left/text-indent are set ON that shared ancestor, and
+   text-indent is inherited, so both would otherwise silently pick up
+   spacing that was never meant for them: the padding shoves their whole
+   box right by the same amount, AND — only if one of them happens to be
+   the container's actual first line — their own first line of TEXT would
+   also get an extra yank back to the left from the inherited negative
+   text-indent (misaligning it against their own wrapped lines).
+   #sharedChat never had any left offset before this — cancel the padding
+   with an equal negative margin and drop the inherited indent so it stays
+   exactly where it always was, at the far left.
+   #reply already carries its own margin-left with the exact same
+   avatar/platform math a few rules up (so it lines up under the avatar
+   regardless of "chat en ligne" being on or off) — the container's new
+   padding-left now provides that same offset instead, so #reply's own
+   margin-left is reset to 0 rather than stacking a second copy of it. */
+:root.inlineChat #sharedChat {
+	margin-left: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
+	text-indent: 0;
+}
+
+:root.inlineChat #reply {
+	margin-left: 0;
+	text-indent: 0;
+}
+
+/* #sharedChat is visible (shared-chat guest message) AND comes before
+   #userInfo in the DOM — so per the caveat above, #userInfo is no longer
+   the container's genuinely first line, and the -X text-indent correction
+   two rules up never reaches it. #userInfo is an atomic inline-flex box
+   (it never itself wraps across lines), so it just needs the same single
+   correction applied directly: pull its one box back by the offset the
+   ambient padding-left added, same as if sharedChat weren't there. The
+   avatar is positioned absolute relative to THIS element, so it rides
+   along automatically once #userInfo itself is back in the right spot. */
+:root.inlineChat #sharedChat[style*="display: block"] ~ #userInfo {
+	margin-left: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
 }
 
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
