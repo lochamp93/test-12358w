@@ -395,6 +395,27 @@ li:has(#avatar:not(:empty)) + li {
 	margin-left: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
 }
 
+/* Grouped consecutive message: script.js hides #userInfo entirely
+   (display:none) for a repeat message from the same user, so there's no
+   pseudo/avatar row on that particular message at all. #userInfo being
+   display:none means it renders NO box whatsoever — so #message, coming
+   right after it, becomes the container's new genuinely-first line, and
+   wrongly receives the -X pull-back meant for userInfo instead (netting
+   back down to just the small 0.3em same-line gap, with no avatar/
+   platform clearance at all — reported: a grouped message's text drops
+   down to align with the left edge/avatar instead of staying under the
+   text of the message above it).
+   Cancel that pull-back (text-indent: 0) and replace the small "next to
+   the pseudo" gap with the real avatar/platform offset directly — there's
+   no pseudo on this line to leave a gap after, so this message's text
+   should sit exactly where the wrapped continuation lines of any OTHER
+   message already do, keeping the whole column of message text aligned
+   regardless of which rows happen to show their own header. */
+:root.inlineChat #userInfo[style*="display: none"] ~ #message {
+	text-indent: 0;
+	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
+}
+
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
 	align-items: center;
 } */

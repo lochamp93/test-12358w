@@ -740,7 +740,16 @@ async function TwitchChatMessage(data) {
 		const lastUserId = messageList.lastChild.dataset.userId;
 		if (lastPlatform == "twitch" && lastUserId == data.user.id) {
 			userInfoDiv.style.display = "none";
-			avatarDiv.innerHTML = '';
+			// Used to also clear avatarDiv's content here — but #message's
+			// left offset (--avatar-offset in style.css) is computed from
+			// whether AVATAR ITSELF is empty, not from whether showAvatar is
+			// on, so emptying it made a grouped message's text fall all the
+			// way back to the left margin instead of staying lined up with
+			// the text of the message above it (reported: "ça vient s'aligner
+			// avec la pp plutôt qu'avec le texte précédent"). #userInfo being
+			// display:none already hides the avatar visually either way, so
+			// simply leaving its (already-fetched) image in place keeps the
+			// reserved offset intact for free, with no other effect.
 			// #userInfo being display:none doesn't remove this <br> from the
 			// flow — it still forces its own line break, which (with nothing
 			// visible above it to break after) rendered as a tall empty line
@@ -2769,10 +2778,15 @@ async function TikTokChat(data) {
 		const lastUserId = messageList.lastChild.dataset.userId;
 		if (lastPlatform == "tiktok" && lastUserId == data.userId) {
 			userInfoDiv.style.display = "none";
-			avatarDiv.innerHTML = '';
-			// See the twitch handler above: the <br> still forces its own
-			// line break even though #userInfo is hidden, leaving a tall
-			// empty line before #reply/#message on grouped messages.
+			// See the twitch handler above: no longer clearing avatarDiv here
+			// either — it kept the grouped message's text from lining up
+			// with the text above it, since #message's left offset in
+			// style.css depends on the avatar actually being present, not on
+			// showAvatar's setting. #userInfo:display:none already hides it
+			// visually regardless.
+			// The <br> still forces its own line break even though #userInfo
+			// is hidden, leaving a tall empty line before #reply/#message on
+			// grouped messages.
 			instance.querySelector("#line-space").style.display = 'none';
 		}
 	}
