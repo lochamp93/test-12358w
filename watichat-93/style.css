@@ -89,10 +89,18 @@ li {
    much as the avatar below overhangs upward, and together that's already
    bigger than the small 0.5em gap above, so the two avatars end up
    touching/overlapping instead of having any "jeu" between them.
-   Either message in the pair having a visible avatar can cause this —
-   the message that shows one itself (":has(#avatar:not(:empty))"), or
-   the one right before it (via the "+" sibling case) — so both get the
-   bigger gap.
+   That's a compounding problem — it only actually happens when BOTH
+   messages in the pair show their own avatar, each overhanging toward the
+   other — so the bigger gap on the second li is only added when IT also
+   has one (the "+" sibling case now repeats the same :has() on itself).
+   A grouped consecutive message (#userInfo display:none, so no avatar of
+   its own overhanging upward into the gap) only ever has ONE overhang to
+   clear — the one li above it — and measuring that worst case (a single-
+   character first message, so its own box is as short as the avatar
+   allows) still leaves ~30px of clearance at the plain 0.5em gap below,
+   so it doesn't need the bigger one; it now gets the same compact gap as
+   two grouped messages in a row, which is what looked inconsistent and
+   was reported as "moins bien" than the grouped-to-grouped spacing.
    ":not(:empty)" alone used to be enough, back when a grouped consecutive
    message (its #userInfo, avatar included, hidden via display:none — see
    script.js) also had its avatar's content cleared. It no longer does —
@@ -105,7 +113,8 @@ li {
    that case: an avatar only earns the bigger gap when it's actually going
    to be visible. */
 li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)),
-li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)) + li {
+li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
+	+ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)) {
 	margin-top: 1em;
 }
 
