@@ -517,6 +517,13 @@ li:has(#avatar:not(:empty)) + li {
 	background: var(--username-frame-color);
 	border-radius: var(--border-radius); /* rectangle w/ rounded corners, not a full pill — matches the avatar/cards elsewhere */
 	padding: 0.15em 0.6em;
+	/* text-shadow is inherited — <html> sets a global one (2px 2px 5px)
+	   further up, and every element gets it by default unless something
+	   overrides it. Not adding a shadow HERE only stops this rule from
+	   adding a NEW one; it doesn't stop the inherited one from showing
+	   through, which is why the pseudo still had a shadow while framed.
+	   Needs an explicit "none" to actually cancel it. */
+	text-shadow: none;
 }
 
 /* Announcements reuse the normal chat username/badge/pronoun markup
