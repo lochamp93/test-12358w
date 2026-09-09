@@ -92,9 +92,20 @@ li {
    Either message in the pair having a visible avatar can cause this —
    the message that shows one itself (":has(#avatar:not(:empty))"), or
    the one right before it (via the "+" sibling case) — so both get the
-   bigger gap. */
-li:has(#avatar:not(:empty)),
-li:has(#avatar:not(:empty)) + li {
+   bigger gap.
+   ":not(:empty)" alone used to be enough, back when a grouped consecutive
+   message (its #userInfo, avatar included, hidden via display:none — see
+   script.js) also had its avatar's content cleared. It no longer does —
+   emptying it broke the SEPARATE "chat en ligne" horizontal alignment
+   further down this file, since #message's own left offset needs that
+   avatar to still exist — so an avatar sitting unused inside a
+   display:none #userInfo now still counts as ":not(:empty)" here too,
+   adding this bigger gap for a message that isn't showing any avatar to
+   protect. ":not([style*='display: none'])" on #userInfo excludes exactly
+   that case: an avatar only earns the bigger gap when it's actually going
+   to be visible. */
+li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)),
+li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)) + li {
 	margin-top: 1em;
 }
 
