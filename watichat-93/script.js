@@ -901,9 +901,27 @@ async function TwitchAnnouncement(data) {
 	content.querySelector("#username").style.color = useCustomCardColor ? cardColor : (useCustomUsernameColor ? usernameColor : data.user.color);
 	content.querySelector("#message").innerText = data.text;
 
-	// Remove the line break
-	content.querySelector("#colon-separator").style.display = `inline`;
-	content.querySelector("#line-space").style.display = `none`;
+	// Remove the line break — mirrors the "chat en ligne" (inlineChat)
+	// handling in TwitchChatMessage/etc. above, which was missing here:
+	// this used to always show the ":" and drop the line break no matter
+	// what inlineChat was set to, so #message (still display:block by
+	// default) kept starting its own new line underneath the pseudo
+	// regardless — the ":" then looked like it was introducing an inline
+	// continuation that never actually came, which is what read as
+	// misaligned. Gating this on inlineChat (and adding the matching
+	// "#message inline" line, also missing here) makes an announcement
+	// follow the toggle exactly like every other message type.
+	// Unlike TwitchChatMessage, this doesn't also check "!showUsernameFrame"
+	// before showing the ":" — the username-frame pill never shows on an
+	// announcement pseudo regardless of that global toggle (see the
+	// "#card #username" override above), so there's never a pill there to
+	// let the ":" be skipped.
+	if (inlineChat) {
+		content.querySelector("#colon-separator").style.display = `inline`;
+		content.querySelector("#line-space").style.display = `none`;
+		content.querySelector(".message-contents").style.alignItems = 'center';
+		content.querySelector("#message").style.display = `inline`;
+	}
 
 	// Remove the avatar
 	content.querySelector("#avatar").style.display = `none`;

@@ -80,6 +80,24 @@ li {
 	transition: all 1s ease-in-out;
 }
 
+/* #avatarFrame deliberately overhangs its own #userInfo row above AND
+   below (see the comment on #avatarFrame) so a single line of text isn't
+   stretched to the avatar's height. That's invisible on a long/wrapped
+   message — its own row is tall enough that the overhang stays well
+   inside it — but for two SHORT, un-grouped messages from different
+   users back to back, the avatar above overhangs downward by about as
+   much as the avatar below overhangs upward, and together that's already
+   bigger than the small 0.5em gap above, so the two avatars end up
+   touching/overlapping instead of having any "jeu" between them.
+   Either message in the pair having a visible avatar can cause this —
+   the message that shows one itself (":has(#avatar:not(:empty))"), or
+   the one right before it (via the "+" sibling case) — so both get the
+   bigger gap. */
+li:has(#avatar:not(:empty)),
+li:has(#avatar:not(:empty)) + li {
+	margin-top: 1em;
+}
+
 .reverseLineItemDirection {
 	display: flex;
 	flex-direction: column;
