@@ -890,7 +890,29 @@ async function TwitchAnnouncement(data) {
 	// Create a new instance of the template
 	const content = contentTemplate.content.cloneNode(true);
 
-	content.querySelector("#message").innerText = data.text;
+	// Built from data.parts via the SAME function TwitchChatMessage uses
+	// (ConstructMessageFromParts), not from the flat "data.text" string —
+	// that used to be a plain innerText assignment, with a separate
+	// hand-rolled loop below doing its own regex search-and-replace for
+	// emotes. That loop only ever checked "part.type == 'emote'" (Twitch's
+	// own custom emotes), never "part.emoji" — the flag ConstructMessage-
+	// FromParts checks FIRST for a native/system emoji fragment (💀, 😂,
+	// etc., which Twitch sends as its own small colored image, not a
+	// bare-font character). A native emoji in an announcement's text was
+	// therefore never matched by anything, left as the literal unicode
+	// character straight from "data.text" — rendered by whatever font
+	// this page happens to be using instead of Twitch's own colored icon,
+	// which is why it came out as a plain grey/outline skull, bigger and
+	// flatter than the properly-rendered version one row up in a normal
+	// chat message (reported: same emoji, two different looks). Reusing
+	// ConstructMessageFromParts fixes this by construction — one code
+	// path handles every fragment type (emoji, cheer bits, custom emotes,
+	// mentions, plain text) identically for both chat messages and
+	// announcements, so they can't drift apart again like this.
+	// Falls back to the flat text on the rare event with no parts at all.
+	content.querySelector("#message").innerHTML = (data.parts && data.parts.length)
+		? ConstructMessageFromParts(data.parts)
+		: EscapeHTML(data.text);
 
 	// An announcement shows just the pseudo (no badges, pronouns or
 	// timestamp — with the card's colored bar and the "userColor" already
@@ -933,28 +955,6 @@ async function TwitchAnnouncement(data) {
 
 	// Remove the platform icon
 	content.querySelector("#platform").style.display = `none`;
-
-	// Render emotes
-	for (i in data.parts) {
-		if (data.parts[i].type == `emote`) {
-			const emoteElement = `<img src="${data.parts[i].imageUrl}" class="emote"/>`;
-			const emoteName = EscapeRegExp(data.parts[i].text);
-
-			let regexPattern = emoteName;
-
-			// Check if the emote name consists only of word characters (alphanumeric and underscore)
-			if (/^\w+$/.test(emoteName)) {
-				regexPattern = `\\b${emoteName}\\b`;
-			}
-			else {
-				// For non-word emotes, ensure they are surrounded by non-word characters or boundaries
-				regexPattern = `(?<=^|[^\\w])${emoteName}(?=$|[^\\w])`;
-			}
-
-			const regex = new RegExp(regexPattern, 'g');
-			content.querySelector("#message").innerHTML = content.querySelector("#message").innerHTML.replace(regex, emoteElement);
-		}
-	}
 
 	// Insert the modified template instance into the DOM
 	instance.querySelector("#content").appendChild(content);
