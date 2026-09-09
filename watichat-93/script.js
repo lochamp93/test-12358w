@@ -27,20 +27,24 @@ const avatarFrameColor = urlParams.get("avatarFrameColor") || "#FFD400";
 const showTimestamps = GetBooleanParam("showTimestamps", true);
 const showBadges = GetBooleanParam("showBadges", true);
 const showPronouns = GetBooleanParam("showPronouns", true);
-const showUsername = GetBooleanParam("showUsername", true);
 const useCustomUsernameColor = GetBooleanParam("useCustomUsernameColor", false);
 const usernameColor = urlParams.get("usernameColor") || "#FFFFFF";
 const usernameFontWeight = GetIntParam("usernameFontWeight", 700);
 const showUsernameFrame = GetBooleanParam("showUsernameFrame", false);
 const usernameFrameColor = urlParams.get("usernameFrameColor") || "#FFD400";
-const showMessage = GetBooleanParam("showMessage", true);
 const messageColor = urlParams.get("messageColor") || "#FFFFFF";
 const messageFontWeight = GetIntParam("messageFontWeight", 400);
 const useCustomCardColor = GetBooleanParam("useCustomCardColor", false);
 const cardColor = urlParams.get("cardColor") || "#1D1D1D";
-const showAnnouncementUsername = GetBooleanParam("showAnnouncementUsername", true);
+const hideAnnouncementUsername = GetBooleanParam("hideAnnouncementUsername", false);
+const useCustomAnnouncementTextColor = GetBooleanParam("useCustomAnnouncementTextColor", false);
+const announcementTextColor = urlParams.get("announcementTextColor") || "#FFFFFF";
 const font = urlParams.get("font") || "";
 const fontSize = urlParams.get("fontSize") || "30";
+const useCustomMessageFont = GetBooleanParam("useCustomMessageFont", false);
+const messageFont = urlParams.get("messageFont") || "";
+const useCustomMessageFontSize = GetBooleanParam("useCustomMessageFontSize", false);
+const messageFontSize = urlParams.get("messageFontSize") || "";
 const lineSpacing = urlParams.get("lineSpacing") || "1.7";
 const useChatBubbles = GetBooleanParam("useChatBubbles", false);
 const bubbleColor = urlParams.get("bubbleColor") || "#000000";
@@ -57,7 +61,6 @@ const inlineChat = GetBooleanParam("inlineChat", false);
 const imageEmbedPermissionLevel = GetIntParam("imageEmbedPermissionLevel", 20);
 const showYouTubeLinkPreviews = GetBooleanParam("showYouTubeLinkPreviews", true);
 
-const showTwitchMessages = GetBooleanParam("showTwitchMessages", true);
 const showTwitchAnnouncements = GetBooleanParam("showTwitchAnnouncements", true);
 const showTwitchFollows = GetBooleanParam("showTwitchFollows", false);
 const showTwitchSubs = GetBooleanParam("showTwitchSubs", false);
@@ -82,7 +85,6 @@ const showYouTubeMemberships = GetBooleanParam("showYouTubeMemberships", false);
 const enableTikTokSupport = GetBooleanParam("enableTikTokSupport", false);
 const showTikTokFollows = GetBooleanParam("showTikTokFollows", false);
 const showTikTokLikes = GetBooleanParam("showTikTokLikes", false);
-const showTikTokMessages = GetBooleanParam("showTikTokMessages", false);
 const showTikTokGifts = GetBooleanParam("showTikTokGifts", false);
 const showTikTokSubs = GetBooleanParam("showTikTokSubs", false);
 
@@ -125,6 +127,15 @@ document.body.style.fontFamily = font;
 // Setting it on the root instead makes rem and em agree again, at any
 // configured font size.
 document.documentElement.style.fontSize = `${fontSize}px`;
+
+// Optional per-message overrides, independent of the widget-wide font/size
+// above (which still drives the pseudo and everything else) — only ever
+// applied when their own toggle is on. Left unset otherwise, so "#message"
+// in style.css falls back to "inherit" and behaves exactly as before.
+if (useCustomMessageFont)
+	document.documentElement.style.setProperty('--message-font-family', messageFont);
+if (useCustomMessageFontSize)
+	document.documentElement.style.setProperty('--message-font-size', `${messageFontSize}px`);
 
 // Set line spacing
 document.documentElement.style.setProperty('--line-spacing', `${lineSpacing}em`);
@@ -561,9 +572,6 @@ function ApplyCardColor(cardDiv, platformClass) {
 }
 
 async function TwitchChatMessage(data) {
-	if (!showTwitchMessages)
-		return;
-
 	// Don't post messages starting with "!"
 	if (data.text.startsWith("!") && excludeCommands)
 		return;
@@ -614,7 +622,7 @@ async function TwitchChatMessage(data) {
 
 	// Set First Time Chatter
 	const firstMessage = data.meta.firstMessage;
-	if (firstMessage && showMessage) {
+	if (firstMessage) {
 		firstMessageDiv.style.display = 'block';
 		messageContainerDiv.classList.add("highlightMessage");
 	}
@@ -643,7 +651,7 @@ async function TwitchChatMessage(data) {
 
 	// Set Reply Message
 	const isReply = data.isReply;
-	if (isReply && showMessage) {
+	if (isReply) {
 		const replyUser = data.reply.userName;
 		const replyMsg = data.reply.msgBody;
 
@@ -659,13 +667,11 @@ async function TwitchChatMessage(data) {
 	}
 
 	// Set the username info
-	if (showUsername) {
-		if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
-			usernameDiv.innerText = data.user.name;
-		else
-			usernameDiv.innerText = `${data.user.name} (${data.user.login})`;
-		usernameDiv.style.color = useCustomUsernameColor ? usernameColor : data.user.color;
-	}
+	if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
+		usernameDiv.innerText = data.user.name;
+	else
+		usernameDiv.innerText = `${data.user.name} (${data.user.login})`;
+	usernameDiv.style.color = useCustomUsernameColor ? usernameColor : data.user.color;
 
 	// Set pronouns
 	const pronouns = await GetPronouns('twitch', data.user.login);
@@ -683,9 +689,7 @@ async function TwitchChatMessage(data) {
 		message = TranslateToFurry(message);
 
 	// Set message text
-	if (showMessage) {
-		messageDiv.innerHTML = message;
-	}
+	messageDiv.innerHTML = message;
 
 	// "/me" action messages: shown in italics instead of the old
 	// username-colored text (message color now follows "messageColor" like
@@ -893,7 +897,7 @@ async function TwitchAnnouncement(data) {
 
 	content.querySelector("#message").innerText = data.text;
 
-	// An announcement always shows just the pseudo (no badges, pronouns or
+	// An announcement shows just the pseudo (no badges, pronouns or
 	// timestamp — with the card's colored bar and the "userColor" already
 	// carrying the identity, those read as clutter here) and, when shown,
 	// the pseudo always sits on its own line above the message — this
@@ -903,22 +907,30 @@ async function TwitchAnnouncement(data) {
 	// colon-separator/inline-message machinery from TwitchChatMessage is
 	// needed here — #userInfo/#line-space are just left at their template
 	// defaults (visible, pseudo-only) in that case.
-	// When "showAnnouncementUsername" is off, there's no account identity
+	// When "hideAnnouncementUsername" is on, there's no account identity
 	// to show at all — just the announcement's own content — so the whole
 	// #userInfo row is hidden along with it. #line-space has to go too:
 	// like the grouped-consecutive-message case elsewhere in this file,
 	// hiding #userInfo alone doesn't remove the <br> from the flow, so it
 	// would still force an empty line above the message.
-	if (showAnnouncementUsername) {
+	if (hideAnnouncementUsername) {
+		content.querySelector("#userInfo").style.display = `none`;
+		content.querySelector("#line-space").style.display = `none`;
+		// The custom text color is only ever offered (per the settings
+		// nesting) once the pseudo itself is hidden — with no pseudo/card
+		// color to carry the announcement's identity anymore, the message
+		// text is the only thing left to color. When the pseudo is shown,
+		// the message keeps the normal global "messageColor" like any
+		// other message.
+		if (useCustomAnnouncementTextColor)
+			content.querySelector("#message").style.color = announcementTextColor;
+	}
+	else {
 		if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
 			content.querySelector("#username").innerText = data.user.name;
 		else
 			content.querySelector("#username").innerText = `${data.user.name} (${data.user.login})`;
 		content.querySelector("#username").style.color = useCustomCardColor ? cardColor : (useCustomUsernameColor ? usernameColor : data.user.color);
-	}
-	else {
-		content.querySelector("#userInfo").style.display = `none`;
-		content.querySelector("#line-space").style.display = `none`;
 	}
 
 	// Remove the avatar
@@ -1318,20 +1330,16 @@ async function YouTubeMessage(data) {
 		timestampDiv.innerText = GetCurrentTimeFormatted();
 	}
 
-	// Set the message data
-	if (showUsername) {
-		usernameDiv.innerText = data.user.name;
-		if (useCustomUsernameColor)
-			usernameDiv.style.color = usernameColor;
-		else if (randomYouTubeColors)
-			usernameDiv.style.color = StringToHex(data.user.name);
-		else
-			usernameDiv.style.color = youtubeColor;	// YouTube users do not have colors, so just set it to red
-	}
+	// Set the username info
+	usernameDiv.innerText = data.user.name;
+	if (useCustomUsernameColor)
+		usernameDiv.style.color = usernameColor;
+	else if (randomYouTubeColors)
+		usernameDiv.style.color = StringToHex(data.user.name);
+	else
+		usernameDiv.style.color = youtubeColor;	// YouTube users do not have colors, so just set it to red
 
-	if (showMessage) {
-		messageDiv.innerText = data.message;
-	}
+	messageDiv.innerText = data.message;
 
 	// Set furry mode
 	if (furryMode)
@@ -2244,14 +2252,14 @@ async function KickChatMessage(data) {
 
 	// // Set First Time Chatter
 	// const firstMessage = data.firstMessage;
-	// if (firstMessage && showMessage) {
+	// if (firstMessage) {
 	// 	firstMessageDiv.style.display = 'block';
 	// 	messageContainerDiv.classList.add("highlightMessage");
 	// }
 
 	// Set Reply Message
 	const isReply = data.type == 'reply';
-	if (isReply && showMessage) {
+	if (isReply) {
 		const replyUser = data.metadata.original_sender.username;
 		const replyMsg = data.metadata.original_message.content;
 
@@ -2267,10 +2275,8 @@ async function KickChatMessage(data) {
 	}
 
 	// Set the username info
-	if (showUsername) {
-		usernameDiv.innerText = data.sender.username;
-		usernameDiv.style.color = useCustomUsernameColor ? usernameColor : data.sender.identity.color;
-	}
+	usernameDiv.innerText = data.sender.username;
+	usernameDiv.style.color = useCustomUsernameColor ? usernameColor : data.sender.identity.color;
 
 	// Set the message data
 	let message = data.content;
@@ -2278,7 +2284,7 @@ async function KickChatMessage(data) {
 	// Highlight mentions
 	const mentionRgx = new RegExp(`(^|\\s)@${kickUsername}(\\s|$)`, 'i');
 	const mention = mentionRgx.test(message);
-	if (mention && showMessage)
+	if (mention)
 		messageContainerDiv.classList.add("highlightMessage");
 
 	// Set furry mode
@@ -2286,9 +2292,7 @@ async function KickChatMessage(data) {
 		message = TranslateToFurry(message);
 
 	// Set message text
-	if (showMessage) {
-		messageDiv.innerText = message;
-	}
+	messageDiv.innerText = message;
 
 	// Remove the line break
 	if (inlineChat) {
@@ -2694,9 +2698,6 @@ function KickUserBanned(data) {
 
 
 async function TikTokChat(data) {
-	if (!showTikTokMessages)
-		return;
-
 	// Don't post messages starting with "!"
 	if (data.comment.startsWith("!") && excludeCommands)
 		return;
@@ -2746,10 +2747,8 @@ async function TikTokChat(data) {
 	}
 
 	// Set the username info
-	if (showUsername) {
-		usernameDiv.innerText = data.nickname;
-		usernameDiv.style.color = useCustomUsernameColor ? usernameColor : '#9e9e9e';
-	}
+	usernameDiv.innerText = data.nickname;
+	usernameDiv.style.color = useCustomUsernameColor ? usernameColor : '#9e9e9e';
 
 	// Set the message data
 	let message = data.comment;
@@ -2759,9 +2758,7 @@ async function TikTokChat(data) {
 		message = TranslateToFurry(message);
 
 	// Set message text
-	if (showMessage) {
-		messageDiv.innerText = message;
-	}
+	messageDiv.innerText = message;
 
 	// Remove the line break
 	if (inlineChat) {

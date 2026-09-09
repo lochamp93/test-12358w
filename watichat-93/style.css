@@ -578,6 +578,12 @@ li:has(#avatar:not(:empty)) + li {
 	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
 	color: var(--message-color);
+	/* Both custom properties are only ever set (in script.js) when their
+	   own "personnalisé ?" toggle is on — left unset otherwise, so the
+	   "inherit" fallback keeps #message tracking the widget-wide
+	   font/fontSize exactly like before these existed. */
+	font-family: var(--message-font-family, inherit);
+	font-size: var(--message-font-size, inherit);
 }
 
 /* The ":" separating pseudo and message (visible in "Chat en ligne" mode) */
