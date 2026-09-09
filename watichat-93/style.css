@@ -216,7 +216,18 @@ li {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.4em;
-	padding-left: 2.4rem; /* reserve room for the absolutely-positioned avatar — rem, not em, so this isn't thrown off by #userInfo's own font-size */
+}
+
+/* Reserve room for the absolutely-positioned avatar ONLY when there's
+   actually an avatar to reserve room for — #avatar:empty covers both
+   "showAvatar is off" and an announcement card (which always hides/never
+   fills its avatar). Without this condition the gap stayed reserved even
+   with no avatar to show, leaving a dead strip of empty space to the left
+   of the pseudo instead of letting it (and everything after it) shift
+   left to fill it. rem, not em, so this isn't thrown off by #userInfo's
+   own font-size. */
+#userInfo:has(#avatar:not(:empty)) {
+	padding-left: 2.4rem;
 }
 
 /* flexbox's "gap" is inserted between EVERY pair of flex items, even ones
@@ -228,28 +239,63 @@ li {
 	display: none;
 }
 
-/* Aligns with the pseudo's actual x-position — 2.4rem is the room reserved
-   above for the avatar. rem, not em: #reply's own font-size is smaller
-   (0.7em below), and an em value here would've scaled down with it,
-   landing short of where it should be — exactly what was throwing the
-   reply arrow's alignment off.
-   When the platform icon is showing, it sits before the pseudo and pushes
-   it further right, so the rule below bumps this margin accordingly. Done
-   with :has() rather than a live JS measurement so it still works when
-   #userInfo is display:none (grouped consecutive messages) — :has()
-   matches on DOM structure, not on what's actually painted. */
-#reply {
-	margin-left: 2.4rem;
+/* #reply/#message align with wherever the pseudo actually starts, which
+   depends on what's showing before it: the avatar (2.4rem reserved above)
+   and/or the platform icon (1.2rem wide + 0.4rem gap). Both contributions
+   are computed as custom properties on ".message-right" — the common
+   ancestor of #userInfo AND #reply/#message (they're siblings, not
+   parent/child, so a property set ON #userInfo wouldn't cascade to
+   them) — each toggled independently via :has(), so any combination
+   (avatar only, platform only, both, neither) adds up correctly instead
+   of needing one rule per combination.
+   rem throughout, not em: #reply's own font-size is smaller (0.7em
+   below), so an em value here would shrink right back down on #reply
+   specifically when used as ITS margin — exactly what was throwing the
+   reply arrow's alignment off originally. #userInfo/#avatarFrame share
+   the root's font-size (no override), so 1.2em/0.4em there convert 1:1
+   to 1.2rem/0.4rem.
+   Using :has() rather than a live JS measurement so this keeps working
+   when #userInfo is display:none (grouped consecutive messages) —
+   :has() matches on DOM structure, not on what's actually painted. */
+.message-right {
+	--avatar-offset: 0rem;
+	--platform-offset: 0rem;
 }
 
-#userInfo:has(#platform:not(:empty)) ~ #reply,
-#userInfo:has(#platform:not(:empty)) ~ #message {
-	/* rem throughout, not em, for the platform-width/gap portion too — #reply's
-	   own font-size is smaller (0.7em), so an em value here would shrink right
-	   back down on #reply specifically, the same bug as above all over again.
-	   #userInfo (where the platform icon actually lives) shares the root's
-	   font-size, so 1.2em/0.4em there convert 1:1 to 1.2rem/0.4rem. */
-	margin-left: calc(2.4rem + 1.2rem + 0.4rem); /* + platform width + gap */
+.message-right:has(#userInfo #avatar:not(:empty)) {
+	--avatar-offset: 2.4rem;
+}
+
+.message-right:has(#userInfo #platform:not(:empty)) {
+	--platform-offset: 1.6rem; /* platform width (1.2rem) + gap (0.4rem) */
+}
+
+#reply,
+#message {
+	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
+}
+
+/* "Chat en ligne" mode: the message continues right after the pseudo (or
+   the colon) on the SAME line as #userInfo, rather than starting a new
+   row underneath it — so it has nothing to align under, and the
+   avatar/platform offset above (meant for the block-mode row start) just
+   opened up a large dead gap between the pseudo and the message instead.
+   A small fixed gap replaces it. */
+:root.inlineChat #message {
+	margin-left: 0.3em;
+}
+
+/* ...EXCEPT when it's a reply: #reply is a <div>, so it always starts its
+   own line whether or not "chat en ligne" is on — #message then follows
+   on a new line too (after it, not next to the pseudo), so it should
+   align under the pseudo/reply like in block mode, not use the small
+   same-line gap above. [style*="display: block"] targets script.js
+   setting replyDiv.style.display='block' for an actual reply (the
+   default, no-reply state is "display: none" from the plain #reply rule
+   above) — 2 IDs + 3 classes/attribute beats the 1 ID + 2 classes above,
+   so this wins when it applies. */
+:root.inlineChat #reply[style*="display: block"] ~ #message {
+	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
 }
 
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
@@ -424,10 +470,22 @@ li {
 }
 
 /* Ombre pour la lisibilité (reprise de l'ancien chat) — un peu plus
-   marquée que l'ombre globale de <html> (2px 2px 5px), spécifiquement
-   sur le pseudo et le message. */
-#username,
+   marquée que l'ombre globale de <html> (2px 2px 5px), spécifiquement sur
+   le message, et sur le pseudo SEULEMENT s'il n'a pas déjà un cadre coloré
+   derrière lui (:root.showUsernameFrame ci-dessous) — la pastille pleine
+   couleur donne déjà largement assez de contraste, une ombre portée
+   dessus ne fait qu'ajouter du bruit visuel inutile. */
 #message {
+	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+:root:not(.showUsernameFrame) #username,
+#card #username {
+	/* #card #username here too: an announcement's pseudo never gets the
+	   pill (see the #card #username rule below), regardless of whether
+	   showUsernameFrame is on globally for the rest of the chat — so
+	   whether it should have this shadow can't be keyed to that global
+	   toggle, only to whether THIS pseudo is actually framed or not. */
 	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
@@ -441,6 +499,21 @@ li {
 	background: var(--username-frame-color);
 	border-radius: var(--border-radius); /* rectangle w/ rounded corners, not a full pill — matches the avatar/cards elsewhere */
 	padding: 0.15em 0.6em;
+}
+
+/* Announcements reuse the normal chat username/badge/pronoun markup
+   nested inside the card (see script.js TwitchAnnouncement — it clones
+   messageTemplate into #card #content), so it would otherwise inherit
+   the pill-frame styling above too. On an announcement card it's one
+   colored element too many next to the card's own colored bar — always
+   plain text there regardless of the global "cadre de pseudo" setting.
+   #card #username (2 IDs) outweighs :root.showUsernameFrame #username
+   (1 ID + 2 classes) by specificity, so this wins either way. */
+#card #username {
+	display: inline;
+	background: none;
+	border-radius: 0;
+	padding: 0;
 }
 
 #title {
@@ -466,9 +539,17 @@ li {
 	   EVERY wrapped line respects margin-left below, not just the first —
 	   an inline element's margin only offsets its first line, so wrapped
 	   continuation lines were falling back to the far left edge. Switched
-	   back to inline for "chat en ligne" mode in script.js. */
+	   back to inline for "chat en ligne" mode in script.js.
+	   margin-left is NOT set here anymore — it's a leftover from before
+	   the --avatar-offset/--platform-offset system further up handled it.
+	   Left in place, it had the same specificity (one #message ID) as
+	   that rule but came later in the file, so it always won and pinned
+	   the margin to a flat 2.4rem no matter what avatar/platform were
+	   actually showing — the exact cause of "hiding the avatar doesn't
+	   free up the space" and of the message text sitting misaligned
+	   under an announcement's pseudo (which never has an avatar/platform
+	   to offset for). */
 	display: block;
-	margin-left: 2.4rem; /* rem for the same reason as #reply above */
 	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
 	color: var(--message-color);

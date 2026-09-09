@@ -153,6 +153,12 @@ if (showUsernameFrame)
 	document.documentElement.classList.add('showUsernameFrame');
 document.documentElement.style.setProperty('--username-frame-color', usernameFrameColor);
 
+// "Chat en ligne" mode (pseudo + message on the same line) — flagged on
+// <html> so CSS can reset #message/#reply's block-mode-only avatar-space
+// margin (see the ":root.inlineChat" rules in style.css).
+if (inlineChat)
+	document.documentElement.classList.add('inlineChat');
+
 // Card background color
 document.documentElement.style.setProperty('--card-color', cardColor);
 
