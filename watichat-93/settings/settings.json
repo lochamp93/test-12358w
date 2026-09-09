@@ -248,6 +248,14 @@
 			"group": "Apparence"
 		},
 		{
+			"id": "showAnnouncementUsername",
+			"label": "Afficher le pseudo dans les annonces",
+			"description": "Si activé, le pseudo s'affiche au-dessus du message. Si désactivé, seul le contenu de l'annonce est affiché",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Apparence"
+		},
+		{
 			"id": "hideAfter",
 			"label": "Masquer après",
 			"description": "Les messages disparaissent après X secondes (0 pour désactiver)",

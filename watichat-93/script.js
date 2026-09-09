@@ -38,6 +38,7 @@ const messageColor = urlParams.get("messageColor") || "#FFFFFF";
 const messageFontWeight = GetIntParam("messageFontWeight", 400);
 const useCustomCardColor = GetBooleanParam("useCustomCardColor", false);
 const cardColor = urlParams.get("cardColor") || "#1D1D1D";
+const showAnnouncementUsername = GetBooleanParam("showAnnouncementUsername", true);
 const font = urlParams.get("font") || "";
 const fontSize = urlParams.get("fontSize") || "30";
 const lineSpacing = urlParams.get("lineSpacing") || "1.7";
@@ -879,9 +880,10 @@ async function TwitchAnnouncement(data) {
 		}
 	}
 
-	// Set the card header
-	iconDiv.innerText = "📢";
-	titleDiv.innerText = "Annonce";
+	// The card's own header (icon + "Annonce" title) is redundant with the
+	// colored bar on the side, which already marks the card as an
+	// announcement — always hidden here, regardless of any other setting.
+	headerDiv.style.display = `none`;
 
 	// Get a reference to the message template
 	const contentTemplate = document.getElementById('messageTemplate');
@@ -889,61 +891,41 @@ async function TwitchAnnouncement(data) {
 	// Create a new instance of the template
 	const content = contentTemplate.content.cloneNode(true);
 
-	// Set timestamp
-	if (showTimestamps) {
-		content.querySelector("#timestamp").classList.add("timestamp");
-		content.querySelector("#timestamp").innerText = GetCurrentTimeFormatted();
-	}
-	if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
-		content.querySelector("#username").innerText = data.user.name;
-	else
-		content.querySelector("#username").innerText = `${data.user.name} (${data.user.login})`;
-	content.querySelector("#username").style.color = useCustomCardColor ? cardColor : (useCustomUsernameColor ? usernameColor : data.user.color);
 	content.querySelector("#message").innerText = data.text;
 
-	// Remove the line break — mirrors the "chat en ligne" (inlineChat)
-	// handling in TwitchChatMessage/etc. above, which was missing here:
-	// this used to always show the ":" and drop the line break no matter
-	// what inlineChat was set to, so #message (still display:block by
-	// default) kept starting its own new line underneath the pseudo
-	// regardless — the ":" then looked like it was introducing an inline
-	// continuation that never actually came, which is what read as
-	// misaligned. Gating this on inlineChat (and adding the matching
-	// "#message inline" line, also missing here) makes an announcement
-	// follow the toggle exactly like every other message type.
-	// Unlike TwitchChatMessage, this doesn't also check "!showUsernameFrame"
-	// before showing the ":" — the username-frame pill never shows on an
-	// announcement pseudo regardless of that global toggle (see the
-	// "#card #username" override above), so there's never a pill there to
-	// let the ":" be skipped.
-	if (inlineChat) {
-		content.querySelector("#colon-separator").style.display = `inline`;
+	// An announcement always shows just the pseudo (no badges, pronouns or
+	// timestamp — with the card's colored bar and the "userColor" already
+	// carrying the identity, those read as clutter here) and, when shown,
+	// the pseudo always sits on its own line above the message — this
+	// doesn't follow "chat en ligne" (inlineChat) the way a normal chat
+	// message does; the user explicitly asked for pseudo/message to
+	// always be stacked, never on the same line. So none of the
+	// colon-separator/inline-message machinery from TwitchChatMessage is
+	// needed here — #userInfo/#line-space are just left at their template
+	// defaults (visible, pseudo-only) in that case.
+	// When "showAnnouncementUsername" is off, there's no account identity
+	// to show at all — just the announcement's own content — so the whole
+	// #userInfo row is hidden along with it. #line-space has to go too:
+	// like the grouped-consecutive-message case elsewhere in this file,
+	// hiding #userInfo alone doesn't remove the <br> from the flow, so it
+	// would still force an empty line above the message.
+	if (showAnnouncementUsername) {
+		if (data.user.name.toLowerCase() == data.user.login.toLowerCase())
+			content.querySelector("#username").innerText = data.user.name;
+		else
+			content.querySelector("#username").innerText = `${data.user.name} (${data.user.login})`;
+		content.querySelector("#username").style.color = useCustomCardColor ? cardColor : (useCustomUsernameColor ? usernameColor : data.user.color);
+	}
+	else {
+		content.querySelector("#userInfo").style.display = `none`;
 		content.querySelector("#line-space").style.display = `none`;
-		content.querySelector(".message-contents").style.alignItems = 'center';
-		content.querySelector("#message").style.display = `inline`;
 	}
 
 	// Remove the avatar
 	content.querySelector("#avatar").style.display = `none`;
 
-	// Render platform
+	// Remove the platform icon
 	content.querySelector("#platform").style.display = `none`;
-
-	// Render badges
-	content.querySelector("#badgeList").innerHTML = "";
-	for (i in data.user.badges) {
-		const badge = new Image();
-		badge.src = data.user.badges[i].imageUrl;
-		badge.classList.add("badge");
-		content.querySelector("#badgeList").appendChild(badge);
-	}
-
-	// Set pronouns
-	const pronouns = await GetPronouns('twitch', data.user.login);
-	if (pronouns && showPronouns) {
-		content.querySelector("#pronouns").classList.add("pronouns");
-		content.querySelector("#pronouns").innerText = pronouns;
-	}
 
 	// Render emotes
 	for (i in data.parts) {
