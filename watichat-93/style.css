@@ -91,6 +91,10 @@ li {
    parallèle de la transition de hauteur ci-dessus sur li. */
 .slide-fade li.show {
 	animation: slideInAerian 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	/* Hints the browser to promote this to its own compositing layer up
+	   front, instead of deciding mid-animation — filter+transform running
+	   together can otherwise cause a brief hitch right as it starts. */
+	will-change: transform, opacity, filter;
 }
 
 @keyframes slideInAerian {
@@ -160,7 +164,7 @@ li {
 	align-items: center;
 	flex-wrap: wrap;
 	gap: 0.4em;
-	padding-left: 2.4em; /* reserve room for the absolutely-positioned avatar */
+	padding-left: 2.4rem; /* reserve room for the absolutely-positioned avatar — rem, not em, so this isn't thrown off by #userInfo's own font-size */
 }
 
 /* flexbox's "gap" is inserted between EVERY pair of flex items, even ones
@@ -172,11 +176,28 @@ li {
 	display: none;
 }
 
-/* Matches #userInfo's padding-left above, so #reply lines up with where
-   the pseudo starts too (#message has its own margin-left further down,
-   next to the display:block it needs — see the comment there). */
+/* Aligns with the pseudo's actual x-position — 2.4rem is the room reserved
+   above for the avatar. rem, not em: #reply's own font-size is smaller
+   (0.7em below), and an em value here would've scaled down with it,
+   landing short of where it should be — exactly what was throwing the
+   reply arrow's alignment off.
+   When the platform icon is showing, it sits before the pseudo and pushes
+   it further right, so the rule below bumps this margin accordingly. Done
+   with :has() rather than a live JS measurement so it still works when
+   #userInfo is display:none (grouped consecutive messages) — :has()
+   matches on DOM structure, not on what's actually painted. */
 #reply {
-	margin-left: 2.4em;
+	margin-left: 2.4rem;
+}
+
+#userInfo:has(#platform:not(:empty)) ~ #reply,
+#userInfo:has(#platform:not(:empty)) ~ #message {
+	/* rem throughout, not em, for the platform-width/gap portion too — #reply's
+	   own font-size is smaller (0.7em), so an em value here would shrink right
+	   back down on #reply specifically, the same bug as above all over again.
+	   #userInfo (where the platform icon actually lives) shares the root's
+	   font-size, so 1.2em/0.4em there convert 1:1 to 1.2rem/0.4rem. */
+	margin-left: calc(2.4rem + 1.2rem + 0.4rem); /* + platform width + gap */
 }
 
 /* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
@@ -267,6 +288,9 @@ li {
 
 .platform {
   height: 1.2em;
+  width: 1.2em; /* fixed, so #reply/#message below can offset by a known
+                   amount instead of depending on the icon image's aspect
+                   ratio or whether it's finished loading yet */
 	margin: 0, 0, 0, 0;
   /* transform: translate(0, 0,25em); */
   }
@@ -373,7 +397,7 @@ li {
 	   continuation lines were falling back to the far left edge. Switched
 	   back to inline for "chat en ligne" mode in script.js. */
 	display: block;
-	margin-left: 2.4em;
+	margin-left: 2.4rem; /* rem for the same reason as #reply above */
 	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
 	color: var(--message-color);

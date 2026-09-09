@@ -3056,14 +3056,23 @@ function AddMessageItem(element, elementID, platform, userId) {
 		// Add the line item to the list and animate it
 		// We need to manually set the height as straight CSS can't animate on "height: auto"
 		messageList.appendChild(lineItem);
-		setTimeout(function () {
-			lineItem.className = lineItem.className + " show";
-			lineItem.style.maxHeight = calculatedHeight;
-			// After it's done animating, remove the height constraint in case the div needs to get bigger
-			setTimeout(function () {
-				lineItem.style.maxHeight = "none";
-			}, 1000);
-		}, 10);
+		// Wait for two animation frames (not a fixed setTimeout) before flipping to
+		// "show" — this guarantees the browser has actually painted the starting
+		// max-height:0 state at least once first. A plain setTimeout(fn, 10) mostly
+		// works, but under load (bursty chat, OBS also encoding) the browser can
+		// skip straight to the new state without ever painting the old one, which
+		// skips the height transition entirely — while the arrival animation keeps
+		// playing smoothly regardless, producing an intermittent "jump"/tremor.
+		requestAnimationFrame(function () {
+			requestAnimationFrame(function () {
+				lineItem.className = lineItem.className + " show";
+				lineItem.style.maxHeight = calculatedHeight;
+				// After it's done animating, remove the height constraint in case the div needs to get bigger
+				setTimeout(function () {
+					lineItem.style.maxHeight = "none";
+				}, 1000);
+			});
+		});
 
 		// Remove old messages that have gone off screen to save memory
 		while (messageList.clientHeight > 5 * window.innerHeight) {
