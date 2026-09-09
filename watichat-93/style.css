@@ -235,22 +235,28 @@ li {
 #avatarFrame {
 	position: absolute;
 	left: 0;
-	top: 0;
-	/* Fixed height matching a single #userInfo text line (measured: ~1.43em
-	   for platform icon + pseudo with no badges/pronouns/timestamp — a plain
-	   #username line is never taller than that). Deliberately NOT "top:50%;
-	   transform:translateY(-50%)" against #userInfo's OWN rendered height:
-	   #userInfo can wrap onto 2-3 lines when badges/pronouns/timestamp don't
-	   all fit on one line (flex-wrap: wrap, above), and that total height
-	   changes per message depending on how many of those happen to be shown
-	   and how long the username is — centering against it made the avatar
-	   land in a different spot relative to the pseudo every time, which is
-	   exactly what looked "random" from one message to the next. Pinning to
-	   a fixed line-height instead keeps the avatar centered on line 1 (where
-	   the platform icon + pseudo live) no matter how many extra lines the
-	   rest of the row wraps to underneath. */
-	height: 1.45em;
-	display: flex;
+	/* Anchor point = the vertical center of a single #userInfo text line
+	   (~1.43em tall — measured with just the platform icon + pseudo, no
+	   badges/pronouns/timestamp; a plain #username line is never taller
+	   than that), then translateY(-50%) centers the frame ON that point
+	   regardless of the frame's OWN height. That "own height stays auto"
+	   part matters: an earlier attempt gave #avatarFrame a fixed height
+	   directly (to solve the issue below), but the framed avatar inside is
+	   taller than a single text line (1.85em + padding, vs. ~1.43em) — so
+	   the frame's colored background box ended up SHORTER than the avatar
+	   it's supposed to sit behind, and only a sliver of the frame showed.
+	   Auto height (frame always exactly wraps its avatar, background included)
+	   + this anchor-and-translate approach gets both right at once: the
+	   frame's box is never smaller than its content, AND its center stays
+	   pinned to line 1 no matter how many extra lines the rest of the row
+	   (badges/pronouns/timestamp, via flex-wrap: wrap above) wraps to
+	   underneath — centering against #userInfo's own total height instead
+	   made the avatar land in a different spot relative to the pseudo
+	   depending on how many lines THAT message happened to wrap to, which
+	   is what looked "random" from one message to the next. */
+	top: 0.715em;
+	transform: translateY(-50%);
+	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }

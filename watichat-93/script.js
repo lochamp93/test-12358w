@@ -744,6 +744,11 @@ async function TwitchChatMessage(data) {
 		if (lastPlatform == "twitch" && lastUserId == data.user.id) {
 			userInfoDiv.style.display = "none";
 			avatarDiv.innerHTML = '';
+			// #userInfo being display:none doesn't remove this <br> from the
+			// flow — it still forces its own line break, which (with nothing
+			// visible above it to break after) rendered as a tall empty line
+			// before #reply/#message on every grouped message. Has to go too.
+			instance.querySelector("#line-space").style.display = 'none';
 		}
 	}
 
@@ -1414,8 +1419,13 @@ async function YouTubeMessage(data) {
 	if (groupConsecutiveMessages && messageList.children.length > 0 && scrollDirection != 2) {
 		const lastPlatform = messageList.lastChild.dataset.platform;
 		const lastUserId = messageList.lastChild.dataset.userId;
-		if (lastPlatform == "youtube" && lastUserId == data.user.id)
+		if (lastPlatform == "youtube" && lastUserId == data.user.id) {
 			userInfoDiv.style.display = "none";
+			// See the twitch handler above: the <br> still forces its own
+			// line break even though #userInfo is hidden, leaving a tall
+			// empty line before #reply/#message on grouped messages.
+			instance.querySelector("#line-space").style.display = 'none';
+		}
 	}
 
 	// Embed image
@@ -2329,8 +2339,13 @@ async function KickChatMessage(data) {
 	if (groupConsecutiveMessages && messageList.children.length > 0 && scrollDirection != 2) {
 		const lastPlatform = messageList.lastChild.dataset.platform;
 		const lastUserId = messageList.lastChild.dataset.userId;
-		if (lastPlatform == "kick" && lastUserId == data.sender.id)
+		if (lastPlatform == "kick" && lastUserId == data.sender.id) {
 			userInfoDiv.style.display = "none";
+			// See the twitch handler above: the <br> still forces its own
+			// line break even though #userInfo is hidden, leaving a tall
+			// empty line before #reply/#message on grouped messages.
+			instance.querySelector("#line-space").style.display = 'none';
+		}
 	}
 
 	// Embed image
@@ -2799,6 +2814,10 @@ async function TikTokChat(data) {
 		if (lastPlatform == "tiktok" && lastUserId == data.userId) {
 			userInfoDiv.style.display = "none";
 			avatarDiv.innerHTML = '';
+			// See the twitch handler above: the <br> still forces its own
+			// line break even though #userInfo is hidden, leaving a tall
+			// empty line before #reply/#message on grouped messages.
+			instance.querySelector("#line-space").style.display = 'none';
 		}
 	}
 
