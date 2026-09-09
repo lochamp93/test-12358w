@@ -86,6 +86,25 @@ li {
 	justify-content: flex-end;
 }
 
+/* A freshly-inserted <li> doesn't get ".show" until a couple of frames
+   later (the double-rAF in AddMessageItem, so the browser has painted the
+   starting state first — see script.js). "li { overflow: hidden; }" is
+   deliberately NOT set above (the avatar is meant to overhang the row
+   above/below it — clipping would cut it off), so with nothing else
+   saying otherwise, the message rendered at its natural opacity (fully
+   visible, no blur/offset) during that gap — then ".show" landed and
+   SNAPPED it to the animation's 0% keyframe (invisible, blurred, shifted
+   down) before animating back up. That snap is what looked like "appears,
+   then flickers, then the animation replays". Pre-matching the 0% keyframe
+   here means there's no visible default state to flash before ".show"
+   takes over — the animation picks up from exactly where this already
+   left it. */
+.slide-fade li:not(.show) {
+	opacity: 0;
+	transform: translateY(40px);
+	filter: blur(8px);
+}
+
 /* Animation d'arrivée des messages (reprise de l'ancien chat) — se joue
    quand le message passe en ".show" (juste après son insertion), en
    parallèle de la transition de hauteur ci-dessus sur li. */
