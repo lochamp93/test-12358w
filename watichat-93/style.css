@@ -314,6 +314,14 @@ li {
 	font-weight: var(--username-font-weight);
 }
 
+/* Ombre pour la lisibilité (reprise de l'ancien chat) — un peu plus
+   marquée que l'ombre globale de <html> (2px 2px 5px), spécifiquement
+   sur le pseudo et le message. */
+#username,
+#message {
+	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
 /* Optional badge-style background behind the pseudo. Off by default; the
    ": " that normally follows the pseudo in "chat en ligne" mode is
    skipped by script.js when this is on (the pill itself already reads as
