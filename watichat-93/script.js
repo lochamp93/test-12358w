@@ -111,7 +111,19 @@ const youtubeCustomSubIcon = urlParams.get("youtubeCustomSubIcon") || "";
 
 // Set fonts for the widget
 document.body.style.fontFamily = font;
-document.body.style.fontSize = `${fontSize}px`;
+// On the root (html), not body: several rules (the avatar's reserved
+// space on #userInfo, #reply, #message) use "rem" specifically so they
+// aren't thrown off by an element's own smaller font-size (see the
+// comments on those rules in style.css) — but rem is always relative to
+// the ROOT element's font-size, never body's. Setting this on body only
+// left html stuck at its CSS-authored 30px fallback, so as soon as
+// "fontSize" (default 20, and commonly customized higher) differed from
+// that hardcoded 30, rem-based measurements silently drifted out of sync
+// with everything else (avatar, badges, pills, etc.), which are all sized
+// in "em" and therefore track body/html's ACTUAL font-size correctly.
+// Setting it on the root instead makes rem and em agree again, at any
+// configured font size.
+document.documentElement.style.fontSize = `${fontSize}px`;
 
 // Set line spacing
 document.documentElement.style.setProperty('--line-spacing', `${lineSpacing}em`);
