@@ -327,8 +327,18 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
    row underneath it — so it has nothing to align under, and the
    avatar/platform offset above (meant for the block-mode row start) just
    opened up a large dead gap between the pseudo and the message instead.
-   A small fixed gap replaces it. */
-:root.inlineChat #message {
+   A small fixed gap replaces it.
+   "[style*='display: inline']" scopes this to messages that ACTUALLY got
+   put on that same line — script.js only ever switches #message to
+   inline (from its own block default) inside TwitchChatMessage's own
+   inlineChat branch. An announcement's #message never goes through that
+   branch (its comment explains why: the pseudo always sits on its own
+   line above it, regardless of "chat en ligne") and stays block — but
+   without this qualifier, being a plain "#message" rule, this still
+   matched it anyway just because :root had the inlineChat class, adding
+   a small unwanted left indent before "ANNONCE TEST"-type text that has
+   nothing to sit next to on a shared line. */
+:root.inlineChat #message[style*="display: inline"] {
 	margin-left: 0.3em;
 }
 
