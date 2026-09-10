@@ -1,8 +1,22 @@
 * {
 	margin: 0;
 	padding: 0;
-	--margin: 20px;
+	--margin: 1em;
 	--border-radius: 0.5em;
+}
+
+/* These are set dynamically (via document.documentElement.style.setProperty
+   in script.js) and must live on :root, NOT "*" — "*" matches every element,
+   so it would redeclare the variable locally on #username, #message, #card,
+   etc. themselves, which shadows the inline override and always wins over
+   whatever value should have been inherited from <html>. */
+:root {
+	--avatar-frame-color: #FFD400;
+	--message-color: #ffffff;
+	--card-color: #1d1d1d;
+	--username-font-weight: 700;
+	--message-font-weight: 400;
+	--username-frame-color: #FFD400;
 }
 
 body {
@@ -13,7 +27,7 @@ html {
 	width: 100vw;
 	height: 100vh;
 	scroll-behavior: smooth;
-	/* background: #000000d9; */
+	/* background:  #000000d9; */
 	font-size: 30px;
 	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
 	color: white;
@@ -44,7 +58,7 @@ html {
 
 #messageList {
 	position: absolute;
-	left: 0;
+	left: 0em;
 	width: 100%;
 }
 
@@ -62,8 +76,46 @@ li {
 	list-style: none;
 	/* overflow: hidden; */
 	max-height: 0;
-	margin: 10px 0px 0px 0px;
+	margin: 0.5em 0px 0px 0px; /* espace entre les messages*/
 	transition: all 1s ease-in-out;
+}
+
+/* #avatarFrame deliberately overhangs its own #userInfo row above AND
+   below (see the comment on #avatarFrame) so a single line of text isn't
+   stretched to the avatar's height. That's invisible on a long/wrapped
+   message — its own row is tall enough that the overhang stays well
+   inside it — but for two SHORT, un-grouped messages from different
+   users back to back, the avatar above overhangs downward by about as
+   much as the avatar below overhangs upward, and together that's already
+   bigger than the small 0.5em gap above, so the two avatars end up
+   touching/overlapping instead of having any "jeu" between them.
+   That's a compounding problem — it only actually happens when BOTH
+   messages in the pair show their own avatar, each overhanging toward the
+   other — so the bigger gap on the second li is only added when IT also
+   has one (the "+" sibling case now repeats the same :has() on itself).
+   A grouped consecutive message (#userInfo display:none, so no avatar of
+   its own overhanging upward into the gap) only ever has ONE overhang to
+   clear — the one li above it — and measuring that worst case (a single-
+   character first message, so its own box is as short as the avatar
+   allows) still leaves ~30px of clearance at the plain 0.5em gap below,
+   so it doesn't need the bigger one; it now gets the same compact gap as
+   two grouped messages in a row, which is what looked inconsistent and
+   was reported as "moins bien" than the grouped-to-grouped spacing.
+   ":not(:empty)" alone used to be enough, back when a grouped consecutive
+   message (its #userInfo, avatar included, hidden via display:none — see
+   script.js) also had its avatar's content cleared. It no longer does —
+   emptying it broke the SEPARATE "chat en ligne" horizontal alignment
+   further down this file, since #message's own left offset needs that
+   avatar to still exist — so an avatar sitting unused inside a
+   display:none #userInfo now still counts as ":not(:empty)" here too,
+   adding this bigger gap for a message that isn't showing any avatar to
+   protect. ":not([style*='display: none'])" on #userInfo excludes exactly
+   that case: an avatar only earns the bigger gap when it's actually going
+   to be visible. */
+li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)),
+li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
+	+ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty)) {
+	margin-top: 1em;
 }
 
 .reverseLineItemDirection {
@@ -72,9 +124,130 @@ li {
 	justify-content: flex-end;
 }
 
-.slide-fade li {
-	transition: all var(--animation-speed) ease-out;
-	/* opacity: 0; */
+/* A freshly-inserted <li> doesn't get ".show" until a couple of frames
+   later (the double-rAF in AddMessageItem, so the browser has painted the
+   starting state first — see script.js). "li { overflow: hidden; }" is
+   deliberately NOT set above (the avatar is meant to overhang the row
+   above/below it — clipping would cut it off), so with nothing else
+   saying otherwise, the message rendered at its natural opacity (fully
+   visible, no blur/offset) during that gap — then ".show" landed and
+   SNAPPED it to the animation's 0% keyframe (invisible, blurred, shifted
+   down) before animating back up. That snap is what looked like "appears,
+   then flickers, then the animation replays". Pre-matching the 0% keyframe
+   here means there's no visible default state to flash before ".show"
+   takes over — the animation picks up from exactly where this already
+   left it. */
+.slide-fade li:not(.show) {
+	opacity: 0;
+	transform: translateY(40px);
+	filter: blur(8px);
+}
+
+/* Animation d'arrivée des messages (reprise de l'ancien chat, puis affinée
+   sur plusieurs retours : "un ralentissement à l'arrivée, plus smooth",
+   puis "encore plus lissé", puis "vitesse normale au début, mais vraiment
+   atténué avant la position finale"). Se joue quand le message passe en
+   ".show" (juste après son insertion), en parallèle de la transition de
+   hauteur ci-dessus sur li.
+   Deux animations séparées plutôt qu'une seule : le fondu (opacité + flou)
+   se termine assez vite (0.7s) pour que le texte redevienne lisible sans
+   attendre — mais le GLISSEMENT (position) continue tout seul sur 1.4s.
+   La courbe précédente, (0.09, 1, 0.15, 1) (une variante encore plus
+   extrême que l'easeOutExpo standard), allait en fait dans le mauvais
+   sens : ses points de contrôle en y=1 dès le départ créent un démarrage
+   "fusée" qui couvre déjà ~95% de la distance dans le premier tiers du
+   temps — mathématiquement ça continue de décélérer après, mais il ne
+   reste quasiment plus rien à parcourir, donc à l'œil ça ressemble à "déjà
+   arrivé", pas à un ralentissement. Nouvelle courbe (0.4, 0.05, 0.2, 1) :
+   démarrage volontairement proche du linéaire (vitesse "normale", pas de
+   ruée initiale), puis un gros freinage sur toute la seconde moitié —
+   environ 35% de la distance totale se joue dans les 50% de temps
+   restants, donc le ralentissement final couvre une distance qui se voit
+   vraiment, pas une fraction de pixel.
+   Avec une seule animation (comme dans l'original), fondu et glissement se
+   terminaient ensemble : la décélération de la position était "masquée"
+   par le fondu qui finissait au même rythme, donc peu perceptible. En les
+   décorrélant, l'œil continue à suivre le message glisser doucement en
+   place après qu'il soit déjà lisible — c'est ce glissement qui se ressent
+   comme un "ralentissement à l'arrivée". */
+.slide-fade li.show {
+	animation:
+		slideInAerianFade 0.7s ease-out forwards,
+		slideInAerianSettle 1.4s cubic-bezier(0.4, 0.05, 0.2, 1) forwards;
+	/* Hints the browser to promote this to its own compositing layer up
+	   front, instead of deciding mid-animation — filter+transform running
+	   together can otherwise cause a brief hitch right as it starts. */
+	will-change: transform, opacity, filter;
+}
+
+@keyframes slideInAerianFade {
+	0% {
+		opacity: 0;
+		filter: blur(8px);
+	}
+	100% {
+		opacity: 1;
+		filter: blur(0);
+	}
+}
+
+@keyframes slideInAerianSettle {
+	0% {
+		transform: translateY(40px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+/* "Masquer après" (hideAfter, script.js HideMessageItem): the message
+   used to just flatly fade its opacity to 0 — nothing like the slide/
+   blur/fade it played coming IN, so leaving looked and felt like a
+   completely different, cheaper effect. This mirrors that arrival motion
+   exactly, played back to front: same distance (40px), same blur amount
+   (8px), same per-animation durations (0.7s fade / 1.4s slide) — just
+   time-reversed, including the easing curves themselves (mirroring a
+   cubic-bezier(x1,y1,x2,y2) is (1-x2,1-y2,1-x1,1-y1), which is exactly
+   how "ease-out" and "ease-in" relate — arrival's fade used ease-out, so
+   this one uses ease-in; arrival's slide used cubic-bezier(0.4,0.05,0.2,1),
+   so this one uses its mirror, cubic-bezier(0.8,0,0.6,0.95)).
+   Tried first with the SAME two keyframe names and "direction: reverse"
+   instead of separate ones — reusing the exact keyframes felt like the
+   more literal way to "replay arrival backwards". It doesn't work: since
+   ".show" is never removed (nothing here needs it gone) and both rules
+   would then name the identical animations, the browser treats "hiding"
+   as an UPDATE to the already-completed, forwards-filled ".show"
+   animation rather than a new one — its current time carries over
+   (sitting at the very end from arrival), so flipping the direction
+   lands it on the opposite keyframe INSTANTLY instead of animating
+   there. Separate keyframe names (slideOut… vs slideIn…) sidestep that
+   entirely: a genuinely different "animation" value always restarts at
+   elapsed 0, so this actually plays instead of snapping. */
+.slide-fade li.hiding {
+	animation:
+		slideOutAerianFade 0.7s ease-in forwards,
+		slideOutAerianSettle 1.4s cubic-bezier(0.8, 0, 0.6, 0.95) forwards;
+	will-change: transform, opacity, filter;
+}
+
+@keyframes slideOutAerianFade {
+	0% {
+		opacity: 1;
+		filter: blur(0);
+	}
+	100% {
+		opacity: 0;
+		filter: blur(8px);
+	}
+}
+
+@keyframes slideOutAerianSettle {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(40px);
+	}
 }
 
 #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList {
@@ -88,12 +261,6 @@ li {
 	font-size: 0.7em;
 }
 
-.bubble {
-	background: var(--bubble-color) !important;
-	padding: 0.5em 1em;
-	border-radius: var(--border-radius);
-}
-
 .highlightMessage {
 	/* background: #adadad46 !important; */
 	/* background: #414141e5 !important;
@@ -105,16 +272,237 @@ li {
 .message-contents {
 	display: flex;
 	flex-direction: row;
-	gap: 0.5em;
+	align-items: flex-start; /* avatar top-aligned, never stretched by a tall/wrapped message */
+	gap: .5em; /*espace entre PP et le reste*/
 }
 
-.add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
+.message-contents > div:not(#avatar) {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+/* #avatarFrame lives INSIDE #userInfo but is taken OUT of its flex flow
+   (position: absolute below) — otherwise the avatar (2em) would force the
+   whole pseudo row to be as tall as itself, even though the badges/text
+   are only ~1.1em tall, leaving a big empty gap before the message.
+   Instead #userInfo is only ever as tall as its actual text content, and
+   the avatar is centered against THAT (real) height via top:50%, simply
+   overlapping the row above/below by the small remaining difference —
+   normal for a chat avatar that's a bit taller than one line of text.
+   #message/#reply get a matching left offset so they still start at the
+   same x as the pseudo, and since the avatar's size has nothing to do
+   with #message's height anymore, it can't stretch on a long message. */
+#userInfo {
+	position: relative;
+	display: inline-flex;
 	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4em;
+	/* text-indent is inherited, and further down this file "chat en ligne"
+	   mode sets a (possibly negative) one on .message-right so wrapped
+	   message lines clear the avatar. #userInfo itself is a flex box, which
+	   simply ignores text-indent when placing ITS OWN flex children (avatar,
+	   pseudo, timestamp, badges, pronouns) — so that part is fine either
+	   way. But several of those children (#username with the pill/frame on,
+	   .timestamp, .pronouns) are individually display:inline-block, which
+	   DOES establish its own little text box with its own "first line" —
+	   and it was silently inheriting that same text-indent and applying it
+	   AGAIN, entirely on its own, shifting its text sideways by the same
+	   amount (this is what caused the pseudo pill to render with its first
+	   few letters pushed out of frame — reported as "amp93"/"t93" instead
+	   of "lochamp93"/"lobot93"). Resetting it here, once, cuts off the
+	   inheritance chain for all of #userInfo's descendants at the source. */
+	text-indent: 0;
 }
 
-#avatar {
-	width: 2em;
+/* Reserve room for the absolutely-positioned avatar ONLY when there's
+   actually an avatar to reserve room for — #avatar:empty covers both
+   "showAvatar is off" and an announcement card (which always hides/never
+   fills its avatar). Without this condition the gap stayed reserved even
+   with no avatar to show, leaving a dead strip of empty space to the left
+   of the pseudo instead of letting it (and everything after it) shift
+   left to fill it. rem, not em, so this isn't thrown off by #userInfo's
+   own font-size. */
+#userInfo:has(#avatar:not(:empty)) {
+	padding-left: 2.4rem;
 }
+
+/* flexbox's "gap" is inserted between EVERY pair of flex items, even ones
+   that are empty (e.g. #timestamp/#platform/#pronouns when those settings
+   are off, or #badgeList when a user has no badges) — so each disabled
+   element was still eating a 0.4em slot it never visually used. Dropping
+   empty ones out of layout entirely removes that dead gap. */
+#userInfo > *:empty {
+	display: none;
+}
+
+/* #reply/#message align with wherever the pseudo actually starts, which
+   depends on what's showing before it: the avatar (2.4rem reserved above)
+   and/or the platform icon (1.2rem wide + 0.4rem gap). Both contributions
+   are computed as custom properties on ".message-right" — the common
+   ancestor of #userInfo AND #reply/#message (they're siblings, not
+   parent/child, so a property set ON #userInfo wouldn't cascade to
+   them) — each toggled independently via :has(), so any combination
+   (avatar only, platform only, both, neither) adds up correctly instead
+   of needing one rule per combination.
+   rem throughout, not em: #reply's own font-size is smaller (0.7em
+   below), so an em value here would shrink right back down on #reply
+   specifically when used as ITS margin — exactly what was throwing the
+   reply arrow's alignment off originally. #userInfo/#avatarFrame share
+   the root's font-size (no override), so 1.2em/0.4em there convert 1:1
+   to 1.2rem/0.4rem.
+   Using :has() rather than a live JS measurement so this keeps working
+   when #userInfo is display:none (grouped consecutive messages) —
+   :has() matches on DOM structure, not on what's actually painted. */
+.message-right {
+	--avatar-offset: 0rem;
+	--platform-offset: 0rem;
+}
+
+.message-right:has(#userInfo #avatar:not(:empty)) {
+	--avatar-offset: 2.4rem;
+}
+
+.message-right:has(#userInfo #platform:not(:empty)) {
+	--platform-offset: 1.6rem; /* platform width (1.2rem) + gap (0.4rem) */
+}
+
+#reply,
+#message {
+	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
+}
+
+/* "Chat en ligne" mode: the message continues right after the pseudo (or
+   the colon) on the SAME line as #userInfo, rather than starting a new
+   row underneath it — so it has nothing to align under, and the
+   avatar/platform offset above (meant for the block-mode row start) just
+   opened up a large dead gap between the pseudo and the message instead.
+   A small fixed gap replaces it.
+   "[style*='display: inline']" scopes this to messages that ACTUALLY got
+   put on that same line — script.js only ever switches #message to
+   inline (from its own block default) inside TwitchChatMessage's own
+   inlineChat branch. An announcement's #message never goes through that
+   branch (its comment explains why: the pseudo always sits on its own
+   line above it, regardless of "chat en ligne") and stays block — but
+   without this qualifier, being a plain "#message" rule, this still
+   matched it anyway just because :root had the inlineChat class, adding
+   a small unwanted left indent before "ANNONCE TEST"-type text that has
+   nothing to sit next to on a shared line. */
+:root.inlineChat #message[style*="display: inline"] {
+	margin-left: 0.3em;
+}
+
+/* ...EXCEPT when it's a reply: #reply is a <div>, so it always starts its
+   own line whether or not "chat en ligne" is on — #message then follows
+   on a new line too (after it, not next to the pseudo), so it should
+   align under the pseudo/reply like in block mode, not use the small
+   same-line gap above. [style*="display: block"] targets script.js
+   setting replyDiv.style.display='block' for an actual reply (the
+   default, no-reply state is "display: none" from the plain #reply rule
+   above) — 2 IDs + 3 classes/attribute beats the 1 ID + 2 classes above,
+   so this wins when it applies. */
+:root.inlineChat #reply[style*="display: block"] ~ #message {
+	/* Was "calc(avatar-offset + platform-offset)" — now 0, see the big
+	   comment block below: the hanging-indent rule's padding-left already
+	   supplies that exact offset uniformly (first line included, for this
+	   specific run), so keeping it here too just doubled it. */
+	margin-left: 0;
+}
+
+/* "Chat en ligne" + avatar/platform: #message is display:inline here (see
+   script.js), and an inline element's margin-left ONLY ever offsets its
+   own first rendered line — a wrapped continuation line has nothing to
+   inherit that from and falls back to this container's left edge (x:0),
+   exactly where the avatar/platform icon overhangs down from #userInfo
+   above. Short messages never wrap far enough to reach it, so this only
+   showed up on longer ones (reported: the second line of a wrapped inline
+   message rendering underneath/behind the avatar).
+   Classic "hanging indent" fix: push EVERY line of this container right
+   by the avatar/platform width (padding-left), then pull back the first
+   line by that same amount (negative text-indent) so it lands right back
+   where it always was.
+   IMPORTANT caveat that shapes every rule below: text-indent only ever
+   applies to the ONE genuinely first line of this whole container, not
+   to "the first line of each inline run" — so it only ever helps whichever
+   of sharedChat/userInfo/reply/message happens to be the very first thing
+   in the DOM (and only if it's actually visible). Everything that can
+   possibly come AFTER something else here (userInfo when sharedChat is
+   shown; message when reply is shown) needs its own EXPLICIT correction
+   below instead of being able to rely on this. Zero avatar/platform means
+   both vars are 0rem, making all of this a no-op outside that combo. */
+:root.inlineChat .message-right {
+	padding-left: calc(var(--avatar-offset) + var(--platform-offset));
+	text-indent: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
+}
+
+/* #reply and #sharedChat are real block-level children of .message-right,
+   not part of the userInfo/message run the hanging indent above is meant
+   for — but padding-left/text-indent are set ON that shared ancestor, and
+   text-indent is inherited, so both would otherwise silently pick up
+   spacing that was never meant for them: the padding shoves their whole
+   box right by the same amount, AND — only if one of them happens to be
+   the container's actual first line — their own first line of TEXT would
+   also get an extra yank back to the left from the inherited negative
+   text-indent (misaligning it against their own wrapped lines).
+   #sharedChat never had any left offset before this — cancel the padding
+   with an equal negative margin and drop the inherited indent so it stays
+   exactly where it always was, at the far left.
+   #reply already carries its own margin-left with the exact same
+   avatar/platform math a few rules up (so it lines up under the avatar
+   regardless of "chat en ligne" being on or off) — the container's new
+   padding-left now provides that same offset instead, so #reply's own
+   margin-left is reset to 0 rather than stacking a second copy of it. */
+:root.inlineChat #sharedChat {
+	margin-left: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
+	text-indent: 0;
+}
+
+:root.inlineChat #reply {
+	margin-left: 0;
+	text-indent: 0;
+}
+
+/* #sharedChat is visible (shared-chat guest message) AND comes before
+   #userInfo in the DOM — so per the caveat above, #userInfo is no longer
+   the container's genuinely first line, and the -X text-indent correction
+   two rules up never reaches it. #userInfo is an atomic inline-flex box
+   (it never itself wraps across lines), so it just needs the same single
+   correction applied directly: pull its one box back by the offset the
+   ambient padding-left added, same as if sharedChat weren't there. The
+   avatar is positioned absolute relative to THIS element, so it rides
+   along automatically once #userInfo itself is back in the right spot. */
+:root.inlineChat #sharedChat[style*="display: block"] ~ #userInfo {
+	margin-left: calc(-1 * (var(--avatar-offset) + var(--platform-offset)));
+}
+
+/* Grouped consecutive message: script.js hides #userInfo entirely
+   (display:none) for a repeat message from the same user, so there's no
+   pseudo/avatar row on that particular message at all. #userInfo being
+   display:none means it renders NO box whatsoever — so #message, coming
+   right after it, becomes the container's new genuinely-first line, and
+   wrongly receives the -X pull-back meant for userInfo instead (netting
+   back down to just the small 0.3em same-line gap, with no avatar/
+   platform clearance at all — reported: a grouped message's text drops
+   down to align with the left edge/avatar instead of staying under the
+   text of the message above it).
+   Cancel that pull-back (text-indent: 0) and replace the small "next to
+   the pseudo" gap with the real avatar/platform offset directly — there's
+   no pseudo on this line to leave a gap after, so this message's text
+   should sit exactly where the wrapped continuation lines of any OTHER
+   message already do, keeping the whole column of message text aligned
+   regardless of which rows happen to show their own header. */
+:root.inlineChat #userInfo[style*="display: none"] ~ #message {
+	text-indent: 0;
+	margin-left: calc(var(--avatar-offset) + var(--platform-offset));
+}
+
+/* .add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better {
+	align-items: center;
+} */
+
+/* #avatar {
+	width: 2em;
+} */
 
 #avatar:empty {
 	display: none;
@@ -123,42 +511,138 @@ li {
 .avatar {
     width: 2em;                /* Set width equal to height */
     height: 2em;
-    margin: 1px;
-    transform: translate(0px, 0.25em);
-    border-radius: 50%;
-    object-fit: cover;         /* Crop to fill the circle */
-    overflow: hidden;          /* Ensure no overflow outside the circle */
-    display: inline-block;     /* Just in case */
+    margin: 0;
+    border-radius: var(--border-radius);
+    object-fit: cover;         /* Crop to fill the shape */
+    overflow: hidden;          /* Ensure no overflow outside the shape */
+    display: block;            /* Avoids the inline "phantom descender space"
+                                   below the image, which threw off the
+                                   vertical centering inside #avatarFrame */
+}
+
+/* Chat-only: optional colored frame behind the profile picture.
+   Off by default (#avatarFrame is a plain transparent wrapper, so the
+   avatar renders at full size); when "showAvatarFrame" is toggled on in
+   the settings, the html element gets the .showAvatarFrame class and the
+   avatar shrinks slightly to reveal the colored frame around it.
+   Positioned absolutely within #userInfo — see the comment above
+   #userInfo for why (avoids forcing the pseudo row to the avatar's
+   height). */
+#avatarFrame {
+	position: absolute;
+	left: 0;
+	/* Anchor point = the vertical center of a single #userInfo text line
+	   (~1.43em tall — measured with just the platform icon + pseudo, no
+	   badges/pronouns/timestamp; a plain #username line is never taller
+	   than that), then translateY(-50%) centers the frame ON that point
+	   regardless of the frame's OWN height. That "own height stays auto"
+	   part matters: an earlier attempt gave #avatarFrame a fixed height
+	   directly (to solve the issue below), but the framed avatar inside is
+	   taller than a single text line (1.85em + padding, vs. ~1.43em) — so
+	   the frame's colored background box ended up SHORTER than the avatar
+	   it's supposed to sit behind, and only a sliver of the frame showed.
+	   Auto height (frame always exactly wraps its avatar, background included)
+	   + this anchor-and-translate approach gets both right at once: the
+	   frame's box is never smaller than its content, AND its center stays
+	   pinned to line 1 no matter how many extra lines the rest of the row
+	   (badges/pronouns/timestamp, via flex-wrap: wrap above) wraps to
+	   underneath — centering against #userInfo's own total height instead
+	   made the avatar land in a different spot relative to the pseudo
+	   depending on how many lines THAT message happened to wrap to, which
+	   is what looked "random" from one message to the next. */
+	top: 0.715em;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* Collapse the frame along with the avatar when showAvatar is off */
+#avatarFrame:has(#avatar:empty) {
+	display: none;
+}
+
+:root.showAvatarFrame #avatarFrame {
+	background: var(--avatar-frame-color);
+	border-radius: calc(var(--border-radius) + 0.1em);
+	padding: 0.08em;
+}
+
+:root.showAvatarFrame #avatarFrame .avatar {
+	width: 1.85em;
+	height: 1.85em;
 }
 
 .timestamp,
 .pronouns {
 	background: #adadad46;
-	/* border-radius: var(--border-radius); */
 	border-radius: 1em;
 	font-size: 0.7em;
-	/* padding: 5px 15px; */
-	padding: 0.15em 0.5em;
+	padding: 0.2em 0.65em;
+	display: inline-block;
+	/* margin-bottom/vertical-align dropped: #userInfo is now a centered flex
+	   row (see below), which handles vertical alignment on its own — the old
+	   margin-bottom would just push the pill off-center again */
 }
+
+/* .timestamp,
+.pronouns {
+	background: #adadad46;
+	border-radius: 1em;
+	font-size: 0.7em;
+	padding: 0.2em 0.65em;
+	margin-bottom: 0.3em;
+} */
 
 .bits {
 	background: #adadad46;
 	border-radius: calc(var(--border-radius) / 2);
 	font-size: 0.7em;
-	padding: 5px 10px;
+	padding: 0.2em 0.65em;
 }
 
-.platform,
+.platform {
+  height: 1.2em;
+  width: 1.2em; /* fixed, so #reply/#message below can offset by a known
+                   amount instead of depending on the icon image's aspect
+                   ratio or whether it's finished loading yet */
+	margin: 0;
+	display: block; /* Same fix as .avatar above: without this, the icon is
+	                    an inline replaced element and picks up the font's
+	                    phantom descender space below it, which is what was
+	                    pushing it visually toward the top of #userInfo's row
+	                    instead of sitting centered like the other elements. */
+  }
+
+#badgeList {
+	display: inline-flex;
+	align-items: center;
+	column-gap: 0.2em; /* espace horizontal entre badges */
+}
+
 .badge {
 	height: 1em;
-	margin: 1px;
-	transform: translate(0px, 0.25em);
+	width: auto;
+	flex-shrink: 0; /* évite qu’ils se compressent si la ligne est pleine */
 }
 
 .emote {
 	height: 1.5em;
 	margin: 1px;
 	transform: translate(0px, 0.4em);
+}
+
+/* Twitch's Tier 2/3 GIF messages arrive as a single, standalone fragment —
+   sizing it like a tiny inline emote (1.5em) makes it unreadable, so it gets
+   its own larger, block-level treatment instead. Tweak the height to taste. */
+.gif-emote {
+	display: block;
+	height: 11em;
+	max-width: 100%;
+	width: auto;
+	margin: 0.3em 0 0 0;
+	border-radius: var(--border-radius);
+	transform: none;
 }
 
 .productImage {
@@ -180,134 +664,69 @@ li {
 } */
 
 #badgeList {
-	margin: 0px 5px;
-}
-
-#username,
-#title {
-	font-weight: 700;
+	margin: 10em,2em;
 }
 
 #username {
-	color: var(--user-color, inherit);
+	font-weight: var(--username-font-weight);
 }
 
-/**********************/
-/** PILL STYLE MODE **/
-/**********************/
-
-body.pillTheme-light {
-	--pill-bg-color: #ffffff;
-	--pill-text-color: #1a1a1a;
+/* Ombre pour la lisibilité (reprise de l'ancien chat) — un peu plus
+   marquée que l'ombre globale de <html> (2px 2px 5px), spécifiquement sur
+   le message, et sur le pseudo SEULEMENT s'il n'a pas déjà un cadre coloré
+   derrière lui (:root.showUsernameFrame ci-dessous) — la pastille pleine
+   couleur donne déjà largement assez de contraste, une ombre portée
+   dessus ne fait qu'ajouter du bruit visuel inutile. */
+#message {
+	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-body.pillTheme-dark {
-	--pill-bg-color: #1a1a1a;
-	--pill-text-color: #ffffff;
+:root:not(.showUsernameFrame) #username,
+#card #username {
+	/* #card #username here too: an announcement's pseudo never gets the
+	   pill (see the #card #username rule below), regardless of whether
+	   showUsernameFrame is on globally for the rest of the chat — so
+	   whether it should have this shadow can't be keyed to that global
+	   toggle, only to whether THIS pseudo is actually framed or not. */
+	text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
 }
 
-body.pillMode #userInfo {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	--pill-height: 1.7em;
-}
-
-/* Elements with nothing in them (timestamp/pronouns/platform disabled or empty)
-   must not take part in the flex layout, or they'd still eat up a margin on
-   either side and throw off the spacing / alignment. */
-body.pillMode #userInfo > *:empty {
-	display: none;
-}
-
-/* Spacing between the row's items is done with margin-right rather than the
-   flexbox "gap" property, since gap on flex containers isn't reliably
-   supported by every embedded browser engine (e.g. OBS's browser source on
-   older builds) — margins work everywhere. */
-body.pillMode #timestamp,
-body.pillMode #platform,
-body.pillMode #username,
-body.pillMode #badgeList,
-body.pillMode #pronouns {
-	margin-right: 0.4em;
-}
-
-body.pillMode #timestamp {
-	order: 1;
+/* Optional badge-style background behind the pseudo. Off by default; the
+   ": " that normally follows the pseudo in "chat en ligne" mode is
+   skipped by script.js when this is on (the pill itself already reads as
+   a separator). Padding is generous on purpose so the pill doesn't hug
+   the text too tightly. */
+:root.showUsernameFrame #username {
+	display: inline-block;
+	background: var(--username-frame-color);
+	border-radius: var(--border-radius); /* rectangle w/ rounded corners, not a full pill — matches the avatar/cards elsewhere */
+	padding: 0.15em 0.6em;
+	/* text-shadow is inherited — <html> sets a global one (2px 2px 5px)
+	   further up, and every element gets it by default unless something
+	   overrides it. Not adding a shadow HERE only stops this rule from
+	   adding a NEW one; it doesn't stop the inherited one from showing
+	   through, which is why the pseudo still had a shadow while framed.
+	   Needs an explicit "none" to actually cancel it. */
 	text-shadow: none;
 }
 
-body.pillMode #platform {
-	order: 2;
-	height: var(--pill-height);
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+/* Announcements reuse the normal chat username/badge/pronoun markup
+   nested inside the card (see script.js TwitchAnnouncement — it clones
+   messageTemplate into #card #content), so it would otherwise inherit
+   the pill-frame styling above too. On an announcement card it's one
+   colored element too many next to the card's own colored bar — always
+   plain text there regardless of the global "cadre de pseudo" setting.
+   #card #username (2 IDs) outweighs :root.showUsernameFrame #username
+   (1 ID + 2 classes) by specificity, so this wins either way. */
+#card #username {
+	display: inline;
+	background: none;
+	border-radius: 0;
+	padding: 0;
 }
 
-body.pillMode #platform .platform {
-	height: 100%;
-	width: auto;
-	max-width: none;
-	transform: none;
-}
-
-body.pillMode #username {
-	order: 3;
-	height: var(--pill-height);
-	box-sizing: border-box;
-	display: inline-flex;
-	align-items: center;
-	padding: 0 0.6em;
-	border-radius: 999px;
-	background: var(--pill-bg-color);
-	color: var(--pill-text-color) !important;
-	text-shadow: none;
-}
-
-body.pillMode #username::before {
-	content: '';
-	width: 0.55em;
-	height: 0.55em;
-	margin-right: 0.4em;
-	flex-shrink: 0;
-	border-radius: 50%;
-	background: var(--user-color, currentColor);
-}
-
-body.pillMode #badgeList {
-	order: 4;
-	display: inline-flex;
-	align-items: center;
-}
-
-body.pillMode #badgeList .badge {
-	margin-right: 0.2em;
-}
-
-body.pillMode #badgeList .badge:last-child {
-	margin-right: 0;
-}
-
-body.pillMode #pronouns {
-	order: 5;
-	text-shadow: none;
-}
-
-/* Announcements force the colon separator on regardless of the "inline chat"
-   setting — pull it back against the pill instead of leaving it floating
-   with a stray gap. */
-body.pillMode #colon-separator {
-	order: 6;
-	margin-left: -0.3em;
-}
-
-body.pillMode #line-space {
-	order: 7;
-}
-
-body.pillMode .badge {
-	transform: none;
+#title {
+	font-weight: 700;
 }
 
 .title {
@@ -325,15 +744,44 @@ body.pillMode .badge {
 }
 
 #message {
-	font-weight: 400;
+	/* block (not the default inline, since #message is a <span>) so that
+	   EVERY wrapped line respects margin-left below, not just the first —
+	   an inline element's margin only offsets its first line, so wrapped
+	   continuation lines were falling back to the far left edge. Switched
+	   back to inline for "chat en ligne" mode in script.js.
+	   margin-left is NOT set here anymore — it's a leftover from before
+	   the --avatar-offset/--platform-offset system further up handled it.
+	   Left in place, it had the same specificity (one #message ID) as
+	   that rule but came later in the file, so it always won and pinned
+	   the margin to a flat 2.4rem no matter what avatar/platform were
+	   actually showing — the exact cause of "hiding the avatar doesn't
+	   free up the space" and of the message text sitting misaligned
+	   under an announcement's pseudo (which never has an avatar/platform
+	   to offset for). */
+	display: block;
+	font-weight: var(--message-font-weight);
 	line-height: var(--line-spacing);
+	color: var(--message-color);
+	/* Both custom properties are only ever set (in script.js) when their
+	   own "personnalisé ?" toggle is on — left unset otherwise, so the
+	   "inherit" fallback keeps #message tracking the widget-wide
+	   font/fontSize exactly like before these existed. */
+	font-family: var(--message-font-family, inherit);
+	font-size: var(--message-font-size, inherit);
+}
+
+/* The ":" separating pseudo and message (visible in "Chat en ligne" mode) */
+#colon-separator {
+	color: var(--message-color);
 }
 
 #card {
-	background: #adadad46;
+	position:relative;
+  background: transparent;
 	padding: 0.5em 1em;
 	border-radius: var(--border-radius);
 }
+
 
 .youtube-super-sticker {
 	height: 2em;
@@ -405,20 +853,31 @@ body.pillMode .badge {
 /** CARD COLORS **/
 /*****************/
 
-.announcementBlue {
-	background: linear-gradient(#03d3d7, #8d49fe) !important;
+/* ► Annonces : liseré dégradé à gauche (coins arrondis par défaut)
+   Pour une version “droite” : commente les 2 border-radius du ::before */
+#card.announcementBlue::before,
+#card.announcementGreen::before,
+#card.announcementOrange::before,
+#card.announcementPurple::before,
+#card.announcementDefault::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.4em;
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
 }
 
-.announcementGreen {
-	background: linear-gradient(#01da86, #55bee4) !important;
-}
+/* Couleurs fixes */
+#card.announcementBlue::before   { background: linear-gradient(#03d3d7, #8d49fe); }
+#card.announcementGreen::before  { background: linear-gradient(#10da86, #55bee4); }
+#card.announcementOrange::before { background: linear-gradient(#feb419, #e1df00); }
+#card.announcementPurple::before { background: linear-gradient(#9548ff, #fc74e6); }
 
-.announcementOrange {
-	background: linear-gradient(#feb419, #e1df00) !important;
-}
-
-.announcementPurple {
-	background: linear-gradient(#9548ff, #fc74e6) !important;
+/* Couleur dynamique (= couleur du pseudo) */
+#card.announcementDefault::before { 
+  /* simple aplat */
+  background: var(--userColor, #888888);
 }
 
 .twitch {
@@ -472,6 +931,13 @@ body.pillMode .badge {
 
 .blank {
 	background: #adadad00 !important;
+}
+
+/* Overrides every platform gradient above with one flat color, when
+   "useCustomCardColor" is enabled in the settings. Declared last so it
+   wins the cascade over the same-specificity platform classes. */
+.customCard {
+	background: var(--card-color) !important;
 }
 
 /****************/
