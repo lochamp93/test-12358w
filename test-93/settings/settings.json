@@ -1,0 +1,508 @@
+{
+	"settings": [
+		{
+			"id": "background",
+			"label": "Arrière-plan",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Apparence"
+		},
+		{
+			"id": "opacity",
+			"label": "Opacité de l’arrière-plan",
+			"description": "",
+			"type": "number",
+			"defaultValue": "0",
+			"min": 0,
+			"max": 1,
+			"step": ".01",
+			"group": "Apparence"
+		},
+		{
+			"id": "showAvatar",
+			"label": "Afficher l’avatar",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Badges"
+		},
+		{
+			"id": "showAvatarFrame",
+			"label": "Afficher un cadre autour de la photo de profil",
+			"description": "Uniquement dans le chat (pas sur les cartes d’alertes)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"showIf": "showAvatar",
+			"group": "Badges"
+		},
+		{
+			"id": "avatarFrameColor",
+			"label": "Couleur du cadre",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFD400",
+			"showIf": "showAvatarFrame",
+			"group": "Badges"
+		},
+		{
+			"id": "showPlatform",
+			"label": "Afficher la plateforme",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Badges"
+		},
+		{
+			"id": "showBadges",
+			"label": "Afficher les badges",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Badges"
+		},
+		{
+			"id": "showTimestamps",
+			"label": "Afficher l’heure",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Badges"
+		},
+		{
+			"id": "showPronouns",
+			"label": "Afficher les pronoms",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Badges"
+		},
+		{
+			"id": "useCustomUsernameColor",
+			"label": "Couleur de pseudo personnalisée",
+			"description": "Si désactivé, la couleur native de la plateforme est utilisée",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Pseudo"
+		},
+		{
+			"id": "usernameColor",
+			"label": "Couleur du pseudo",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"showIf": "useCustomUsernameColor",
+			"group": "Pseudo"
+		},
+		{
+			"id": "showUsernameFrame",
+			"label": "Afficher un cadre autour du pseudo",
+			"description": "Un fond en forme de badge derrière le pseudo (masque automatiquement le « : » qui suit habituellement)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Pseudo"
+		},
+		{
+			"id": "usernameFrameColor",
+			"label": "Couleur du cadre de pseudo",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFD400",
+			"showIf": "showUsernameFrame",
+			"group": "Pseudo"
+		},
+		{
+			"id": "font",
+			"label": "Police d’écriture",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Pseudo"
+		},
+		{
+			"id": "fontSize",
+			"label": "Taille de police",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"defaultValue": 20,
+			"group": "Pseudo"
+		},
+		{
+			"id": "usernameFontWeight",
+			"label": "Épaisseur du pseudo",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": 100, "label": "100 - Très fin" },
+				{ "value": 200, "label": "200 - Extra léger" },
+				{ "value": 300, "label": "300 - Léger" },
+				{ "value": 400, "label": "400 - Normal" },
+				{ "value": 500, "label": "500 - Moyen" },
+				{ "value": 600, "label": "600 - Semi-gras" },
+				{ "value": 700, "label": "700 - Gras" },
+				{ "value": 800, "label": "800 - Extra gras" },
+				{ "value": 900, "label": "900 - Noir / Très gras" }
+			],
+			"defaultValue": 700,
+			"group": "Pseudo"
+		},
+		{
+			"id": "messageColor",
+			"label": "Couleur du message",
+			"description": "S’applique aussi aux « : » après le pseudo",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Message"
+		},
+		{
+			"id": "useCustomMessageFont",
+			"label": "Police d’écriture personnalisée du message ?",
+			"description": "Si désactivé, le message suit la police d’écriture générale (réglage « Pseudo »)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Message"
+		},
+		{
+			"id": "messageFont",
+			"label": "Police d’écriture du message",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "useCustomMessageFont",
+			"group": "Message"
+		},
+		{
+			"id": "useCustomMessageFontSize",
+			"label": "Taille du texte du message personnalisée ?",
+			"description": "Si désactivé, le message suit la taille de police générale (réglage « Pseudo »)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Message"
+		},
+		{
+			"id": "messageFontSize",
+			"label": "Taille du texte du message",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"defaultValue": 20,
+			"showIf": "useCustomMessageFontSize",
+			"group": "Message"
+		},
+		{
+			"id": "messageFontWeight",
+			"label": "Épaisseur du message",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": 100, "label": "100 - Très fin" },
+				{ "value": 200, "label": "200 - Extra léger" },
+				{ "value": 300, "label": "300 - Léger" },
+				{ "value": 400, "label": "400 - Normal" },
+				{ "value": 500, "label": "500 - Moyen" },
+				{ "value": 600, "label": "600 - Semi-gras" },
+				{ "value": 700, "label": "700 - Gras" },
+				{ "value": 800, "label": "800 - Extra gras" },
+				{ "value": 900, "label": "900 - Noir / Très gras" }
+			],
+			"defaultValue": 400,
+			"group": "Message"
+		},
+		{
+			"id": "lineSpacing",
+			"label": "Interlignage",
+			"description": "",
+			"type": "number",
+			"min": 0,
+			"defaultValue": 1.7,
+			"step": ".1",
+			"group": "Message"
+		},
+		{
+			"id": "hideAfter",
+			"label": "Masquer après",
+			"description": "Les messages disparaissent après X secondes (0 pour désactiver)",
+			"type": "number",
+			"min": 0,
+			"max": 120,
+			"defaultValue": 0,
+			"group": "Général"
+		},
+		{
+			"id": "excludeCommands",
+			"label": "Exclure les commandes",
+			"description": "Masquer les messages commençant par \"!\"",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Général"
+		},
+		{
+			"id": "ignoreChatters",
+			"label": "Ignorer certains utilisateurs",
+			"description": "Les pseudos listés seront ignorés",
+			"type": "text",
+			"defaultValue": "StreamElements,Streamlabs",
+			"group": "Général"
+		},
+		{
+			"id": "scrollDirection",
+			"label": "Sens de défilement",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": 1,
+					"label": "Normal"
+				},
+				{
+					"value": 2,
+					"label": "Inversé"
+				}
+			],
+			"defaultValue": 1,
+			"group": "Général"
+		},
+		{
+			"id": "groupConsecutiveMessages",
+			"label": "Grouper les messages consécutifs",
+			"description": "Cache le pseudo sur les messages consécutifs d’un même utilisateur<br>Remarque : ce paramètre est ignoré si le sens de défilement est « Inversé »",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Général"
+		},
+		{
+			"id": "inlineChat",
+			"label": "Chat en ligne",
+			"description": "Supprime l’espace après le pseudo",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Général"
+		},
+		{
+			"id": "imageEmbedPermissionLevel",
+			"label": "Intégrer les images",
+			"description": "Intègre automatiquement les images pour ces utilisateurs",
+			"type": "select",
+			"options": [
+				{
+					"value": 40,
+					"label": "Streamer"
+				},
+				{
+					"value": 30,
+					"label": "Modos & Streamer"
+				},
+				{
+					"value": 20,
+					"label": "VIPs, Modos & Streamer"
+				},
+				{
+					"value": 15,
+					"label": "Subs, VIPs, Modos & Streamer"
+				},
+				{
+					"value": 10,
+					"label": "Tout le monde"
+				},
+				{
+					"value": 69420,
+					"label": "Personne"
+				}
+			],
+			"defaultValue": 20,
+			"group": "Général"
+		},
+		{
+			"id": "showTwitchAnnouncements",
+			"label": "Annonces",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch"
+		},
+		{
+			"id": "useCustomCardColor",
+			"label": "Couleur des cartes personnalisée",
+			"description": "Cartes = annonces, subs, dons, raids, etc. Si désactivé, chaque type garde sa couleur de plateforme. Ce réglage s’applique à toutes les cartes, pas seulement aux annonces",
+			"type": "checkbox",
+			"defaultValue": false,
+			"showIf": "showTwitchAnnouncements",
+			"group": "Twitch"
+		},
+		{
+			"id": "cardColor",
+			"label": "Couleur des cartes",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1D1D1D",
+			"showIf": "useCustomCardColor",
+			"group": "Twitch"
+		},
+		{
+			"id": "hideAnnouncementUsername",
+			"label": "Masquer le pseudo dans les annonces",
+			"description": "Si activé, seul le contenu de l'annonce est affiché. Si désactivé, le pseudo s'affiche au-dessus du message",
+			"type": "checkbox",
+			"defaultValue": false,
+			"showIf": "showTwitchAnnouncements",
+			"group": "Twitch"
+		},
+		{
+			"id": "useCustomAnnouncementTextColor",
+			"label": "Personnaliser la couleur du texte des annonces ?",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"showIf": "hideAnnouncementUsername",
+			"group": "Twitch"
+		},
+		{
+			"id": "announcementTextColor",
+			"label": "Couleur du texte de l'annonce",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"showIf": "useCustomAnnouncementTextColor",
+			"group": "Twitch"
+		},
+		{
+			"id": "showTwitchSharedChat",
+			"label": "Chat partagé",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value":  2,
+					"label": "Afficher & Mettre en évidence"
+				},
+				{
+					"value": 1,
+					"label": "Afficher sans mettre en évidence"
+				},
+				{
+					"value": 0,
+					"label": "Ne pas afficher"
+				}
+			],
+			"defaultValue": 2,
+			"group": "Twitch"
+		},
+		{
+			"id": "showTwitchGifs",
+			"label": "Faire apparaître les GIFs ?",
+			"description": "Affiche les GIFs natifs accessibles aux abos T2 / T3 Twitch dans le chat",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch"
+		},
+		{
+			"id": "showYouTubeMessages",
+			"label": "Support YouTube ?",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube"
+		},
+		{
+			"id": "showYouTubeLinkPreviews",
+			"label": "Prévisualiser les liens YouTube",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"showIf": "showYouTubeMessages",
+			"group": "YouTube"
+		},
+		{
+			"id": "showKickMessages",
+			"label": "Support Kick ?",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick"
+		},
+		{
+			"id": "kickUsername",
+			"label": "Pseudo Kick",
+			"description": "",
+			"type": "text",
+			"defaultValue": "",
+			"showIf": "showKickMessages",
+			"group": "Kick"
+		},
+		{
+			"id": "enableTikTokSupport",
+			"label": "Support TikTok ?",
+			"description": "Active automatiquement les messages du chat TikTok",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "TikTok"
+		},
+		{
+			"id": "showStreamlabsDonations",
+			"label": "Tips Streamlabs",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/streamlabs\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "showStreamElementsTips",
+			"label": "Tips StreamElements",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/streamelements\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "showPatreonMemberships",
+			"label": "Abonnements Patreon",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/patreon\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "showKofiDonations",
+			"label": "Dons Ko-fi",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/ko-fi\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "showTipeeeStreamDonations",
+			"label": "Dons TipeeeStream",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/tipeee-stream\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "showFourthwallAlerts",
+			"label": "Alertes Fourthwall",
+			"description": "<a href=\"https://docs.streamer.bot/guide/integrations/fourthwall\" target=\"_blank\">Cliquez pour connecter</a>",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Dons"
+		},
+		{
+			"id": "address",
+			"label": "Adresse",
+			"description": "Adresse du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Avancé"
+		},
+		{
+			"id": "port",
+			"label": "Port",
+			"description": "Port du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "8080",
+			"group": "Avancé"
+		}
+	]
+}
