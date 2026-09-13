@@ -3068,8 +3068,17 @@ function AddMessageItem(element, elementID, platform, userId) {
 			requestAnimationFrame(function () {
 				lineItem.className = lineItem.className + " show";
 				lineItem.style.maxHeight = calculatedHeight;
-				// After it's done animating, remove the height constraint in case the div needs to get bigger
-				setTimeout(function () {
+				// After it's done animating, remove the height constraint in case the div needs to get bigger.
+				// Stashed on the element itself so HideMessageItem can cancel it — with
+				// a short "hideAfter" (as little as 1s), this fires at almost the exact
+				// same moment HideMessageItem pins maxHeight back down to collapse it,
+				// and whichever of the two writes lands second silently wins: if this
+				// one does, it stomps the pinned height back to "none" right as the
+				// close animation is trying to start, and since a transition can't
+				// animate FROM "none" the whole close reads as an instant cut with no
+				// height collapse at all (reported: message set to "hideAfter: 1"
+				// vanishing "genre cut" instead of fading/collapsing).
+				lineItem._releaseMaxHeightTimeout = setTimeout(function () {
 					lineItem.style.maxHeight = "none";
 				}, 1000);
 			});
@@ -3082,14 +3091,55 @@ function AddMessageItem(element, elementID, platform, userId) {
 
 		if (hideAfter > 0) {
 			setTimeout(function () {
-				lineItem.style.opacity = 0;
-				setTimeout(function () {
-					messageList.removeChild(lineItem);
-				}, 1000);
+				HideMessageItem(lineItem);
 			}, hideAfter * 1000);
 		}
 
 	}, 200);
+}
+
+// Mirrors AddMessageItem's own arrival animation instead of the flat
+// opacity-only fade this used to do — same slide/blur/fade motion, same
+// durations, just played backwards (see the ".hiding" rule in style.css),
+// so a message leaves exactly the way it came in, and the gap it leaves
+// behind closes smoothly instead of the rest of the list snapping up the
+// instant it's removed.
+function HideMessageItem(lineItem) {
+	// Cancel AddMessageItem's own pending "release to none" timer (see its
+	// comment) — with a short "hideAfter", it can still be sitting there
+	// waiting to fire, and left alone it can stomp the pinned height right
+	// back to "none" moments after this sets it, silently cancelling the
+	// close animation. Whether it already fired or not, clearing an
+	// already-elapsed timeout is a harmless no-op.
+	clearTimeout(lineItem._releaseMaxHeightTimeout);
+
+	// AddMessageItem releases maxHeight to "none" a second after arrival
+	// so a message that grows afterwards (a grouped reply, an embedded
+	// image loading in) isn't clipped — but a CSS transition can only
+	// animate FROM a real pixel value, never from "none", so it has to be
+	// pinned back to the element's current rendered height first before
+	// asking it to collapse to 0.
+	lineItem.style.maxHeight = lineItem.offsetHeight + "px";
+
+	// Two rAFs, same reasoning as the arrival code above: guarantees the
+	// pinned height just above is actually painted once before the
+	// collapse starts, so the transition animates from a real starting
+	// point instead of jumping straight to the end state.
+	requestAnimationFrame(function () {
+		requestAnimationFrame(function () {
+			lineItem.classList.add('hiding');
+			lineItem.style.maxHeight = '0px';
+		});
+	});
+
+	// 1.4s matches the slower of the two exit animations (the "settle"
+	// slide) in style.css — long enough for the height collapse and the
+	// slide/fade/blur to both fully finish before the element is actually
+	// taken out of the DOM.
+	setTimeout(function () {
+		if (lineItem.parentNode)
+			lineItem.parentNode.removeChild(lineItem);
+	}, 1400);
 }
 
 // I used Gemini for this shit so if it doesn't work, blame Google
