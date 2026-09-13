@@ -745,7 +745,7 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
-	color: #c9c9c9; /* Otherwise inherits the message color, which can be too dark to read against a dark background */
+	color: #e2e2e2; /* Otherwise inherits the message color, which can be too dark to read against a dark background */
 }
 
 #message {
