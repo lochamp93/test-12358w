@@ -3068,8 +3068,17 @@ function AddMessageItem(element, elementID, platform, userId) {
 			requestAnimationFrame(function () {
 				lineItem.className = lineItem.className + " show";
 				lineItem.style.maxHeight = calculatedHeight;
-				// After it's done animating, remove the height constraint in case the div needs to get bigger
-				setTimeout(function () {
+				// After it's done animating, remove the height constraint in case the div needs to get bigger.
+				// Stashed on the element itself so HideMessageItem can cancel it — with
+				// a short "hideAfter" (as little as 1s), this fires at almost the exact
+				// same moment HideMessageItem pins maxHeight back down to collapse it,
+				// and whichever of the two writes lands second silently wins: if this
+				// one does, it stomps the pinned height back to "none" right as the
+				// close animation is trying to start, and since a transition can't
+				// animate FROM "none" the whole close reads as an instant cut with no
+				// height collapse at all (reported: message set to "hideAfter: 1"
+				// vanishing "genre cut" instead of fading/collapsing).
+				lineItem._releaseMaxHeightTimeout = setTimeout(function () {
 					lineItem.style.maxHeight = "none";
 				}, 1000);
 			});
@@ -3095,34 +3104,81 @@ function AddMessageItem(element, elementID, platform, userId) {
 // so a message leaves exactly the way it came in, and the gap it leaves
 // behind closes smoothly instead of the rest of the list snapping up the
 // instant it's removed.
+//
+// IMPORTANT — why the max-height collapse is NOT started at the same time
+// as ".hiding" (even though that's what arrival does with ".show"):
+// #messageList is bottom-anchored (position:absolute; bottom:0) with the
+// li's stacked in plain, non-reversed flow, so a li's own on-screen top
+// edge is fixed by "list bottom minus the height of itself and everything
+// after it". Concretely, while ONE li's height is changing, its top edge
+// always moves the same amount as its height, in the OPPOSITE direction:
+// shrink it and its top edge slides DOWN (toward the fixed bottom) as it
+// collapses; grow it and its top edge slides UP.
+// That's actually why arrival looks great: the new li is the last child,
+// growing from 0 to full height, so its top edge is already rising on its
+// own — same direction as the "slide up into place" transform — and the
+// two add together into one clean motion.
+// For the EXIT animation it's the opposite: shrinking max-height at the
+// same time as the slideOutAerianSettle transform (translateY 0 → -40px,
+// i.e. "up") makes the box's own top edge slide DOWN by up to its full
+// row height (often more than the 40px the transform moves it), and that
+// fights the transform outright — the two don't cancel out, the box's own
+// motion just wins, so the message reads as sliding DOWN as it vanishes.
+// (translateY itself was correctly "-40px" the whole time — a Playwright
+// check confirming the transform's own value was never going to catch
+// this, since the bug isn't in the transform, it's in the box moving
+// underneath it. Only actually watching the live page's rendered position
+// surfaced it — see the "ça n'a pas changé le sens d'effacement" video.)
+// Fix: don't touch max-height at all while ".hiding" plays — keep the box
+// pinned at its full, current size (exactly like arrival keeps it pinned
+// at its full, final size) so nothing is fighting the slide. Only once
+// the message has fully faded out (1.4s later, fully invisible) do we
+// collapse max-height to 0 and let the list reflow — by then there's
+// nothing left to see move, so the box repositioning some other message
+// above.
 function HideMessageItem(lineItem) {
+	// Cancel AddMessageItem's own pending "release to none" timer (see its
+	// comment) — with a short "hideAfter", it can still be sitting there
+	// waiting to fire, and left alone it can stomp the pinned height right
+	// back to "none" moments after this sets it, silently cancelling the
+	// close animation. Whether it already fired or not, clearing an
+	// already-elapsed timeout is a harmless no-op.
+	clearTimeout(lineItem._releaseMaxHeightTimeout);
+
 	// AddMessageItem releases maxHeight to "none" a second after arrival
 	// so a message that grows afterwards (a grouped reply, an embedded
 	// image loading in) isn't clipped — but a CSS transition can only
 	// animate FROM a real pixel value, never from "none", so it has to be
-	// pinned back to the element's current rendered height first before
-	// asking it to collapse to 0.
+	// pinned back to the element's current rendered height first. This is
+	// also what keeps the box from resizing itself during the fade below —
+	// pinning it to its OWN current height is a no-op change (nothing to
+	// animate to yet), so it just stays put.
 	lineItem.style.maxHeight = lineItem.offsetHeight + "px";
 
 	// Two rAFs, same reasoning as the arrival code above: guarantees the
-	// pinned height just above is actually painted once before the
-	// collapse starts, so the transition animates from a real starting
-	// point instead of jumping straight to the end state.
+	// pinned height just above is actually painted once before ".hiding"
+	// is added, so the fade/slide starts from a real, already-settled
+	// state instead of racing its own first paint.
 	requestAnimationFrame(function () {
 		requestAnimationFrame(function () {
 			lineItem.classList.add('hiding');
-			lineItem.style.maxHeight = '0px';
 		});
 	});
 
 	// 1.4s matches the slower of the two exit animations (the "settle"
-	// slide) in style.css — long enough for the height collapse and the
-	// slide/fade/blur to both fully finish before the element is actually
-	// taken out of the DOM.
+	// slide) in style.css — wait for the fade/slide to be fully done and
+	// the message fully invisible before shrinking the box.
+	setTimeout(function () {
+		lineItem.style.maxHeight = '0px';
+	}, 1400);
+
+	// Then give the collapse itself (the li's own "transition: all 1s
+	// ease-in-out") time to finish closing the gap before actually
+	// removing the element.
 	setTimeout(function () {
 		if (lineItem.parentNode)
 			lineItem.parentNode.removeChild(lineItem);
-	}, 1400);
+	}, 1400 + 1000);
 }
 
 // I used Gemini for this shit so if it doesn't work, blame Google
