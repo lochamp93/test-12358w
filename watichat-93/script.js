@@ -3082,14 +3082,47 @@ function AddMessageItem(element, elementID, platform, userId) {
 
 		if (hideAfter > 0) {
 			setTimeout(function () {
-				lineItem.style.opacity = 0;
-				setTimeout(function () {
-					messageList.removeChild(lineItem);
-				}, 1000);
+				HideMessageItem(lineItem);
 			}, hideAfter * 1000);
 		}
 
 	}, 200);
+}
+
+// Mirrors AddMessageItem's own arrival animation instead of the flat
+// opacity-only fade this used to do — same slide/blur/fade motion, same
+// durations, just played backwards (see the ".hiding" rule in style.css),
+// so a message leaves exactly the way it came in, and the gap it leaves
+// behind closes smoothly instead of the rest of the list snapping up the
+// instant it's removed.
+function HideMessageItem(lineItem) {
+	// AddMessageItem releases maxHeight to "none" a second after arrival
+	// so a message that grows afterwards (a grouped reply, an embedded
+	// image loading in) isn't clipped — but a CSS transition can only
+	// animate FROM a real pixel value, never from "none", so it has to be
+	// pinned back to the element's current rendered height first before
+	// asking it to collapse to 0.
+	lineItem.style.maxHeight = lineItem.offsetHeight + "px";
+
+	// Two rAFs, same reasoning as the arrival code above: guarantees the
+	// pinned height just above is actually painted once before the
+	// collapse starts, so the transition animates from a real starting
+	// point instead of jumping straight to the end state.
+	requestAnimationFrame(function () {
+		requestAnimationFrame(function () {
+			lineItem.classList.add('hiding');
+			lineItem.style.maxHeight = '0px';
+		});
+	});
+
+	// 1.4s matches the slower of the two exit animations (the "settle"
+	// slide) in style.css — long enough for the height collapse and the
+	// slide/fade/blur to both fully finish before the element is actually
+	// taken out of the DOM.
+	setTimeout(function () {
+		if (lineItem.parentNode)
+			lineItem.parentNode.removeChild(lineItem);
+	}, 1400);
 }
 
 // I used Gemini for this shit so if it doesn't work, blame Google

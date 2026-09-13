@@ -200,6 +200,60 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
 	}
 }
 
+/* "Masquer après" (hideAfter, script.js HideMessageItem): the message
+   used to just flatly fade its opacity to 0 — nothing like the slide/
+   blur/fade it played coming IN, so leaving looked and felt like a
+   completely different, cheaper effect. Same distance (40px), same blur
+   amount (8px), same per-animation durations (0.7s fade / 1.4s slide) as
+   arrival — but continuing UPWARD in the same direction arrival was
+   already moving, not backing down the way it came. Going back down
+   (translateY(0) → translateY(40px), the literal reverse of arrival's
+   translateY(40px) → translateY(0)) reads as a "yoyo" — arrives moving
+   up, sits, then visibly reverses and retraces its own path down before
+   vanishing. Continuing to translateY(-40px) instead keeps the same
+   single direction all the way through, like being pushed up and off by
+   the newer messages below it — no reversal to catch the eye.
+   The fade still mirrors arrival's easing (ease-out reversed is ease-in
+   — see slideOutAerianFade), just not the direction of travel; only the
+   slide's target changed.
+   Tried first with the SAME two keyframe names as arrival and
+   "direction: reverse" instead of a separate pair. It doesn't work: since
+   ".show" is never removed (nothing here needs it gone) and both rules
+   would then name the identical animations, the browser treats "hiding"
+   as an UPDATE to the already-completed, forwards-filled ".show"
+   animation rather than a new one — its current time carries over
+   (sitting at the very end from arrival), so flipping the direction
+   lands it on the opposite keyframe INSTANTLY instead of animating
+   there. Separate keyframe names (slideOut… vs slideIn…) sidestep that
+   entirely: a genuinely different "animation" value always restarts at
+   elapsed 0, so this actually plays instead of snapping. */
+.slide-fade li.hiding {
+	animation:
+		slideOutAerianFade 0.7s ease-in forwards,
+		slideOutAerianSettle 1.4s cubic-bezier(0.8, 0, 0.6, 0.95) forwards;
+	will-change: transform, opacity, filter;
+}
+
+@keyframes slideOutAerianFade {
+	0% {
+		opacity: 1;
+		filter: blur(0);
+	}
+	100% {
+		opacity: 0;
+		filter: blur(8px);
+	}
+}
+
+@keyframes slideOutAerianSettle {
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-40px);
+	}
+}
+
 #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList {
 	opacity: 0;
 }
@@ -691,6 +745,7 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
 	opacity: 0.5;
+	color: #c9c9c9; /* Otherwise inherits the message color, which can be too dark to read against a dark background */
 }
 
 #message {
