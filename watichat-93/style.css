@@ -265,6 +265,19 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
 	font-size: 0.7em;
 }
 
+/* #sharedChat sits directly above #userInfo, inside the SAME message, when
+   a shared-chat guest message is shown — unlike the gap between two
+   separate li's (handled elsewhere by "margin-top: 1em" once both show an
+   avatar), nothing here reserved any space for #avatarFrame's own upward
+   overhang past #userInfo's top edge (deliberate — see the #avatarFrame
+   comment further down), so it bled straight into the sharedChat text
+   sitting right above it (reported: overlap once "chat partagé" is
+   enabled). Only needed when an avatar is actually going to show (nothing
+   overhangs otherwise) and only once #sharedChat is actually visible. */
+.message-right:has(#userInfo #avatar:not(:empty)) #sharedChat[style*="display: block"] {
+	margin-bottom: 0.3em;
+}
+
 .highlightMessage {
 	/* background: #adadad46 !important; */
 	/* background: #414141e5 !important;
@@ -744,8 +757,14 @@ li:has(#userInfo:not([style*="display: none"]) #avatar:not(:empty))
 	text-overflow: ellipsis;
 	word-break: break-word; /* Break long words if necessary */
 	font-size: 0.7em;
-	opacity: 1;
-	color: #e2e2e2; /* Otherwise inherits the message color, which can be too dark to read against a dark background */
+	/* "opacity: 0.5" used to sit here to dim this down from the message's
+	   own bright color — but opacity blends with whatever's BEHIND it, so
+	   the color actually picked up on screen depends on the background and
+	   ends up darker/muddier than the color set below (e.g. e2e2e2 reading
+	   back as roughly 8c8c8c against a dark background). Setting an
+	   explicit lighter grey directly, at full opacity, gives a color that
+	   actually matches what's picked here, regardless of background. */
+	color: #e2e2e2;
 }
 
 #message {
