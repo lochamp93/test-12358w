@@ -755,6 +755,19 @@ async function TwitchChatMessage(data) {
 			// visible above it to break after) rendered as a tall empty line
 			// before #reply/#message on every grouped message. Has to go too.
 			instance.querySelector("#line-space").style.display = 'none';
+
+			// Same idea for the "💬 <channel>" shared-chat indicator: a
+			// grouped consecutive message is already understood to be from
+			// the same person as the one above it (that's what hiding the
+			// avatar/pseudo just above means) — and therefore from the same
+			// source channel too — so showing it a second time is just the
+			// same information repeated (reported: overlap AND repetition
+			// once "chat partagé" is on, for consecutive messages from the
+			// same shared-chat guest). Harmless to set even when THIS
+			// message isn't itself from shared chat: sharedChatDiv is never
+			// switched to "block" for a non-shared message in the first
+			// place, so this is a no-op then.
+			sharedChatDiv.style.display = 'none';
 		}
 	}
 
