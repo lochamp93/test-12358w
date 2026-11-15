@@ -5,6 +5,7 @@
 	"checkerPreview": true,
 	"livePreview": true,
 	"demo": true,
+	"dock": true,
 	"settings": [
 		{
 			"id": "layout",

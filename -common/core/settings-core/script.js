@@ -74,6 +74,10 @@ function LoadJSON(settingsJson) {
 				subtitle.style.display = data.subtitle ? '' : 'none';
 			}
 
+			// "dock": true (ou chemin relatif au widget) : bouton pour ouvrir le dock dans une nouvelle fenêtre
+			const dockButton = document.getElementById('openDockButton');
+			if (dockButton) dockButton.style.display = data.dock ? '' : 'none';
+
 			const headerLogo = document.getElementById('headerLogo');
 			if (headerLogo) headerLogo.style.display = data.showLogo === false ? 'none' : '';
 
@@ -943,6 +947,15 @@ function EnsureIcons() {
 	script.src = new URL('../../utils/icons.js?v=' + Date.now(), document.baseURI).href;
 	script.onload = PaintIcons;
 	document.head.appendChild(script);
+}
+
+// Ouvre le dock du widget (settings.json : "dock": true → <widget>/dock/) dans une fenêtre à sa taille
+function OpenDock() {
+	if (!settingsData || !settingsData.dock) return;
+	const base = widgetURL.endsWith('/') ? widgetURL : widgetURL + '/';
+	const url = new URL(settingsData.dock === true ? 'dock/' : String(settingsData.dock), base).href;
+	const win = window.open(url, '_blank', 'popup,width=460,height=860');
+	if (!win) window.open(url, '_blank');
 }
 
 // Réglages sans valeur (jamais dans l’URL) : boutons, infos, lignes d’actions

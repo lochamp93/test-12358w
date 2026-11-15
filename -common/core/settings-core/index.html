@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramètres</title>
-    <link rel="stylesheet" href="style.css?v=2026111527">
-    <link rel="stylesheet" href="../../styles/apple.css?v=2026111527">
-    <link rel="stylesheet" href="apple.css?v=2026111527">
-    <script src="../../utils/icons.js?v=2026111527"></script>
-    <script src="../../utils/color-scheme.js?v=2026111527"></script>
+    <link rel="stylesheet" href="style.css?v=2026111528">
+    <link rel="stylesheet" href="../../styles/apple.css?v=2026111528">
+    <link rel="stylesheet" href="apple.css?v=2026111528">
+    <script src="../../utils/icons.js?v=2026111528"></script>
+    <script src="../../utils/color-scheme.js?v=2026111528"></script>
     <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -26,6 +26,7 @@
         </div>
         <button id="loadDefaultsButton" onclick="OpenLoadDefaultsPopup()" title="Charger les paramètres par défaut"><svg viewBox="0 0 25 30" aria-hidden="true"><path d="M12.21 29.7C18.95 29.7 24.42 24.23 24.42 17.49C24.42 10.73 18.95 5.28 12.21 5.28C11.56 5.28 10.93 5.33 10.32 5.43L13.55 2.27C13.79 2.02 13.92 1.71 13.92 1.35C13.92 0.6 13.34 0 12.62 0C12.22 0 11.92 0.150002 11.67 0.400002L6.05 6.1C5.79 6.37 5.64 6.73 5.64 7.08C5.64 7.47 5.77 7.78 6.05 8.08L11.67 13.73C11.92 13.96 12.22 14.11 12.6 14.11C13.34 14.11 13.92 13.52 13.92 12.78C13.92 12.43 13.79 12.11 13.53 11.88L9.85 8.23C10.61 8.04 11.4 7.94 12.21 7.94C17.47 7.94 21.74 12.21 21.74 17.47C21.74 22.74 17.47 27 12.21 27C6.94 27 2.68 22.74 2.68 17.47C2.68 16.73 2.06 16.13 1.34 16.13C0.6 16.13 0 16.73 0 17.47C0 24.23 5.45 29.7 12.21 29.7Z"/></svg>Charger les paramètres par défaut</button>
         <button id="loadSettingsButton" onclick="OpenLoadSettingsPopup()" title="Charger des paramètres depuis une URL"><svg viewBox="0 0 25 30" aria-hidden="true"><path d="M7.65 13.6C7.04 13.6 6.53 14.06 6.53 14.69C6.53 15.02 6.67 15.27 6.9 15.5L11.4 19.83C11.73 20.15 12.01 20.26 12.36 20.26C12.68 20.26 12.98 20.15 13.31 19.83L17.8 15.5C18.03 15.27 18.17 15.02 18.17 14.69C18.17 14.06 17.65 13.6 17.03 13.6C16.72 13.6 16.4 13.74 16.18 13.98L14.23 16.06L13.5 16.95L13.61 14.9V1.23C13.61 0.56 13.04 0 12.36 0C11.66 0 11.08 0.56 11.08 1.23V14.9L11.21 16.95L10.47 16.06L8.51 13.98C8.3 13.74 7.97 13.6 7.65 13.6ZM5.86 29.51H18.84C22.6 29.51 24.7 27.41 24.7 23.65V13.11C24.7 9.35 22.6 7.24 18.84 7.24H16.18V9.92H18.77C20.85 9.92 22.02 11.1 22.02 13.17V23.58C22.02 25.66 20.85 26.83 18.77 26.83H5.93C3.85 26.83 2.68 25.66 2.68 23.58V13.17C2.68 11.1 3.85 9.92 5.93 9.92H8.5V7.24H5.86C2.09 7.24 0 9.35 0 13.11V23.65C0 27.41 2.09 29.51 5.86 29.51Z"/></svg>Charger des paramètres</button>
+        <button id="openDockButton" onclick="OpenDock()" title="Ouvrir le dock dans une nouvelle fenêtre" style="display:none"><svg viewBox="0 0 35 29" aria-hidden="true"><path d="M5.03 21.86H6.9V23.33C6.9 26.51 8.75 28.36 11.93 28.36H29.73C32.77 28.36 34.53 26.51 34.53 23.33V11.53C34.53 8.34 32.77 6.5 29.73 6.5H27.63V5.03C27.63 1.85 25.86 0 22.83 0H5.03C1.84 0 0 1.85 0 5.03V16.83C0 20.02 1.84 21.86 5.03 21.86ZM5.15 19.18C3.56 19.18 2.68 18.29 2.68 16.71V5.16C2.68 3.57 3.56 2.68 5.15 2.68H22.47C24.06 2.68 24.95 3.57 24.95 5.16V6.5H11.93C8.75 6.5 6.9 8.34 6.9 11.53V19.18H5.15ZM12.05 25.69C10.47 25.69 9.58 24.79 9.58 23.2V11.65C9.58 10.06 10.47 9.17 12.05 9.17H29.38C30.96 9.17 31.85 10.06 31.85 11.65V23.2C31.85 24.79 30.96 25.69 29.38 25.69H12.05ZM13.23 14C13.93 14 14.49 13.43 14.49 12.76C14.49 12.09 13.93 11.51 13.23 11.51C12.55 11.51 11.99 12.09 11.99 12.76C11.99 13.43 12.55 14 13.23 14ZM17.18 14C17.87 14 18.43 13.43 18.43 12.76C18.43 12.09 17.87 11.51 17.18 11.51C16.48 11.51 15.92 12.09 15.92 12.76C15.92 13.43 16.48 14 17.18 14ZM21.12 14C21.82 14 22.38 13.43 22.38 12.76C22.38 12.09 21.82 11.51 21.12 11.51C20.44 11.51 19.88 12.09 19.88 12.76C19.88 13.43 20.44 14 21.12 14Z"/></svg>Ouvrir le dock</button>
         <button id="schemeToggle" data-scheme-toggle></button>
     </div>
 
@@ -72,5 +73,5 @@
 </html>
 
 <script src="../../utils/helpers.js"></script>
-<script src="../../utils/widget-settings.js?v=2026111527"></script>
-<script src="script.js?v=2026111527"></script>
+<script src="../../utils/widget-settings.js?v=2026111528"></script>
+<script src="script.js?v=2026111528"></script>

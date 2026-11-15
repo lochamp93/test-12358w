@@ -3,6 +3,7 @@
 	"design": "apple",
 	"showLogo": false,
 	"showNuttyLink": false,
+	"dock": true,
 	"subtitle": "{editScenario}",
 	"checkerPreview": true,
 	"livePreview": true,

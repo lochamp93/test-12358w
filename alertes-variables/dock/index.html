@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="fr" class="apple">
+<html lang="fr" class="apple" data-scheme="dark">
 
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Alertes variables • Dock</title>
 	<link rel="icon" href="../../-common/resources/logo.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111527" />
-	<script src="../../-common/utils/color-scheme.js?v=2026111527"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111527" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111528" />
+	<!-- Dock : thème sombre uniquement ; rechargement automatique si une version plus récente est en ligne -->
+	<script src="../../-common/utils/fresh.js?v=2026111528" data-version="2026111528" data-version-url="../version.txt"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111528" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -16,8 +17,9 @@
 	<!-- En-tête -->
 	<div id="header">
 		<span class="dock-title">Alertes variables</span>
+		<span id="folderStatus" class="status off" title="Dossier source">Dossier</span>
 		<span id="status" class="status off" title="Connexion à Streamer.bot">Déconnecté</span>
-		<button id="schemeToggle" class="ui-icon" type="button" data-scheme-toggle></button>
+		<a id="settingsLink" class="ui-icon icon-link" href="../settings/" target="_blank" rel="noopener" title="Ouvrir la page de paramétrage"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M14.09 20.48L16.17 18.39C14.53 18.24 13.38 17.72 12.53 16.87C10.22 14.56 10.22 11.28 12.52 8.98003L17.06 4.44003C19.37 2.13003 22.64 2.13003 24.95 4.44003C27.27 6.78003 27.26 10.03 24.96 12.33L22.61 14.68C23.05 15.68 23.18 16.9 22.95 17.95L26.87 14.04C30.24 10.69 30.25 5.93003 26.86 2.54003C23.47 -0.859974 18.71 -0.839974 15.36 2.51003L10.6 7.29003C7.24997 10.64 7.22997 15.39 10.62 18.78C11.42 19.58 12.5 20.18 14.09 20.48ZM15.29 8.95003L13.23 11.05C14.86 11.2 16.02 11.73 16.85 12.56C19.18 14.89 19.18 18.15 16.87 20.45L12.33 24.99C10.02 27.3 6.75997 27.3 4.43997 24.99C2.10997 22.67 2.12997 19.4 4.43997 17.1L6.77997 14.75C6.34997 13.75 6.19997 12.55 6.42997 11.48L2.51997 15.39C-0.84003 18.74 -0.85003 23.51 2.53997 26.9C5.92997 30.3 10.69 30.27 14.04 26.92L18.78 22.16C22.14 18.8 22.16 14.04 18.77 10.66C17.97 9.86003 16.89 9.25003 15.29 8.95003Z"/></svg></a>
 	</div>
 
 	<!-- Streamer.bot non connecté -->
@@ -95,28 +97,6 @@
 			</div>
 		</div>
 
-		<!-- Dossier source -->
-		<div class="section">
-			<h3>Dossier source</h3>
-			<div class="card">
-				<div id="folderBox" class="folder-box warn">
-					<span id="folderIcon" class="folder-icon" aria-hidden="true"></span>
-					<div class="folder-text">
-						<div id="folderName">Aucun dossier choisi</div>
-						<div id="folderPath"></div>
-					</div>
-				</div>
-				<div class="row">
-					<button id="chooseFolderButton" type="button">Choisir le dossier</button>
-					<button id="refreshButton" type="button">Actualiser</button>
-				</div>
-				<div class="row">
-					<input id="folderInput" type="text" placeholder="Ou collez le chemin : C:\Alertes" />
-					<button id="setFolderButton" type="button" style="flex:0 0 auto">Définir</button>
-				</div>
-			</div>
-		</div>
-
 		<!-- Dernières alertes (avec bouton pour les rejouer) -->
 		<div class="section">
 			<h3>Dernières alertes</h3>
@@ -132,9 +112,9 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111527"></script>
-	<script src="../helpers.js?v=2026111527"></script>
-	<script src="./script.js?v=2026111527"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111528"></script>
+	<script src="../helpers.js?v=2026111528"></script>
+	<script src="./script.js?v=2026111528"></script>
 </body>
 
 </html>

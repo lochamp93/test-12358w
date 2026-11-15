@@ -83,14 +83,15 @@ function Render() {
 		Toast(st.dossierExiste ? `Dossier enregistré : ${st.dossier}` : `Dossier introuvable : ${st.dossier}`);
 	if (state) lastFolder = st.dossier || '';
 
-	// Dossier source : nom du dossier bien visible, chemin complet en dessous
-	const folderName = st.dossier ? (st.dossier.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || st.dossier) : '';
-	const nbScenarios = Object.keys(st.dossiers || {}).length;
+	// Témoin « Dossier » à côté de « Connecté » : vert si le dossier source est trouvé
+	// (le dossier se choisit dans la page de paramétrage)
 	const folderOk = !!st.dossier && st.dossierExiste;
-	$('folderBox').className = 'folder-box ' + (folderOk ? 'ok' : 'warn');
-	$('folderName').textContent = !st.dossier ? 'Aucun dossier choisi'
-		: (st.dossierExiste ? `${folderName} · ${nbScenarios} sous-dossier${nbScenarios > 1 ? 's' : ''}` : `${folderName} (introuvable)`);
-	$('folderPath').textContent = st.dossier || 'Cliquez sur « Choisir le dossier » ou collez son chemin';
+	const nbScenarios = Object.keys(st.dossiers || {}).length;
+	$('folderStatus').className = 'status ' + (!state ? 'off' : folderOk ? 'on' : 'warn');
+	$('folderStatus').title = !state ? 'Dossier source : en attente de Streamer.bot'
+		: !st.dossier ? 'Aucun dossier source : choisissez-le dans la page de paramétrage'
+		: folderOk ? `${st.dossier} · ${nbScenarios} sous-dossier${nbScenarios > 1 ? 's' : ''}`
+		: `Dossier introuvable : ${st.dossier}`;
 
 	RenderTests();
 	RenderHistory();
@@ -255,20 +256,7 @@ $('testButton').addEventListener('click', () => Send({ mode: 'tester', type: $('
 
 $('skipButton').addEventListener('click', () => Send({ mode: 'passer' }));
 
-$('chooseFolderButton').addEventListener('click', () => {
-	Toast('Fenêtre de choix ouverte sur le PC de Streamer.bot');
-	Send({ mode: 'choisirDossier' });
-});
-$('refreshButton').addEventListener('click', () => AskState('actualiser'));
 
-function SubmitFolder() {
-	const path = $('folderInput').value.trim();
-	if (!path) { Toast('Collez le chemin du dossier'); return; }
-	Send({ mode: 'definirDossier', chemin: path });
-	$('folderInput').value = '';
-}
-$('setFolderButton').addEventListener('click', SubmitFolder);
-$('folderInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') SubmitFolder(); });
 
 async function CopyImportCode() {
 	try {

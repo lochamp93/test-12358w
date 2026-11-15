@@ -310,6 +310,7 @@ out = {
     "design": "apple",
     "showLogo": False,
     "showNuttyLink": False,
+    "dock": True,
     "subtitle": "{editScenario}",
     "checkerPreview": True,
     "livePreview": True,

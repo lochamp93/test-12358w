@@ -65,6 +65,25 @@ body {
 }
 
 .status.on::before { background: var(--ui-green); }
+.status.warn::before { background: #ff9f0a; }
+
+/* Bouton lien vers la page de paramétrage (en-tête) */
+html.apple a.ui-icon.icon-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	margin-left: 4px;
+	border-radius: 50%;
+	background: var(--ui-fill);
+	color: var(--ui-text);
+	text-decoration: none;
+	transition: filter .12s ease, transform .12s ease;
+}
+html.apple a.ui-icon.icon-link:hover { filter: brightness(1.15); }
+html.apple a.ui-icon.icon-link:active { transform: scale(.92); }
+html.apple a.ui-icon.icon-link svg { width: 14px; height: 14px; fill: currentColor; }
 
 /* ---------- Bandeaux ---------- */
 
