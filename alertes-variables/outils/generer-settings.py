@@ -216,7 +216,7 @@ for nom, cle, types in PLATEFORMES:
         for prefix, scope in SCOPES:
             ident = f"{cle}{T}Text" if not prefix else f"{prefix}{cle.capitalize()}{T}Text"
             ancien = f"text{T}" if not prefix else f"{prefix}Text{T}"
-            add(id=ident, label="Texte", description=PLACEHOLDERS, type="text", defaultValue=TEXTES[t],
+            add(id=ident, label="Texte", description=PLACEHOLDERS + (", {recipient} (personne qui reçoit l’abonnement)" if t == "gift" else ""), type="text", defaultValue=TEXTES[t],
                 group=nom, popup=pop, showIf={"all": [{"id": tid}, scope]}, aliases=[ancien])
         if cle == "twitch" and t == "cheer":
             add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte", type="number",

@@ -8656,7 +8656,7 @@
 		{
 			"id": "twitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8679,7 +8679,7 @@
 		{
 			"id": "sc1TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8702,7 +8702,7 @@
 		{
 			"id": "sc2TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8725,7 +8725,7 @@
 		{
 			"id": "sc3TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8748,7 +8748,7 @@
 		{
 			"id": "sc4TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8771,7 +8771,7 @@
 		{
 			"id": "sc5TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8794,7 +8794,7 @@
 		{
 			"id": "sc6TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8817,7 +8817,7 @@
 		{
 			"id": "sc7TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8840,7 +8840,7 @@
 		{
 			"id": "sc8TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8863,7 +8863,7 @@
 		{
 			"id": "sc9TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8886,7 +8886,7 @@
 		{
 			"id": "sc10TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8909,7 +8909,7 @@
 		{
 			"id": "sc11TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -8932,7 +8932,7 @@
 		{
 			"id": "sc12TwitchGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
@@ -14908,7 +14908,7 @@
 		{
 			"id": "kickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -14931,7 +14931,7 @@
 		{
 			"id": "sc1KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -14954,7 +14954,7 @@
 		{
 			"id": "sc2KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -14977,7 +14977,7 @@
 		{
 			"id": "sc3KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15000,7 +15000,7 @@
 		{
 			"id": "sc4KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15023,7 +15023,7 @@
 		{
 			"id": "sc5KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15046,7 +15046,7 @@
 		{
 			"id": "sc6KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15069,7 +15069,7 @@
 		{
 			"id": "sc7KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15092,7 +15092,7 @@
 		{
 			"id": "sc8KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15115,7 +15115,7 @@
 		{
 			"id": "sc9KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15138,7 +15138,7 @@
 		{
 			"id": "sc10KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15161,7 +15161,7 @@
 		{
 			"id": "sc11KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -15184,7 +15184,7 @@
 		{
 			"id": "sc12KickGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
@@ -18394,7 +18394,7 @@
 		{
 			"id": "youtubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18417,7 +18417,7 @@
 		{
 			"id": "sc1YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18440,7 +18440,7 @@
 		{
 			"id": "sc2YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18463,7 +18463,7 @@
 		{
 			"id": "sc3YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18486,7 +18486,7 @@
 		{
 			"id": "sc4YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18509,7 +18509,7 @@
 		{
 			"id": "sc5YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18532,7 +18532,7 @@
 		{
 			"id": "sc6YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18555,7 +18555,7 @@
 		{
 			"id": "sc7YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18578,7 +18578,7 @@
 		{
 			"id": "sc8YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18601,7 +18601,7 @@
 		{
 			"id": "sc9YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18624,7 +18624,7 @@
 		{
 			"id": "sc10YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18647,7 +18647,7 @@
 		{
 			"id": "sc11YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
@@ -18670,7 +18670,7 @@
 		{
 			"id": "sc12YoutubeGiftText",
 			"label": "Texte",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",

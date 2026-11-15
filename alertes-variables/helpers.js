@@ -105,6 +105,16 @@ function ParseEvent(source, eventType, type, data) {
 	else if (/2000|2/.test(tierRaw)) tier = 'tier2';
 	else if (/1000|1/.test(tierRaw) || tierRaw === '0') tier = 'tier1';
 
+	// Personne qui reçoit l'abonnement offert ({recipient}) ; plusieurs : noms séparés par des virgules
+	let recipient = Pick(d, ['recipient.display_name', 'recipient.displayName', 'recipient.name', 'recipientUser.name',
+		'recipientUser.display_name', 'recipient_display_name', 'recipientDisplayName', 'recipientUserName',
+		'recipient_user_name', 'recipientName', 'giftee.name', 'giftee.username', 'recipient']);
+	const many = ['recipients', 'giftees', 'gifted_usernames', 'giftedUsernames'].map(k => d[k]).find(Array.isArray);
+	if (!recipient && Array.isArray(many))
+		recipient = many.map(x => (x && typeof x === 'object') ? (x.display_name || x.displayName || x.username || x.name || '') : x)
+			.filter(Boolean).join(', ');
+	recipient = typeof recipient === 'object' ? '' : String(recipient || '');
+
 	// Photo de profil si l'événement la fournit (sinon le dock la cherche ou affiche l'initiale)
 	const avatar = String(Pick(d, ['user.profileImageUrl', 'user.profile_image_url', 'user.profilePicture',
 		'user.profilePictureUrl', 'user.avatar', 'profileImageUrl', 'profile_image_url', 'profilePictureUrl',
@@ -115,14 +125,14 @@ function ParseEvent(source, eventType, type, data) {
 	// Twitch : chaque abonnement d'un « gift bomb » arrive aussi seul : on garde uniquement le total
 	const fromBomb = !!(d.fromCommunitySubGift || d.isFromGiftBomb || d.fromGiftBomb || d.communityGift || d.isCommunityGift);
 
-	return { platform: source, eventType, type, user: String(user), avatar, months, count, amount, bits, value, tier, viewers, message, fromBomb };
+	return { platform: source, eventType, type, user: String(user), recipient, avatar, months, count, amount, bits, value, tier, viewers, message, fromBomb };
 }
 
 // Remplit un texte d'alerte : {user} et les nombres prennent la couleur du pseudo
 function FillTemplate(template, info) {
 	const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-	const values = { user: info.user, months: info.months, count: info.count, amount: info.amount, viewers: info.viewers };
-	return esc(template).replace(/\{(user|months|count|amount|viewers)\}/g, (m, k) => `<span class="accent">${esc(values[k])}</span>`);
+	const values = { user: info.user, recipient: info.recipient || '', months: info.months, count: info.count, amount: info.amount, viewers: info.viewers };
+	return esc(template).replace(/\{(user|recipient|months|count|amount|viewers)\}/g, (m, k) => `<span class="accent">${esc(values[k])}</span>`);
 }
 
 // Fichiers d'un dossier : { nomEnMinuscules: nomRéel }
@@ -162,7 +172,7 @@ const DEMO_INFO = {
 	follow: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '' },
 	sub: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '', tier: 'tier1' },
 	resub: { user: 'Viewer_Test', months: 14, count: 1, amount: '', viewers: 0, message: 'Toujours là pour les lives horreur 👻' },
-	gift: { user: 'Viewer_Test', months: 1, count: 5, amount: '', viewers: 0, message: '' },
+	gift: { user: 'Viewer_Test', recipient: 'Viewer_Chanceux', months: 1, count: 5, amount: '', viewers: 0, message: '' },
 	cheer: { user: 'Viewer_Test', months: 1, count: 1, amount: '500 bits', bits: 500, value: 500, viewers: 0, message: 'Prends ça pour le courage !' },
 	raid: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 42, message: '' }
 };
