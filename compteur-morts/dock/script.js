@@ -38,16 +38,23 @@ let actionFound = false;
 let data = { games: {}, current: '', manual: false }; // contenu de la variable Streamer.bot
 
 const ANNOUNCE_KEY = 'compteur-morts-dock-announce';
+
+// Icônes (SVG maison, style SF)
+const ICON = {
+	photo: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>',
+	trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M10 4h4M6.5 7l.8 11.2A2 2 0 0 0 9.3 20h5.4a2 2 0 0 0 2-1.8L17.5 7M10 10.5v6M14 10.5v6"/></svg>',
+	check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+};
 const CONNECTION_KEY = 'compteur-morts-dock-connection';
 let openCoverEditor = null;
 let syncedOnConnect = false; // synchronisation avec la catégorie Twitch faite à la connexion // clé du jeu dont l'éditeur de jaquette est ouvert
 
 // Miniature : jaquette perso, sinon modèle Twitch en petite taille
-function CoverThumb(g) {
+function CoverThumb(g, w = 60, h = 80) {
 	if (g.cover) return g.cover;
 	if (g.boxArt) {
-		if (g.boxArt.includes('{width}')) return g.boxArt.replace('{width}', '60').replace('{height}', '80');
-		return g.boxArt.replace(/(static-cdn\.jtvnw\.net\/ttv-boxart\/.*)-\d+x\d+(\.[a-z]+)(\?.*)?$/i, '$1-60x80$2');
+		if (g.boxArt.includes('{width}')) return g.boxArt.replace('{width}', w).replace('{height}', h);
+		return g.boxArt.replace(/(static-cdn\.jtvnw\.net\/ttv-boxart\/.*)-\d+x\d+(\.[a-z]+)(\?.*)?$/i, `$1-${w}x${h}$2`);
 	}
 	return '';
 }
@@ -88,6 +95,10 @@ function Render() {
 	const game = CurrentGame();
 	els.gameName.textContent = game ? game.name : 'Aucun jeu (catégorie Twitch au prochain clic)';
 	els.countDisplay.textContent = game ? String(game.count) : '0';
+	const heroURL = game ? CoverThumb(game, 132, 176) : '';
+	const heroImg = document.getElementById('heroCoverImg');
+	document.getElementById('heroCover').classList.toggle('empty', !heroURL);
+	if (heroURL && heroImg.getAttribute('src') !== heroURL) heroImg.src = heroURL;
 	els.modeBadge.textContent = data.manual ? 'Choix manuel' : 'Catégorie Twitch';
 	els.modeBadge.classList.toggle('manual', !!data.manual);
 
@@ -138,13 +149,15 @@ function Render() {
 			const choose = document.createElement('button');
 			choose.type = 'button';
 			choose.textContent = 'Choisir';
+			choose.title = 'Afficher ce jeu';
 			choose.addEventListener('click', () => Send('select', { jeu: g.name }));
 			item.appendChild(choose);
 		}
 
 		const coverBtn = document.createElement('button');
 		coverBtn.type = 'button';
-		coverBtn.textContent = '🖼';
+		coverBtn.className = 'ui-icon';
+		coverBtn.innerHTML = ICON.photo;
 		coverBtn.title = 'Jaquette personnalisée';
 		coverBtn.classList.toggle('active', openCoverEditor === key);
 		coverBtn.addEventListener('click', () => {
@@ -155,9 +168,10 @@ function Render() {
 
 		const del = document.createElement('button');
 		del.type = 'button';
-		del.textContent = '🗑';
-		del.title = 'Supprimer ce compteur';
-		WithConfirmation(del, true, '🗑 ?', () => Send('delete', { jeu: g.name, annonce: 'false' }));
+		del.className = 'ui-icon trash';
+		del.innerHTML = ICON.trash;
+		del.title = 'Supprimer ce compteur (cliquez deux fois)';
+		WithConfirmation(del, true, ICON.trash, () => Send('delete', { jeu: g.name, annonce: 'false' }));
 		item.appendChild(del);
 
 		els.gameList.appendChild(item);
@@ -209,21 +223,21 @@ function Render() {
 }
 
 // Bouton à double clic de confirmation (sans boîte de dialogue, qui bloque les docks OBS)
-function WithConfirmation(button, enabled, confirmText, action) {
-	const original = button.textContent;
+function WithConfirmation(button, enabled, confirmHTML, action) {
+	const original = button.innerHTML;
 	button.addEventListener('click', () => {
 		const needConfirm = typeof enabled === 'function' ? enabled() : enabled;
 		if (!needConfirm || button.classList.contains('confirming')) {
 			button.classList.remove('confirming');
-			button.textContent = original;
+			button.innerHTML = original;
 			action();
 			return;
 		}
 		button.classList.add('confirming');
-		button.textContent = confirmText;
+		button.innerHTML = confirmHTML;
 		setTimeout(() => {
 			button.classList.remove('confirming');
-			button.textContent = original;
+			button.innerHTML = original;
 		}, 3000);
 	});
 }

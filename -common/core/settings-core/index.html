@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramètres</title>
-    <link rel="stylesheet" href="style.css?v=2026111505">
+    <link rel="stylesheet" href="style.css?v=2026111509">
+    <link rel="stylesheet" href="../../styles/apple.css?v=2026111509">
+    <link rel="stylesheet" href="apple.css?v=2026111509">
+    <script src="../../utils/color-scheme.js?v=2026111509"></script>
     <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -18,9 +21,11 @@
         <div id="widgetUrlInputWrapper">
             <span id="urlLabel">Cliquez pour copier l’URL</span>
             <input id="widgetUrlInput" type="text" readonly onclick="CopyURLToClipboard()">
+            <button id="copyUrlButton" class="ui-primary" onclick="CopyURLToClipboard()" title="Copier l’URL du widget pour OBS"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8"/></svg>Copier l’URL</button>
         </div>
-        <button id="loadDefaultsButton" onclick="OpenLoadDefaultsPopup()">Charger les paramètres par défaut</button>
-        <button id="loadSettingsButton" onclick="OpenLoadSettingsPopup()">Charger des paramètres</button>
+        <button id="loadDefaultsButton" onclick="OpenLoadDefaultsPopup()" title="Charger les paramètres par défaut"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4 4.5v4h4"/></svg>Charger les paramètres par défaut</button>
+        <button id="loadSettingsButton" onclick="OpenLoadSettingsPopup()" title="Charger des paramètres depuis une URL"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v11M7.5 10l4.5 4.5 4.5-4.5"/><path d="M4.5 15.5v2A2.5 2.5 0 0 0 7 20h10a2.5 2.5 0 0 0 2.5-2.5v-2"/></svg>Charger des paramètres</button>
+        <button id="schemeToggle" data-scheme-toggle></button>
     </div>
 
     <!-- Main Content Area -->
@@ -66,5 +71,5 @@
 </html>
 
 <script src="../../utils/helpers.js"></script>
-<script src="../../utils/widget-settings.js?v=2026111505"></script>
-<script src="script.js?v=2026111505"></script>
+<script src="../../utils/widget-settings.js?v=2026111509"></script>
+<script src="script.js?v=2026111509"></script>

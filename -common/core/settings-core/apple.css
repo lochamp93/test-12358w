@@ -1,0 +1,251 @@
+/*
+ * Page de paramétrage — DA Apple (Réglages Système macOS)
+ * Actif seulement si settings.json contient "design": "apple" (classe « apple » sur <html>).
+ */
+
+html.apple body {
+	font-size: 13px;
+}
+
+/* ---------- Barre du haut (verre) ---------- */
+
+html.apple #header {
+	height: 52px;
+	padding: 0 16px;
+	gap: 8px;
+	flex-wrap: nowrap;
+	background: var(--ui-glass);
+	backdrop-filter: blur(24px) saturate(180%);
+	-webkit-backdrop-filter: blur(24px) saturate(180%);
+	box-shadow: none;
+	border-bottom: 0.5px solid var(--ui-separator);
+	z-index: 5;
+}
+
+html.apple #widgetTitle {
+	font-family: var(--ui-font-display);
+	font-size: 15px;
+	font-weight: 600;
+	margin-right: 4px;
+}
+
+html.apple #membershipsButton {
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+	padding: 0 6px;
+	font-weight: 500;
+}
+
+html.apple #membershipsButton:hover { background: var(--ui-fill); }
+
+/* Champ URL : lisible, avec un bouton « Copier » */
+html.apple #widgetUrlInputWrapper {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	flex: 1 1 200px;
+	min-width: 160px;
+	width: auto;
+}
+
+html.apple #urlLabel { display: none; }
+
+html.apple #widgetUrlInput {
+	flex: 1;
+	min-width: 0;
+	filter: none;
+	color: var(--ui-text-secondary);
+	background: var(--ui-fill);
+	box-shadow: none;
+	cursor: pointer;
+	text-overflow: ellipsis;
+}
+
+html.apple #widgetUrlInput:hover { filter: none; color: var(--ui-text); }
+
+/* Message « Copié » (styles en ligne d'origine remplacés) */
+html.apple #widgetUrlInputWrapper > span:not(#urlLabel) {
+	background: var(--ui-green) !important;
+	color: #fff !important;
+	border-radius: 7px !important;
+	font-size: 12px !important;
+	padding: 4px 10px !important;
+	box-shadow: var(--ui-shadow-pop);
+	white-space: nowrap;
+}
+
+html.apple #header button { width: auto; flex: 0 0 auto; }
+html.apple #copyUrlButton { display: inline-flex; gap: 6px; align-items: center; }
+html.apple #copyUrlButton svg { width: 14px; height: 14px; }
+
+/* Boutons de la barre en icônes (libellé au survol) */
+html.apple #loadDefaultsButton,
+html.apple #loadSettingsButton,
+html.apple #schemeToggle {
+	width: 30px;
+	padding: 0;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0;
+}
+
+html.apple #header svg {
+	width: 16px;
+	height: 16px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.7;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+/* ---------- Panneau des réglages ---------- */
+
+html.apple #settingsPanel {
+	width: 440px;
+	flex-shrink: 0;
+	padding: 4px 20px 40px;
+	background: var(--ui-bg);
+	box-shadow: none;
+	border-right: 0.5px solid var(--ui-separator);
+}
+
+/* Section = carte arrondie, titre au-dessus (comme les Réglages) */
+html.apple .setting-group {
+	position: relative;
+	margin: 36px 0 0;
+	padding: 0 14px;
+	background: var(--ui-bg-elevated);
+	border-radius: var(--ui-radius);
+	box-shadow: var(--ui-shadow);
+}
+
+html.apple .setting-group h2 {
+	position: absolute;
+	top: -24px;
+	left: 4px;
+	margin: 0;
+	font-family: var(--ui-font-display);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ui-text);
+}
+
+html.apple .setting-item {
+	min-height: 44px;
+	padding: 8px 0;
+	gap: 16px;
+	box-sizing: border-box;
+}
+
+html.apple .setting-item + .setting-item {
+	border-top: 0.5px solid var(--ui-separator);
+}
+
+html.apple .setting-item label {
+	font-size: 13px;
+	font-weight: 400;
+	color: var(--ui-text);
+}
+
+html.apple .setting-item p {
+	margin: 2px 0 0;
+	font-size: 11px;
+	line-height: 1.35;
+	color: var(--ui-text-secondary);
+}
+
+html.apple .setting-item-content {
+	flex-shrink: 0;
+	justify-content: flex-end;
+}
+
+html.apple .setting-item-content input[type="text"],
+html.apple .setting-item-content input[type="number"],
+html.apple .setting-item-content input[type="password"],
+html.apple .setting-item-content select {
+	width: 190px;
+	margin: 0;
+}
+
+/* Boutons de type « button » (ex. tester l'animation) : pleine largeur */
+html.apple .setting-item-content > button {
+	width: 100%;
+	margin: 0;
+}
+
+/* ---------- Aperçu ---------- */
+
+html.apple #widget-preview-wrapper {
+	background: var(--ui-bg);
+}
+
+/* L'aperçu garde un fond transparent quel que soit le thème de la page
+   (sinon Chrome peint un fond opaque sous une iframe de thème différent) */
+html.apple #widgetPreview {
+	color-scheme: normal;
+	background: transparent;
+}
+
+html.apple #widget-preview-wrapper.checker {
+	background: repeating-conic-gradient(var(--ui-checker-a) 0% 25%, var(--ui-checker-b) 0% 50%) 50% / 24px 24px;
+}
+
+/* ---------- Fenêtres « Charger » / « Valeurs par défaut » ---------- */
+
+html.apple #loadSettingsWrapper,
+html.apple #loadDefaultsWrapper {
+	background: rgba(0, 0, 0, 0.28);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+html.apple #loadSettingsContainer,
+html.apple #loadDefaultsContainer {
+	max-width: 440px;
+	padding: 20px;
+	border: none;
+	border-radius: 14px;
+	background: var(--ui-bg-elevated);
+	box-shadow: var(--ui-shadow-pop);
+	backdrop-filter: none;
+}
+
+html.apple #loadSettingsContainer h2,
+html.apple #loadDefaultsContainer h2 {
+	margin: 0 0 8px;
+	font-family: var(--ui-font-display);
+	font-size: 15px;
+	font-weight: 600;
+	color: var(--ui-text);
+}
+
+html.apple #loadSettingsContainer label,
+html.apple #loadDefaultsContainer label {
+	color: var(--ui-text-secondary);
+}
+
+html.apple #loadSettingsContainer input {
+	width: 100%;
+	margin: 10px 0 16px;
+}
+
+html.apple #loadSettingsContainer > div,
+html.apple #loadDefaultsContainer > div {
+	justify-content: flex-end;
+	margin-top: 12px;
+}
+
+html.apple #loadSettingsContainer button,
+html.apple #loadDefaultsContainer button {
+	width: auto;
+	min-width: 90px;
+}
+
+html.apple #loadSettingsContainer button[style],
+html.apple #loadDefaultsContainer button[style] {
+	background: var(--ui-accent) !important;
+	color: #fff;
+}

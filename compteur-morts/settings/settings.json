@@ -1,5 +1,6 @@
 {
 	"title": "Compteur de morts",
+	"design": "apple",
 	"showLogo": false,
 	"checkerPreview": true,
 	"livePreview": true,

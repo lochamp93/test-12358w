@@ -403,3 +403,17 @@ button:hover {
 #widget-preview-wrapper.checker {
     background: repeating-conic-gradient(#252525 0% 25%, #181818 0% 50%) 50% / 24px 24px;
 }
+
+/* Éléments propres à la DA Apple (masqués avec le style d’origine) */
+#copyUrlButton,
+#schemeToggle {
+    display: none;
+}
+
+#header button:not([data-scheme-toggle]) svg {
+    display: none;
+}
+
+html.apple #header button svg:not(.icon-sun):not(.icon-moon) {
+    display: block;
+}

@@ -52,6 +52,10 @@ function LoadJSON(settingsJson) {
 				if (titleLabel) titleLabel.textContent = data.title;
 			}
 
+			// DA Apple (clair/sombre) si settings.json contient "design": "apple"
+			document.documentElement.classList.toggle('apple', data.design === 'apple');
+			if (window.ColorScheme) window.ColorScheme.initToggles();
+
 			// Logo masqué si settings.json contient "showLogo": false
 			const headerLogo = document.getElementById('headerLogo');
 			if (headerLogo) headerLogo.style.display = data.showLogo === false ? 'none' : '';
