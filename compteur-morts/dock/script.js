@@ -389,6 +389,29 @@ function ConnectStreamerBot() {
 		if (ev && ev.source === 'compteurMorts' && (!ev.variable || ev.variable === ws.values.variableName))
 			SetData(ev.data);
 	});
+	// Changement de catégorie sur Twitch : le compteur suit le nouveau jeu (sauf choix manuel)
+	const onCategoryChange = ({ data: ev }) => {
+		if (!actionFound || data.manual) return;
+		const game = (ev && (ev.game || ev.category)) || {};
+		const name = String(game.name || (ev && (ev.gameName || ev.categoryName)) || '').trim();
+		const id = String(game.id || (ev && (ev.gameId || ev.categoryId)) || '').trim();
+		const current = CurrentGame();
+		if (name && current && current.name.toLowerCase() === name.toLowerCase()) return;
+		const args = { annonce: 'false' };
+		if (name) args.gameName = name;
+		if (id) args.gameId = id;
+		Send('sync', args);
+
+		// Streamer.bot met parfois quelques secondes à connaître la jaquette du nouveau jeu
+		setTimeout(() => {
+			const g = CurrentGame();
+			if (!data.manual && g && !g.boxArt && !g.cover) Send('sync', { ...args });
+		}, 8000);
+	};
+	sbClient.on('Twitch.StreamUpdate', onCategoryChange);
+	sbClient.on('Twitch.BroadcastUpdate', onCategoryChange);
+	sbClient.on('Twitch.StreamUpdateGameOnConnect', onCategoryChange);
+
 	// Une action créée ou renommée : on revérifie
 	sbClient.on('Application.ActionAdded', CheckAction);
 	sbClient.on('Application.ActionUpdated', CheckAction);

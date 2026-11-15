@@ -258,8 +258,11 @@ public class CPHInline
 			{
 				string n = Texte(Membre(infos, "Game")); if (n == "") n = Texte(Membre(infos, "GameName"));
 				if (nom == "") nom = n;
-				if (id == "") id = Texte(Membre(infos, "GameId"));
-				if (jaquette == "" && (n == "" || n == nom))
+				// Infos de la chaîne parfois en retard sur Twitch : on ne les utilise que si elles
+				// parlent bien du même jeu (sinon id et jaquette seraient ceux de l'ancien jeu)
+				bool memeJeu = n != "" && string.Equals(n, nom, StringComparison.OrdinalIgnoreCase);
+				if (id == "" && memeJeu) id = Texte(Membre(infos, "GameId"));
+				if (jaquette == "" && memeJeu)
 				{
 					jaquette = Texte(Membre(infos, "GameBoxArt"));
 					if (jaquette == "") jaquette = Texte(Membre(infos, "BoxArt"));
