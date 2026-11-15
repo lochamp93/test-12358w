@@ -12,14 +12,24 @@
 
 <body>
 	<div id="widget" class="hidden">
-		<div id="box">
-			<div id="game" class="game"></div>
-			<div id="core">
-				<span id="label" class="label"></span>
-				<span id="valueRow">
-					<span id="icon"></span>
-					<span id="countWrap"><span id="count">0</span></span>
-				</span>
+		<div id="box" class="layout-card">
+			<!-- Carte : fond flouté à partir de la jaquette -->
+			<div id="bgLayer"></div>
+
+			<!-- Carte : jaquette du jeu -->
+			<div id="coverWrap"><img id="cover" alt="" /></div>
+
+			<div id="content">
+				<!-- Minimal : ligne décorative -->
+				<div id="decorLine"></div>
+				<div id="game" class="game"></div>
+				<div id="core">
+					<span id="label" class="label"></span>
+					<span id="valueRow">
+						<span id="icon"></span>
+						<span id="countWrap"><span id="count">0</span></span>
+					</span>
+				</div>
 			</div>
 		</div>
 	</div>

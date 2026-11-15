@@ -283,6 +283,13 @@ function LoadJSON(settingsJson) {
 						if (item) item.style.display = shouldShow ? 'flex' : 'none';
 					}
 				});
+
+				// Une section dont tous les réglages sont masqués disparaît aussi (titre compris)
+				settingsPanel.querySelectorAll('.setting-group').forEach(group => {
+					const items = Array.from(group.querySelectorAll('.setting-item'));
+					const anyVisible = items.some(item => item.style.display !== 'none');
+					group.style.display = items.length === 0 || anyVisible ? '' : 'none';
+				});
 			}
 
 			UpdateSettingItemVisibility();
@@ -396,7 +403,8 @@ function UpdateStreamerBotConnection() {
 
 	lastSbHost = client.options.host;
 	lastSbPort = client.options.port;
-	client.connect();
+	// La promesse est interceptée : Streamer.bot fermé ne doit pas lever d’erreur dans la page
+	Promise.resolve(client.connect()).catch(err => console.warn('Streamer.bot injoignable :', err && err.message ? err.message : err));
 }
 
 

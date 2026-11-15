@@ -38,6 +38,14 @@ let actionFound = false;
 let data = { games: {}, current: '', manual: false }; // contenu de la variable Streamer.bot
 
 const ANNOUNCE_KEY = 'compteur-morts-dock-announce';
+let openCoverEditor = null; // clé du jeu dont l'éditeur de jaquette est ouvert
+
+// Miniature : jaquette perso, sinon modèle Twitch en petite taille
+function CoverThumb(g) {
+	if (g.cover) return g.cover;
+	if (g.boxArt) return g.boxArt.replace('{width}', '60').replace('{height}', '80');
+	return '';
+}
 
 ///////////////
 // AFFICHAGE //
@@ -97,6 +105,19 @@ function Render() {
 		const item = document.createElement('div');
 		item.className = 'game-item' + (key === data.current ? ' current' : '');
 
+		// Miniature de la jaquette (perso, sinon Twitch)
+		const thumb = document.createElement('span');
+		thumb.className = 'thumb';
+		const thumbURL = CoverThumb(g);
+		if (thumbURL) {
+			const img = document.createElement('img');
+			img.src = thumbURL;
+			img.alt = '';
+			img.onerror = () => img.remove();
+			thumb.appendChild(img);
+		}
+		item.appendChild(thumb);
+
 		const name = document.createElement('span');
 		name.className = 'name';
 		name.textContent = g.name;
@@ -116,6 +137,17 @@ function Render() {
 			item.appendChild(choose);
 		}
 
+		const coverBtn = document.createElement('button');
+		coverBtn.type = 'button';
+		coverBtn.textContent = '🖼';
+		coverBtn.title = 'Jaquette personnalisée';
+		coverBtn.classList.toggle('active', openCoverEditor === key);
+		coverBtn.addEventListener('click', () => {
+			openCoverEditor = openCoverEditor === key ? null : key;
+			Render();
+		});
+		item.appendChild(coverBtn);
+
 		const del = document.createElement('button');
 		del.type = 'button';
 		del.textContent = '🗑';
@@ -124,6 +156,49 @@ function Render() {
 		item.appendChild(del);
 
 		els.gameList.appendChild(item);
+
+		// Éditeur de jaquette (une seule ouverte à la fois)
+		if (openCoverEditor === key) {
+			const editor = document.createElement('div');
+			editor.className = 'cover-editor';
+
+			const input = document.createElement('input');
+			input.type = 'text';
+			input.placeholder = 'URL de l’image (vide = jaquette Twitch)';
+			input.value = g.cover || '';
+
+			const save = document.createElement('button');
+			save.type = 'button';
+			save.textContent = 'OK';
+			const submit = () => {
+				openCoverEditor = null;
+				Send('cover', { jeu: g.name, valeur: input.value.trim(), annonce: 'false' });
+			};
+			save.addEventListener('click', submit);
+			input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+
+			editor.append(input, save);
+
+			if (g.cover) {
+				const reset = document.createElement('button');
+				reset.type = 'button';
+				reset.textContent = 'Twitch';
+				reset.title = 'Revenir à la jaquette Twitch';
+				reset.addEventListener('click', () => {
+					openCoverEditor = null;
+					Send('cover', { jeu: g.name, valeur: '', annonce: 'false' });
+				});
+				editor.appendChild(reset);
+			}
+
+			const hint = document.createElement('p');
+			hint.className = 'muted';
+			hint.textContent = g.boxArt ? 'Jaquette Twitch trouvée automatiquement.' : 'Aucune jaquette Twitch trouvée pour ce jeu.';
+			editor.appendChild(hint);
+
+			els.gameList.appendChild(editor);
+			if (document.activeElement === document.body) input.focus();
+		}
 	}
 	els.emptyList.hidden = entries.length > 0;
 }
@@ -192,6 +267,12 @@ function DemoApply(args) {
 	if (args.mode === 'delete') {
 		delete data.games[k];
 		if (data.current === k) data.current = '';
+		return;
+	}
+	if (args.mode === 'cover') {
+		if (data.games[k]) {
+			if (args.valeur) data.games[k].cover = args.valeur; else delete data.games[k].cover;
+		}
 		return;
 	}
 	if (!data.games[k]) data.games[k] = { name, count: 0 };

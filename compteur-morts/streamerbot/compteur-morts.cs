@@ -3,17 +3,24 @@
 //  Un compteur par jeu, stocké dans une variable globale persistante (JSON).
 //
 //  Arguments acceptés (envoyés par le dock ou réglés dans l'action) :
-//    mode    : add | sub | set | reset | select | auto | sync | delete
+//    mode    : add | sub | set | reset | select | auto | sync | delete | cover
 //              (si absent, déduit de la commande : !addmort, !supmort, !setmort, !resetmort)
 //    valeur  : nombre (mode set ; pour add/sub : pas, 1 par défaut)
+//              URL d'image (mode cover ; vide = jaquette Twitch)
 //    jeu     : nom du jeu à modifier (sinon : jeu choisi à la main, puis catégorie Twitch)
 //    annonce : false pour ne pas écrire dans le chat (true par défaut)
+//
+//  Jaquettes : l'action récupère l'image officielle de la catégorie via l'API Twitch
+//  (compte Twitch connecté dans Streamer.bot), une fois par jeu.
 //
 //  Après exécution, les arguments %jeu% et %morts% sont disponibles pour les
 //  sous-actions suivantes (par exemple un texte OBS).
 // =====================================================================
 using System;
+using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -41,12 +48,13 @@ public class CPHInline
 		JObject jeux = (JObject)data["games"];
 
 		string nomJeu;
+		string twitchId = "";
 		switch (mode)
 		{
 			case "sync":   // changement de catégorie sur Twitch
 			case "auto":   // le dock repasse en suivi automatique
 				data["manual"] = false;
-				nomJeu = JeuTwitch();
+				nomJeu = JeuTwitch(out twitchId);
 				if (nomJeu == "") nomJeu = JeuCourant(data);
 				break;
 			case "select": // le dock choisit un jeu à la main
@@ -59,8 +67,8 @@ public class CPHInline
 				if (nomJeu == "")
 				{
 					bool manuel = data.Value<bool?>("manual") ?? false;
-					nomJeu = manuel ? JeuCourant(data) : JeuTwitch();
-					if (nomJeu == "") nomJeu = manuel ? JeuTwitch() : JeuCourant(data);
+					nomJeu = manuel ? JeuCourant(data) : JeuTwitch(out twitchId);
+					if (nomJeu == "") nomJeu = manuel ? JeuTwitch(out twitchId) : JeuCourant(data);
 				}
 				break;
 		}
@@ -80,9 +88,23 @@ public class CPHInline
 		JObject jeu = jeux[cle] as JObject;
 		if (jeu == null)
 		{
+			if (mode == "cover") return false; // jeu inconnu
 			jeu = new JObject { ["name"] = nomJeu, ["count"] = 0 };
 			jeux[cle] = jeu;
 		}
+
+		// Jaquette personnalisée (depuis le dock) : ne change ni le compteur ni le jeu affiché
+		if (mode == "cover")
+		{
+			string url = Arg("valeur").Trim();
+			if (url == "") jeu.Remove("cover"); else jeu["cover"] = url;
+			Sauver(data);
+			return true;
+		}
+
+		// Jaquette officielle Twitch (une seule recherche par jeu)
+		if (twitchId != "") jeu["twitchId"] = twitchId;
+		CompleterJaquette(jeu, nomJeu);
 
 		// Reprise de l'ancien compteur unique (une seule fois, sur le premier jeu utilisé)
 		if (!(data.Value<bool?>("migrated") ?? false))
@@ -179,12 +201,17 @@ public class CPHInline
 	}
 
 	// Catégorie Twitch en cours : arguments du déclencheur, sinon infos de la chaîne
-	string JeuTwitch()
+	string JeuTwitch(out string gameId)
 	{
+		gameId = "";
 		foreach (string cle in new[] { "gameName", "game", "targetUserGame" })
 		{
 			string v = Arg(cle).Trim();
-			if (v != "") return v;
+			if (v != "")
+			{
+				gameId = Arg(cle == "targetUserGame" ? "targetUserGameId" : "gameId").Trim();
+				return v;
+			}
 		}
 		try
 		{
@@ -193,9 +220,9 @@ public class CPHInline
 			MethodInfo m = CPH.GetType().GetMethod("TwitchGetExtendedUserInfoById", new[] { typeof(string) });
 			if (m == null) return "";
 			object info = m.Invoke(CPH, new object[] { id });
-			PropertyInfo p = info?.GetType().GetProperty("Game");
-			string jeu = p?.GetValue(info) as string;
-			return string.IsNullOrWhiteSpace(jeu) ? "" : jeu.Trim();
+			string jeu = Propriete(info, "Game");
+			gameId = Propriete(info, "GameId");
+			return jeu.Trim();
 		}
 		catch (Exception e)
 		{
@@ -204,7 +231,61 @@ public class CPHInline
 		}
 	}
 
+	// Récupère l'adresse de la jaquette via l'API Twitch (jeton du compte connecté dans Streamer.bot)
+	void CompleterJaquette(JObject jeu, string nom)
+	{
+		if (!string.IsNullOrEmpty(jeu.Value<string>("boxArt"))) return;
+
+		// Pas plus d'une tentative par heure et par jeu si Twitch ne répond pas
+		DateTime essai;
+		if (DateTime.TryParse(jeu.Value<string>("boxArtTried") ?? "", null, System.Globalization.DateTimeStyles.RoundtripKind, out essai)
+			&& (DateTime.UtcNow - essai.ToUniversalTime()).TotalHours < 1)
+			return;
+		jeu["boxArtTried"] = DateTime.UtcNow.ToString("o");
+
+		try
+		{
+			string token = Propriete(CPH, "TwitchOAuthToken");
+			string clientId = Propriete(CPH, "TwitchClientId");
+			if (token == "" || clientId == "") return;
+
+			string id = jeu.Value<string>("twitchId") ?? "";
+			string url = "https://api.twitch.tv/helix/games?" + (id != "" ? "id=" + Uri.EscapeDataString(id) : "name=" + Uri.EscapeDataString(nom));
+
+			HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+			req.Method = "GET";
+			req.Timeout = 3000;
+			req.ReadWriteTimeout = 3000;
+			req.Headers.Add("Client-Id", clientId);
+			req.Headers.Add("Authorization", "Bearer " + token);
+
+			using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
+			using (StreamReader reader = new StreamReader(res.GetResponseStream(), Encoding.UTF8))
+			{
+				JObject json = JObject.Parse(reader.ReadToEnd());
+				JArray liste = json["data"] as JArray;
+				if (liste != null && liste.Count > 0)
+				{
+					jeu["twitchId"] = liste[0].Value<string>("id");
+					jeu["boxArt"] = liste[0].Value<string>("box_art_url"); // modèle avec {width}x{height}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			CPH.LogWarn("[Compteur de morts] Jaquette introuvable pour " + nom + " : " + e.Message);
+		}
+	}
+
 	// ---------- Outils ----------
+
+	static string Propriete(object obj, string nom)
+	{
+		if (obj == null) return "";
+		PropertyInfo p = obj.GetType().GetProperty(nom);
+		object v = p?.GetValue(obj);
+		return v == null ? "" : v.ToString();
+	}
 
 	static string Cle(string nom) => nom.Trim().ToLowerInvariant();
 

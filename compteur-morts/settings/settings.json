@@ -22,6 +22,28 @@
 			"group": "Connexion"
 		},
 		{
+			"id": "layout",
+			"label": "Style d’affichage",
+			"description": "Chaque style a son propre rendu ; seuls ses réglages sont affichés",
+			"type": "select",
+			"options": [
+				{
+					"value": "card",
+					"label": "Carte (jaquette du jeu)"
+				},
+				{
+					"value": "classic",
+					"label": "Classique"
+				},
+				{
+					"value": "minimal",
+					"label": "Minimal"
+				}
+			],
+			"defaultValue": "card",
+			"group": "Style"
+		},
+		{
 			"id": "variableName",
 			"label": "Variable Streamer.bot",
 			"description": "Variable globale persistante qui contient les compteurs de chaque jeu (doit être la même que dans l’action)",
@@ -42,7 +64,7 @@
 			"label": "Texte du libellé",
 			"description": "",
 			"type": "text",
-			"defaultValue": "Morts :",
+			"defaultValue": "MORTS",
 			"group": "Compteur",
 			"showIf": "showLabel"
 		},
@@ -52,14 +74,38 @@
 			"description": "",
 			"type": "select",
 			"options": [
-				{ "value": "before", "label": "Avant le nombre" },
-				{ "value": "after", "label": "Après le nombre" },
-				{ "value": "above", "label": "Au-dessus" },
-				{ "value": "below", "label": "En dessous" }
+				{
+					"value": "before",
+					"label": "Avant le nombre"
+				},
+				{
+					"value": "after",
+					"label": "Après le nombre"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus"
+				},
+				{
+					"value": "below",
+					"label": "En dessous"
+				}
 			],
-			"defaultValue": "before",
+			"defaultValue": "above",
 			"group": "Compteur",
 			"showIf": "showLabel"
+		},
+		{
+			"id": "cardShowGame",
+			"label": "Afficher le nom du jeu",
+			"description": "La jaquette l’indique déjà",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Compteur",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
 		},
 		{
 			"id": "showGame",
@@ -67,7 +113,14 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Compteur"
+			"group": "Compteur",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"classic",
+					"minimal"
+				]
+			}
 		},
 		{
 			"id": "gamePosition",
@@ -75,8 +128,14 @@
 			"description": "",
 			"type": "select",
 			"options": [
-				{ "value": "above", "label": "Au-dessus" },
-				{ "value": "below", "label": "En dessous" }
+				{
+					"value": "above",
+					"label": "Au-dessus"
+				},
+				{
+					"value": "below",
+					"label": "En dessous"
+				}
 			],
 			"defaultValue": "above",
 			"group": "Compteur",
@@ -94,18 +153,200 @@
 			"showIf": "showGame"
 		},
 		{
+			"id": "showCover",
+			"label": "Afficher la jaquette",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "coverPosition",
+			"label": "Position de la jaquette",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "left",
+					"label": "À gauche"
+				},
+				{
+					"value": "right",
+					"label": "À droite"
+				}
+			],
+			"defaultValue": "left",
+			"group": "Carte",
+			"showIf": "showCover"
+		},
+		{
+			"id": "coverWidth",
+			"label": "Largeur de la jaquette",
+			"description": "En pixels (format 3:4)",
+			"type": "number",
+			"min": 40,
+			"max": 600,
+			"defaultValue": 110,
+			"group": "Carte",
+			"showIf": "showCover"
+		},
+		{
+			"id": "fallbackCover",
+			"label": "Image de secours",
+			"description": "Affichée si aucune jaquette n’est trouvée pour le jeu (URL d’image). Vide : pas d’image",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Carte",
+			"showIf": "showCover"
+		},
+		{
+			"id": "cardBackground",
+			"label": "Fond de la carte",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "cover",
+					"label": "Jaquette floutée"
+				},
+				{
+					"value": "color",
+					"label": "Couleur unie"
+				},
+				{
+					"value": "transparent",
+					"label": "Transparent"
+				}
+			],
+			"defaultValue": "cover",
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardBgColor",
+			"label": "Couleur du fond",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Carte",
+			"showIf": {
+				"id": "cardBackground",
+				"value": "color"
+			}
+		},
+		{
+			"id": "cardBgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 60,
+			"group": "Carte",
+			"showIf": {
+				"id": "cardBackground",
+				"value": "color"
+			}
+		},
+		{
+			"id": "border",
+			"label": "Cadre",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "borderColor",
+			"label": "Couleur du cadre",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Carte",
+			"showIf": "border"
+		},
+		{
+			"id": "borderWidth",
+			"label": "Épaisseur du cadre",
+			"description": "En pixels",
+			"type": "number",
+			"min": 1,
+			"max": 20,
+			"defaultValue": 3,
+			"group": "Carte",
+			"showIf": "border"
+		},
+		{
+			"id": "cardRadius",
+			"label": "Arrondi de la carte",
+			"description": "En pixels ; la jaquette suit automatiquement",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 28,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardPadding",
+			"label": "Marge intérieure",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 12,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
 			"id": "icon",
 			"label": "Icône",
 			"description": "",
 			"type": "select",
 			"options": [
-				{ "value": "none", "label": "Aucune" },
-				{ "value": "skull", "label": "Crâne" },
-				{ "value": "cross", "label": "Croix" },
-				{ "value": "custom", "label": "Personnalisée (URL)" }
+				{
+					"value": "none",
+					"label": "Aucune"
+				},
+				{
+					"value": "skull",
+					"label": "Crâne"
+				},
+				{
+					"value": "cross",
+					"label": "Croix"
+				},
+				{
+					"value": "custom",
+					"label": "Personnalisée (URL)"
+				}
 			],
 			"defaultValue": "skull",
-			"group": "Icône"
+			"group": "Icône",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"classic",
+					"minimal"
+				]
+			}
 		},
 		{
 			"id": "iconUrl",
@@ -114,7 +355,10 @@
 			"type": "text",
 			"defaultValue": "",
 			"group": "Icône",
-			"showIf": { "id": "icon", "value": "custom" }
+			"showIf": {
+				"id": "icon",
+				"value": "custom"
+			}
 		},
 		{
 			"id": "iconSize",
@@ -125,7 +369,119 @@
 			"max": 400,
 			"defaultValue": 48,
 			"group": "Icône",
-			"showIf": { "id": "icon", "value": ["skull", "cross", "custom"] }
+			"showIf": {
+				"id": "icon",
+				"value": [
+					"skull",
+					"cross",
+					"custom"
+				]
+			}
+		},
+		{
+			"id": "background",
+			"label": "Fond",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Classique",
+			"showIf": {
+				"id": "layout",
+				"value": "classic"
+			}
+		},
+		{
+			"id": "bgColor",
+			"label": "Couleur du fond",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Classique",
+			"showIf": "background"
+		},
+		{
+			"id": "bgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 60,
+			"group": "Classique",
+			"showIf": "background"
+		},
+		{
+			"id": "bgRadius",
+			"label": "Arrondi des coins",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 12,
+			"group": "Classique",
+			"showIf": "background"
+		},
+		{
+			"id": "bgPadding",
+			"label": "Marge intérieure",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 16,
+			"group": "Classique",
+			"showIf": "background"
+		},
+		{
+			"id": "decorLine",
+			"label": "Ligne décorative",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Minimal",
+			"showIf": {
+				"id": "layout",
+				"value": "minimal"
+			}
+		},
+		{
+			"id": "lineColor",
+			"label": "Couleur de la ligne",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Minimal",
+			"showIf": "decorLine"
+		},
+		{
+			"id": "lineLength",
+			"label": "Longueur de la ligne",
+			"description": "En pixels",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Minimal",
+			"showIf": "decorLine"
+		},
+		{
+			"id": "linePosition",
+			"label": "Position de la ligne",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "above",
+					"label": "Au-dessus"
+				},
+				{
+					"value": "below",
+					"label": "En dessous"
+				}
+			],
+			"defaultValue": "above",
+			"group": "Minimal",
+			"showIf": "decorLine"
 		},
 		{
 			"id": "font",
@@ -158,7 +514,7 @@
 			"label": "Contour",
 			"description": "",
 			"type": "checkbox",
-			"defaultValue": true,
+			"defaultValue": false,
 			"group": "Texte"
 		},
 		{
@@ -210,66 +566,31 @@
 			"showIf": "shadow"
 		},
 		{
-			"id": "background",
-			"label": "Fond",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": false,
-			"group": "Fond"
-		},
-		{
-			"id": "bgColor",
-			"label": "Couleur du fond",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#000000",
-			"group": "Fond",
-			"showIf": "background"
-		},
-		{
-			"id": "bgOpacity",
-			"label": "Opacité du fond",
-			"description": "En %",
-			"type": "number",
-			"min": 0,
-			"max": 100,
-			"defaultValue": 60,
-			"group": "Fond",
-			"showIf": "background"
-		},
-		{
-			"id": "bgRadius",
-			"label": "Arrondi des coins",
-			"description": "En pixels",
-			"type": "number",
-			"min": 0,
-			"max": 200,
-			"defaultValue": 12,
-			"group": "Fond",
-			"showIf": "background"
-		},
-		{
-			"id": "bgPadding",
-			"label": "Marge intérieure",
-			"description": "En pixels",
-			"type": "number",
-			"min": 0,
-			"max": 200,
-			"defaultValue": 16,
-			"group": "Fond",
-			"showIf": "background"
-		},
-		{
 			"id": "animation",
 			"label": "Animation au changement",
 			"description": "Jouée quand le nombre de morts change",
 			"type": "select",
 			"options": [
-				{ "value": "none", "label": "Aucune" },
-				{ "value": "pulse", "label": "Pulsation" },
-				{ "value": "bounce", "label": "Rebond" },
-				{ "value": "flip", "label": "Retournement" },
-				{ "value": "slide", "label": "Glissement" }
+				{
+					"value": "none",
+					"label": "Aucune"
+				},
+				{
+					"value": "pulse",
+					"label": "Pulsation"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "flip",
+					"label": "Retournement"
+				},
+				{
+					"value": "slide",
+					"label": "Glissement"
+				}
 			],
 			"defaultValue": "pulse",
 			"group": "Animation"
@@ -284,7 +605,15 @@
 			"step": 50,
 			"defaultValue": 400,
 			"group": "Animation",
-			"showIf": { "id": "animation", "value": ["pulse", "bounce", "flip", "slide"] }
+			"showIf": {
+				"id": "animation",
+				"value": [
+					"pulse",
+					"bounce",
+					"flip",
+					"slide"
+				]
+			}
 		},
 		{
 			"id": "flashColors",
@@ -313,16 +642,69 @@
 			"showIf": "flashColors"
 		},
 		{
+			"id": "gameChangeAnim",
+			"label": "Animation au changement de jeu",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "none",
+					"label": "Aucune"
+				},
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slide",
+					"label": "Glissement"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Animation"
+		},
+		{
 			"id": "align",
-			"label": "Alignement",
+			"label": "Alignement horizontal",
 			"description": "Position du compteur dans la source OBS",
 			"type": "select",
 			"options": [
-				{ "value": "left", "label": "Gauche" },
-				{ "value": "center", "label": "Centre" },
-				{ "value": "right", "label": "Droite" }
+				{
+					"value": "left",
+					"label": "Gauche"
+				},
+				{
+					"value": "center",
+					"label": "Centre"
+				},
+				{
+					"value": "right",
+					"label": "Droite"
+				}
 			],
 			"defaultValue": "center",
+			"group": "Position"
+		},
+		{
+			"id": "verticalAlign",
+			"label": "Alignement vertical",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "top",
+					"label": "Haut"
+				},
+				{
+					"value": "middle",
+					"label": "Milieu"
+				},
+				{
+					"value": "bottom",
+					"label": "Bas"
+				}
+			],
+			"defaultValue": "top",
 			"group": "Position"
 		}
 	]

@@ -9,14 +9,17 @@ const gameEl = document.getElementById('game');
 const labelEl = document.getElementById('label');
 const iconEl = document.getElementById('icon');
 const countEl = document.getElementById('count');
+const coverEl = document.getElementById('cover');
 const fontLinkEl = document.getElementById('googleFont');
 
 let ws = null;            // réglages (module commun WidgetSettings)
 let sbClient = null;      // client Streamer.bot
 let sbHost = null, sbPort = null;
 let demoTimer = null;
-let state = null;         // { name, count } du jeu affiché
+let state = null;         // jeu affiché { name, count, cover, boxArt }
 let hasData = false;
+let swapToken = 0;
+let currentCoverURL = null;
 
 ////////////////////
 // RENDU / STYLES //
@@ -29,78 +32,157 @@ function HexToRgba(hex, opacityPercent) {
 	return `rgba(${r}, ${g}, ${b}, ${Math.max(0, Math.min(100, opacityPercent)) / 100})`;
 }
 
+function SetVar(name, value) {
+	widgetEl.style.setProperty(name, value);
+}
+
 function ApplySettings() {
 	const s = ws.values;
 	const on = (id) => ws.isActive(id); // un réglage masqué n'a pas d'effet
+	const layout = s.layout;
 
 	// Police Google Fonts
 	const font = String(s.font || '').trim();
 	if (font) {
-		const href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font).replace(/%20/g, '+')}:wght@400;600;700;900&display=swap`;
+		const href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(font).replace(/%20/g, '+')}:wght@400;600;700;800;900&display=swap`;
 		if (fontLinkEl.getAttribute('href') !== href) fontLinkEl.setAttribute('href', href);
-		widgetEl.style.setProperty('--font', `'${font.replace(/'/g, '')}'`);
+		SetVar('--font', `'${font.replace(/'/g, '')}'`);
 	} else {
 		fontLinkEl.removeAttribute('href');
-		widgetEl.style.setProperty('--font', 'inherit');
+		SetVar('--font', 'inherit');
 	}
 
-	widgetEl.style.setProperty('--font-size', `${s.fontSize}px`);
-	widgetEl.style.setProperty('--text-color', s.textColor);
-	widgetEl.style.setProperty('--game-size', `${s.gameFontSize}px`);
-	widgetEl.style.setProperty('--icon-size', `${s.iconSize}px`);
-	widgetEl.style.setProperty('--anim-duration', `${s.animationDuration}ms`);
+	SetVar('--font-size', `${s.fontSize}px`);
+	SetVar('--text-color', s.textColor);
+	SetVar('--game-size', `${s.gameFontSize}px`);
+	SetVar('--icon-size', `${s.iconSize}px`);
+	SetVar('--anim-duration', `${s.animationDuration}ms`);
 
-	// Alignement
-	widgetEl.classList.remove('align-left', 'align-center', 'align-right');
-	widgetEl.classList.add(`align-${s.align}`);
+	// Position
+	widgetEl.classList.remove('align-left', 'align-center', 'align-right', 'valign-top', 'valign-middle', 'valign-bottom');
+	widgetEl.classList.add(`align-${s.align}`, `valign-${s.verticalAlign}`);
+
+	// Classes du style (on repart de zéro à chaque application)
+	const keep = ['swap-out', 'swap-in', 'swap-slide', 'no-cover-image'].filter(c => boxEl.classList.contains(c));
+	boxEl.className = `layout-${layout}`;
+	keep.forEach(c => boxEl.classList.add(c));
 
 	// Contour / ombre
 	boxEl.classList.toggle('outline', s.outline);
-	widgetEl.style.setProperty('--outline-color', s.outlineColor);
-	widgetEl.style.setProperty('--outline-width', `${s.outlineWidth}px`);
+	SetVar('--outline-color', s.outlineColor);
+	SetVar('--outline-width', `${s.outlineWidth}px`);
 	boxEl.classList.toggle('shadow', s.shadow);
-	widgetEl.style.setProperty('--shadow-color', s.shadowColor);
-	widgetEl.style.setProperty('--shadow-blur', `${s.shadowBlur}px`);
-
-	// Fond
-	boxEl.classList.toggle('with-bg', s.background);
-	widgetEl.style.setProperty('--bg-color', HexToRgba(s.bgColor, s.bgOpacity));
-	widgetEl.style.setProperty('--bg-radius', `${s.bgRadius}px`);
-	widgetEl.style.setProperty('--bg-padding', `${s.bgPadding}px`);
+	SetVar('--shadow-color', s.shadowColor);
+	SetVar('--shadow-blur', `${s.shadowBlur}px`);
 
 	// Libellé
-	coreEl.className = '';
-	if (s.showLabel) coreEl.classList.add(`label-${s.labelPosition}`);
-	else coreEl.classList.add('label-hidden');
+	coreEl.className = s.showLabel ? `label-${s.labelPosition}` : 'label-hidden';
 	labelEl.textContent = on('labelText') ? s.labelText : '';
 
-	// Nom du jeu
-	boxEl.classList.toggle('game-hidden', !s.showGame);
+	// Nom du jeu (réglage propre au style Carte, ou commun aux deux autres)
+	const showGame = layout === 'card' ? s.cardShowGame : s.showGame;
+	boxEl.classList.toggle('game-hidden', !showGame);
 	boxEl.classList.toggle('game-below', on('gamePosition') && s.gamePosition === 'below');
 
-	// Icône
+	// Icône (Classique et Minimal)
 	iconEl.innerHTML = '';
-	if (s.icon === 'custom') {
-		if (s.iconUrl.trim()) {
-			const img = document.createElement('img');
-			img.src = s.iconUrl.trim();
-			img.alt = '';
-			iconEl.appendChild(img);
+	if (on('icon')) {
+		if (s.icon === 'custom') {
+			if (on('iconUrl') && s.iconUrl.trim()) {
+				const img = document.createElement('img');
+				img.src = s.iconUrl.trim();
+				img.alt = '';
+				iconEl.appendChild(img);
+			}
+		} else if (DEATH_ICONS[s.icon]) {
+			iconEl.innerHTML = DEATH_ICONS[s.icon];
 		}
-	} else if (DEATH_ICONS[s.icon]) {
-		iconEl.innerHTML = DEATH_ICONS[s.icon];
 	}
 
-	RenderState(false);
+	// Style Classique : fond
+	if (layout === 'classic') {
+		boxEl.classList.toggle('with-bg', s.background);
+		SetVar('--bg-color', HexToRgba(s.bgColor, s.bgOpacity));
+		SetVar('--bg-radius', `${s.bgRadius}px`);
+		SetVar('--bg-padding', `${s.bgPadding}px`);
+	}
+
+	// Style Carte
+	if (layout === 'card') {
+		boxEl.classList.add(`bg-${s.cardBackground}`);
+		boxEl.classList.toggle('show-cover', s.showCover);
+		boxEl.classList.toggle('no-cover', !s.showCover);
+		boxEl.classList.toggle('cover-right', on('coverPosition') && s.coverPosition === 'right');
+		SetVar('--cover-width', `${s.coverWidth}px`);
+		SetVar('--card-radius', `${s.cardRadius}px`);
+		SetVar('--card-padding', `${s.cardPadding}px`);
+		SetVar('--border-width', s.border ? `${s.borderWidth}px` : '0px');
+		SetVar('--border-color', s.borderColor);
+		SetVar('--card-bg', s.cardBackground === 'color' ? HexToRgba(s.cardBgColor, s.cardBgOpacity) : 'rgba(0, 0, 0, 0.55)');
+	}
+
+	// Style Minimal
+	if (layout === 'minimal') {
+		boxEl.classList.toggle('with-line', s.decorLine);
+		boxEl.classList.toggle('line-below', on('linePosition') && s.linePosition === 'below');
+		SetVar('--line-color', s.lineColor);
+		SetVar('--line-length', `${s.lineLength}px`);
+	}
+
+	RenderText();
+	UpdateCover(state);
 }
 
-function RenderState(animate, previousCount) {
+function RenderText() {
 	if (!state) return;
 	gameEl.textContent = state.name;
 	countEl.textContent = String(state.count);
+}
 
-	if (animate && previousCount !== undefined && previousCount !== state.count)
-		PlayChangeAnimation(state.count > previousCount);
+// Jaquette : préchargée avant affichage pour éviter un cadre vide
+function CoverURLFor(game) {
+	const s = ws.values;
+	if (s.layout !== 'card') return '';
+	const fallback = ws.isActive('fallbackCover') ? s.fallbackCover : '';
+	return ResolveCoverURL(game, fallback, s.coverWidth);
+}
+
+function PreloadImage(url) {
+	return new Promise((resolve) => {
+		if (!url) return resolve(false);
+		const img = new Image();
+		const timer = setTimeout(() => resolve(false), 4000);
+		img.onload = () => { clearTimeout(timer); resolve(true); };
+		img.onerror = () => { clearTimeout(timer); resolve(false); };
+		img.src = url;
+	});
+}
+
+function SetCoverImage(url) {
+	currentCoverURL = url;
+	boxEl.classList.toggle('no-cover-image', !url);
+	if (url) {
+		coverEl.src = url;
+		SetVar('--cover-url', `url("${url.replace(/"/g, '%22')}")`);
+	} else {
+		coverEl.removeAttribute('src');
+		SetVar('--cover-url', 'none');
+	}
+}
+
+async function UpdateCover(game) {
+	const url = CoverURLFor(game);
+	if (url === currentCoverURL) return;
+	if (!url) { SetCoverImage(''); return; }
+
+	let ok = await PreloadImage(url);
+	let finalURL = url;
+	if (!ok) {
+		// Jaquette introuvable : image de secours, sinon carte sans jaquette
+		const fallback = ws.isActive('fallbackCover') ? ws.values.fallbackCover.trim() : '';
+		finalURL = fallback && fallback !== url && await PreloadImage(fallback) ? fallback : '';
+	}
+	if (CoverURLFor(state) === url) SetCoverImage(finalURL);
 }
 
 let flashTimeout = null;
@@ -116,23 +198,64 @@ function PlayChangeAnimation(isUp) {
 
 	if (s.flashColors) {
 		clearTimeout(flashTimeout);
-		widgetEl.style.setProperty('--count-color', isUp ? s.colorUp : s.colorDown);
+		SetVar('--count-color', isUp ? s.colorUp : s.colorDown);
 		const hold = Math.max(500, (ws.isActive('animationDuration') ? s.animationDuration : 400) * 2);
-		flashTimeout = setTimeout(() => widgetEl.style.setProperty('--count-color', 'var(--text-color)'), hold);
+		flashTimeout = setTimeout(() => SetVar('--count-color', 'var(--text-color)'), hold);
 	}
+}
+
+const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+// Changement de jeu animé : sortie, mise à jour (jaquette préchargée), entrée
+async function SwapGame(next) {
+	const token = ++swapToken;
+	const anim = ws.values.gameChangeAnim;
+	const url = CoverURLFor(next);
+	const preload = PreloadImage(url);
+
+	boxEl.classList.toggle('swap-slide', anim === 'slide');
+	boxEl.classList.add('swap-out');
+	await Promise.all([wait(260), Promise.race([preload, wait(1500)])]);
+	if (token !== swapToken) return;
+
+	state = next;
+	RenderText();
+	await UpdateCover(state);
+	if (token !== swapToken) return;
+
+	boxEl.classList.remove('swap-out');
+	boxEl.classList.add('swap-in');
+	void boxEl.offsetWidth;
+	boxEl.classList.remove('swap-in');
 }
 
 function SetState(next) {
 	if (!next) return;
+	next = { name: next.name || '', count: Number(next.count) || 0, cover: next.cover || '', boxArt: next.boxArt || '' };
 	const previous = state;
-	state = { name: next.name, count: next.count };
-	const sameGame = previous && previous.name === state.name;
-	RenderState(sameGame, sameGame ? previous.count : undefined);
 
 	if (!hasData) {
+		state = next;
+		RenderText();
+		UpdateCover(state);
 		hasData = true;
 		widgetEl.classList.remove('hidden');
+		return;
 	}
+
+	if (previous && previous.name !== next.name) {
+		if (ws.values.gameChangeAnim !== 'none') { SwapGame(next); return; }
+		swapToken++;
+		state = next;
+		RenderText();
+		UpdateCover(state);
+		return;
+	}
+
+	state = next;
+	RenderText();
+	UpdateCover(state); // la jaquette a pu être ajoutée ou changée depuis le dock
+	if (previous && previous.count !== next.count) PlayChangeAnimation(next.count > previous.count);
 }
 
 //////////////////
@@ -189,18 +312,9 @@ function ConnectStreamerBot() {
 	});
 }
 
-////////////
-// DÉMO   //
-////////////
-
-function StartDemo() {
-	if (demoTimer) return;
-	demoTimer = CreateDemoFeed(SetState);
-}
-
-//////////////////
-// DÉMARRAGE    //
-//////////////////
+///////////////
+// DÉMARRAGE //
+///////////////
 
 (async function Init() {
 	try {
@@ -218,6 +332,6 @@ function StartDemo() {
 
 	ApplySettings();
 
-	if (ws.demo) StartDemo();
+	if (ws.demo) demoTimer = CreateDemoFeed(SetState);
 	else ConnectStreamerBot();
 })();
