@@ -42,7 +42,7 @@ public class CPHInline
 
 	static readonly object verrou = new object();
 	static readonly Dictionary<string, bool> messagesTraites = new Dictionary<string, bool>();
-	static readonly Queue<string> ordreMessages = new Queue<string>();
+	static readonly List<string> ordreMessages = new List<string>(); // (Queue<T> n'est pas disponible dans Streamer.bot)
 
 	// Titre et catégorie gardés quelques secondes (évite d'interroger Twitch à chaque appel)
 	static string titreCache = "", categorieCache = "";
@@ -278,8 +278,8 @@ public class CPHInline
 			{
 				if (messagesTraites.ContainsKey(msgId)) return true;
 				messagesTraites[msgId] = true;
-				ordreMessages.Enqueue(msgId);
-				while (ordreMessages.Count > 200) messagesTraites.Remove(ordreMessages.Dequeue());
+				ordreMessages.Add(msgId);
+				while (ordreMessages.Count > 200) { messagesTraites.Remove(ordreMessages[0]); ordreMessages.RemoveAt(0); }
 			}
 		}
 
