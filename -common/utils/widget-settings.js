@@ -81,6 +81,8 @@
 		if (!showIf || depth > 20) return true;
 		if (Array.isArray(showIf.any))
 			return showIf.any.some(c => conditionMet(definition, values, c, depth + 1));
+		if (Array.isArray(showIf.all))
+			return showIf.all.every(c => conditionMet(definition, values, c, depth + 1));
 		const cond = typeof showIf === 'string' ? { id: showIf } : showIf;
 		const parent = (definition.settings || []).find(s => s.id === cond.id);
 		if (!parent) return true;

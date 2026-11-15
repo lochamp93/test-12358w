@@ -58,6 +58,14 @@ function Scenarios() {
 // Scénario actif : forcé depuis le dock, sinon la première règle qui correspond, sinon le défaut
 function ActiveScenario() {
 	const list = Scenarios();
+
+	// Aperçu de la page de paramétrage : le scénario en cours de modification
+	if (ws.demo && ws.values.editScenario) {
+		const edit = String(ws.values.editScenario);
+		if (edit === 'defaut') return { scenario: null, reason: 'Scénario en cours de modification' };
+		const editing = list.find(sc => String(sc.n) === edit);
+		if (editing) return { scenario: editing, reason: 'Scénario en cours de modification' };
+	}
 	const force = Normalize(sbState.force);
 	if (force) {
 		const forced = list.find(sc => Normalize(sc.name) === force);

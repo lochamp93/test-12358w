@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -162,11 +163,15 @@ public class CPHInline
 		{
 			try
 			{
-				// 1) Fenêtre WPF « OpenFolderDialog » (.NET 8, version récente de Streamer.bot)
+				// 1) Fenêtre moderne de l'Explorateur Windows (la même que Chrome, l'Explorateur…)
+				string moderne = ChoisirDossierModerne(depart);
+				if (moderne != null) { choisi = moderne == "" ? null : moderne; return; }
+
+				// 2) Fenêtre WPF « OpenFolderDialog » (.NET 8)
 				string wpf = ChoisirDossierWpf(depart);
 				if (wpf != null) { choisi = wpf == "" ? null : wpf; return; }
 
-				// 2) Fenêtre WinForms « FolderBrowserDialog »
+				// 3) Ancienne fenêtre WinForms « FolderBrowserDialog »
 				Assembly wf = ChargerAssembly("System.Windows.Forms",
 					"System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
 				if (wf == null) throw new Exception("System.Windows.Forms indisponible");
@@ -211,9 +216,105 @@ public class CPHInline
 			Erreur("La fenêtre de choix du dossier n’a pas pu s’ouvrir. Collez le chemin du dossier dans le dock.");
 			return;
 		}
-		if (string.IsNullOrEmpty(choisi)) { EnvoyerEtat(false); return; } // annulé
+		if (string.IsNullOrEmpty(choisi)) { CPH.LogInfo("[Alertes variables] Choix du dossier annulé"); EnvoyerEtat(false); return; }
 		CPH.SetGlobalVar(VAR_DOSSIER, choisi, true);
+		string relu = Dossier();
+		if (relu != choisi.Trim())
+			CPH.LogWarn("[Alertes variables] Le dossier n’a pas été enregistré (variable « " + VAR_DOSSIER + " » : « " + relu + " »)");
+		else
+			CPH.LogInfo("[Alertes variables] Dossier source enregistré : " + choisi);
 		EnvoyerEtat(true);
+	}
+
+	// ---------- Fenêtre moderne de choix de dossier (COM IFileOpenDialog, mode dossier) ----------
+
+	[ComImport, Guid("DC1C5A9C-E88A-4dde-A5A1-60F82A20AEF7")]
+	class FileOpenDialogCom { }
+
+	[ComImport, Guid("43826D1E-E718-42EE-BC55-A1E261C37BFE"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	interface IShellItem
+	{
+		void BindToHandler(IntPtr pbc, ref Guid bhid, ref Guid riid, out IntPtr ppv);
+		void GetParent(out IShellItem ppsi);
+		void GetDisplayName(uint sigdnName, out IntPtr ppszName);
+		void GetAttributes(uint sfgaoMask, out uint psfgaoAttribs);
+		void Compare(IShellItem psi, uint hint, out int piOrder);
+	}
+
+	[ComImport, Guid("42f85136-db7e-439c-85f1-e4075d135fc8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+	interface IFileDialog
+	{
+		[PreserveSig] int Show(IntPtr parent);
+		void SetFileTypes(uint cFileTypes, IntPtr rgFilterSpec);
+		void SetFileTypeIndex(uint iFileType);
+		void GetFileTypeIndex(out uint piFileType);
+		void Advise(IntPtr pfde, out uint pdwCookie);
+		void Unadvise(uint dwCookie);
+		void SetOptions(uint fos);
+		void GetOptions(out uint pfos);
+		void SetDefaultFolder(IShellItem psi);
+		void SetFolder(IShellItem psi);
+		void GetFolder(out IShellItem ppsi);
+		void GetCurrentSelection(out IShellItem ppsi);
+		void SetFileName([MarshalAs(UnmanagedType.LPWStr)] string pszName);
+		void GetFileName([MarshalAs(UnmanagedType.LPWStr)] out string pszName);
+		void SetTitle([MarshalAs(UnmanagedType.LPWStr)] string pszTitle);
+		void SetOkButtonLabel([MarshalAs(UnmanagedType.LPWStr)] string pszText);
+		void SetFileNameLabel([MarshalAs(UnmanagedType.LPWStr)] string pszLabel);
+		void GetResult(out IShellItem ppsi);
+		void AddPlace(IShellItem psi, int fdap);
+		void SetDefaultExtension([MarshalAs(UnmanagedType.LPWStr)] string pszDefaultExtension);
+		void Close(int hr);
+		void SetClientGuid(ref Guid guid);
+		void ClearClientData();
+		void SetFilter(IntPtr pFilter);
+	}
+
+	[DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+	static extern void SHCreateItemFromParsingName(string pszPath, IntPtr pbc, [In] ref Guid riid, out IShellItem ppv);
+
+	[DllImport("user32.dll")]
+	static extern IntPtr GetForegroundWindow();
+
+	// Chemin choisi, "" si annulé, null si la fenêtre n'est pas disponible
+	static string ChoisirDossierModerne(string depart)
+	{
+		IFileDialog dialogue;
+		try { dialogue = (IFileDialog)new FileOpenDialogCom(); }
+		catch (Exception) { return null; }
+		try
+		{
+			const uint FOS_PICKFOLDERS = 0x20, FOS_FORCEFILESYSTEM = 0x40, FOS_PATHMUSTEXIST = 0x800;
+			uint options;
+			dialogue.GetOptions(out options);
+			dialogue.SetOptions(options | FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST);
+			dialogue.SetTitle("Dossier source des Alertes variables (celui qui contient « defaut »)");
+			dialogue.SetOkButtonLabel("Choisir ce dossier");
+			if (depart != "" && Directory.Exists(depart))
+			{
+				try
+				{
+					Guid iidShellItem = typeof(IShellItem).GUID;
+					IShellItem dossier;
+					SHCreateItemFromParsingName(depart, IntPtr.Zero, ref iidShellItem, out dossier);
+					dialogue.SetFolder(dossier);
+				}
+				catch (Exception) { }
+			}
+
+			int hr = dialogue.Show(GetForegroundWindow());
+			if (hr != 0) return ""; // annulé (ou fermé)
+
+			IShellItem resultat;
+			dialogue.GetResult(out resultat);
+			IntPtr ptr;
+			resultat.GetDisplayName(0x80058000, out ptr); // SIGDN_FILESYSPATH
+			string chemin = Marshal.PtrToStringUni(ptr);
+			Marshal.FreeCoTaskMem(ptr);
+			return chemin ?? "";
+		}
+		catch (Exception) { return null; }
+		finally { Marshal.ReleaseComObject(dialogue); }
 	}
 
 	// Charge une bibliothèque par son nom court, puis par son nom complet (null si absente)

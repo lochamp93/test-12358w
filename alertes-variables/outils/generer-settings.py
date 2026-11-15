@@ -89,102 +89,104 @@ add(id="alertGap", label="Pause entre deux alertes", description="En secondes", 
 for p, l in [("Twitch", "Twitch"), ("Kick", "Kick"), ("YouTube", "YouTube"), ("TikTok", "TikTok")]:
     add(id=f"platform{p}", label=l, type="checkbox", defaultValue=True, group="Plateformes")
 
-# ---------- Style d'un scénario (défaut ou scénario n) ----------
-
-
-def style_settings(prefix, group, cond):
-    """Réglages de style ; prefix = '' pour le scénario par défaut, 'sc1' sinon."""
-    def i(name):
-        return name if not prefix else prefix + name[0].upper() + name[1:]
-
-    def c(extra=None):
-        if extra is None:
-            return cond
-        return extra
-
-    add(id=i("font"), label="Police", description="Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
-        type="font", defaultValue="SF Pro Display", group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("fontSize"), label="Taille du texte", description="En pixels", type="number", min=8, max=300,
-        defaultValue=42, group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("textColor"), label="Couleur du texte", type="color", defaultValue="#ffffff", group=group,
-        **({"showIf": cond} if cond else {}))
-    add(id=i("accentColor"), label="Couleur du pseudo", description="Couleur de {user} et des nombres", type="color",
-        defaultValue="#ff4d6d", group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("textPosition"), label="Position du texte", type="select", options=opts(TEXT_POS), defaultValue="below",
-        group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("mediaHeight"), label="Hauteur de l’image", description="En pixels (largeur automatique)", type="number",
-        min=20, max=2000, defaultValue=320, group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("animIn"), label="Animation d’entrée", type="select", options=opts(ANIM_IN), defaultValue="bounce",
-        group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("animOut"), label="Animation de sortie", type="select", options=opts(ANIM_OUT), defaultValue="fade",
-        group=group, **({"showIf": cond} if cond else {}))
-    add(id=i("duration"), label="Durée d’affichage", description="En secondes", type="number", min=1, max=120,
-        step=0.5, defaultValue=6, group=group, **({"showIf": cond} if cond else {}))
-    for t, label, text in TYPES:
-        show = {"id": f"alert{t.capitalize()}"}
-        add(id=i(f"text{t.capitalize()}"), label=f"Texte : {label}", description=PLACEHOLDERS,
-            type="text", defaultValue=text, group=group + " : textes",
-            showIf={"any": [show]} if not cond else show_and(cond, show))
-
-
-def show_and(cond, show):
-    # Les textes dépendent du type d'alerte ET du visuel propre au scénario :
-    # le visuel est la condition principale (sa chaîne inclut le nombre de scénarios),
-    # le type d'alerte est vérifié par l'overlay (un texte d'alerte désactivée n'a pas d'effet).
-    return cond
-
-
-# ---------- Scénario par défaut ----------
-style_settings("", "Scénario par défaut", None)
-add(id="animDuration", label="Durée des animations", description="En millisecondes", type="number", min=0, max=5000,
-    defaultValue=600, group="Scénario par défaut")
-add(id="waitMedia", label="Attendre la fin du son ou de la vidéo",
-    description="L’alerte reste affichée tant que le son ou la vidéo joue", type="checkbox", defaultValue=True,
-    group="Scénario par défaut")
-add(id="volume", label="Volume", description="En %", type="number", min=0, max=100, defaultValue=80,
-    group="Scénario par défaut")
-add(id="textShadow", label="Ombre du texte", type="checkbox", defaultValue=True, group="Scénario par défaut")
-add(id="showMessage", label="Afficher le message du viewer", description="Réabonnements, bits et dons",
-    type="checkbox", defaultValue=True, group="Scénario par défaut")
-add(id="messageSize", label="Taille du message", description="En pixels", type="number", min=8, max=200,
-    defaultValue=26, group="Scénario par défaut", showIf="showMessage")
-add(id="defaultFolder", label="Dossier du scénario par défaut",
-    description="Sous-dossier du dossier source", type="text", datalist="alertes-dossiers",
-    defaultValue="defaut", group="Scénario par défaut")
-
-# ---------- Scénarios ----------
-add(id="scenarioCount", label="Nombre de scénarios",
+# ---------- Organisation par scénario ----------
+# « Scénario à modifier » (aperçu seulement) : seules les sections du scénario choisi s'affichent,
+# et les tests de l'aperçu utilisent ce scénario.
+add(id="editScenario", label="Scénario à modifier",
+    description="Affiche les réglages de ce scénario ; les tests de l’aperçu l’utilisent",
+    type="select", options=opts([("defaut", "Par défaut")] + [(str(n), f"Scénario {n}") for n in range(1, NB_SCENARIOS + 1)]),
+    defaultValue="defaut", previewOnly=True, group="Scénarios")
+add(id="scenarioCount", label="Nombre de scénarios actifs",
     description="Chaque scénario a son sous-dossier, du même nom, dans le dossier source. Le premier scénario dont la règle correspond est utilisé.",
     type="select", options=[{"value": str(n), "label": str(n)} for n in range(0, NB_SCENARIOS + 1)],
     defaultValue="1", group="Scénarios")
 
+DEF = {"id": "editScenario", "value": "defaut"}
+
+
+def vis(n):
+    return {"all": [{"id": "editScenario", "value": str(n)},
+                    {"id": "scenarioCount", "value": [str(k) for k in range(n, NB_SCENARIOS + 1)]}]}
+
+
+def style_settings(prefix, cond):
+    """Réglages de style ; prefix = '' pour le scénario par défaut, 'sc1' sinon."""
+    def i(name):
+        return name if not prefix else prefix + name[0].upper() + name[1:]
+
+    g = "Style"
+    add(id=i("font"), label="Police", description="Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
+        type="font", defaultValue="SF Pro Display", group=g, showIf=cond)
+    add(id=i("fontSize"), label="Taille du texte", description="En pixels", type="number", min=8, max=300,
+        defaultValue=42, group=g, showIf=cond)
+    add(id=i("textColor"), label="Couleur du texte", type="color", defaultValue="#ffffff", group=g, showIf=cond)
+    add(id=i("accentColor"), label="Couleur du pseudo", description="Couleur de {user} et des nombres", type="color",
+        defaultValue="#ff4d6d", group=g, showIf=cond)
+    add(id=i("textPosition"), label="Position du texte", type="select", options=opts(TEXT_POS), defaultValue="below",
+        group=g, showIf=cond)
+    add(id=i("mediaHeight"), label="Hauteur de l’image", description="En pixels (largeur automatique)", type="number",
+        min=20, max=2000, defaultValue=320, group=g, showIf=cond)
+    add(id=i("animIn"), label="Animation d’entrée", type="select", options=opts(ANIM_IN), defaultValue="bounce",
+        group=g, showIf=cond)
+    add(id=i("animOut"), label="Animation de sortie", type="select", options=opts(ANIM_OUT), defaultValue="fade",
+        group=g, showIf=cond)
+    add(id=i("duration"), label="Durée d’affichage", description="En secondes", type="number", min=1, max=120,
+        step=0.5, defaultValue=6, group=g, showIf=cond)
+    for t, label, text in TYPES:
+        add(id=i(f"text{t.capitalize()}"), label=f"Texte : {label}", description=PLACEHOLDERS,
+            type="text", defaultValue=text, group="Textes",
+            showIf={"all": [cond, {"id": f"alert{t.capitalize()}"}]})
+
+
+# ---------- Scénario par défaut ----------
+add(id="defaultFolder", label="Dossier du scénario par défaut",
+    description="Sous-dossier du dossier source", type="text", datalist="alertes-dossiers",
+    defaultValue="defaut", group="Visuel et son", showIf=DEF)
+add(id="volume", label="Volume", description="En %", type="number", min=0, max=100, defaultValue=80,
+    group="Visuel et son", showIf=DEF)
+add(id="waitMedia", label="Attendre la fin du son ou de la vidéo",
+    description="L’alerte reste affichée tant que le son ou la vidéo joue", type="checkbox", defaultValue=True,
+    group="Visuel et son", showIf=DEF)
+style_settings("", DEF)
+add(id="animDuration", label="Durée des animations", description="En millisecondes", type="number", min=0, max=5000,
+    defaultValue=600, group="Style", showIf=DEF)
+add(id="textShadow", label="Ombre du texte", type="checkbox", defaultValue=True, group="Style", showIf=DEF)
+add(id="showMessage", label="Afficher le message du viewer", description="Réabonnements, bits et dons",
+    type="checkbox", defaultValue=True, group="Style", showIf=DEF)
+add(id="messageSize", label="Taille du message", description="En pixels", type="number", min=8, max=200,
+    defaultValue=26, group="Style", showIf="showMessage")
+
+# ---------- Scénarios 1 à 12 ----------
 EXEMPLES = {1: ("Horreur", "horreur, horror, peur", "")}
 
 for n in range(1, NB_SCENARIOS + 1):
-    g = f"Scénario {n}"
     p = f"sc{n}"
-    visible = {"id": "scenarioCount", "value": [str(k) for k in range(n, NB_SCENARIOS + 1)]}
+    v = vis(n)
     name, kw, cats = EXEMPLES.get(n, ("", "", ""))
+    add(id=f"{p}Inactive", label=f"Scénario {n} désactivé",
+        description="Augmentez « Nombre de scénarios actifs » pour l’utiliser", type="info", defaultValue="Inactif",
+        group="Scénarios", showIf={"all": [{"id": "editScenario", "value": str(n)},
+                                           {"id": "scenarioCount", "value": [str(k) for k in range(0, n)]}]})
     add(id=f"{p}Name", label="Nom du scénario (= nom du dossier)",
         description="Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
-        type="text", datalist="alertes-dossiers", defaultValue=name, group=g, showIf=visible)
+        type="text", datalist="alertes-dossiers", defaultValue=name, group="Déclenchement", showIf=v)
     add(id=f"{p}Keywords", label="Mots-clés du titre",
         description="Séparés par des virgules (majuscules et accents ignorés)", type="text", defaultValue=kw,
-        group=g, showIf=visible)
+        group="Déclenchement", showIf=v)
     add(id=f"{p}Categories", label="Catégories", description="Séparées par des virgules, ex. : Just Chatting, Minecraft",
-        type="text", defaultValue=cats, group=g, showIf=visible)
+        type="text", defaultValue=cats, group="Déclenchement", showIf=v)
     add(id=f"{p}Match", label="Combinaison", type="select",
         options=opts([("any", "Mot-clé OU catégorie"), ("all", "Mot-clé ET catégorie")]), defaultValue="any",
-        group=g, showIf=visible)
-    add(id=f"{p}Visual", label="Visuel", type="select",
-        options=opts([("default", "Celui du scénario par défaut"), ("own", "Visuel propre au scénario")]),
-        defaultValue="default", group=g, showIf=visible)
+        group="Déclenchement", showIf=v)
+    add(id=f"{p}Visual", label="Visuel et style", type="select",
+        options=opts([("default", "Ceux du scénario par défaut"), ("own", "Propres au scénario")]),
+        defaultValue="default", group="Visuel et son", showIf=v)
     add(id=f"{p}Sound", label="Son", type="select",
         options=opts([("default", "Celui du scénario par défaut"), ("own", "Son propre au scénario")]),
-        defaultValue="own", group=g, showIf=visible)
+        defaultValue="own", group="Visuel et son", showIf=v)
     add(id=f"{p}Volume", label="Volume", description="En %", type="number", min=0, max=100, defaultValue=80,
-        group=g, showIf={"id": f"{p}Sound", "value": "own"})
-    style_settings(p, g, {"id": f"{p}Visual", "value": "own"})
+        group="Visuel et son", showIf={"id": f"{p}Sound", "value": "own"})
+    style_settings(p, {"id": f"{p}Visual", "value": "own"})
 
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")
@@ -204,13 +206,9 @@ add(id="msgMute", label="Message au mute", description="{user} : qui a coupé le
 add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a réactivé le son", type="text",
     defaultValue="🔊 Sons des alertes réactivés par {user}", group="Commandes de chat", showIf="botReply")
 
-# Textes du scénario par défaut : showIf = type d'alerte activé
-for s in S:
-    if s["id"].startswith("text") and isinstance(s.get("showIf"), dict) and "any" in s["showIf"]:
-        s["showIf"] = s["showIf"]["any"][0]
-
 # Ordre des sections : les commandes de chat avant les scénarios
-ORDRE = ["Connexion", "Dossier source", "Tester dans l’aperçu", "Alertes", "Plateformes", "Commandes de chat"]
+ORDRE = ["Dossier source", "Scénarios", "Tester dans l’aperçu", "Déclenchement", "Visuel et son", "Style", "Textes",
+         "Alertes", "Plateformes", "Commandes de chat", "Connexion"]
 S.sort(key=lambda s: ORDRE.index(s["group"]) if s["group"] in ORDRE else len(ORDRE))
 
 out = {

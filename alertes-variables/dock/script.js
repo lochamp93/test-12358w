@@ -6,6 +6,7 @@ const $ = (id) => document.getElementById(id);
 
 let ws = null;
 let sbClient = null, sbHost = null, sbPort = null;
+let lastFolder = null; // dernier dossier source affiché (pour la confirmation)
 let connected = false;
 let actionFound = false;
 let state = null;   // dernier état envoyé par l'action
@@ -72,6 +73,11 @@ function Render() {
 	$('queueInfo').textContent = report
 		? (r.enCours ? `Alerte en cours${waiting ? ` + ${waiting} en attente` : ''}` : (waiting ? `${waiting} en attente` : 'Vide'))
 		: '-';
+
+	// Confirmation quand le dossier source change
+	if (st.dossier && lastFolder !== null && st.dossier !== lastFolder)
+		Toast(st.dossierExiste ? `Dossier enregistré : ${st.dossier}` : `Dossier introuvable : ${st.dossier}`);
+	if (state) lastFolder = st.dossier || '';
 
 	// Dossier source : nom du dossier bien visible, chemin complet en dessous
 	const folderName = st.dossier ? (st.dossier.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || st.dossier) : '';

@@ -284,6 +284,9 @@ function LoadJSON(settingsJson) {
 				// { "any": [cond1, cond2] } : visible si au moins une condition (avec sa chaîne) est remplie
 				if (showIf && Array.isArray(showIf.any))
 					return showIf.any.some(c => ConditionChainMet(c));
+				// { "all": [cond1, cond2] } : visible si toutes les conditions (avec leur chaîne) sont remplies
+				if (showIf && Array.isArray(showIf.all))
+					return showIf.all.every(c => ConditionChainMet(c));
 
 				const cond = typeof showIf === 'string' ? { id: showIf } : showIf;
 				const parentInput = document.getElementById(cond.id);
@@ -306,7 +309,7 @@ function LoadJSON(settingsJson) {
 			function ConditionChainMet(showIf, depth = 0) {
 				if (!showIf || depth > 20) return true;
 				if (!ShowIfConditionMet(showIf)) return false;
-				if (Array.isArray(showIf.any)) return true; // chaque branche a déjà vérifié sa chaîne
+				if (Array.isArray(showIf.any) || Array.isArray(showIf.all)) return true; // chaque branche a déjà vérifié sa chaîne
 				const parentId = typeof showIf === 'string' ? showIf : showIf.id;
 				const parent = data.settings.find(s => s.id === parentId);
 				return parent ? ConditionChainMet(parent.showIf, depth + 1) : true;
@@ -327,7 +330,7 @@ function LoadJSON(settingsJson) {
 							}
 
 							// Condition « any » : chaque branche a déjà vérifié sa propre chaîne
-							if (Array.isArray(currentSetting.showIf.any)) break;
+							if (Array.isArray(currentSetting.showIf.any) || Array.isArray(currentSetting.showIf.all)) break;
 
 							// Retrouver l’objet parent (pour continuer à remonter)
 							const parentId = typeof currentSetting.showIf === 'string' ? currentSetting.showIf : currentSetting.showIf.id;
@@ -436,8 +439,12 @@ function RefreshWidgetPreview() {
 	if (settingsData.compactURL === true)
 		settingsData.settings.forEach(setting => { defaults[setting.id] = setting.defaultValue; });
 
+	// Réglages "previewOnly": true : utilisés par l’aperçu, jamais dans l’URL copiée pour OBS
+	const previewOnly = new Set(settingsData.settings.filter(s => s.previewOnly).map(s => s.id));
+
 	const searchParams = new URLSearchParams();
 	Object.entries(settings).forEach(([key, value]) => {
+		if (previewOnly.has(key)) return;
 		if (settingsData.compactURL === true && key in defaults && String(value) === String(defaults[key])) return;
 		searchParams.set(key, value);
 	});
@@ -450,6 +457,7 @@ function RefreshWidgetPreview() {
 
 	// URL de l’aperçu : demo=true si settings.json le demande ("demo": true)
 	const previewParams = new URLSearchParams(searchParams);
+	previewOnly.forEach(key => { if (key in settings) previewParams.set(key, settings[key]); });
 	if (settingsData.demo === true)
 		previewParams.set('demo', 'true');
 	const previewURL = widgetURL + "?" + previewParams.toString();
