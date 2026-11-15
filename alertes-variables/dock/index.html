@@ -6,9 +6,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Alertes variables • Dock</title>
 	<link rel="icon" href="../../-common/resources/logo.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111526" />
-	<script src="../../-common/utils/color-scheme.js?v=2026111526"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111526" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111527" />
+	<script src="../../-common/utils/color-scheme.js?v=2026111527"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111527" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -81,14 +81,7 @@
 		<div class="section">
 			<h3>Tester une alerte</h3>
 			<div class="control-row">
-				<select id="testSelect">
-					<option value="follow">Follow</option>
-					<option value="sub">Abonnement</option>
-					<option value="resub">Réabonnement</option>
-					<option value="gift">Abonnements offerts</option>
-					<option value="cheer">Bits / dons</option>
-					<option value="raid">Raid</option>
-				</select>
+				<select id="testSelect"></select>
 				<button id="testButton" type="button" class="round-btn accent" title="Jouer l’alerte"><svg viewBox="0 0 22 24" aria-hidden="true"><path d="M0 21.53C0 23.02 0.89 23.75 1.94 23.75C2.4 23.75 2.88 23.61 3.35 23.35L19.49 13.93C20.67 13.25 21.15 12.71 21.15 11.88C21.15 11.03 20.67 10.51 19.49 9.83L3.35 0.389999C2.88 0.129999 2.4 0 1.94 0C0.89 0 0 0.72 0 2.23V21.53Z"/></svg></button>
 			</div>
 		</div>
@@ -124,10 +117,10 @@
 			</div>
 		</div>
 
-		<!-- Vérification des fichiers -->
+		<!-- Dernières alertes (avec bouton pour les rejouer) -->
 		<div class="section">
-			<h3>Fichiers</h3>
-			<div class="card"><ul id="issues"></ul></div>
+			<h3>Dernières alertes</h3>
+			<div class="card history-card"><ul id="history"></ul></div>
 		</div>
 
 		<div class="section">
@@ -139,9 +132,9 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111526"></script>
-	<script src="../helpers.js?v=2026111526"></script>
-	<script src="./script.js?v=2026111526"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111527"></script>
+	<script src="../helpers.js?v=2026111527"></script>
+	<script src="./script.js?v=2026111527"></script>
 </body>
 
 </html>

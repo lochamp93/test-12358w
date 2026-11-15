@@ -57,6 +57,23 @@ function LoadJSON(settingsJson) {
 			if (window.ColorScheme) window.ColorScheme.initToggles();
 
 			// Logo masqué si settings.json contient "showLogo": false
+			// "showNuttyLink": false : pas de lien « Découvrez les widgets de nutty » pour ce widget
+			const nuttyLink = document.getElementById('membershipsButton');
+			if (nuttyLink) nuttyLink.style.display = data.showNuttyLink === false ? 'none' : '';
+
+			// "subtitle" : texte à côté du titre, qui peut reprendre un réglage (ex. "{editScenario}")
+			let subtitle = document.getElementById('widgetSubtitle');
+			const titleLabel = document.getElementById('widgetTitle');
+			if (data.subtitle && !subtitle && titleLabel) {
+				subtitle = document.createElement('span');
+				subtitle.id = 'widgetSubtitle';
+				titleLabel.insertAdjacentElement('afterend', subtitle);
+			}
+			if (subtitle) {
+				subtitle.dataset.labelTemplate = data.subtitle || '';
+				subtitle.style.display = data.subtitle ? '' : 'none';
+			}
+
 			const headerLogo = document.getElementById('headerLogo');
 			if (headerLogo) headerLogo.style.display = data.showLogo === false ? 'none' : '';
 

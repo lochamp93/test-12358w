@@ -92,55 +92,58 @@ function Render() {
 		: (st.dossierExiste ? `${folderName} · ${nbScenarios} sous-dossier${nbScenarios > 1 ? 's' : ''}` : `${folderName} (introuvable)`);
 	$('folderPath').textContent = st.dossier || 'Cliquez sur « Choisir le dossier » ou collez son chemin';
 
-	RenderIssues();
+	RenderTests();
+	RenderHistory();
 }
 
 function Escape(text) {
 	return String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 }
 
-// Vérification des fichiers : dossiers manquants, types sans visuel ou sans son
-function RenderIssues() {
-	const list = $('issues');
-	const items = [];
-	const st = state || {};
-	const add = (cls, text) => items.push(`<li class="${cls}">${Escape(text)}</li>`);
+// Tests proposés : ceux que l'overlay déclare (alertes activées et leurs règles)
+const LEGACY_TESTS = [['follow', 'Follow'], ['sub', 'Abonnement'], ['resub', 'Réabonnement'],
+	['gift', 'Abonnements offerts'], ['cheer', 'Bits / dons'], ['raid', 'Raid']];
 
-	if (!state) add('info', 'En attente de Streamer.bot…');
-	else if (!st.dossier) add('warn', 'Choisissez le dossier source (un sous-dossier par scénario).');
-	else if (!st.dossierExiste) add('warn', 'Le dossier source est introuvable sur ce PC.');
-	else if (!report) add('info', 'Ouvrez l’overlay dans OBS pour vérifier les fichiers des scénarios.');
-	else {
-		const folders = {};
-		for (const [name, files] of Object.entries(st.dossiers || {})) folders[name.toLowerCase()] = IndexFiles(files);
-		const types = report.types || [];
-		const defName = report.defaut || 'defaut';
-		const def = folders[defName.toLowerCase()];
-
-		if (!def) add('warn', `Dossier « ${defName} » (scénario par défaut) introuvable.`);
-		else {
-			for (const t of types) {
-				const miss = [];
-				if (!FindFile(def, t, VISUAL_EXT)) miss.push('image');
-				if (!FindFile(def, t, SOUND_EXT)) miss.push('son');
-				if (miss.length) add('warn', `${defName} : pas de ${miss.join(' ni de ')} pour « ${TYPE_LABELS[t]} » (ni ${FILE_NAMES[t][0]}.*, ni alerte.*).`);
-			}
-		}
-
-		for (const sc of report.scenarios || []) {
-			if (sc.visual !== 'own' && sc.sound !== 'own') continue;
-			const folder = folders[sc.name.toLowerCase()];
-			if (!folder) { add('warn', `Dossier « ${sc.name} » introuvable : le scénario utilise les fichiers par défaut.`); continue; }
-			// Regroupé par scénario : « Horreur : son repris du défaut pour Follow, Raid »
-			const noVisual = types.filter(t => sc.visual === 'own' && !FindFile(folder, t, VISUAL_EXT)).map(t => TYPE_LABELS[t]);
-			const noSound = types.filter(t => sc.sound === 'own' && !FindFile(folder, t, SOUND_EXT)).map(t => TYPE_LABELS[t]);
-			if (noVisual.length) add('info', `${sc.name} : image reprise du défaut pour ${noVisual.join(', ')}.`);
-			if (noSound.length) add('info', `${sc.name} : son repris du défaut pour ${noSound.join(', ')}.`);
-		}
-		if (!items.length) add('ok', '✓ Tous les fichiers sont en place.');
-	}
-	list.innerHTML = items.join('');
+function RenderTests() {
+	const select = $('testSelect');
+	const tests = report && Array.isArray(report.tests)
+		? report.tests.map(t => [t.id, t.label])
+		: LEGACY_TESTS;
+	const key = JSON.stringify(tests);
+	if (select.dataset.key === key) return;
+	select.dataset.key = key;
+	const current = select.value;
+	select.innerHTML = tests.length
+		? tests.map(([id, label]) => `<option value="${Escape(id)}">${Escape(label)}</option>`).join('')
+		: '<option value="">Aucune alerte activée</option>';
+	if (tests.some(([id]) => id === current)) select.value = current;
+	$('testButton').disabled = !tests.length;
 }
+
+// Dernières alertes jouées : pseudo, alerte, heure et bouton pour la rejouer
+const REPLAY_ICON = '<svg viewBox="0 0 25 30" aria-hidden="true"><path d="M12.21 29.7C18.95 29.7 24.42 24.23 24.42 17.49C24.42 10.73 18.95 5.28 12.21 5.28C11.56 5.28 10.93 5.33 10.32 5.43L13.55 2.27C13.79 2.02 13.92 1.71 13.92 1.35C13.92 0.6 13.34 0 12.62 0C12.22 0 11.92 0.150002 11.67 0.400002L6.05 6.1C5.79 6.37 5.64 6.73 5.64 7.08C5.64 7.47 5.77 7.78 6.05 8.08L11.67 13.73C11.92 13.96 12.22 14.11 12.6 14.11C13.34 14.11 13.92 13.52 13.92 12.78C13.92 12.43 13.79 12.11 13.53 11.88L9.85 8.23C10.61 8.04 11.4 7.94 12.21 7.94C17.47 7.94 21.74 12.21 21.74 17.47C21.74 22.74 17.47 27 12.21 27C6.94 27 2.68 22.74 2.68 17.47C2.68 16.73 2.06 16.13 1.34 16.13C0.6 16.13 0 16.73 0 17.47C0 24.23 5.45 29.7 12.21 29.7Z"/></svg>';
+
+function RenderHistory() {
+	const list = $('history');
+	const items = report && Array.isArray(report.historique) ? report.historique : [];
+	if (!report) { list.innerHTML = '<li class="history-empty">Ouvrez l’overlay dans OBS pour voir les dernières alertes.</li>'; return; }
+	if (!items.length) { list.innerHTML = '<li class="history-empty">Aucune alerte pour l’instant.</li>'; return; }
+	list.innerHTML = items.map(h => {
+		const time = new Date(h.time || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+		return `<li class="history-item">
+			<div class="history-text">
+				<span class="history-user">${Escape(h.user || 'Anonyme')}</span>
+				<span class="history-label">${Escape(h.label || '')}${h.test ? ' · test' : ''} · ${time}</span>
+			</div>
+			<button type="button" class="round-btn small" data-replay="${Escape(h.id)}" title="Rejouer l’alerte">${REPLAY_ICON}</button>
+		</li>`;
+	}).join('');
+}
+
+$('history').addEventListener('click', (e) => {
+	const btn = e.target.closest('[data-replay]');
+	if (btn) Send({ mode: 'tester', type: `replay:${btn.dataset.replay}` });
+});
 
 /////////////
 // ACTIONS //

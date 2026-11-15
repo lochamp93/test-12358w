@@ -2,6 +2,8 @@
 	"title": "Alertes variables",
 	"design": "apple",
 	"showLogo": false,
+	"showNuttyLink": false,
+	"subtitle": "{editScenario}",
 	"checkerPreview": true,
 	"livePreview": true,
 	"demo": true,
@@ -2968,6 +2970,25 @@
 			"showIf": "showMessage"
 		},
 		{
+			"id": "sc1ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc1",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc1Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -3163,6 +3184,25 @@
 				"id": "sc1Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc2ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc2",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc2Font",
@@ -3362,6 +3402,25 @@
 			}
 		},
 		{
+			"id": "sc3ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc3",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc3Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -3557,6 +3616,25 @@
 				"id": "sc3Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc4ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc4",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc4Font",
@@ -3756,6 +3834,25 @@
 			}
 		},
 		{
+			"id": "sc5ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc5",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc5Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -3951,6 +4048,25 @@
 				"id": "sc5Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc6ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc6",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc6Font",
@@ -4150,6 +4266,25 @@
 			}
 		},
 		{
+			"id": "sc7ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc7",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc7Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -4345,6 +4480,25 @@
 				"id": "sc7Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc8ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc8",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc8Font",
@@ -4544,6 +4698,25 @@
 			}
 		},
 		{
+			"id": "sc9ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc9",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc9Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -4739,6 +4912,25 @@
 				"id": "sc9Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc10ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc10",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc10Font",
@@ -4938,6 +5130,25 @@
 			}
 		},
 		{
+			"id": "sc11ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc11",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
 			"id": "sc11Font",
 			"label": "Police",
 			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
@@ -5133,6 +5344,25 @@
 				"id": "sc11Visual",
 				"value": "own"
 			}
+		},
+		{
+			"id": "sc12ImportStyle",
+			"label": "Reprendre le style du scénario par défaut",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "import",
+					"title": "Importer le style du défaut (deux clics)",
+					"callFunction": "ImportDefaultStyle_sc12",
+					"confirm": true
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			},
+			"description": ""
 		},
 		{
 			"id": "sc12Font",
@@ -5687,6 +5917,17 @@
 			"description": ""
 		},
 		{
+			"id": "twitchFollowFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchFollow",
+			"showIf": "twitchFollow"
+		},
+		{
 			"id": "twitchSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -6032,6 +6273,17 @@
 			"popup": "twitchSub",
 			"showIf": "twitchSub",
 			"description": ""
+		},
+		{
+			"id": "twitchSubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchSub",
+			"showIf": "twitchSub"
 		},
 		{
 			"id": "twitchSubRule1Row",
@@ -7297,6 +7549,17 @@
 			"popup": "twitchResub",
 			"showIf": "twitchResub",
 			"description": ""
+		},
+		{
+			"id": "twitchResubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchResub",
+			"showIf": "twitchResub"
 		},
 		{
 			"id": "twitchResubRule1Row",
@@ -8711,6 +8974,17 @@
 			"description": ""
 		},
 		{
+			"id": "twitchGiftFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchGift",
+			"showIf": "twitchGift"
+		},
+		{
 			"id": "twitchGiftRule1Row",
 			"labelTemplate": "Règle 1 : {twitchGiftRule1Name|twitchGiftRule1Summary}",
 			"label": "Règle 1",
@@ -10081,6 +10355,17 @@
 			"popup": "twitchCheer",
 			"showIf": "twitchCheer",
 			"description": ""
+		},
+		{
+			"id": "twitchCheerFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchCheer",
+			"showIf": "twitchCheer"
 		},
 		{
 			"id": "twitchCheerRule1Row",
@@ -11455,6 +11740,17 @@
 			"description": ""
 		},
 		{
+			"id": "twitchRaidFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchRaid",
+			"showIf": "twitchRaid"
+		},
+		{
 			"id": "twitchRaidRule1Row",
 			"labelTemplate": "Règle 1 : {twitchRaidRule1Name|twitchRaidRule1Summary}",
 			"label": "Règle 1",
@@ -12823,6 +13119,17 @@
 			"description": ""
 		},
 		{
+			"id": "kickFollowFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Kick",
+			"popup": "kickFollow",
+			"showIf": "kickFollow"
+		},
+		{
 			"id": "kickSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -13170,6 +13477,17 @@
 			"description": ""
 		},
 		{
+			"id": "kickSubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Kick",
+			"popup": "kickSub",
+			"showIf": "kickSub"
+		},
+		{
 			"id": "kickResub",
 			"label": "Réabonnement",
 			"type": "checkbox",
@@ -13515,6 +13833,17 @@
 			"popup": "kickResub",
 			"showIf": "kickResub",
 			"description": ""
+		},
+		{
+			"id": "kickResubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Kick",
+			"popup": "kickResub",
+			"showIf": "kickResub"
 		},
 		{
 			"id": "kickResubRule1Row",
@@ -14897,6 +15226,17 @@
 			"description": ""
 		},
 		{
+			"id": "kickGiftFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Kick",
+			"popup": "kickGift",
+			"showIf": "kickGift"
+		},
+		{
 			"id": "kickGiftRule1Row",
 			"labelTemplate": "Règle 1 : {kickGiftRule1Name|kickGiftRule1Summary}",
 			"label": "Règle 1",
@@ -16265,6 +16605,17 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeFollowFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeFollow",
+			"showIf": "youtubeFollow"
+		},
+		{
 			"id": "youtubeSub",
 			"label": "Nouveau membre",
 			"type": "checkbox",
@@ -16612,6 +16963,17 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeSubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeSub",
+			"showIf": "youtubeSub"
+		},
+		{
 			"id": "youtubeResub",
 			"label": "Palier de membre",
 			"type": "checkbox",
@@ -16957,6 +17319,17 @@
 			"popup": "youtubeResub",
 			"showIf": "youtubeResub",
 			"description": ""
+		},
+		{
+			"id": "youtubeResubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeResub",
+			"showIf": "youtubeResub"
 		},
 		{
 			"id": "youtubeResubRule1Row",
@@ -18339,6 +18712,17 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeGiftFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeGift",
+			"showIf": "youtubeGift"
+		},
+		{
 			"id": "youtubeGiftRule1Row",
 			"labelTemplate": "Règle 1 : {youtubeGiftRule1Name|youtubeGiftRule1Summary}",
 			"label": "Règle 1",
@@ -19697,6 +20081,17 @@
 			"popup": "youtubeCheer",
 			"showIf": "youtubeCheer",
 			"description": ""
+		},
+		{
+			"id": "youtubeCheerFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeCheer",
+			"showIf": "youtubeCheer"
 		},
 		{
 			"id": "youtubeCheerRule1Row",
@@ -21067,6 +21462,17 @@
 			"description": ""
 		},
 		{
+			"id": "tiktokFollowFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "TikTok",
+			"popup": "tiktokFollow",
+			"showIf": "tiktokFollow"
+		},
+		{
 			"id": "tiktokSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -21414,6 +21820,17 @@
 			"description": ""
 		},
 		{
+			"id": "tiktokSubFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "TikTok",
+			"popup": "tiktokSub",
+			"showIf": "tiktokSub"
+		},
+		{
 			"id": "tiktokCheer",
 			"label": "Cadeaux",
 			"type": "checkbox",
@@ -21759,6 +22176,17 @@
 			"popup": "tiktokCheer",
 			"showIf": "tiktokCheer",
 			"description": ""
+		},
+		{
+			"id": "tiktokCheerFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "TikTok",
+			"popup": "tiktokCheer",
+			"showIf": "tiktokCheer"
 		},
 		{
 			"id": "tiktokCheerRule1Row",

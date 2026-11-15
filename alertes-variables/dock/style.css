@@ -409,3 +409,30 @@ html.apple .round-btn.accent { background: var(--ui-accent); color: #fff; }
 .round-btn:not(.muted-on) .icon-unmute,
 .round-btn.muted-on .icon-mute { display: none; }
 html.apple .round-btn.muted-on { background: var(--ui-red); color: #fff; }
+
+/* Dernières alertes */
+.history-card { padding: 4px 14px; }
+#history { list-style: none; margin: 0; padding: 0; }
+
+.history-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 0;
+}
+
+.history-item + .history-item { border-top: 0.5px solid var(--ui-separator, rgba(255, 255, 255, .1)); }
+.history-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.history-user { font-weight: 600; font-size: 14px; }
+
+.history-label {
+	font-size: 12px;
+	color: var(--ui-text-secondary, #8e8e93);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.history-empty { padding: 8px 0; font-size: 13px; color: var(--ui-text-secondary, #8e8e93); }
+html.apple .round-btn.small { flex: 0 0 30px; width: 30px; height: 30px; }
+.round-btn.small svg { width: 13px; height: 13px; }

@@ -117,6 +117,12 @@ def style_settings(prefix, cond):
         return name if not prefix else prefix + name[0].upper() + name[1:]
 
     g = "Style"
+    if prefix:
+        # Scénario : reprendre d'un clic le style du scénario par défaut (deux clics : écrase le style actuel)
+        add(id=f"{prefix}ImportStyle", label="Reprendre le style du scénario par défaut", type="actions",
+            buttons=[{"icon": "import", "title": "Importer le style du défaut (deux clics)",
+                      "callFunction": f"ImportDefaultStyle_{prefix}", "confirm": True}],
+            group=g, showIf=cond)
     add(id=i("font"), label="Police", description="Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
         type="font", defaultValue="SF Pro Display", group=g, showIf=cond)
     add(id=i("fontSize"), label="Taille du texte", description="En pixels", type="number", min=8, max=300,
@@ -223,6 +229,9 @@ for nom, cle, types in PLATEFORMES:
             min=0, max=100, defaultValue=100, group=nom, popup=pop, showIf=tid)
         add(id=f"{tid}Files", label="Fichiers", type="info", defaultValue="Connexion à Streamer.bot…",
             group=nom, popup=pop, showIf=tid)
+        add(id=f"{tid}FileName", label="Nom à donner à l’image et au son",
+            description="Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+            type="info", copyable=True, defaultValue="", group=nom, popup=pop, showIf=tid)
 
         # Règles de la catégorie (anniversaires, paliers, montants…), sous l'alerte, en retrait
         if t in REGLES_PLATEFORME.get(cle, []):
@@ -300,6 +309,8 @@ out = {
     "title": "Alertes variables",
     "design": "apple",
     "showLogo": False,
+    "showNuttyLink": False,
+    "subtitle": "{editScenario}",
     "checkerPreview": True,
     "livePreview": True,
     "demo": True,

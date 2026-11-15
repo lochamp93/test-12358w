@@ -334,6 +334,8 @@ async function PlayQueue() {
 	while (queue.length) {
 		const info = queue.shift();
 		Report();
+		RecordHistory(info);
+		Report();
 		try { await PlayAlert(info); } catch (e) { console.error('[Alertes variables] Erreur pendant l’alerte :', e); }
 		await wait(Math.max(0, Number(ws.values.alertGap) || 0) * 1000);
 	}
@@ -484,6 +486,8 @@ function DoAction(args) {
 function SetState(next) {
 	const wasMuted = sbState.mute;
 	sbState = Object.assign({}, sbState, next);
+	if (!history.length && next.rapport && Array.isArray(next.rapport.historique))
+		history = next.rapport.historique.filter(h => h && h.id && h.info).slice(0, HISTORY_MAX);
 
 	folderIndex = {};
 	for (const [name, files] of Object.entries(sbState.dossiers || {}))
@@ -536,7 +540,9 @@ function Report() {
 			enCours: !!current,
 			botReply: ws.values.botReply,
 			msgMute: ws.values.msgMute,
-			msgUnmute: ws.values.msgUnmute
+			msgUnmute: ws.values.msgUnmute,
+			tests: TestOptions(),
+			historique: history.slice(0, HISTORY_MAX)
 		};
 		const json = JSON.stringify(report);
 		if (json === lastReport) return;
@@ -561,7 +567,7 @@ function OnCustom(data) {
 			break;
 		}
 		case 'test':
-			if (!ws.demo && ALERT_TYPES.includes(data.type)) Enqueue(Object.assign({ type: data.type, test: true, platform: '' }, DEMO_INFO[data.type]));
+			if (!ws.demo) RunDockTest(String(data.type || ''));
 			break;
 		case 'passer':
 			if (!ws.demo) SkipCurrent();
@@ -903,6 +909,12 @@ function PostFilesInfo() {
 	const post = (id, data) => PostToSettings(Object.assign({ type: 'widget-info', id }, data));
 	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
 
+	// Nom de fichier de chaque alerte (follow, sub…), même sans Streamer.bot
+	for (const id of ids) {
+		const m = /^(twitch|kick|youtube|tiktok)([A-Z][a-z]+)FileName$/.exec(id);
+		if (m) post(id, { text: [].concat(FILE_NAMES[m[2].toLowerCase()] || [m[2].toLowerCase()])[0] });
+	}
+
 	// Nom de fichier et résumé de chaque règle, même sans Streamer.bot
 	for (const { tid, platform, type } of RuleAlerts())
 		for (const rule of RulesOf(tid)) {
@@ -932,6 +944,94 @@ async function OnPopupOpened(popupId) {
 	const uri = await RequestFile(f.visual);
 	const ext = f.visual.fichier.split('.').pop().toLowerCase();
 	post({ media: uri ? { src: uri, video: VIDEO_EXT.includes(ext) } : null });
+}
+
+//////////////////////////////////////////////
+// DOCK : TESTS DISPONIBLES ET DERNIÈRES ALERTES //
+//////////////////////////////////////////////
+
+const HISTORY_MAX = 10;
+let history = [];
+
+function AlertLabel(platform, type) {
+	const tid = AlertId(platform, type);
+	const def = ws.definition.settings.find(x => x.id === tid);
+	return `${platform || 'Twitch'} · ${def ? def.label : type}`;
+}
+
+function RuleLabel(type, rule, platform) {
+	return rule.name || RuleSummary(type, rule, platform);
+}
+
+// Libellé d'une alerte jouée : « Twitch · Réabonnement | Anniversaire » si une règle s'applique
+function PlayedLabel(info) {
+	const platform = info.platform || 'Twitch';
+	const tid = AlertId(platform, info.type);
+	const rule = RulesOf(tid).find(r => RuleMatches(info.type, r, info));
+	return AlertLabel(platform, info.type) + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
+}
+
+// Tests proposés dans le dock : chaque alerte activée, puis ses règles
+function TestOptions() {
+	const out = [];
+	for (const [platform, cle] of Object.entries(PLATFORM_KEYS)) {
+		if (!PlatformEnabled(platform)) continue;
+		for (const type of ALERT_TYPES) {
+			const tid = `${cle}${Cap(type)}`;
+			if (ws.values[tid] !== true) continue;
+			out.push({ id: `alert:${tid.toLowerCase()}`, label: AlertLabel(platform, type) });
+			for (const rule of RulesOf(tid))
+				out.push({ id: `rule:${tid.toLowerCase()}:${rule.n}`, label: `${AlertLabel(platform, type)} | ${RuleLabel(type, rule, platform)}` });
+		}
+	}
+	return out;
+}
+
+function RecordHistory(info) {
+	if (info.replay) return;
+	const clean = Object.assign({}, info);
+	delete clean.test;
+	history.unshift({ id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`,
+		user: info.user, label: PlayedLabel(info), test: !!info.test, time: Date.now(), info: clean });
+	history = history.slice(0, HISTORY_MAX);
+}
+
+// Commande « tester » du dock (Streamer.bot la transmet en minuscules) :
+//   follow…            → ancien format : alerte par type
+//   alert:<tid>        → alerte d'une plateforme
+//   rule:<tid>:<n>     → règle d'une alerte
+//   replay:<id>        → rejouer une alerte de l'historique
+function RunDockTest(cmd) {
+	const [kind, a, b] = cmd.split(':');
+	if (ALERT_TYPES.includes(kind)) {
+		Enqueue(Object.assign({ type: kind, test: true, platform: '' }, DEMO_INFO[kind]));
+		return;
+	}
+	if (kind === 'replay') {
+		const h = history.find(x => x.id.toLowerCase() === a);
+		if (h) Enqueue(Object.assign({}, h.info, { replay: true, test: h.test }));
+		return;
+	}
+	const m = /^(twitch|kick|youtube|tiktok)([a-z]+)$/.exec(a || '');
+	if (!m) return;
+	const platform = PLATFORM_OF[m[1]], type = m[2];
+	if (!ALERT_TYPES.includes(type)) return;
+	if (kind === 'alert') Enqueue(Object.assign({}, DEMO_INFO[type], { type, test: true, platform }));
+	if (kind === 'rule') {
+		const rule = RulesOf(AlertId(platform, type)).find(r => r.n === Number(b));
+		if (rule) Enqueue(RuleTestInfo(type, rule, platform));
+	}
+}
+
+// Scénarios : « Reprendre le style du scénario par défaut » (page de paramétrage)
+const STYLE_KEYS = ['font', 'fontSize', 'textColor', 'accentColor', 'textPosition', 'mediaHeight', 'animIn', 'animOut', 'duration'];
+for (let n = 1; n <= 12; n++) {
+	window[`ImportDefaultStyle_sc${n}`] = function () {
+		const changes = {};
+		for (const k of STYLE_KEYS)
+			if (k in ws.values) changes[`sc${n}${Cap(k)}`] = ws.values[k];
+		PostToSettings({ type: 'widget-set', values: changes });
+	};
 }
 
 window.addEventListener('message', (e) => {
