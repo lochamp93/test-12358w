@@ -212,8 +212,10 @@ function LoadJSON(settingsJson) {
 
 								setTimeout(() => {
 									inputElement.style.transitionDuration = '0.2s'
-									inputElement.style.backgroundColor = defaultBackgroundColor;
-									inputElement.style.color = defaultTextColor;
+									// DA Apple : on rend la main au thème (clair ou sombre)
+									const apple = document.documentElement.classList.contains('apple');
+									inputElement.style.backgroundColor = apple ? '' : defaultBackgroundColor;
+									inputElement.style.color = apple ? '' : defaultTextColor;
 								}, 100);
 							});
 							break;

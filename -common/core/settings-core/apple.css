@@ -44,25 +44,26 @@ html.apple #widgetUrlInputWrapper {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	flex: 1 1 200px;
-	min-width: 160px;
+	flex: 0 0 auto;
+	min-width: 0;
 	width: auto;
+	margin-left: auto; /* boutons regroupés à droite */
 }
 
 html.apple #urlLabel { display: none; }
 
+/* URL masquée (••••) : elle reste copiable, sans prendre de place */
 html.apple #widgetUrlInput {
-	flex: 1;
-	min-width: 0;
+	width: 120px;
+	flex: 0 0 120px;
 	filter: none;
 	color: var(--ui-text-secondary);
-	background: var(--ui-fill);
-	box-shadow: none;
+	-webkit-text-security: disc;
+	letter-spacing: 1px;
 	cursor: pointer;
-	text-overflow: ellipsis;
 }
 
-html.apple #widgetUrlInput:hover { filter: none; color: var(--ui-text); }
+html.apple #widgetUrlInput:hover { filter: none; }
 
 /* Message « Copié » (styles en ligne d'origine remplacés) */
 html.apple #widgetUrlInputWrapper > span:not(#urlLabel) {
@@ -80,6 +81,10 @@ html.apple #copyUrlButton { display: inline-flex; gap: 6px; align-items: center;
 html.apple #copyUrlButton svg { width: 14px; height: 14px; }
 
 /* Boutons de la barre en icônes (libellé au survol) */
+html.apple #schemeToggle {
+	border-radius: 50%; /* bouton rond */
+}
+
 html.apple #loadDefaultsButton,
 html.apple #loadSettingsButton,
 html.apple #schemeToggle {
@@ -102,6 +107,17 @@ html.apple #header svg {
 }
 
 /* ---------- Panneau des réglages ---------- */
+
+/* Barre de défilement du panneau (remplace celle, sombre, du style d’origine) */
+html.apple #settingsPanel::-webkit-scrollbar { width: 10px; }
+html.apple #settingsPanel::-webkit-scrollbar-track { background: transparent; }
+html.apple #settingsPanel::-webkit-scrollbar-thumb {
+	background: var(--ui-fill-strong);
+	border: 3px solid transparent;
+	border-radius: 10px;
+	background-clip: content-box;
+}
+html.apple #settingsPanel::-webkit-scrollbar-thumb:hover { background-color: var(--ui-text-secondary); }
 
 html.apple #settingsPanel {
 	width: 440px;
@@ -152,7 +168,7 @@ html.apple .setting-item label {
 
 html.apple .setting-item p {
 	margin: 2px 0 0;
-	font-size: 11px;
+	font-size: 11.5px;
 	line-height: 1.35;
 	color: var(--ui-text-secondary);
 }

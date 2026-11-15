@@ -513,7 +513,7 @@
 		{
 			"id": "font",
 			"label": "Police d’écriture",
-			"description": "Police installée sur votre ordinateur (cliquez dans le champ pour afficher la liste) — <a href=\"ms-settings:fonts\">Voir les polices installées</a>. Une police Google Fonts fonctionne aussi.",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "Montserrat",
 			"group": "Texte"
