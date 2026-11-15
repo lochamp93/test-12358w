@@ -644,3 +644,7 @@ html.apple .setting-item-content > button.info-action {
 html.apple .setting-item-content > button.info-action:hover { text-decoration: underline; }
 html.apple .setting-item-content > button.info-action.confirming { color: var(--ui-red) !important; background: none !important; }
 html.apple .setting-item-content:has(> .info-action) { display: flex; align-items: center; justify-content: flex-end; }
+
+/* Centrage optique du triangle « lecture » dans son rond (comme le logo YouTube) :
+   le centre géométrique paraît trop à gauche, on le décale d'environ 10 % de sa largeur */
+.setting-actions .icon-button[data-icon="play"] svg { transform: translateX(1.5px); }
