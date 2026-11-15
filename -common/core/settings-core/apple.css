@@ -20,6 +20,7 @@ html.apple #header {
 	box-shadow: none;
 	border-bottom: 0.5px solid var(--ui-separator);
 	z-index: 5;
+	box-sizing: border-box;
 }
 
 html.apple #widgetTitle {
@@ -81,14 +82,15 @@ html.apple #copyUrlButton { display: inline-flex; gap: 6px; align-items: center;
 html.apple #copyUrlButton svg { width: 14px; height: 14px; }
 
 /* Boutons de la barre en icônes (libellé au survol) */
-html.apple #schemeToggle {
-	border-radius: 50%; /* bouton rond */
-}
-
-html.apple #loadDefaultsButton,
-html.apple #loadSettingsButton,
-html.apple #schemeToggle {
+/* Boutons icône ronds de 30 px (sélecteurs renforcés : priment sur « #header button ») */
+html.apple #header #loadDefaultsButton,
+html.apple #header #loadSettingsButton,
+html.apple #header #schemeToggle {
 	width: 30px;
+	height: 30px;
+	min-width: 30px;
+	flex: 0 0 30px;
+	border-radius: 50%;
 	padding: 0;
 	display: inline-flex;
 	align-items: center;

@@ -320,6 +320,27 @@ html.apple .game-item button.active {
 
 html.apple .game-item button.trash { color: var(--ui-red); }
 
+/* Confirmation de suppression : icône blanche sur fond rouge */
+html.apple .game-item button.trash.confirming {
+	background: var(--ui-red);
+	color: #fff;
+}
+
+/* Champ nombre sans flèches */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+/* Pas de badge de mode */
+#modeBadge { display: none; }
+
 .cover-editor {
 	display: flex;
 	flex-wrap: wrap;
