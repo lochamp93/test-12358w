@@ -1,42 +1,10 @@
 {
 	"title": "Compteur de morts",
+	"showLogo": false,
+	"checkerPreview": true,
 	"livePreview": true,
 	"demo": true,
 	"settings": [
-		{
-			"id": "address",
-			"label": "Adresse Streamer.bot",
-			"description": "Adresse du serveur WebSocket de Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Connexion"
-		},
-		{
-			"id": "port",
-			"label": "Port Streamer.bot",
-			"description": "",
-			"type": "number",
-			"min": 1,
-			"max": 65535,
-			"defaultValue": 8080,
-			"group": "Connexion"
-		},
-		{
-			"id": "previewTestCount",
-			"label": "Tester l’animation du nombre (+1)",
-			"description": "",
-			"type": "button",
-			"callFunction": "PreviewTestCount",
-			"group": "Aperçu"
-		},
-		{
-			"id": "previewTestGame",
-			"label": "Tester le changement de jeu",
-			"description": "",
-			"type": "button",
-			"callFunction": "PreviewTestGame",
-			"group": "Aperçu"
-		},
 		{
 			"id": "layout",
 			"label": "Style d’affichage",
@@ -60,6 +28,22 @@
 			"group": "Style"
 		},
 		{
+			"id": "previewTestCount",
+			"label": "Tester l’animation du nombre (+1)",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewTestCount",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewTestGame",
+			"label": "Tester le changement de jeu",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewTestGame",
+			"group": "Aperçu"
+		},
+		{
 			"id": "variableName",
 			"label": "Variable Streamer.bot",
 			"description": "Variable globale persistante qui contient les compteurs de chaque jeu (doit être la même que dans l’action)",
@@ -78,7 +62,7 @@
 		{
 			"id": "labelText",
 			"label": "Texte du libellé",
-			"description": "",
+			"description": "Ex. : MORTS, morts, décès…",
 			"type": "text",
 			"defaultValue": "MORTS",
 			"group": "Compteur",
@@ -92,11 +76,11 @@
 			"options": [
 				{
 					"value": "before",
-					"label": "Avant le nombre"
+					"label": "À gauche du nombre"
 				},
 				{
 					"value": "after",
-					"label": "Après le nombre"
+					"label": "À droite du nombre"
 				},
 				{
 					"value": "above",
@@ -114,7 +98,7 @@
 		{
 			"id": "cardShowGame",
 			"label": "Afficher le nom du jeu",
-			"description": "La jaquette l’indique déjà",
+			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
 			"group": "Compteur",
@@ -145,6 +129,14 @@
 			"type": "select",
 			"options": [
 				{
+					"value": "left",
+					"label": "À gauche"
+				},
+				{
+					"value": "right",
+					"label": "À droite"
+				},
+				{
 					"value": "above",
 					"label": "Au-dessus"
 				},
@@ -155,7 +147,31 @@
 			],
 			"defaultValue": "above",
 			"group": "Compteur",
-			"showIf": "showGame"
+			"showIf": {
+				"any": [
+					{
+						"id": "showGame"
+					},
+					{
+						"id": "cardShowGame"
+					}
+				]
+			}
+		},
+		{
+			"id": "gameSeparator",
+			"label": "Séparateur",
+			"description": "Entre le nom du jeu et le compteur (ex. « World of Warcraft : 12 morts »)",
+			"type": "text",
+			"defaultValue": ":",
+			"group": "Compteur",
+			"showIf": {
+				"id": "gamePosition",
+				"value": [
+					"left",
+					"right"
+				]
+			}
 		},
 		{
 			"id": "gameFontSize",
@@ -166,7 +182,16 @@
 			"max": 200,
 			"defaultValue": 24,
 			"group": "Compteur",
-			"showIf": "showGame"
+			"showIf": {
+				"any": [
+					{
+						"id": "showGame"
+					},
+					{
+						"id": "cardShowGame"
+					}
+				]
+			}
 		},
 		{
 			"id": "showCover",
@@ -354,7 +379,7 @@
 					"label": "Personnalisée (URL)"
 				}
 			],
-			"defaultValue": "skull",
+			"defaultValue": "none",
 			"group": "Icône",
 			"showIf": {
 				"id": "layout",
@@ -681,8 +706,8 @@
 		},
 		{
 			"id": "align",
-			"label": "Alignement horizontal",
-			"description": "Position du compteur dans la source OBS",
+			"label": "Alignement",
+			"description": "Côté qui reste fixe quand la largeur change (nom de jeu plus long, nombre à 3 chiffres…)",
 			"type": "select",
 			"options": [
 				{
@@ -699,29 +724,25 @@
 				}
 			],
 			"defaultValue": "center",
-			"group": "Position"
+			"group": "Alignement"
 		},
 		{
-			"id": "verticalAlign",
-			"label": "Alignement vertical",
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "Adresse du serveur WebSocket de Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
 			"description": "",
-			"type": "select",
-			"options": [
-				{
-					"value": "top",
-					"label": "Haut"
-				},
-				{
-					"value": "middle",
-					"label": "Milieu"
-				},
-				{
-					"value": "bottom",
-					"label": "Bas"
-				}
-			],
-			"defaultValue": "top",
-			"group": "Position"
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion"
 		}
 	]
 }

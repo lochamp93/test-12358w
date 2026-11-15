@@ -114,6 +114,8 @@ public class CPHInline
 		}
 		if (twitchId != "") jeu["twitchId"] = twitchId;
 		CompleterJaquette(jeu, nomJeu);
+		if (string.IsNullOrEmpty(jeu.Value<string>("boxArt")) && string.IsNullOrEmpty(jeu.Value<string>("cover")))
+			JournaliserSourcesJaquette(nomJeu);
 
 		// Reprise de l'ancien compteur unique (une seule fois, sur le premier jeu utilisé)
 		if (!(data.Value<bool?>("migrated") ?? false))
@@ -260,6 +262,73 @@ public class CPHInline
 			if (id == "") id = Texte(Membre(a.Value, "gameId"));
 			if (jaquette == "") jaquette = Texte(Membre(a.Value, "gameBoxArt"));
 		}
+
+		// Pas d'information dans les arguments (ex. clic dans le dock) : infos de la chaîne Twitch
+		if (nom == "" || jaquette == "")
+		{
+			object infos = InfosChaine();
+			if (infos != null)
+			{
+				string n = Texte(Membre(infos, "Game")); if (n == "") n = Texte(Membre(infos, "GameName"));
+				if (nom == "") nom = n;
+				if (id == "") id = Texte(Membre(infos, "GameId"));
+				if (jaquette == "" && (n == "" || n == nom))
+				{
+					jaquette = Texte(Membre(infos, "GameBoxArt"));
+					if (jaquette == "") jaquette = Texte(Membre(infos, "BoxArt"));
+					if (jaquette == "") jaquette = Texte(Membre(infos, "GameBoxArtUrl"));
+				}
+			}
+		}
+	}
+
+	object infosChaine;
+	bool infosChaineLues;
+
+	// Infos étendues de la chaîne (méthode Streamer.bot appelée par réflexion, une fois par exécution)
+	object InfosChaine()
+	{
+		if (infosChaineLues) return infosChaine;
+		infosChaineLues = true;
+		try
+		{
+			string id = Arg("broadcastUserId");
+			if (id == "") return null;
+			MethodInfo m = CPH.GetType().GetMethod("TwitchGetExtendedUserInfoById", new[] { typeof(string) });
+			if (m != null) infosChaine = m.Invoke(CPH, new object[] { id });
+		}
+		catch (Exception) { }
+		return infosChaine;
+	}
+
+	// Écrit dans le log de Streamer.bot ce que l'action voit, pour comprendre une jaquette manquante
+	void JournaliserSourcesJaquette(string nomJeu)
+	{
+		StringBuilder sb = new StringBuilder("[Compteur de morts] Aucune jaquette trouvée pour « " + nomJeu + " ». Arguments liés au jeu : ");
+		bool vide = true;
+		foreach (KeyValuePair<string, object> a in args)
+		{
+			string k = a.Key ?? "";
+			string kl = k.ToLowerInvariant();
+			bool interessant = kl.Contains("game") || kl.Contains("boxart") || kl.Contains("channel") || kl.Contains("category");
+			if (!interessant) continue;
+			string v = a.Value == null ? "null" : a.Value.ToString();
+			if (v.Length > 120) v = v.Substring(0, 120) + "…";
+			sb.Append(k).Append(" = ").Append(v).Append(" (").Append(a.Value == null ? "?" : a.Value.GetType().Name).Append(") ; ");
+			vide = false;
+		}
+		if (vide) sb.Append("aucun");
+		object infos = InfosChaine();
+		if (infos != null)
+		{
+			sb.Append(" | Infos chaîne (").Append(infos.GetType().Name).Append(") : ");
+			foreach (PropertyInfo p in infos.GetType().GetProperties())
+			{
+				string pl = p.Name.ToLowerInvariant();
+				if (pl.Contains("game") || pl.Contains("art")) sb.Append(p.Name).Append(" = ").Append(Texte(Membre(infos, p.Name))).Append(" ; ");
+			}
+		}
+		CPH.LogInfo(sb.ToString());
 	}
 
 	string PremierArg(params string[] noms)

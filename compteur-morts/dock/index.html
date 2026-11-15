@@ -7,14 +7,13 @@
 	<title>Compteur de morts • Dock</title>
 	<link rel="icon" href="../../-common/resources/logo.png" type="image/png">
 	<link rel="stylesheet" href="../../-common/styles/global.css" />
-	<link rel="stylesheet" href="./style.css?v=2026111503" />
+	<link rel="stylesheet" href="./style.css?v=2026111504" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
 <body>
 	<!-- En-tête -->
 	<div id="header">
-		<img src="../../-common/resources/logo.png" alt="" />
 		<span class="dock-title">Compteur de morts</span>
 		<span id="status" class="status off" title="Connexion à Streamer.bot">Déconnecté</span>
 	</div>
@@ -23,6 +22,11 @@
 	<div id="panelDisconnected" class="panel warning" hidden>
 		<strong>Streamer.bot n’est pas connecté</strong>
 		<p>Le dock essaie de joindre <code id="sbTarget"></code>. Vérifiez que Streamer.bot est ouvert et que le serveur WebSocket est démarré (Servers/Clients → WebSocket Server).</p>
+		<div class="row">
+			<input id="sbAddressInput" type="text" placeholder="Adresse (127.0.0.1)" />
+			<input id="sbPortInput" type="number" placeholder="Port (8080)" />
+			<button id="sbConnectButton" type="button">Se connecter</button>
+		</div>
 	</div>
 
 	<!-- Action manquante -->
@@ -93,8 +97,8 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111503"></script>
-	<script src="./script.js?v=2026111503"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111504"></script>
+	<script src="./script.js?v=2026111504"></script>
 </body>
 
 </html>

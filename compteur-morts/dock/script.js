@@ -38,6 +38,7 @@ let actionFound = false;
 let data = { games: {}, current: '', manual: false }; // contenu de la variable Streamer.bot
 
 const ANNOUNCE_KEY = 'compteur-morts-dock-announce';
+const CONNECTION_KEY = 'compteur-morts-dock-connection';
 let openCoverEditor = null; // clé du jeu dont l'éditeur de jaquette est ouvert
 
 // Miniature : jaquette perso, sinon modèle Twitch en petite taille
@@ -360,6 +361,7 @@ function ConnectStreamerBot() {
 		port,
 		onConnect: () => {
 			connected = true;
+			try { localStorage.setItem(CONNECTION_KEY, JSON.stringify({ address: host, port })); } catch (e) { }
 			CheckAction();
 			RefreshData();
 		},
@@ -421,7 +423,7 @@ els.announce.addEventListener('change', () => {
 
 (async function Init() {
 	try {
-		ws = await WidgetSettings.load('settings/settings.json', (values, previous) => {
+		ws = await WidgetSettings.load('dock.json', (values, previous) => {
 			if (values.announce !== previous.announce) els.announce.checked = values.announce;
 			ConnectStreamerBot();
 			if (values.actionName !== previous.actionName) CheckAction();
@@ -432,6 +434,22 @@ els.announce.addEventListener('change', () => {
 		console.error('[Dock] Réglages illisibles :', e);
 		return;
 	}
+
+	// Connexion : paramètres de l'URL, sinon dernière connexion réussie mémorisée dans le dock
+	const urlParams = new URL(window.location.href).searchParams;
+	try {
+		const saved = JSON.parse(localStorage.getItem(CONNECTION_KEY) || 'null');
+		if (saved && !urlParams.has('address') && saved.address) ws.values.address = saved.address;
+		if (saved && !urlParams.has('port') && saved.port) ws.values.port = Number(saved.port) || ws.values.port;
+	} catch (e) { }
+	document.getElementById('sbAddressInput').value = ws.values.address;
+	document.getElementById('sbPortInput').value = ws.values.port;
+	document.getElementById('sbConnectButton').addEventListener('click', () => {
+		ws.values.address = document.getElementById('sbAddressInput').value.trim() || '127.0.0.1';
+		ws.values.port = Number(document.getElementById('sbPortInput').value) || 8080;
+		ConnectStreamerBot();
+		Render();
+	});
 
 	// Annonce : choix mémorisé dans le dock, sinon réglage de l'URL
 	let stored = null;

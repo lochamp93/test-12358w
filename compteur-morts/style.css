@@ -32,7 +32,7 @@ body {
 
 	display: flex;
 	justify-content: center;
-	align-items: flex-start;
+	align-items: center;
 	width: 100vw;
 	height: 100vh;
 	box-sizing: border-box;
@@ -44,12 +44,10 @@ body {
 
 #widget.hidden { opacity: 0; }
 
+/* Widget centré verticalement ; l'alignement choisit le côté fixe horizontalement */
 #widget.align-left { justify-content: flex-start; }
 #widget.align-center { justify-content: center; }
 #widget.align-right { justify-content: flex-end; }
-#widget.valign-top { align-items: flex-start; }
-#widget.valign-middle { align-items: center; }
-#widget.valign-bottom { align-items: flex-end; }
 
 #box {
 	position: relative;
@@ -91,14 +89,30 @@ body {
 	white-space: nowrap;
 }
 
-#box.game-below .game { order: 3; }
 #box.game-hidden .game { display: none; }
+
+/* Nom du jeu autour du compteur */
+#mainRow {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
+	order: 2;
+}
+
+#box.game-above #mainRow { flex-direction: column; gap: 0.12em; }
+#box.game-below #mainRow { flex-direction: column-reverse; gap: 0.12em; }
+#box.game-left #mainRow { flex-direction: row; }
+#box.game-right #mainRow { flex-direction: row-reverse; }
+
+#widget.align-left #box.game-above #mainRow,
+#widget.align-left #box.game-below #mainRow { align-items: flex-start; }
+#widget.align-right #box.game-above #mainRow,
+#widget.align-right #box.game-below #mainRow { align-items: flex-end; }
 
 #core {
 	display: flex;
 	align-items: center;
 	gap: 0.3em;
-	order: 2;
 }
 
 #core.label-before { flex-direction: row; }
@@ -245,11 +259,7 @@ body {
 #box.layout-card .label { letter-spacing: 0.02em; }
 
 #box.layout-card .game {
-	font-size: 0.32em;
 	opacity: 0.85;
-	max-width: 9em;
-	overflow: hidden;
-	text-overflow: ellipsis;
 }
 
 /* ---------- Style Minimal (inspiré du subgoal) ---------- */

@@ -1,7 +1,4 @@
 {
-	"title": "Compteur de morts • Dock",
-	"livePreview": true,
-	"demo": true,
 	"settings": [
 		{
 			"id": "address",
@@ -25,7 +22,7 @@
 			"id": "actionName",
 			"label": "Action Streamer.bot",
 			"description": "Nom de l’action qui contient le code C# du compteur",
-			"type": "sb-actions",
+			"type": "text",
 			"defaultValue": "Compteur de morts | Modifier",
 			"group": "Streamer.bot"
 		},
@@ -87,5 +84,6 @@
 			"defaultValue": "#2196f3",
 			"group": "Apparence"
 		}
-	]
+	],
+	"description": "Réglages du dock : valeurs par défaut, modifiables par paramètres d'URL (?port=8081&step=5…). Pas de page de paramétrage : le dock est un lien unique."
 }

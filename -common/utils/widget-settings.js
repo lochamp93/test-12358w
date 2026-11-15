@@ -79,6 +79,8 @@
 	// Une condition showIf est-elle remplie ? (gère la chaîne de dépendances)
 	function conditionMet(definition, values, showIf, depth) {
 		if (!showIf || depth > 20) return true;
+		if (Array.isArray(showIf.any))
+			return showIf.any.some(c => conditionMet(definition, values, c, depth + 1));
 		const cond = typeof showIf === 'string' ? { id: showIf } : showIf;
 		const parent = (definition.settings || []).find(s => s.id === cond.id);
 		if (!parent) return true;

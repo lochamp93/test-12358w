@@ -59,8 +59,8 @@ function ApplySettings() {
 	SetVar('--anim-duration', `${s.animationDuration}ms`);
 
 	// Position
-	widgetEl.classList.remove('align-left', 'align-center', 'align-right', 'valign-top', 'valign-middle', 'valign-bottom');
-	widgetEl.classList.add(`align-${s.align}`, `valign-${s.verticalAlign}`);
+	widgetEl.classList.remove('align-left', 'align-center', 'align-right');
+	widgetEl.classList.add(`align-${s.align}`);
 
 	// Classes du style (on repart de zéro à chaque application)
 	const keep = ['swap-out', 'swap-in', 'swap-slide', 'no-cover-image'].filter(c => boxEl.classList.contains(c));
@@ -82,7 +82,7 @@ function ApplySettings() {
 	// Nom du jeu (réglage propre au style Carte, ou commun aux deux autres)
 	const showGame = layout === 'card' ? s.cardShowGame : s.showGame;
 	boxEl.classList.toggle('game-hidden', !showGame);
-	boxEl.classList.toggle('game-below', on('gamePosition') && s.gamePosition === 'below');
+	boxEl.classList.add(`game-${on('gamePosition') ? s.gamePosition : 'above'}`);
 
 	// Icône (Classique et Minimal)
 	iconEl.innerHTML = '';
@@ -135,7 +135,12 @@ function ApplySettings() {
 
 function RenderText() {
 	if (!state) return;
-	gameEl.textContent = state.name;
+	// Séparateur entre le nom du jeu et le compteur quand ils sont sur la même ligne
+	const s = ws.values;
+	const sep = ws.isActive('gameSeparator') ? s.gameSeparator.trim() : '';
+	if (sep && s.gamePosition === 'left') gameEl.textContent = `${state.name} ${sep}`;
+	else if (sep && s.gamePosition === 'right') gameEl.textContent = `${sep} ${state.name}`;
+	else gameEl.textContent = state.name;
 	countEl.textContent = String(state.count);
 }
 
@@ -271,7 +276,6 @@ async function RefreshFromStreamerBot() {
 			if (parsed) ShowLive(parsed);
 		} else if (ws.demo) {
 			// Aperçu : pas encore de compteur dans Streamer.bot, on garde l'exemple
-			if (!liveData) SetPreviewStatus(`Aperçu : exemple — la variable « ${ws.values.variableName} » n’existe pas encore (lancez !addmort une fois)`, false);
 		} else {
 			// Variable pas encore créée : on affiche 0 en attendant la première action
 			SetState(state || { name: '', count: 0 });
@@ -301,7 +305,6 @@ function ConnectStreamerBot() {
 		},
 		onDisconnect: () => {
 			console.warn('[Compteur de morts] Déconnecté de Streamer.bot');
-			if (!liveData) SetPreviewStatus(`Aperçu : exemple — Streamer.bot injoignable (${host}:${port})`, false);
 		}
 	});
 
@@ -318,19 +321,6 @@ function ConnectStreamerBot() {
 	});
 }
 
-// Indicateur affiché uniquement dans l'aperçu de la page de paramétrage (jamais dans OBS)
-let previewBadge = null;
-function SetPreviewStatus(text, live) {
-	if (!ws.demo) return;
-	if (!previewBadge) {
-		previewBadge = document.createElement('div');
-		previewBadge.style.cssText = 'position:fixed;left:8px;bottom:8px;padding:4px 10px;border-radius:999px;font:600 12px Segoe UI,sans-serif;color:#fff;z-index:10;pointer-events:none';
-		document.body.appendChild(previewBadge);
-	}
-	previewBadge.textContent = text;
-	previewBadge.style.background = live ? 'rgba(46,160,90,.85)' : 'rgba(90,90,90,.85)';
-}
-
 // Vraies valeurs : la première arrive sans animation (remplace l'exemple de l'aperçu)
 function ShowLive(game) {
 	if (!liveData && ws.demo) {
@@ -340,7 +330,6 @@ function ShowLive(game) {
 		hasData = false;
 	}
 	liveData = true;
-	SetPreviewStatus('Aperçu : valeurs réelles de Streamer.bot', true);
 	SetState(game);
 }
 
@@ -385,7 +374,6 @@ window.PreviewTestGame = function () {
 	// Aperçu : exemple fixe en attendant les vraies valeurs de Streamer.bot
 	if (ws.demo) {
 		SetState({ ...DEMO_GAMES[0] });
-		SetPreviewStatus('Aperçu : exemple — connexion à Streamer.bot…', false);
 	}
 	ConnectStreamerBot();
 })();

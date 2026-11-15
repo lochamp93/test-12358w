@@ -52,6 +52,13 @@ function LoadJSON(settingsJson) {
 				if (titleLabel) titleLabel.textContent = data.title;
 			}
 
+			// Logo masqué si settings.json contient "showLogo": false
+			const headerLogo = document.getElementById('headerLogo');
+			if (headerLogo) headerLogo.style.display = data.showLogo === false ? 'none' : '';
+
+			// Fond en damier pour l’aperçu si settings.json contient "checkerPreview": true
+			document.getElementById('widget-preview-wrapper').classList.toggle('checker', data.checkerPreview === true);
+
 			// Vider le panneau des paramètres
 			settingsPanel.innerHTML = '';
 
@@ -255,6 +262,10 @@ function LoadJSON(settingsJson) {
 			//   { "id": "idInterrupteur" }                      → identique au format d’origine
 			// Les dépendances en chaîne sont suivies : un réglage est masqué si l’un de ses parents l’est.
 			function ShowIfConditionMet(showIf) {
+				// { "any": [cond1, cond2] } : visible si au moins une condition (avec sa chaîne) est remplie
+				if (showIf && Array.isArray(showIf.any))
+					return showIf.any.some(c => ConditionChainMet(c));
+
 				const cond = typeof showIf === 'string' ? { id: showIf } : showIf;
 				const parentInput = document.getElementById(cond.id);
 				if (!parentInput) return false;
@@ -272,6 +283,16 @@ function LoadJSON(settingsJson) {
 				return parentInput.checked === true;
 			}
 
+			// Une condition et toute la chaîne de ses parents
+			function ConditionChainMet(showIf, depth = 0) {
+				if (!showIf || depth > 20) return true;
+				if (!ShowIfConditionMet(showIf)) return false;
+				if (Array.isArray(showIf.any)) return true; // chaque branche a déjà vérifié sa chaîne
+				const parentId = typeof showIf === 'string' ? showIf : showIf.id;
+				const parent = data.settings.find(s => s.id === parentId);
+				return parent ? ConditionChainMet(parent.showIf, depth + 1) : true;
+			}
+
 			function UpdateSettingItemVisibility() {
 				data.settings.forEach(setting => {
 					if (setting.showIf) {
@@ -285,6 +306,9 @@ function LoadJSON(settingsJson) {
 								shouldShow = false;
 								break;
 							}
+
+							// Condition « any » : chaque branche a déjà vérifié sa propre chaîne
+							if (Array.isArray(currentSetting.showIf.any)) break;
 
 							// Retrouver l’objet parent (pour continuer à remonter)
 							const parentId = typeof currentSetting.showIf === 'string' ? currentSetting.showIf : currentSetting.showIf.id;
@@ -581,7 +605,7 @@ function LoadSettings() {
 }
 
 function OpenMembershipPage() {
-	window.open("https://nutty.gg/collections/member-exclusive-widgets", '_blank').focus();
+	window.open("https://nutty.gg", '_blank').focus();
 }
 
 function OpenLoadDefaultsPopup() {
