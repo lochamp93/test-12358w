@@ -226,7 +226,7 @@ for nom, cle, types in PLATEFORMES:
             add(id="minRaid", label="Viewers minimum", type="number", min=1, max=100000, defaultValue=1,
                 group=nom, popup=pop, showIf=tid)
         # Lecture du message (alertes qui ont un message : réabonnement, bits, Super Chat)
-        if t in ("resub", "cheer") and cle != "tiktok":
+        if t in ("resub", "cheer"):  # cadeaux TikTok compris (lu seulement si un message arrive)
             add(id=f"{tid}Tts", label="Lire le message à voix haute", description="Synthèse vocale (Fish Audio)",
                 type="checkbox", defaultValue=True, group=nom, popup=pop, showIf={"all": [{"id": tid}, {"id": "ttsEnabled"}]})
         # Volume de l'alerte (multiplie le volume du scénario)
@@ -302,12 +302,12 @@ add(id="ttsEnabled", label="Lire les messages à voix haute",
 add(id="ttsKeyStatus", label="Clé API Fish Audio", type="info", defaultValue="Connexion à Streamer.bot…",
     group=G_TTS, showIf=TTS_ON)
 add(id="ttsKeyInput", label="Nouvelle clé API",
-    description="À créer sur fish.audio (API Keys). Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
+    description="Une clé par streameur : <a href=\"https://fish.audio/fr/text-to-speech-api/\" target=\"_blank\" rel=\"noopener\">créer son compte et sa clé</a>. Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
     type="text", defaultValue="", previewOnly=True, group=G_TTS, showIf=TTS_ON)
 add(id="ttsSaveKey", label="Enregistrer la clé dans Streamer.bot", type="button", callFunction="SaveTtsKey",
     group=G_TTS, showIf=TTS_ON)
 add(id="ttsVoice", label="Identifiant du modèle de voix",
-    description="Sur fish.audio, page de la voix : l’identifiant à la fin de l’adresse (ex. Thérèse)",
+    description="<a href=\"https://fish.audio/fr/discovery/\" target=\"_blank\" rel=\"noopener\">Choisir une voix</a>, puis copier l’identifiant à la fin de l’adresse de sa page (ex. Thérèse)",
     type="text", defaultValue="94702e20bb3e44d39c64ba74bb480dfc", group=G_TTS, showIf=TTS_ON)
 add(id="ttsModel", label="Moteur Fish Audio", type="select",
     options=opts([("s2.1-pro-free", "S2.1 Pro, offre gratuite"), ("s2.1-pro", "S2.1 Pro"), ("s1", "S1")]),

@@ -23422,6 +23422,25 @@
 			]
 		},
 		{
+			"id": "tiktokCheerTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "TikTok",
+			"popup": "tiktokCheer",
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
+		},
+		{
 			"id": "tiktokCheerVolume",
 			"label": "Volume",
 			"description": "En % (0 : alerte muette)",
@@ -24498,7 +24517,7 @@
 		{
 			"id": "ttsKeyInput",
 			"label": "Nouvelle clé API",
-			"description": "À créer sur fish.audio (API Keys). Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
+			"description": "Une clé par streameur : <a href=\"https://fish.audio/fr/text-to-speech-api/\" target=\"_blank\" rel=\"noopener\">créer son compte et sa clé</a>. Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
 			"type": "text",
 			"defaultValue": "",
 			"previewOnly": true,
@@ -24517,7 +24536,7 @@
 		{
 			"id": "ttsVoice",
 			"label": "Identifiant du modèle de voix",
-			"description": "Sur fish.audio, page de la voix : l’identifiant à la fin de l’adresse (ex. Thérèse)",
+			"description": "<a href=\"https://fish.audio/fr/discovery/\" target=\"_blank\" rel=\"noopener\">Choisir une voix</a>, puis copier l’identifiant à la fin de l’adresse de sa page (ex. Thérèse)",
 			"type": "text",
 			"defaultValue": "94702e20bb3e44d39c64ba74bb480dfc",
 			"group": "Synthèse vocale",
