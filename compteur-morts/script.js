@@ -15,7 +15,7 @@ const fontLinkEl = document.getElementById('googleFont');
 let ws = null;            // réglages (module commun WidgetSettings)
 let sbClient = null;      // client Streamer.bot
 let sbHost = null, sbPort = null;
-let demoTimer = null;
+let liveData = false;     // true dès que Streamer.bot a fourni de vraies valeurs
 let state = null;         // jeu affiché { name, count, cover, boxArt }
 let hasData = false;
 let swapToken = 0;
@@ -268,7 +268,9 @@ async function RefreshFromStreamerBot() {
 		const response = await sbClient.getGlobal(ws.values.variableName, true);
 		if (response && response.status === 'ok' && response.variable) {
 			const parsed = ParseDeathData(response.variable.value);
-			if (parsed) SetState(parsed);
+			if (parsed) ShowLive(parsed);
+		} else if (ws.demo) {
+			// Aperçu : pas encore de compteur dans Streamer.bot, on garde l'exemple
 		} else {
 			// Variable pas encore créée : on affiche 0 en attendant la première action
 			SetState(state || { name: '', count: 0 });
@@ -307,10 +309,42 @@ function ConnectStreamerBot() {
 	sbClient.on('General.Custom', ({ data }) => {
 		if (data && data.source === 'compteurMorts' && (!data.variable || data.variable === ws.values.variableName)) {
 			const parsed = ParseDeathData(data.data);
-			if (parsed) SetState(parsed);
+			if (parsed) ShowLive(parsed);
 		}
 	});
 }
+
+// Vraies valeurs : la première arrive sans animation (remplace l'exemple de l'aperçu)
+function ShowLive(game) {
+	if (!liveData && ws.demo) {
+		liveData = true;
+		swapToken++;
+		state = null;
+		hasData = false;
+	}
+	liveData = true;
+	SetState(game);
+}
+
+////////////////////////////////////////
+// APERÇU : boutons de test (settings) //
+////////////////////////////////////////
+
+// Appelées par les boutons « Tester » de la page de paramétrage (visuel seulement,
+// rien n'est envoyé à Streamer.bot)
+let demoIndex = 0;
+
+window.PreviewTestCount = function () {
+	if (!state) return;
+	SetState({ ...state, count: state.count + 1 });
+};
+
+window.PreviewTestGame = function () {
+	demoIndex = (demoIndex + 1) % DEMO_GAMES.length;
+	const next = { ...DEMO_GAMES[demoIndex] };
+	if (state && state.name === next.name) next.name += ' ';
+	SetState(next);
+};
 
 ///////////////
 // DÉMARRAGE //
@@ -320,10 +354,8 @@ function ConnectStreamerBot() {
 	try {
 		ws = await WidgetSettings.load('settings/settings.json', (values, previous) => {
 			ApplySettings();
-			if (!ws.demo) {
-				ConnectStreamerBot(); // ne reconnecte que si l'adresse ou le port ont changé
-				if (values.variableName !== previous.variableName) RefreshFromStreamerBot();
-			}
+			ConnectStreamerBot(); // ne reconnecte que si l'adresse ou le port ont changé
+			if (values.variableName !== previous.variableName) RefreshFromStreamerBot();
 		});
 	} catch (e) {
 		console.error('[Compteur de morts] Réglages illisibles :', e);
@@ -332,6 +364,7 @@ function ConnectStreamerBot() {
 
 	ApplySettings();
 
-	if (ws.demo) demoTimer = CreateDemoFeed(SetState);
-	else ConnectStreamerBot();
+	// Aperçu : exemple fixe en attendant les vraies valeurs de Streamer.bot
+	if (ws.demo) SetState({ ...DEMO_GAMES[0] });
+	ConnectStreamerBot();
 })();

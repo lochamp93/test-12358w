@@ -64,7 +64,7 @@ function CurrentGame() {
 
 function Render() {
 	const s = ws.values;
-	const demo = ws.demo;
+	const demo = ws.demo && !connected; // aperçu sans Streamer.bot : exemple local
 
 	document.documentElement.style.setProperty('--dock-accent', s.accentColor);
 	els.minus.textContent = `−${s.step}`;
@@ -236,7 +236,7 @@ async function Send(mode, extra = {}) {
 		if (game) args.jeu = game.name;
 	}
 
-	if (ws.demo) {
+	if (ws.demo && !connected) {
 		DemoApply(args);
 		Render();
 		return;
@@ -420,11 +420,9 @@ els.announce.addEventListener('change', () => {
 	try {
 		ws = await WidgetSettings.load('settings/settings.json', (values, previous) => {
 			if (values.announce !== previous.announce) els.announce.checked = values.announce;
-			if (!ws.demo) {
-				ConnectStreamerBot();
-				if (values.actionName !== previous.actionName) CheckAction();
-				if (values.variableName !== previous.variableName) RefreshData();
-			}
+			ConnectStreamerBot();
+			if (values.actionName !== previous.actionName) CheckAction();
+			if (values.variableName !== previous.variableName) RefreshData();
 			Render();
 		});
 	} catch (e) {
@@ -449,7 +447,7 @@ els.announce.addEventListener('change', () => {
 	});
 	document.getElementById('recheckButton').addEventListener('click', CheckAction);
 
-	if (ws.demo) data = DemoData();
-	else ConnectStreamerBot();
+	if (ws.demo) data = DemoData(); // remplacé par les vraies données dès la connexion
+	ConnectStreamerBot();
 	Render();
 })();

@@ -46,28 +46,9 @@ function DemoCover(title, c1, c2) {
 	return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
 
-// Données de démonstration (aperçu de la page de paramétrage, sans Streamer.bot)
-function CreateDemoFeed(onUpdate) {
-	const games = [
-		{ name: 'Elden Ring', count: 87, cover: DemoCover('Démo Ring', '#3b2a12', '#c9a227') },
-		{ name: 'World of Warcraft', count: 12, cover: DemoCover('Démo Craft', '#0d2b4d', '#3fa7ff') },
-		{ name: 'Hades II', count: 18, cover: DemoCover('Démo Hadès', '#0b3b33', '#38d6a8') }
-	];
-	let index = 0;
-	let tick = 0;
-
-	onUpdate({ ...games[index], boxArt: '' });
-
-	return setInterval(() => {
-		tick++;
-		if (tick % 6 === 0) {
-			index = (index + 1) % games.length; // changement de catégorie
-		}
-		else {
-			const g = games[index];
-			const delta = Math.random() < 0.8 ? 1 : -1;
-			g.count = Math.max(0, g.count + delta);
-		}
-		onUpdate({ ...games[index], boxArt: '' });
-	}, 2200);
-}
+// Données d'exemple fixes, utilisées dans l'aperçu seulement si Streamer.bot ne répond pas
+const DEMO_GAMES = [
+	{ name: 'Elden Ring', count: 87, cover: DemoCover('Démo Ring', '#3b2a12', '#c9a227'), boxArt: '' },
+	{ name: 'World of Warcraft', count: 12, cover: DemoCover('Démo Craft', '#0d2b4d', '#3fa7ff'), boxArt: '' },
+	{ name: 'Hades II', count: 18, cover: DemoCover('Démo Hadès', '#0b3b33', '#38d6a8'), boxArt: '' }
+];

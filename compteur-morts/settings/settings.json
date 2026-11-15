@@ -22,6 +22,22 @@
 			"group": "Connexion"
 		},
 		{
+			"id": "previewTestCount",
+			"label": "Tester l’animation du nombre (+1)",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewTestCount",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewTestGame",
+			"label": "Tester le changement de jeu",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewTestGame",
+			"group": "Aperçu"
+		},
+		{
 			"id": "layout",
 			"label": "Style d’affichage",
 			"description": "Chaque style a son propre rendu ; seuls ses réglages sont affichés",

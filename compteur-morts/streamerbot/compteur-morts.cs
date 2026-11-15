@@ -17,10 +17,9 @@
 //  sous-actions suivantes (par exemple un texte OBS).
 // =====================================================================
 using System;
-using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -250,31 +249,64 @@ public class CPHInline
 			if (token == "" || clientId == "") return;
 
 			string id = jeu.Value<string>("twitchId") ?? "";
-			string url = "https://api.twitch.tv/helix/games?" + (id != "" ? "id=" + Uri.EscapeDataString(id) : "name=" + Uri.EscapeDataString(nom));
+			string url = "https://api.twitch.tv/helix/games?" + (id != "" ? "id=" + EncoderURL(id) : "name=" + EncoderURL(nom));
 
-			HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-			req.Method = "GET";
-			req.Timeout = 3000;
-			req.ReadWriteTimeout = 3000;
-			req.Headers.Add("Client-Id", clientId);
-			req.Headers.Add("Authorization", "Bearer " + token);
+			string reponse = TelechargerTexte(url, clientId, token, 4000);
+			if (string.IsNullOrEmpty(reponse)) return;
 
-			using (HttpWebResponse res = (HttpWebResponse)req.GetResponse())
-			using (StreamReader reader = new StreamReader(res.GetResponseStream(), Encoding.UTF8))
+			JObject json = JObject.Parse(reponse);
+			JArray liste = json["data"] as JArray;
+			if (liste != null && liste.Count > 0)
 			{
-				JObject json = JObject.Parse(reader.ReadToEnd());
-				JArray liste = json["data"] as JArray;
-				if (liste != null && liste.Count > 0)
-				{
-					jeu["twitchId"] = liste[0].Value<string>("id");
-					jeu["boxArt"] = liste[0].Value<string>("box_art_url"); // modèle avec {width}x{height}
-				}
+				jeu["twitchId"] = liste[0].Value<string>("id");
+				jeu["boxArt"] = liste[0].Value<string>("box_art_url"); // modèle avec {width}x{height}
 			}
 		}
 		catch (Exception e)
 		{
 			CPH.LogWarn("[Compteur de morts] Jaquette introuvable pour " + nom + " : " + e.Message);
 		}
+	}
+
+	// Requête HTTP sans référence à System.dll : la bibliothèque réseau est chargée
+	// par réflexion (Streamer.bot n'expose pas System.Net au code C# par défaut).
+	static string TelechargerTexte(string url, string clientId, string token, int delaiMs)
+	{
+		Type typeClient = Type.GetType("System.Net.WebClient, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+		if (typeClient == null) return "";
+
+		object client = Activator.CreateInstance(typeClient);
+		try
+		{
+			typeClient.GetProperty("Encoding").SetValue(client, Encoding.UTF8);
+			object entetes = typeClient.GetProperty("Headers").GetValue(client);
+			MethodInfo ajouter = entetes.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+			ajouter.Invoke(entetes, new object[] { "Client-Id", clientId });
+			ajouter.Invoke(entetes, new object[] { "Authorization", "Bearer " + token });
+
+			MethodInfo telecharger = typeClient.GetMethod("DownloadString", new[] { typeof(string) });
+			Task<string> tache = Task.Run(() => (string)telecharger.Invoke(client, new object[] { url }));
+			return tache.Wait(delaiMs) ? tache.Result : "";
+		}
+		finally
+		{
+			(client as IDisposable)?.Dispose();
+		}
+	}
+
+	// Encodage d'URL (équivalent de Uri.EscapeDataString, sans System.dll)
+	static string EncoderURL(string texte)
+	{
+		StringBuilder sb = new StringBuilder();
+		foreach (byte b in Encoding.UTF8.GetBytes(texte))
+		{
+			char c = (char)b;
+			if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '_' || c == '.' || c == '~')
+				sb.Append(c);
+			else
+				sb.Append('%').Append(b.ToString("X2"));
+		}
+		return sb.ToString();
 	}
 
 	// ---------- Outils ----------
