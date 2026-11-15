@@ -16,6 +16,9 @@
 //    tester          joue une alerte de test dans les overlays (« type »)
 //    passer          termine l'alerte en cours
 //    rapport         compte rendu de l'overlay pour le dock (« rapport », JSON)
+//    tts             synthèse vocale Fish Audio (« texte », « voix » = identifiant du modèle,
+//                    « modele » = moteur, « requestId ») ; renvoie l'audio en mp3
+//    cletts          enregistre la clé API Fish Audio (« cle ») ; elle reste dans Streamer.bot
 //
 //  Les réponses sont envoyées à l'overlay et au dock par WebSocket (General.Custom,
 //  source « alertesVariables »).
@@ -38,6 +41,7 @@ public class CPHInline
 	const string VAR_MUTE = "alertesVariablesMute";
 	const string VAR_FORCE = "alertesVariablesForce";
 	const string VAR_RAPPORT = "alertesVariablesRapport"; // non persistante
+	const string VAR_FISH = "alertesVariablesFishCle"; // clé API Fish Audio (persistante, jamais envoyée aux pages)
 	const long TAILLE_MAX = 25L * 1024 * 1024;           // 25 Mo par fichier
 	// -------------------------------------
 
@@ -72,6 +76,12 @@ public class CPHInline
 					return true;
 				case "tester":
 					Diffuser(new Dictionary<string, object> { { "kind", "test" }, { "type", Arg("type").Trim().ToLowerInvariant() } });
+					return true;
+				case "tts": SynthetiserTts(); return true;
+				case "cletts":
+					CPH.SetGlobalVar(VAR_FISH, Arg("cle").Trim(), true);
+					CPH.LogInfo("[Alertes variables] Clé Fish Audio " + (Arg("cle").Trim() == "" ? "effacée" : "enregistrée"));
+					EnvoyerEtat(false);
 					return true;
 				case "passer":
 					Diffuser(new Dictionary<string, object> { { "kind", "passer" } });
@@ -130,7 +140,8 @@ public class CPHInline
 			{ "force", LireTexte(VAR_FORCE, true) },
 			{ "titre", titre },
 			{ "categorie", categorie },
-			{ "rapport", new JsonBrut(RapportValide(LireTexte(VAR_RAPPORT, false))) }
+			{ "rapport", new JsonBrut(RapportValide(LireTexte(VAR_RAPPORT, false))) },
+			{ "ttsCle", LireTexte(VAR_FISH, true).Trim() != "" }
 		});
 	}
 
@@ -561,6 +572,17 @@ public class CPHInline
 			Type t = asm.GetType(nomComplet, false);
 			if (t != null) return t;
 		}
+		// Assembly pas encore chargée : chargement par son nom complet (.NET Framework 4)
+		foreach (string a in assemblies)
+		{
+			try
+			{
+				Assembly asm = Assembly.Load(a + ", Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a");
+				Type t = asm?.GetType(nomComplet, false);
+				if (t != null) return t;
+			}
+			catch (Exception) { }
+		}
 		return null;
 	}
 
@@ -583,6 +605,89 @@ public class CPHInline
 			finally { (client as IDisposable)?.Dispose(); }
 		}
 		return "";
+	}
+
+	// ---------- Synthèse vocale (Fish Audio) ----------
+
+	void SynthetiserTts()
+	{
+		Dictionary<string, object> rep = new Dictionary<string, object> { { "kind", "tts" }, { "requestId", Arg("requestId") } };
+		string cle = LireTexte(VAR_FISH, true).Trim();
+		string texte = Arg("texte").Trim();
+		if (cle == "") { rep["erreur"] = "Aucune clé Fish Audio enregistrée"; Diffuser(rep); return; }
+		if (texte == "") { rep["erreur"] = "Texte vide"; Diffuser(rep); return; }
+		if (texte.Length > 500) texte = texte.Substring(0, 500);
+
+		Dictionary<string, object> corps = new Dictionary<string, object>
+		{
+			{ "text", texte }, { "format", "mp3" }, { "latency", "balanced" }
+		};
+		string voix = Arg("voix").Trim();
+		if (voix != "") corps["reference_id"] = voix;
+
+		string erreur;
+		byte[] audio = PosterOctets("https://api.fish.audio/v1/tts", Json(corps), cle, Arg("modele").Trim(), 30000, out erreur);
+		if (audio == null || audio.Length == 0)
+		{
+			rep["erreur"] = erreur == "" ? "Fish Audio n’a renvoyé aucun son" : erreur;
+			CPH.LogWarn("[Alertes variables] " + rep["erreur"]);
+		}
+		else rep["dataUri"] = "data:audio/mpeg;base64," + Convert.ToBase64String(audio);
+		Diffuser(rep);
+	}
+
+	// POST JSON, réponse binaire (HttpClient par réflexion)
+	static byte[] PosterOctets(string url, string json, string cle, string modele, int delaiMs, out string erreur)
+	{
+		erreur = "";
+		Type typeHttp = TrouverType("System.Net.Http.HttpClient", "System.Net.Http");
+		Type typeContenu = TrouverType("System.Net.Http.StringContent", "System.Net.Http");
+		Type typeBase = TrouverType("System.Net.Http.HttpContent", "System.Net.Http");
+		if (typeHttp == null || typeContenu == null || typeBase == null) { erreur = "HttpClient indisponible"; return null; }
+		object client = Activator.CreateInstance(typeHttp);
+		try
+		{
+			typeHttp.GetProperty("Timeout").SetValue(client, TimeSpan.FromMilliseconds(delaiMs));
+			object entetes = typeHttp.GetProperty("DefaultRequestHeaders").GetValue(client);
+			MethodInfo ajouter = entetes.GetType().GetMethod("TryAddWithoutValidation", new[] { typeof(string), typeof(string) });
+			ajouter.Invoke(entetes, new object[] { "Authorization", "Bearer " + cle });
+			if (modele != "") ajouter.Invoke(entetes, new object[] { "model", modele });
+
+			object contenu = Activator.CreateInstance(typeContenu, new object[] { json, Encoding.UTF8, "application/json" });
+			MethodInfo post = typeHttp.GetMethod("PostAsync", new[] { typeof(string), typeBase });
+			Task tache = (Task)post.Invoke(client, new object[] { url, contenu });
+			if (!tache.Wait(delaiMs)) { erreur = "Fish Audio ne répond pas"; return null; }
+			object reponse = tache.GetType().GetProperty("Result").GetValue(tache);
+			bool ok = (bool)reponse.GetType().GetProperty("IsSuccessStatusCode").GetValue(reponse);
+			object corps = reponse.GetType().GetProperty("Content").GetValue(reponse);
+			if (!ok)
+			{
+				int code = Convert.ToInt32(reponse.GetType().GetProperty("StatusCode").GetValue(reponse));
+				string detail = "";
+				try
+				{
+					Task lecture = (Task)corps.GetType().GetMethod("ReadAsStringAsync", Type.EmptyTypes).Invoke(corps, null);
+					if (lecture.Wait(5000)) detail = (string)lecture.GetType().GetProperty("Result").GetValue(lecture) ?? "";
+				}
+				catch (Exception) { }
+				if (detail.Length > 200) detail = detail.Substring(0, 200);
+				erreur = "Fish Audio : erreur " + code
+					+ (code == 401 ? " (clé refusée)" : code == 402 ? " (crédit insuffisant ou modèle payant)" : "")
+					+ (detail != "" ? " : " + detail : "");
+				return null;
+			}
+			Task octets = (Task)corps.GetType().GetMethod("ReadAsByteArrayAsync", Type.EmptyTypes).Invoke(corps, null);
+			if (!octets.Wait(delaiMs)) { erreur = "Lecture de l’audio trop longue"; return null; }
+			return (byte[])octets.GetType().GetProperty("Result").GetValue(octets);
+		}
+		catch (Exception e)
+		{
+			Exception racine = e;
+			while (racine.InnerException != null) racine = racine.InnerException;
+			erreur = "Fish Audio : " + racine.Message;
+			return null;
+		}
+		finally { (client as IDisposable)?.Dispose(); }
 	}
 
 	// ---------- Envoi aux overlays et au dock ----------

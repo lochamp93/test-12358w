@@ -370,6 +370,9 @@ async function PlayAlert(info) {
 	const style = StyleOf(scenario);
 	const media = ResolveMedia(scenario, info.type, info);
 
+	// Voix demandée tout de suite (Fish Audio prend une ou deux secondes), jouée après le son
+	const ttsPromise = TtsWanted(info) ? RequestTts(TtsText(info)) : null;
+
 	// Fichiers (lus par Streamer.bot, puis gardés en mémoire)
 	const [visualURI, soundURI] = await Promise.all([RequestFile(media.visual), RequestFile(media.sound)]);
 	const visual = visualURI || (ws.demo && !media.visual ? DemoVisual(info.type) : null);
@@ -435,13 +438,29 @@ async function PlayAlert(info) {
 	if (videoEl) videoEl.play().catch(() => { videoEl.muted = true; videoEl.play().catch(() => { }); });
 	if (audioEl) audioEl.play().catch(e => console.warn('[Alertes variables] Son bloqué :', e.message));
 
-	// Durée : réglage, prolongée jusqu'à la fin du son / de la vidéo si demandé
+	// Durée : réglage, prolongée jusqu'à la fin du son / de la vidéo si demandé, puis de la voix
+	const t0 = Date.now();
+	const elapsed = () => Date.now() - t0;
 	let total = Math.max(1, Number(style.duration) || 1) * 1000;
-	if (s.waitMedia) {
-		const [a, v] = await Promise.all([MediaDuration(audioEl), MediaDuration(videoEl)]);
-		total = Math.max(total, a, v);
+	const [a, v] = await Promise.all([MediaDuration(audioEl), MediaDuration(videoEl)]);
+	if (s.waitMedia) total = Math.max(total, a, v);
+	if (ttsPromise) {
+		const uri = await Promise.race([ttsPromise, skipped.then(() => null)]);
+		if (uri && current && !sbState.mute) {
+			// Le message est lu une fois le son (ou la vidéo) de l'alerte terminé
+			const mediaEnd = audioEl || (videoEl && !videoEl.muted) ? Math.max(a, v) : 0;
+			if (mediaEnd - elapsed() > 0) await Promise.race([wait(mediaEnd - elapsed() + 250), skipped]);
+			if (current) {
+				const ttsEl = new Audio(uri);
+				ttsEl.volume = Math.max(0, Math.min(100, Number(s.ttsVolume) || 0)) / 100;
+				current.tts = ttsEl;
+				ttsEl.play().catch(e => console.warn('[Alertes variables] Voix bloquée :', e.message));
+				const d = await MediaDuration(ttsEl);
+				total = Math.max(total, elapsed() + d + 400);
+			}
+		}
 	}
-	await Promise.race([wait(total), skipped]);
+	await Promise.race([wait(Math.max(0, total - elapsed())), skipped]);
 
 	// Sortie
 	alertEl.className = alertEl.className.replace(/\b(in|out)-\w+/g, '').trim();
@@ -452,6 +471,7 @@ async function PlayAlert(info) {
 	}
 	alertEl.classList.add('hidden');
 	if (audioEl) { audioEl.pause(); audioEl.src = ''; }
+	if (current && current.tts) { current.tts.pause(); current.tts.src = ''; }
 	if (videoEl) videoEl.pause();
 	mediaWrapEl.innerHTML = '';
 	current = null;
@@ -465,6 +485,7 @@ function SkipCurrent() {
 function ApplyMuteToCurrent() {
 	if (!current || !sbState.mute) return;
 	if (current.audio) current.audio.pause();
+	if (current.tts) current.tts.pause();
 	if (current.video) current.video.muted = true;
 }
 
@@ -502,6 +523,7 @@ function SetState(next) {
 	}
 
 	PostFilesInfo();
+	PostTtsStatus();
 	if (sbState.mute && !wasMuted) ApplyMuteToCurrent();
 	PreloadActive();
 	Report();
@@ -565,6 +587,15 @@ function OnCustom(data) {
 			if (resolve) { pendingFiles.delete(data.requestId); resolve(data.dataUri || null); }
 			break;
 		}
+		case 'tts': {
+			if (data.erreur) {
+				console.warn('[Alertes variables] Synthèse vocale :', data.erreur);
+				if (ws.demo) PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text: data.erreur, status: 'warn' });
+			}
+			const resolve = pendingFiles.get(data.requestId);
+			if (resolve) { pendingFiles.delete(data.requestId); resolve(data.dataUri || null); }
+			break;
+		}
 		case 'test':
 			if (!ws.demo) RunDockTest(String(data.type || ''));
 			break;
@@ -619,6 +650,7 @@ function ConnectStreamerBot() {
 			console.warn('[Alertes variables] Déconnecté de Streamer.bot');
 			PostFolderInfo('Streamer.bot non connecté');
 			PostFilesInfo();
+			PostTtsStatus();
 		}
 	});
 
@@ -1036,6 +1068,63 @@ function RunDockTest(cmd) {
 		const rule = RulesOf(AlertId(platform, type)).find(r => r.n === Number(b));
 		if (rule) Enqueue(RuleTestInfo(type, rule, platform));
 	}
+}
+
+/////////////////////////////////////
+// SYNTHÈSE VOCALE (FISH AUDIO)     //
+/////////////////////////////////////
+
+// Message à lire ? (réglage général, réglage de l'alerte, message présent, son non coupé)
+function TtsWanted(info) {
+	const s = ws.values;
+	if (!s.ttsEnabled || sbState.mute || !info || !info.message) return false;
+	if (s[`${AlertId(info.platform, info.type)}Tts`] === false) return false;
+	return !!TtsText(info);
+}
+
+// Texte lu : le message, sans les « Cheer100 » de Twitch ni les liens, limité en longueur
+function TtsText(info) {
+	let text = String(info.message || '');
+	if (info.platform === 'Twitch' && info.type === 'cheer') text = text.replace(/\b[a-z]+\d+\b/gi, ' ');
+	text = text.replace(/https?:\/\/\S+/gi, ' ').replace(/\s+/g, ' ').trim();
+	const max = Math.max(20, Number(ws.values.ttsMaxLength) || 200);
+	return text.length > max ? text.slice(0, max).replace(/\s+\S*$/, '') : text;
+}
+
+// Demande l'audio à Streamer.bot (qui appelle Fish Audio avec la clé qu'il garde) : data URI mp3
+function RequestTts(text) {
+	if (!text || !sbClient || !connected) return Promise.resolve(null);
+	const s = ws.values;
+	const requestId = `tts-${Date.now()}-${++requestCounter}`;
+	return new Promise((resolve) => {
+		const timer = setTimeout(() => { pendingFiles.delete(requestId); resolve(null); }, 30000);
+		pendingFiles.set(requestId, (uri) => { clearTimeout(timer); resolve(uri); });
+		DoAction({ mode: 'tts', texte: text, voix: String(s.ttsVoice || '').trim(), modele: String(s.ttsModel || ''), requestId });
+	});
+}
+
+// Page de paramétrage : enregistrer la clé (puis vider le champ), tester la voix, état de la clé
+window.SaveTtsKey = function () {
+	const key = String(ws.values.ttsKeyInput || '').trim();
+	if (!key) { PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text: 'Collez d’abord la clé API', status: 'warn' }); return; }
+	if (!connected) { PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text: 'Streamer.bot non connecté', status: 'warn' }); return; }
+	DoAction({ mode: 'cletts', cle: key });
+	PostToSettings({ type: 'widget-set', values: { ttsKeyInput: '' } });
+};
+
+window.TestTts = async function () {
+	const uri = await RequestTts('Merci pour le réabonnement, ça fait super plaisir !');
+	if (!uri) return;
+	const el = new Audio(uri);
+	el.volume = Math.max(0, Math.min(100, Number(ws.values.ttsVolume) || 0)) / 100;
+	el.play().catch(() => { });
+};
+
+function PostTtsStatus() {
+	if (!ws.demo) return;
+	const text = !connected ? 'Streamer.bot non connecté'
+		: sbState.ttsCle ? 'Enregistrée dans Streamer.bot' : 'Aucune clé enregistrée';
+	PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text, status: connected && sbState.ttsCle ? 'ok' : 'warn' });
 }
 
 // Scénarios : « Reprendre le style du scénario par défaut » (page de paramétrage)

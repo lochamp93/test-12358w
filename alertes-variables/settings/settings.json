@@ -7530,6 +7530,25 @@
 			]
 		},
 		{
+			"id": "twitchResubTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch",
+			"popup": "twitchResub",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
+		},
+		{
 			"id": "twitchResubVolume",
 			"label": "Volume",
 			"description": "En % (0 : alerte muette)",
@@ -10724,6 +10743,25 @@
 			"group": "Twitch",
 			"popup": "twitchCheer",
 			"showIf": "twitchCheer"
+		},
+		{
+			"id": "twitchCheerTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch",
+			"popup": "twitchCheer",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
 		},
 		{
 			"id": "twitchCheerVolume",
@@ -14202,6 +14240,25 @@
 			"aliases": [
 				"sc12TextResub"
 			]
+		},
+		{
+			"id": "kickResubTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"popup": "kickResub",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
 		},
 		{
 			"id": "kickResubVolume",
@@ -18080,6 +18137,25 @@
 			]
 		},
 		{
+			"id": "youtubeResubTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"popup": "youtubeResub",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
+		},
+		{
 			"id": "youtubeResubVolume",
 			"label": "Volume",
 			"description": "En % (0 : alerte muette)",
@@ -21232,6 +21308,25 @@
 			]
 		},
 		{
+			"id": "youtubeCheerTts",
+			"label": "Lire le message à voix haute",
+			"description": "Synthèse vocale (Fish Audio)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"popup": "youtubeCheer",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "ttsEnabled"
+					}
+				]
+			}
+		},
+		{
 			"id": "youtubeCheerVolume",
 			"label": "Volume",
 			"description": "En % (0 : alerte muette)",
@@ -24382,6 +24477,105 @@
 			"step": 0.5,
 			"defaultValue": 1,
 			"group": "Réglages des alertes"
+		},
+		{
+			"id": "ttsEnabled",
+			"label": "Lire les messages à voix haute",
+			"description": "Messages des réabonnements, bits et Super Chat, avec Fish Audio (activable alerte par alerte)",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Synthèse vocale"
+		},
+		{
+			"id": "ttsKeyStatus",
+			"label": "Clé API Fish Audio",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled",
+			"description": ""
+		},
+		{
+			"id": "ttsKeyInput",
+			"label": "Nouvelle clé API",
+			"description": "À créer sur fish.audio (API Keys). Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
+			"type": "text",
+			"defaultValue": "",
+			"previewOnly": true,
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled"
+		},
+		{
+			"id": "ttsSaveKey",
+			"label": "Enregistrer la clé dans Streamer.bot",
+			"type": "button",
+			"callFunction": "SaveTtsKey",
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled",
+			"description": ""
+		},
+		{
+			"id": "ttsVoice",
+			"label": "Identifiant du modèle de voix",
+			"description": "Sur fish.audio, page de la voix : l’identifiant à la fin de l’adresse (ex. Thérèse)",
+			"type": "text",
+			"defaultValue": "94702e20bb3e44d39c64ba74bb480dfc",
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled"
+		},
+		{
+			"id": "ttsModel",
+			"label": "Moteur Fish Audio",
+			"type": "select",
+			"options": [
+				{
+					"value": "s2.1-pro-free",
+					"label": "S2.1 Pro, offre gratuite"
+				},
+				{
+					"value": "s2.1-pro",
+					"label": "S2.1 Pro"
+				},
+				{
+					"value": "s1",
+					"label": "S1"
+				}
+			],
+			"defaultValue": "s2.1-pro-free",
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled",
+			"description": ""
+		},
+		{
+			"id": "ttsVolume",
+			"label": "Volume de la voix",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 100,
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled"
+		},
+		{
+			"id": "ttsMaxLength",
+			"label": "Longueur maximale lue",
+			"description": "En caractères (le reste n’est pas lu)",
+			"type": "number",
+			"min": 20,
+			"max": 500,
+			"defaultValue": 200,
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled"
+		},
+		{
+			"id": "ttsTest",
+			"label": "Tester la voix",
+			"type": "button",
+			"callFunction": "TestTts",
+			"group": "Synthèse vocale",
+			"showIf": "ttsEnabled",
+			"description": ""
 		},
 		{
 			"id": "cmdEnabled",

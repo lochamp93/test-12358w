@@ -225,6 +225,10 @@ for nom, cle, types in PLATEFORMES:
         if cle == "twitch" and t == "raid":
             add(id="minRaid", label="Viewers minimum", type="number", min=1, max=100000, defaultValue=1,
                 group=nom, popup=pop, showIf=tid)
+        # Lecture du message (alertes qui ont un message : réabonnement, bits, Super Chat)
+        if t in ("resub", "cheer") and cle != "tiktok":
+            add(id=f"{tid}Tts", label="Lire le message à voix haute", description="Synthèse vocale (Fish Audio)",
+                type="checkbox", defaultValue=True, group=nom, popup=pop, showIf={"all": [{"id": tid}, {"id": "ttsEnabled"}]})
         # Volume de l'alerte (multiplie le volume du scénario)
         add(id=f"{tid}Volume", label="Volume", description="En % (0 : alerte muette)", type="number",
             min=0, max=100, defaultValue=100, group=nom, popup=pop, showIf=tid)
@@ -289,6 +293,31 @@ for nom, cle, types in PLATEFORMES:
                 options=[{"value": str(k), "label": str(k)} for k in range(NB_REGLES + 1)],
                 defaultValue="0", group=nom, hidden=True, aliases=(["subRuleCount"] if ancien else []) + ([f"{cle}GiftRuleCount"] if t == "giftbomb" else []))
 
+# ---------- Synthèse vocale (Fish Audio, via Streamer.bot) ----------
+G_TTS = "Synthèse vocale"
+TTS_ON = "ttsEnabled"
+add(id="ttsEnabled", label="Lire les messages à voix haute",
+    description="Messages des réabonnements, bits et Super Chat, avec Fish Audio (activable alerte par alerte)",
+    type="checkbox", defaultValue=False, group=G_TTS)
+add(id="ttsKeyStatus", label="Clé API Fish Audio", type="info", defaultValue="Connexion à Streamer.bot…",
+    group=G_TTS, showIf=TTS_ON)
+add(id="ttsKeyInput", label="Nouvelle clé API",
+    description="À créer sur fish.audio (API Keys). Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
+    type="text", defaultValue="", previewOnly=True, group=G_TTS, showIf=TTS_ON)
+add(id="ttsSaveKey", label="Enregistrer la clé dans Streamer.bot", type="button", callFunction="SaveTtsKey",
+    group=G_TTS, showIf=TTS_ON)
+add(id="ttsVoice", label="Identifiant du modèle de voix",
+    description="Sur fish.audio, page de la voix : l’identifiant à la fin de l’adresse (ex. Thérèse)",
+    type="text", defaultValue="94702e20bb3e44d39c64ba74bb480dfc", group=G_TTS, showIf=TTS_ON)
+add(id="ttsModel", label="Moteur Fish Audio", type="select",
+    options=opts([("s2.1-pro-free", "S2.1 Pro, offre gratuite"), ("s2.1-pro", "S2.1 Pro"), ("s1", "S1")]),
+    defaultValue="s2.1-pro-free", group=G_TTS, showIf=TTS_ON)
+add(id="ttsVolume", label="Volume de la voix", description="En %", type="number", min=0, max=100,
+    defaultValue=100, group=G_TTS, showIf=TTS_ON)
+add(id="ttsMaxLength", label="Longueur maximale lue", description="En caractères (le reste n’est pas lu)",
+    type="number", min=20, max=500, defaultValue=200, group=G_TTS, showIf=TTS_ON)
+add(id="ttsTest", label="Tester la voix", type="button", callFunction="TestTts", group=G_TTS, showIf=TTS_ON)
+
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")
 add(id="cmdMute", label="Commande pour couper le son", description="Plusieurs possibles, séparées par des virgules",
@@ -309,7 +338,7 @@ add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a r
 
 # Ordre des sections : les commandes de chat avant les scénarios
 ORDRE = ["Dossier source", "Scénarios", "Déclenchement", "Visuel et son", "Style",
-         "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Commandes de chat", "Connexion",
+         "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Synthèse vocale", "Commandes de chat", "Connexion",
          "Gérer le scénario"]
 S.sort(key=lambda s: ORDRE.index(s["group"]) if s["group"] in ORDRE else len(ORDRE))
 
