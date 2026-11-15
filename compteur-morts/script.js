@@ -361,20 +361,36 @@ window.PreviewTestGame = function () {
 ///////////////////////
 
 // Niveau de l'auteur : 40 streamer, 30 modo, 20 VIP, 15 abonné, 10 viewer
+// (accepte les différentes formes d'événement selon la version de Streamer.bot)
 function ChatPermissionLevel(data) {
-	const u = data.user || data.message || {};
+	const m = data && typeof data.message === 'object' ? data.message : {};
+	const u = Object.assign({}, m, data.user || {});
 	const role = Number(u.role) || 1;
-	if (role >= 4) return 40;
-	if (role >= 3) return 30;
-	if (role >= 2) return 20;
-	if (u.subscribed || u.subscriber) return 15;
+	const badges = (u.badges || m.badges || []).map(b => String(b.name || b.setId || b).toLowerCase());
+	if (role >= 4 || u.isBroadcaster || badges.includes('broadcaster')) return 40;
+	if (role >= 3 || u.isModerator || badges.includes('moderator')) return 30;
+	if (role >= 2 || u.isVip || badges.includes('vip')) return 20;
+	if (u.subscribed || u.subscriber || u.isSubscribed || badges.includes('subscriber')) return 15;
 	return 10;
+}
+
+function ChatText(data) {
+	if (!data) return '';
+	if (typeof data.message === 'string') return data.message;
+	if (data.message && typeof data.message.message === 'string') return data.message.message;
+	if (typeof data.text === 'string') return data.text;
+	if (data.message && typeof data.message.text === 'string') return data.message.text;
+	return '';
+}
+
+function ChatMessageId(data) {
+	const m = data && typeof data.message === 'object' ? data.message : {};
+	return String(m.msgId || m.id || data.msgId || data.messageId || data.id || '');
 }
 
 function HandleChatCommand(data) {
 	const s = ws.values;
-	const msg = data && data.message ? data.message : {};
-	const text = String(msg.message || data.text || '').trim();
+	const text = ChatText(data).trim();
 	const [first, ...rest] = text.split(/\s+/);
 	const word = (first || '').toLowerCase();
 	if (!word) return;
@@ -387,16 +403,23 @@ function HandleChatCommand(data) {
 	];
 	const match = commands.find(c => c.cmd && c.cmd.trim().toLowerCase() === word);
 	if (!match) return;
-	if (ChatPermissionLevel(data) < Number(s.permissionLevel)) return;
 
-	const args = { mode: match.mode, annonce: 'true', msgId: String(msg.msgId || '') };
+	const level = ChatPermissionLevel(data);
+	if (level < Number(s.permissionLevel)) {
+		console.info(`[Compteur de morts] ${word} ignorée : permission insuffisante (${level} < ${s.permissionLevel})`);
+		return;
+	}
+
+	const args = { mode: match.mode, annonce: 'true', msgId: ChatMessageId(data) };
 	if (match.mode === 'set') {
 		const n = parseInt(rest[0], 10);
 		if (!Number.isFinite(n) || n < 0) return;
 		args.valeur = String(n);
 	}
 
+	console.info(`[Compteur de morts] Commande ${word} → action « ${s.actionName} »`, args);
 	sbClient.doAction({ name: s.actionName }, args)
+		.then(r => { if (r && r.status && r.status !== 'ok') console.error('[Compteur de morts] Streamer.bot a refusé l’action :', r); })
 		.catch(e => console.error('[Compteur de morts] Action impossible :', e));
 }
 
