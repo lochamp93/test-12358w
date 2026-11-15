@@ -535,19 +535,21 @@ html.apple .setting-item-content > button.link-button {
 }
 
 html.apple .setting-item-content > button.link-button::before {
-	content: "+";
+	/* « + » dessiné (deux traits) : parfaitement centré dans sa pastille */
+	content: "";
 	display: inline-block;
 	width: 18px;
 	height: 18px;
 	margin-right: 8px;
 	border-radius: 50%;
-	background: var(--ui-accent-soft, rgba(10, 132, 255, .15));
-	line-height: 18px;
-	text-align: center;
-	font-size: 15px;
-	font-weight: 600;
-	vertical-align: -1px;
+	vertical-align: middle;
+	background:
+		linear-gradient(currentColor, currentColor) center / 8px 1.6px no-repeat,
+		linear-gradient(currentColor, currentColor) center / 1.6px 8px no-repeat,
+		var(--ui-accent-soft, rgba(10, 132, 255, .15));
 }
+
+html.apple .setting-item-content > button.link-button { display: inline-flex; align-items: center; }
 
 html.apple .setting-item-content > button.link-button:hover { text-decoration: underline; }
 
@@ -564,18 +566,17 @@ html.apple .setting-info.setting-info-lines {
 
 .info-line {
 	display: flex;
-	align-items: baseline;
+	align-items: center;
 	gap: 6px;
 	min-width: 0;
 }
 
 .info-dot {
-	flex: 0 0 8px;
-	width: 8px;
-	height: 8px;
+	flex: 0 0 7px;
+	width: 7px;
+	height: 7px;
 	border-radius: 50%;
 	background: var(--ui-text-secondary, #8e8e93);
-	transform: translateY(-1px);
 }
 
 .info-dot[data-status="ok"] { background: var(--ui-green, #34c759); }
@@ -588,4 +589,25 @@ html.apple .setting-info.setting-info-lines {
    l'interrupteur, pour que tester / paramétrer restent alignés d'une ligne à l'autre */
 .setting-item-actions .setting-actions .icon-button:last-child { margin: 0 4px 0 8px; }
 
-html.apple .setting-info.setting-info-lines { font-size: 13px; }
+html.apple .setting-info.setting-info-lines { font-size: 13px; font-weight: 400; }
+
+/* Règles : en retrait et en italique, pour montrer qu'elles dépendent de l'alerte au-dessus */
+html.apple .setting-item.setting-item-sub label { font-style: italic; padding-left: 16px; }
+html.apple .setting-item.setting-item-sub .link-button { margin-left: 16px; font-style: italic; }
+
+/* Aperçu de l'image ou de la vidéo de l'alerte (fenêtre de paramétrage) */
+.info-media {
+	display: block;
+	max-width: 100%;
+	max-height: 150px;
+	margin-top: 10px;
+	border-radius: 10px;
+	object-fit: contain;
+	background: repeating-conic-gradient(var(--ui-checker-a, #e5e5ea) 0% 25%, var(--ui-checker-b, #f5f5f7) 0% 50%) 0 0 / 16px 16px;
+}
+
+/* Les lignes « Image / Son » gardent la taille et les couleurs de l'info (l'ancien style
+   donne 16 px aux span des réglages) */
+html.apple .setting-info-lines .info-line span { font-size: 13px; font-weight: 400; }
+html.apple .setting-info-lines .info-line .info-label { color: var(--ui-text-secondary); }
+html.apple .setting-info-lines .info-line .info-text { color: var(--ui-text); }

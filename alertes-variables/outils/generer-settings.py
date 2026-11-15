@@ -65,7 +65,26 @@ PLATEFORMES = [
                             ("gift", "Abonnements offerts"), ("cheer", "Super Chat / Super Sticker")]),
     ("TikTok", "tiktok", [("follow", "Follow"), ("sub", "Abonnement"), ("cheer", "Cadeaux")]),
 ]
-NB_REGLES_SUB = 6
+NB_REGLES = 5
+
+# Règles par catégorie : (genre, libellé) ; "valeur" = libellé du nombre N (None : pas de nombre)
+REGLES = {
+    "sub": {"kinds": [("prime", "Prime Gaming"), ("tier1", "Palier 1"), ("tier2", "Palier 2"), ("tier3", "Palier 3")],
+            "valeur": None, "label": "Type d’abonnement"},
+    "resub": {"kinds": [("every", "Tous les N mois"), ("exact", "Exactement N mois"), ("atleast", "À partir de N mois")],
+              "valeur": "Nombre de mois (N)", "defaut": 12},
+    "gift": {"kinds": [("atleast", "À partir de N abonnements"), ("exact", "Exactement N abonnements")],
+             "valeur": "Nombre d’abonnements (N)", "defaut": 10},
+    "cheer": {"kinds": [("atleast", "À partir de N"), ("exact", "Exactement N")],
+              "valeur": "Montant (N)", "defaut": 1000},
+    "raid": {"kinds": [("atleast", "À partir de N viewers"), ("exact", "Exactement N viewers")],
+             "valeur": "Nombre de viewers (N)", "defaut": 50},
+}
+VALEUR_CHEER = {"twitch": ("Nombre de bits (N)", 1000), "youtube": ("Montant en euros (N)", 10),
+                "tiktok": ("Nombre de pièces (N)", 100)}
+# Catégories qui ont des règles, par plateforme
+REGLES_PLATEFORME = {"twitch": ["sub", "resub", "gift", "cheer", "raid"], "kick": ["resub", "gift"],
+                     "youtube": ["resub", "gift", "cheer"], "tiktok": ["cheer"]}
 
 add(id="alertGap", label="Pause entre deux alertes", description="En secondes", type="number",
     min=0, max=30, step=0.5, defaultValue=1, group="Réglages des alertes")
@@ -121,8 +140,9 @@ def style_settings(prefix, cond):
 add(id="defaultFolder", label="Dossier du scénario par défaut",
     description="Sous-dossier du dossier source", type="text", datalist="alertes-dossiers",
     defaultValue="defaut", group="Visuel et son", showIf=DEF)
+# Volume maître (masqué) : le volume se règle dans chaque alerte ; gardé pour les anciennes URL
 add(id="volume", label="Volume", description="En %", type="number", min=0, max=100, defaultValue=80,
-    group="Visuel et son", showIf=DEF)
+    group="Visuel et son", showIf=DEF, hidden=True)
 add(id="waitMedia", label="Attendre la fin du son ou de la vidéo",
     description="L’alerte reste affichée tant que le son ou la vidéo joue", type="checkbox", defaultValue=True,
     group="Visuel et son", showIf=DEF)
@@ -198,41 +218,59 @@ for nom, cle, types in PLATEFORMES:
         if cle == "twitch" and t == "raid":
             add(id="minRaid", label="Viewers minimum", type="number", min=1, max=100000, defaultValue=1,
                 group=nom, popup=pop, showIf=tid)
+        # Volume de l'alerte (multiplie le volume du scénario)
+        add(id=f"{tid}Volume", label="Volume", description="En % (0 : alerte muette)", type="number",
+            min=0, max=100, defaultValue=100, group=nom, popup=pop, showIf=tid)
         add(id=f"{tid}Files", label="Fichiers", type="info", defaultValue="Connexion à Streamer.bot…",
             group=nom, popup=pop, showIf=tid)
 
-        # Abonnements spéciaux (anniversaires) sous Twitch > Abonnement
-        if cle == "twitch" and t == "sub":
-            for n in range(1, NB_REGLES_SUB + 1):
-                v = {"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}]}
-                titre = f"Règle {n} : {{subRule{n}Name|sans nom}}"
-                rpop = f"subRule{n}"
-                add(id=f"subRule{n}Row", labelTemplate=titre, label=f"Règle {n}", type="actions",
+        # Règles de la catégorie (anniversaires, paliers, montants…), sous l'alerte, en retrait
+        if t in REGLES_PLATEFORME.get(cle, []):
+            R = REGLES[t]
+            valeur, defaut = R.get("valeur"), R.get("defaut")
+            if t == "cheer":
+                valeur, defaut = VALEUR_CHEER[cle]
+            ancien = cle == "twitch" and t == "resub"  # anciennes règles « subRule… » (sous Abonnement)
+            for n in range(1, NB_REGLES + 1):
+                v = {"all": [{"id": tid}, {"id": f"{tid}RuleCount", "value": [str(k) for k in range(n, NB_REGLES + 1)]}]}
+                titre = f"Règle {n} : {{{tid}Rule{n}Name|{tid}Rule{n}Summary}}"
+                rpop = f"{tid}Rule{n}"
+                add(id=f"{tid}Rule{n}Row", labelTemplate=titre, label=f"Règle {n}", type="actions",
                     buttons=[
-                        {"icon": "play", "style": "accent", "title": "Tester la règle", "callFunction": f"TestSubRule{n}"},
-                        {"icon": "gear", "title": "Paramétrer la règle", "popup": rpop, "popupTitle": titre},
+                        {"icon": "play", "style": "accent", "title": "Tester la règle", "callFunction": f"TestRule_{tid}_{n}"},
+                        {"icon": "gear", "title": "Paramétrer la règle", "popup": rpop, "popupTitle": f"{label} · " + titre},
                         {"icon": "trash", "style": "danger", "title": "Supprimer la règle (deux clics)",
-                         "callFunction": f"DeleteSubRule{n}", "confirm": True},
+                         "callFunction": f"DeleteRule_{tid}_{n}", "confirm": True},
                     ], group=nom, sub=True, showIf=v)
-                add(id=f"subRule{n}Name", label="Nom de la règle", description="Pour vous repérer (ex. Anniversaire)",
-                    type="text", defaultValue="Anniversaire" if n == 1 else "", group=nom, popup=rpop, showIf=v)
-                add(id=f"subRule{n}Kind", label="Quand", type="select",
-                    options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
-                    defaultValue="every" if n == 1 else "exact", group=nom, popup=rpop, showIf=v)
-                add(id=f"subRule{n}Months", label="Nombre de mois (N)", type="number", min=1, max=240,
-                    defaultValue=12 if n == 1 else 9, group=nom, popup=rpop, showIf=v)
-                add(id=f"subRule{n}Files", label="Fichiers", type="info", defaultValue="",
+                # Résumé (« Tous les 12 mois ») écrit par l'aperçu, affiché si la règle n'a pas de nom
+                add(id=f"{tid}Rule{n}Summary", label="Résumé", type="info", defaultValue="",
+                    group=nom, hidden=True)
+                add(id=f"{tid}Rule{n}Name", label="Nom de la règle", description="Pour vous repérer (ex. Anniversaire)",
+                    type="text", defaultValue="", group=nom, popup=rpop, showIf=v,
+                    aliases=[f"subRule{n}Name"] if ancien else [])
+                kinds = R["kinds"]
+                kdef = kinds[0][0]
+                if ancien and n > 1:
+                    kdef = "exact"  # valeurs par défaut des anciennes règles
+                add(id=f"{tid}Rule{n}Kind", label=R.get("label", "Quand"), type="select", options=opts(kinds),
+                    defaultValue=kdef, group=nom, popup=rpop, showIf=v,
+                    aliases=[f"subRule{n}Kind"] if ancien else [])
+                if valeur:
+                    vdef = 9 if (ancien and n > 1) else defaut
+                    add(id=f"{tid}Rule{n}Value", label=valeur, type="number", min=1, max=1000000,
+                        defaultValue=vdef, group=nom, popup=rpop, showIf=v,
+                        aliases=[f"subRule{n}Months"] if ancien else [])
+                add(id=f"{tid}Rule{n}Files", label="Fichiers", type="info", defaultValue="",
                     group=nom, popup=rpop, showIf=v)
-                add(id=f"subRule{n}FileName", label="Nom à donner à l’image et au son",
+                add(id=f"{tid}Rule{n}FileName", label="Nom à donner à l’image et au son",
                     description="Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
                     type="info", copyable=True, defaultValue="", group=nom, popup=rpop, showIf=v)
-            # Ajout discret, sous les règles
-            add(id="addSubRule", label="Ajouter une règle d’abonnement", type="button", link=True,
-                callFunction="AddSubRule", group=nom,
-                showIf={"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(0, NB_REGLES_SUB)]}]})
-            add(id="subRuleCount", label="Nombre de règles", type="select",
-                options=[{"value": str(k), "label": str(k)} for k in range(NB_REGLES_SUB + 1)],
-                defaultValue="0", group=nom, hidden=True)
+            add(id=f"{tid}AddRule", label="Ajouter une règle", type="button", link=True, sub=True,
+                callFunction=f"AddRule_{tid}", group=nom,
+                showIf={"all": [{"id": tid}, {"id": f"{tid}RuleCount", "value": [str(k) for k in range(0, NB_REGLES)]}]})
+            add(id=f"{tid}RuleCount", label="Nombre de règles", type="select",
+                options=[{"value": str(k), "label": str(k)} for k in range(NB_REGLES + 1)],
+                defaultValue="0", group=nom, hidden=True, aliases=["subRuleCount"] if ancien else [])
 
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")

@@ -853,8 +853,20 @@ window.addEventListener('message', (event) => {
 				el.classList.remove('setting-info-lines');
 				el.textContent = String(event.data.text || '');
 			}
+			// Aperçu d'une image ou d'une vidéo sous l'info : { media: { src, video: true|false } } ;
+			// media: null l'efface ; sans "media", l'aperçu déjà affiché est conservé
+			if ('media' in event.data) el._media = event.data.media;
+			if (el._media && el._media.src && el.tagName !== 'INPUT') {
+				const m = el._media;
+				const node = document.createElement(m.video ? 'video' : 'img');
+				node.className = 'info-media';
+				node.src = m.src;
+				if (m.video) { node.muted = true; node.loop = true; node.autoplay = true; node.playsInline = true; }
+				el.appendChild(node);
+			}
 			el.dataset.status = event.data.status || '';
 			if (event.data.title) el.title = String(event.data.title);
+			RefreshActionLabels();
 		}
 		return;
 	}
@@ -921,14 +933,31 @@ function IsValueless(setting) {
 	return setting.type === 'button' || setting.type === 'info' || setting.type === 'actions';
 }
 
-// Libellé à trous : « Règle 1 : {subRule1Name|sans nom} » → valeur actuelle du réglage, sinon le texte après |
+// Libellé à trous : « Règle 1 : {nomRegle|resumeRegle|sans nom} » : chaque élément entre | est
+// l'id d'un réglage (sa valeur, le texte de l'option choisie ou de l'info) ; le premier non vide l'emporte.
+// Un élément qui n'est l'id d'aucun réglage est pris comme texte.
 function FillLabelTemplate(template) {
-	return String(template || '').replace(/\{([A-Za-z0-9_]+)(?:\|([^}]*))?\}/g, (m, id, fallback) => {
-		const el = document.getElementById(id);
-		let v = el ? (el.type === 'checkbox' ? String(el.checked) : el.value) : settingsMap.get(id);
-		v = String(v == null ? '' : v).trim();
-		if (el && el.tagName === 'SELECT' && el.selectedOptions[0]) v = el.selectedOptions[0].textContent;
-		return v || fallback || '';
+	return String(template || '').replace(/\{([^{}]+)\}/g, (m, inner) => {
+		for (const part of inner.split('|')) {
+			const el = document.getElementById(part);
+			if (!el) {
+				if (/^[A-Za-z0-9_]+$/.test(part) && settingsMap.has(part)) {
+					const v = String(settingsMap.get(part) ?? '').trim();
+					if (v) return v;
+					continue;
+				}
+				if (part) return part;
+				continue;
+			}
+			let v;
+			if (el.type === 'checkbox') v = String(el.checked);
+			else if (el.tagName === 'SELECT') v = el.selectedOptions[0] ? el.selectedOptions[0].textContent : el.value;
+			else if (el.tagName === 'INPUT') v = el.value;
+			else v = el.textContent;
+			v = String(v || '').trim();
+			if (v) return v;
+		}
+		return '';
 	});
 }
 
@@ -961,6 +990,9 @@ function OpenPopup(id, titleTemplate) {
 	title.dataset.labelTemplate = titleTemplate || '';
 	title.textContent = FillLabelTemplate(titleTemplate || '');
 	if (!dialog.open) dialog.showModal();
+	// L'aperçu peut alors envoyer ce qui est utile à la fenêtre (ex. image de l'alerte) :
+	// { type: 'widget-popup', id: '<popup>' }
+	try { widgetPreview.contentWindow.postMessage({ type: 'widget-popup', id }, '*'); } catch (e) { }
 }
 
 // Bouton avec confirmation : un second clic dans les 3 secondes est demandé

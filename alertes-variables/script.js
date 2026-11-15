@@ -128,21 +128,20 @@ function FolderFiles(name) {
 	return f ? f : null;
 }
 
-// Abonnements spéciaux : noms de fichiers à essayer en premier pour ce nombre de mois
-//   « Exactement N mois » → sub-Nmois ; « Tous les N mois » → sub-tous-les-Nmois
-function SpecialSubNames(info) {
-	if (!info || (info.type !== 'sub' && info.type !== 'resub')) return [];
-	const s = ws.values;
-	const count = Number(s.subRuleCount) || 0;
-	const months = Number(info.months) || 0;
-	const exact = [], every = [];
-	for (let n = 1; n <= count; n++) {
-		const N = Number(s[`subRule${n}Months`]) || 0;
-		if (N <= 0 || months <= 0) continue;
-		if (s[`subRule${n}Kind`] === 'exact' && months === N) exact.push(`sub-${N}mois`);
-		if (s[`subRule${n}Kind`] === 'every' && months % N === 0) every.push(`sub-tous-les-${N}mois`);
+// Règles d'une alerte (anniversaires, paliers, montants…) : noms de fichiers à essayer en premier.
+// Priorité : « exactement N » et type d'abonnement, puis « tous les N » (N le plus grand d'abord),
+// puis « à partir de N » (N le plus grand d'abord).
+function SpecialNames(info) {
+	if (!info) return [];
+	const tid = AlertId(info.platform, info.type);
+	const hits = [];
+	for (const rule of RulesOf(tid)) {
+		if (!RuleMatches(info.type, rule, info)) continue;
+		const prio = { exact: 0, prime: 0, tier1: 0, tier2: 0, tier3: 0, every: 1, atleast: 2 }[rule.kind] ?? 3;
+		hits.push({ name: RuleFile(info.type, rule), prio, N: rule.value });
 	}
-	return [...exact, ...every.sort((a, b) => parseInt(b.match(/\d+/)) - parseInt(a.match(/\d+/)))];
+	hits.sort((x, y) => x.prio - y.prio || y.N - x.N);
+	return hits.map(h => h.name);
 }
 
 function FindNamed(folderFiles, names, extensions) {
@@ -161,7 +160,7 @@ function FindNamed(folderFiles, names, extensions) {
 function ResolveMedia(sc, type, info) {
 	const defName = String(ws.values.defaultFolder || 'defaut').trim();
 	const def = FolderFiles(defName);
-	const special = SpecialSubNames(info);
+	const special = SpecialNames(info);
 	const pick = (useOwn, extensions) => {
 		if (special.length) {
 			const own = useOwn && sc ? FolderFiles(sc.name) : null;
@@ -292,7 +291,7 @@ async function PreloadActive() {
 	const token = ++preloadToken;
 	const { scenario } = ActiveScenario();
 	for (const type of ALERT_TYPES) {
-		if (!ws.values[`alert${type[0].toUpperCase()}${type.slice(1)}`]) continue;
+		if (!TypeEnabled(type)) continue;
 		const media = ResolveMedia(scenario, type);
 		for (const ref of [media.visual, media.sound]) {
 			if (token !== preloadToken) return;
@@ -374,7 +373,10 @@ async function PlayAlert(info) {
 	const [visualURI, soundURI] = await Promise.all([RequestFile(media.visual), RequestFile(media.sound)]);
 	const visual = visualURI || (ws.demo && !media.visual ? DemoVisual(info.type) : null);
 	const muted = sbState.mute;
-	const volume = Math.max(0, Math.min(100, Number(style.volume) || 0)) / 100;
+	// Volume : celui du scénario (ou maître), multiplié par celui de l'alerte
+	const alertVolume = ws.values[`${AlertId(info.platform, info.type)}Volume`];
+	const volume = Math.max(0, Math.min(100, Number(style.volume) || 0)) / 100 *
+		Math.max(0, Math.min(100, alertVolume === undefined ? 100 : Number(alertVolume) || 0)) / 100;
 
 	// Mise en forme
 	ApplyFont(style.font);
@@ -728,54 +730,132 @@ for (const type of ALERT_TYPES) {
 	}
 }
 
-/////////////////////////////////////////////////
-// RÈGLES D'ABONNEMENT ET FICHIERS (paramétrage) //
-/////////////////////////////////////////////////
+//////////////////////////////////////////
+// RÈGLES DES ALERTES ET FICHIERS          //
+//////////////////////////////////////////
 
-const NB_SUB_RULES = 6;
-const RULE_FIELDS = ['Name', 'Kind', 'Months'];
+const RULE_MAX = 5;
+const RULE_FIELDS = ['Name', 'Kind', 'Value'];
+const PLATFORM_OF = { twitch: 'Twitch', kick: 'Kick', youtube: 'YouTube', tiktok: 'TikTok' };
 
-function RuleFileName(n) {
-	const s = ws.values;
-	const N = Number(s[`subRule${n}Months`]) || 0;
-	return s[`subRule${n}Kind`] === 'exact' ? `sub-${N}mois` : `sub-tous-les-${N}mois`;
+// Identifiant d'une alerte : twitchResub, kickGift… (sans plateforme : Twitch)
+function AlertId(platform, type) {
+	return `${PLATFORM_KEYS[platform] || 'twitch'}${Cap(type)}`;
 }
 
-for (let n = 1; n <= NB_SUB_RULES; n++) {
-	// Tester une règle : abonnement de N mois
-	window[`TestSubRule${n}`] = function () {
-		const months = Number(ws.values[`subRule${n}Months`]) || 12;
-		Enqueue(Object.assign({}, DEMO_INFO.resub, { type: months > 1 ? 'resub' : 'sub', test: true, platform: 'Twitch', months }));
-	};
-	// Supprimer une règle : les suivantes remontent d'un cran
-	window[`DeleteSubRule${n}`] = function () {
-		const s = ws.values;
-		const count = Math.min(NB_SUB_RULES, Number(s.subRuleCount) || 0);
-		if (n > count) return;
-		const changes = {};
-		for (let k = n; k < count; k++)
-			for (const f of RULE_FIELDS) changes[`subRule${k}${f}`] = s[`subRule${k + 1}${f}`];
-		for (const f of RULE_FIELDS) {
-			const def = ws.definition.settings.find(x => x.id === `subRule${count}${f}`);
-			if (def) changes[def.id] = def.defaultValue;
+// Alertes qui ont des règles (d'après settings.json) : [{ tid, platform, type }]
+function RuleAlerts() {
+	const list = [];
+	for (const x of ws.definition.settings) {
+		const m = /^(twitch|kick|youtube|tiktok)([A-Z][a-z]+)RuleCount$/.exec(x.id);
+		if (m) list.push({ tid: `${m[1]}${m[2]}`, platform: PLATFORM_OF[m[1]], type: m[2].toLowerCase() });
+	}
+	return list;
+}
+
+function RuleCount(tid) {
+	return Math.max(0, Math.min(RULE_MAX, parseInt(ws.values[`${tid}RuleCount`], 10) || 0));
+}
+
+function RulesOf(tid) {
+	const s = ws.values, out = [];
+	for (let n = 1; n <= RuleCount(tid); n++)
+		out.push({ n, name: String(s[`${tid}Rule${n}Name`] || '').trim(), kind: s[`${tid}Rule${n}Kind`],
+			value: Math.max(0, Number(s[`${tid}Rule${n}Value`]) || 0) });
+	return out;
+}
+
+// Nom de fichier d'une règle (sans extension)
+function RuleFile(type, rule) {
+	const N = rule.value;
+	switch (type) {
+		case 'sub': return `sub-${rule.kind}`;
+		case 'resub':
+			if (rule.kind === 'exact') return `sub-${N}mois`;
+			if (rule.kind === 'atleast') return `sub-${N}mois-plus`;
+			return `sub-tous-les-${N}mois`;
+		default:
+			return rule.kind === 'exact' ? `${type}-${N}` : `${type}-${N}-plus`;
+	}
+}
+
+// Résumé lisible d'une règle (affiché si elle n'a pas de nom)
+function RuleSummary(type, rule, platform) {
+	const N = rule.value;
+	const unit = { resub: 'mois', gift: 'abonnements', raid: 'viewers',
+		cheer: platform === 'Twitch' ? 'bits' : platform === 'TikTok' ? 'pièces' : '€' }[type] || '';
+	if (type === 'sub') return { prime: 'Prime Gaming', tier1: 'Palier 1', tier2: 'Palier 2', tier3: 'Palier 3' }[rule.kind] || '';
+	if (rule.kind === 'every') return `Tous les ${N} ${unit}`;
+	if (rule.kind === 'exact') return `Exactement ${N} ${unit}`;
+	return `À partir de ${N} ${unit}`;
+}
+
+// La règle s'applique-t-elle à cet événement ?
+function RuleMatches(type, rule, info) {
+	if (type === 'sub') return !!info.tier && info.tier === rule.kind;
+	const x = Number({ resub: info.months, gift: info.count, cheer: info.value, raid: info.viewers }[type]) || 0;
+	const N = rule.value;
+	if (N <= 0) return false;
+	if (rule.kind === 'exact') return x === N;
+	if (rule.kind === 'every') return x > 0 && x % N === 0;
+	return x >= N;
+}
+
+// Événement de test qui déclenche la règle
+function RuleTestInfo(type, rule, platform) {
+	const info = Object.assign({}, DEMO_INFO[type], { type, test: true, platform });
+	const N = rule.value || 1;
+	if (type === 'sub') info.tier = rule.kind;
+	if (type === 'resub') info.months = N;
+	if (type === 'gift') info.count = N;
+	if (type === 'raid') info.viewers = N;
+	if (type === 'cheer') {
+		info.value = N;
+		info.bits = platform === 'Twitch' ? N : 0;
+		info.amount = platform === 'Twitch' ? `${N} bits` : platform === 'TikTok' ? `${N} pièces` : `${N} €`;
+	}
+	return info;
+}
+
+// Boutons de la page de paramétrage : tester, supprimer, ajouter (une fonction par alerte et par règle)
+function DefineRuleFunctions() {
+	for (const { tid, platform, type } of RuleAlerts()) {
+		for (let n = 1; n <= RULE_MAX; n++) {
+			window[`TestRule_${tid}_${n}`] = function () {
+				const rule = RulesOf(tid).find(r => r.n === n);
+				if (rule) Enqueue(RuleTestInfo(type, rule, platform));
+			};
+			// Supprimer : les règles suivantes remontent d'un cran
+			window[`DeleteRule_${tid}_${n}`] = function () {
+				const s = ws.values, count = RuleCount(tid);
+				if (n > count) return;
+				const changes = {};
+				for (let k = n; k < count; k++)
+					for (const f of RULE_FIELDS)
+						if (`${tid}Rule${k + 1}${f}` in s) changes[`${tid}Rule${k}${f}`] = s[`${tid}Rule${k + 1}${f}`];
+				for (const f of RULE_FIELDS) {
+					const def = ws.definition.settings.find(x => x.id === `${tid}Rule${count}${f}`);
+					if (def) changes[def.id] = def.defaultValue;
+				}
+				changes[`${tid}RuleCount`] = String(count - 1);
+				PostToSettings({ type: 'widget-set', values: changes });
+			};
 		}
-		changes.subRuleCount = String(count - 1);
-		PostToSettings({ type: 'widget-set', values: changes });
-	};
+		window[`AddRule_${tid}`] = function () {
+			const count = RuleCount(tid);
+			if (count >= RULE_MAX) return;
+			const n = count + 1, changes = { [`${tid}RuleCount`]: String(n) };
+			for (const f of RULE_FIELDS) {
+				const def = ws.definition.settings.find(x => x.id === `${tid}Rule${n}${f}`);
+				if (def) changes[def.id] = f === 'Name' ? '' : def.defaultValue;
+			}
+			PostToSettings({ type: 'widget-set', values: changes });
+		};
+	}
 }
 
-window.AddSubRule = function () {
-	const count = Math.min(NB_SUB_RULES, Number(ws.values.subRuleCount) || 0);
-	if (count >= NB_SUB_RULES) return;
-	const n = count + 1;
-	PostToSettings({ type: 'widget-set', values: {
-		[`subRule${n}Name`]: '', [`subRule${n}Kind`]: 'every', [`subRule${n}Months`]: '12', subRuleCount: String(n)
-	} });
-};
-
-// « Fichiers » de chaque alerte : une ligne image, une ligne son, avec un état
-//   ok (vert) : fichier propre trouvé ; warn (orange) : fichier de repli (alerte.*, sub.* pour une règle) ;
-//   error (rouge) : aucun fichier
+// « Fichiers » : une ligne image, une ligne son, avec un état
+//   ok (vert) : fichier propre trouvé ; warn (orange) : fichier de repli ; error (rouge) : aucun fichier
 function FileLine(found, label, preferred) {
 	if (!found) return { label, text: 'aucun', status: 'error' };
 	const def = String(ws.values.defaultFolder || 'defaut').trim().toLowerCase();
@@ -785,51 +865,78 @@ function FileLine(found, label, preferred) {
 	return { label, text: `${found.fichier} (${from})`, status };
 }
 
-function PostFilesInfo() {
-	if (!ws.demo) return;
-	const post = (id, data) => PostToSettings(Object.assign({ type: 'widget-info', id }, data));
-	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
-
-	// Nom de fichier à donner pour chaque règle (champ copiable), même sans Streamer.bot
-	for (let n = 1; n <= NB_SUB_RULES; n++)
-		if (ids.has(`subRule${n}FileName`)) post(`subRule${n}FileName`, { text: RuleFileName(n) });
-
-	if (!connected || !sbState.dossier || !sbState.dossierExiste) {
-		const why = !connected ? 'Streamer.bot non connecté' : 'Choisissez le dossier source';
-		ids.forEach(id => { if (id.endsWith('Files')) post(id, { lines: [{ text: why, status: 'warn' }] }); });
-		return;
-	}
-
+// Fichiers d'une fenêtre « Fichiers » (alerte ou règle) : { lines, visual }
+function FilesFor(id) {
 	const sc = ActiveScenario().scenario;
-	for (const id of ids) {
-		const m = /^(twitch|kick|youtube|tiktok)([A-Z][a-z]+)Files$/.exec(id);
-		if (!m) continue;
+	let m = /^(twitch|kick|youtube|tiktok)([A-Z][a-z]+)Files$/.exec(id);
+	if (m) {
 		const type = m[2].toLowerCase();
 		const media = ResolveMedia(sc, type, { type, months: 1 });
 		const names = [].concat(FILE_NAMES[type] || [type]).map(x => String(x).toLowerCase());
-		post(id, { lines: [FileLine(media.visual, 'Image', names), FileLine(media.sound, 'Son', names)] });
+		return { visual: media.visual, lines: [FileLine(media.visual, 'Image', names), FileLine(media.sound, 'Son', names)] };
 	}
-
-	// Règles : fichiers spéciaux, sinon ceux de l'abonnement habituel (orange)
-	const def = FolderFiles(String(ws.values.defaultFolder || 'defaut').trim());
-	for (let n = 1; n <= NB_SUB_RULES; n++) {
-		if (!ids.has(`subRule${n}Files`)) continue;
-		const name = RuleFileName(n);
-		const pick = (useOwn, ext, type) => {
+	m = /^((twitch|kick|youtube|tiktok)([A-Z][a-z]+))Rule(\d)Files$/.exec(id);
+	if (m) {
+		const tid = m[1], type = m[3].toLowerCase(), n = Number(m[4]);
+		const rule = RulesOf(tid).find(r => r.n === n);
+		if (!rule) return null;
+		const name = RuleFile(type, rule);
+		const def = FolderFiles(String(ws.values.defaultFolder || 'defaut').trim());
+		const base = ResolveMedia(sc, type, { type, months: 1 });
+		const pick = (useOwn, ext, fallback) => {
 			const own = useOwn && sc ? FolderFiles(sc.name) : null;
 			const fo = own && FindNamed(own.fichiers, [name], ext);
 			if (fo) return { dossier: own.nom, fichier: fo };
 			const fd = def && FindNamed(def.fichiers, [name], ext);
 			if (fd) return { dossier: def.nom, fichier: fd };
-			const media = ResolveMedia(sc, 'sub', { type: 'sub', months: 1 });
-			return type === 'visual' ? media.visual : media.sound;
+			return fallback; // sinon, ceux de l'alerte (orange)
 		};
-		post(`subRule${n}Files`, { lines: [
-			FileLine(pick(sc && sc.visual === 'own', VISUAL_EXT, 'visual'), 'Image', [name]),
-			FileLine(pick(sc && sc.sound === 'own', SOUND_EXT, 'sound'), 'Son', [name])
-		] });
+		const visual = pick(sc && sc.visual === 'own', VISUAL_EXT, base.visual);
+		const sound = pick(sc && sc.sound === 'own', SOUND_EXT, base.sound);
+		return { visual, lines: [FileLine(visual, 'Image', [name]), FileLine(sound, 'Son', [name])] };
+	}
+	return null;
+}
+
+function PostFilesInfo() {
+	if (!ws.demo) return;
+	const post = (id, data) => PostToSettings(Object.assign({ type: 'widget-info', id }, data));
+	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
+
+	// Nom de fichier et résumé de chaque règle, même sans Streamer.bot
+	for (const { tid, platform, type } of RuleAlerts())
+		for (const rule of RulesOf(tid)) {
+			post(`${tid}Rule${rule.n}FileName`, { text: RuleFile(type, rule) });
+			post(`${tid}Rule${rule.n}Summary`, { text: RuleSummary(type, rule, platform) });
+		}
+
+	if (!connected || !sbState.dossier || !sbState.dossierExiste) {
+		const why = !connected ? 'Streamer.bot non connecté' : 'Choisissez le dossier source';
+		ids.forEach(id => { if (id.endsWith('Files')) post(id, { lines: [{ text: why, status: 'warn' }], media: null }); });
+		return;
+	}
+	for (const id of ids) {
+		if (!id.endsWith('Files')) continue;
+		const f = FilesFor(id);
+		if (f) post(id, { lines: f.lines });
 	}
 }
+
+// Fenêtre ouverte dans la page de paramétrage : aperçu de l'image (ou de la vidéo) de l'alerte
+async function OnPopupOpened(popupId) {
+	const id = `${popupId}Files`;
+	const f = connected && sbState.dossierExiste ? FilesFor(id) : null;
+	if (!f) return;
+	const post = (data) => PostToSettings(Object.assign({ type: 'widget-info', id, lines: f.lines }, data));
+	if (!f.visual) { post({ media: null }); return; }
+	const uri = await RequestFile(f.visual);
+	const ext = f.visual.fichier.split('.').pop().toLowerCase();
+	post({ media: uri ? { src: uri, video: VIDEO_EXT.includes(ext) } : null });
+}
+
+window.addEventListener('message', (e) => {
+	if (e.data && e.data.type === 'widget-popup' && typeof e.data.id === 'string' && ws) OnPopupOpened(e.data.id);
+});
 
 ///////////////
 // DÉMARRAGE //
@@ -848,6 +955,7 @@ function PostFilesInfo() {
 		console.error('[Alertes variables] Réglages illisibles :', e);
 		return;
 	}
+	DefineRuleFunctions();
 	ManageScenarios(ws.values, {});
 	ConnectStreamerBot();
 })();

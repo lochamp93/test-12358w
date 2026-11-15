@@ -212,6 +212,8 @@ html.apple .switch {
 	display: inline-block;
 	width: 38px;
 	height: 22px;
+	margin: 0; /* centré sur la ligne (l'ancien style ajoutait une marge basse) */
+	vertical-align: middle;
 	flex-shrink: 0;
 }
 

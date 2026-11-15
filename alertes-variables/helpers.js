@@ -88,12 +88,29 @@ function ParseEvent(source, eventType, type, data) {
 
 	const viewers = Number(Pick(d, ['viewers', 'viewerCount', 'viewer_count', 'viewersCount'])) || 0;
 
+	// Montant en nombre (règles « à partir de N ») : bits, pièces TikTok ou montant d'un Super Chat
+	let value = bits;
+	if (!value) {
+		const raw = Pick(d, ['diamondCount', 'coins', 'amount', 'microAmount', 'value', 'amountString', 'formattedAmount']);
+		value = typeof raw === 'number' ? raw : parseFloat(String(raw || '').replace(/[^0-9.,]/g, '').replace(',', '.')) || 0;
+		if (Pick(d, ['microAmount']) && raw === Pick(d, ['microAmount'])) value = value / 1000000;
+		if (source === 'TikTok') value *= Number(Pick(d, ['repeatCount'])) || 1;
+	}
+
+	// Type d'abonnement (règles d'Abonnement) : prime, tier1, tier2, tier3
+	const tierRaw = String(Pick(d, ['subTier', 'sub_tier', 'tier', 'subPlan', 'sub_plan', 'plan']) ?? '').toLowerCase();
+	let tier = '';
+	if (d.isPrime || d.is_prime || tierRaw.includes('prime')) tier = 'prime';
+	else if (/3000|3/.test(tierRaw)) tier = 'tier3';
+	else if (/2000|2/.test(tierRaw)) tier = 'tier2';
+	else if (/1000|1/.test(tierRaw) || tierRaw === '0') tier = 'tier1';
+
 	const message = String(Pick(d, ['message.message', 'message.text', 'text', 'message', 'userMessage', 'comment']) || '');
 
 	// Twitch : chaque abonnement d'un « gift bomb » arrive aussi seul : on garde uniquement le total
 	const fromBomb = !!(d.fromCommunitySubGift || d.isFromGiftBomb || d.fromGiftBomb || d.communityGift || d.isCommunityGift);
 
-	return { platform: source, eventType, type, user: String(user), months, count, amount, bits, viewers, message, fromBomb };
+	return { platform: source, eventType, type, user: String(user), months, count, amount, bits, value, tier, viewers, message, fromBomb };
 }
 
 // Remplit un texte d'alerte : {user} et les nombres prennent la couleur du pseudo
@@ -138,9 +155,9 @@ function DemoVisual(type) {
 
 const DEMO_INFO = {
 	follow: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '' },
-	sub: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '' },
+	sub: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '', tier: 'tier1' },
 	resub: { user: 'Viewer_Test', months: 14, count: 1, amount: '', viewers: 0, message: 'Toujours là pour les lives horreur 👻' },
 	gift: { user: 'Viewer_Test', months: 1, count: 5, amount: '', viewers: 0, message: '' },
-	cheer: { user: 'Viewer_Test', months: 1, count: 1, amount: '500 bits', bits: 500, viewers: 0, message: 'Prends ça pour le courage !' },
+	cheer: { user: 'Viewer_Test', months: 1, count: 1, amount: '500 bits', bits: 500, value: 500, viewers: 0, message: 'Prends ça pour le courage !' },
 	raid: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 42, message: '' }
 };

@@ -42,18 +42,29 @@ Les noms comme « Twitch_sub_1.gif » ou « Twitch_Raid.gif » ne sont PAS
 reconnus : renommez-les (ex. Twitch_Raid.gif → raid.gif).
 
 
-3. ABONNEMENTS SPÉCIAUX (anniversaires de sub)
-----------------------------------------------
+3. RÈGLES (anniversaires, paliers, montants)
+--------------------------------------------
 
-Dans la page de paramétrage, section « Alertes », réglage « Abonnements
-spéciaux » : choisissez le nombre de règles (jusqu'à 6), puis pour chacune :
+Dans la page de paramétrage, sous chaque alerte qui le permet, « Ajouter une
+règle » (jusqu'à 5 par alerte). L'engrenage de la règle affiche le nom exact à
+donner au fichier, avec un bouton pour le copier.
 
-    Exactement N mois   → fichiers  sub-Nmois           ex. sub-9mois.gif
-    Tous les N mois     → fichiers  sub-tous-les-Nmois  ex. sub-tous-les-12mois.gif
-                                    (joué à 12, 24, 36 mois…)
+  Abonnement (Twitch)
+    Prime Gaming / Palier 1, 2, 3   → sub-prime, sub-tier1, sub-tier2, sub-tier3
+  Réabonnement
+    Tous les N mois                 → sub-tous-les-Nmois   ex. sub-tous-les-12mois.gif
+    Exactement N mois               → sub-Nmois            ex. sub-9mois.gif
+    À partir de N mois              → sub-Nmois-plus       ex. sub-24mois-plus.gif
+  Abonnements offerts
+    À partir de N / exactement N    → gift-N-plus / gift-N     ex. gift-10-plus.gif
+  Bits, Super Chat, cadeaux TikTok
+    À partir de N / exactement N    → cheer-N-plus / cheer-N   ex. cheer-1000-plus.gif
+  Raid
+    À partir de N / exactement N    → raid-N-plus / raid-N     ex. raid-50-plus.gif
 
-« Exactement » passe avant « Tous les ». Sans fichier spécial, l'alerte
-« sub » ou « resub » habituelle est jouée.
+Priorité : « exactement » (et le type d'abonnement), puis « tous les », puis
+« à partir de » ; à égalité, le N le plus grand. Sans fichier de règle,
+l'alerte habituelle est jouée.
 
 
 4. FORMATS ACCEPTÉS
