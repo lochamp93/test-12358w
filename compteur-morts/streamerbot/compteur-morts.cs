@@ -9,6 +9,7 @@
 //              URL d'image (mode cover ; vide = jaquette Twitch)
 //    jeu     : nom du jeu à modifier (sinon : jeu choisi à la main, puis catégorie Twitch)
 //    annonce : false pour ne pas écrire dans le chat (true par défaut)
+//    msgId   : identifiant du message du chat (les doublons sont ignorés)
 //
 //  Jaquettes : l'action utilise la variable Streamer.bot %gameBoxArt% (catégorie
 //  Twitch en cours) ; à défaut, elle interroge l'API Twitch une fois par jeu.
@@ -34,7 +35,29 @@ public class CPHInline
 	const string SANS_JEU = "Sans catégorie";
 	// -------------------------------------
 
+	// Messages du chat déjà traités : l'overlay peut être présent dans plusieurs scènes OBS,
+	// chaque instance envoie la même commande, une seule doit compter
+	static readonly object verrou = new object();
+	static readonly Dictionary<string, bool> messagesTraites = new Dictionary<string, bool>();
+	static readonly Queue<string> ordreMessages = new Queue<string>();
+
 	public bool Execute()
+	{
+		string msgId = Arg("msgId").Trim();
+		if (msgId != "")
+		{
+			lock (verrou)
+			{
+				if (messagesTraites.ContainsKey(msgId)) return true; // doublon ignoré
+				messagesTraites[msgId] = true;
+				ordreMessages.Enqueue(msgId);
+				while (ordreMessages.Count > 200) messagesTraites.Remove(ordreMessages.Dequeue());
+			}
+		}
+		lock (verrou) { return Executer(); }
+	}
+
+	bool Executer()
 	{
 		string mode = Arg("mode").ToLowerInvariant();
 		if (mode == "")

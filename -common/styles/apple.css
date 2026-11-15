@@ -152,11 +152,11 @@ html.apple textarea {
 	padding: 0 9px;
 	border: none;
 	border-radius: 7px;
-	background: var(--ui-fill);
+	background-color: var(--ui-fill);
 	color: var(--ui-text);
 	box-shadow: none;
 	outline: none;
-	transition: box-shadow 0.15s, background 0.15s;
+	transition: box-shadow 0.15s, background-color 0.15s;
 }
 
 html.apple input[type="text"]:hover,
@@ -164,7 +164,7 @@ html.apple input[type="number"]:hover,
 html.apple input[type="password"]:hover,
 html.apple select:hover,
 html.apple textarea:hover {
-	background: var(--ui-fill-strong);
+	background-color: var(--ui-fill-strong);
 }
 
 html.apple textarea { height: auto; padding: 6px 9px; }

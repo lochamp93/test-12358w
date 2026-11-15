@@ -313,6 +313,9 @@ function ConnectStreamerBot() {
 		const name = data && (data.name || (data.variable && data.variable.name));
 		if (!name || name === ws.values.variableName) RefreshFromStreamerBot();
 	});
+	// Commandes du chat (pas dans l'aperçu de la page de paramétrage)
+	sbClient.on('Twitch.ChatMessage', ({ data }) => { if (!ws.demo) HandleChatCommand(data); });
+
 	sbClient.on('General.Custom', ({ data }) => {
 		if (data && data.source === 'compteurMorts' && (!data.variable || data.variable === ws.values.variableName)) {
 			const parsed = ParseDeathData(data.data);
@@ -352,6 +355,50 @@ window.PreviewTestGame = function () {
 	if (state && state.name === next.name) next.name += ' ';
 	SetState(next);
 };
+
+///////////////////////
+// COMMANDES DU CHAT //
+///////////////////////
+
+// Niveau de l'auteur : 40 streamer, 30 modo, 20 VIP, 15 abonné, 10 viewer
+function ChatPermissionLevel(data) {
+	const u = data.user || data.message || {};
+	const role = Number(u.role) || 1;
+	if (role >= 4) return 40;
+	if (role >= 3) return 30;
+	if (role >= 2) return 20;
+	if (u.subscribed || u.subscriber) return 15;
+	return 10;
+}
+
+function HandleChatCommand(data) {
+	const s = ws.values;
+	const msg = data && data.message ? data.message : {};
+	const text = String(msg.message || data.text || '').trim();
+	const [first, ...rest] = text.split(/\s+/);
+	const word = (first || '').toLowerCase();
+	if (!word) return;
+
+	const commands = [
+		{ cmd: s.cmdAdd, mode: 'add' },
+		{ cmd: s.cmdSub, mode: 'sub' },
+		{ cmd: s.cmdSet, mode: 'set' },
+		{ cmd: s.cmdReset, mode: 'reset' }
+	];
+	const match = commands.find(c => c.cmd && c.cmd.trim().toLowerCase() === word);
+	if (!match) return;
+	if (ChatPermissionLevel(data) < Number(s.permissionLevel)) return;
+
+	const args = { mode: match.mode, annonce: 'true', msgId: String(msg.msgId || '') };
+	if (match.mode === 'set') {
+		const n = parseInt(rest[0], 10);
+		if (!Number.isFinite(n) || n < 0) return;
+		args.valeur = String(n);
+	}
+
+	sbClient.doAction({ name: s.actionName }, args)
+		.catch(e => console.error('[Compteur de morts] Action impossible :', e));
+}
 
 ///////////////
 // DÉMARRAGE //

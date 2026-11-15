@@ -204,12 +204,17 @@ code {
 	min-width: 0;
 }
 
-.row.big button {
+html.apple .row.big button {
 	height: 48px;
 	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
 	font-family: var(--ui-font-display);
-	font-size: 22px;
-	font-weight: 600;
+	font-size: 28px;
+	font-weight: 500;
 }
 
 html.apple button.danger {
@@ -301,17 +306,29 @@ html.apple .game-item button.confirming {
 }
 
 html.apple .game-item button {
-	height: 26px;
-	padding: 0 9px;
-	font-size: 12px;
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	box-shadow: none;
 	background: var(--ui-fill);
+	flex-shrink: 0;
 }
 
-html.apple .game-item button.ui-icon {
-	width: 26px;
-	padding: 0;
+html.apple .game-item button svg {
+	width: 15px;
+	height: 15px;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.8;
+	stroke-linecap: round;
+	stroke-linejoin: round;
 }
+
+html.apple .game-item button.choose { color: var(--ui-accent); }
 
 html.apple .game-item button.active {
 	background: var(--ui-accent);

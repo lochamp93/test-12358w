@@ -25,9 +25,10 @@ html.apple #header {
 
 html.apple #widgetTitle {
 	font-family: var(--ui-font-display);
-	font-size: 15px;
-	font-weight: 600;
-	margin-right: 4px;
+	font-size: 20px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	margin-right: 6px;
 }
 
 html.apple #membershipsButton {
@@ -53,8 +54,10 @@ html.apple #widgetUrlInputWrapper {
 
 html.apple #urlLabel { display: none; }
 
-/* URL masquée (••••) : elle reste copiable, sans prendre de place */
-html.apple #widgetUrlInput {
+/* URL non affichée : le bouton « Copier l'URL » suffit */
+html.apple #widgetUrlInput { display: none; }
+
+html.apple #widgetUrlInput.unused {
 	width: 120px;
 	flex: 0 0 120px;
 	filter: none;
@@ -138,6 +141,10 @@ html.apple .setting-group {
 	background: var(--ui-bg-elevated);
 	border-radius: var(--ui-radius);
 	box-shadow: var(--ui-shadow);
+}
+
+html.apple .setting-group:last-child {
+	margin-bottom: 64px; /* respiration sous la dernière section */
 }
 
 html.apple .setting-group h2 {

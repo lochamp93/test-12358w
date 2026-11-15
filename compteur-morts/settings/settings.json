@@ -724,6 +724,76 @@
 			"group": "Alignement"
 		},
 		{
+			"id": "cmdAdd",
+			"label": "Ajouter une mort",
+			"description": "Commande du chat (ex. !addmort). Vide : désactivée",
+			"type": "text",
+			"defaultValue": "!addmort",
+			"group": "Commandes"
+		},
+		{
+			"id": "cmdSub",
+			"label": "Retirer une mort",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!supmort",
+			"group": "Commandes"
+		},
+		{
+			"id": "cmdSet",
+			"label": "Définir le nombre de morts",
+			"description": "Suivie du nombre (ex. !setmort 12)",
+			"type": "text",
+			"defaultValue": "!setmort",
+			"group": "Commandes"
+		},
+		{
+			"id": "cmdReset",
+			"label": "Remettre à zéro",
+			"description": "Vide : désactivée",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Commandes"
+		},
+		{
+			"id": "permissionLevel",
+			"label": "Qui peut utiliser les commandes",
+			"description": "",
+			"type": "select",
+			"options": [
+				{
+					"value": "40",
+					"label": "Streamer"
+				},
+				{
+					"value": "30",
+					"label": "Mods et streamer"
+				},
+				{
+					"value": "20",
+					"label": "VIP, mods et streamer"
+				},
+				{
+					"value": "15",
+					"label": "Abonnés, VIP, mods et streamer"
+				},
+				{
+					"value": "10",
+					"label": "Tout le monde"
+				}
+			],
+			"defaultValue": "30",
+			"group": "Commandes"
+		},
+		{
+			"id": "actionName",
+			"label": "Action Streamer.bot",
+			"description": "Action importée depuis le dock",
+			"type": "sb-actions",
+			"defaultValue": "Compteur de morts | Modifier",
+			"group": "Commandes"
+		},
+		{
 			"id": "address",
 			"label": "Adresse Streamer.bot",
 			"description": "Adresse du serveur WebSocket de Streamer.bot",

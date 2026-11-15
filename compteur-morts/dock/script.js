@@ -79,8 +79,8 @@ function Render() {
 	const demo = ws.demo && !connected; // aperçu sans Streamer.bot : exemple local
 
 	document.documentElement.style.setProperty('--dock-accent', s.accentColor);
-	els.minus.textContent = `−${s.step}`;
-	els.plus.textContent = `+${s.step}`;
+	els.minus.textContent = s.step > 1 ? `−${s.step}` : '−';
+	els.plus.textContent = s.step > 1 ? `+${s.step}` : '+';
 
 	// Bandeaux d'état
 	els.status.textContent = demo ? 'Démo' : (connected ? 'Connecté' : 'Déconnecté');
@@ -148,8 +148,9 @@ function Render() {
 		if (s.allowManualGame && key !== data.current) {
 			const choose = document.createElement('button');
 			choose.type = 'button';
-			choose.textContent = 'Choisir';
-			choose.title = 'Afficher ce jeu';
+			choose.className = 'ui-icon choose';
+			choose.innerHTML = ICON.check;
+			choose.title = 'Choisir ce jeu';
 			choose.addEventListener('click', () => Send('select', { jeu: g.name }));
 			item.appendChild(choose);
 		}
