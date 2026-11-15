@@ -6,6 +6,7 @@ const $ = (id) => document.getElementById(id);
 
 let ws = null;
 let sbClient = null, sbHost = null, sbPort = null;
+let lastVoiceError = null; // dernière erreur de voix déjà signalée
 let lastFolder = null; // dernier dossier source affiché (pour la confirmation)
 let connected = false;
 let actionFound = false;
@@ -91,6 +92,13 @@ function Render() {
 
 	RenderTests();
 	RenderHistory();
+
+	// Erreur de synthèse vocale signalée par l'overlay (une seule fois par erreur)
+	const ve = r.voixErreur;
+	if (ve && ve.time && ve.time !== lastVoiceError) {
+		if (lastVoiceError !== null) Toast(`Voix : ${ve.message}`);
+		lastVoiceError = ve.time;
+	} else if (lastVoiceError === null && report) lastVoiceError = 0;
 }
 
 function Escape(text) {

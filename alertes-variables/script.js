@@ -563,6 +563,8 @@ function Report() {
 			msgMute: ws.values.msgMute,
 			msgUnmute: ws.values.msgUnmute,
 			tests: TestOptions(),
+			voix: !!ws.values.ttsEnabled,
+			voixErreur: ttsError,
 			historique: history.slice(0, HISTORY_MAX)
 		};
 		const json = JSON.stringify(report);
@@ -590,6 +592,8 @@ function OnCustom(data) {
 		case 'tts': {
 			if (data.erreur) {
 				console.warn('[Alertes variables] Synthèse vocale :', data.erreur);
+				// Le dock affiche l'erreur (clé absente ou refusée, crédit…)
+				if (!ws.demo && pendingFiles.has(data.requestId)) { ttsError = { message: String(data.erreur), time: Date.now() }; Report(); }
 				if (ws.demo) PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text: data.erreur, status: 'warn' });
 			}
 			const resolve = pendingFiles.get(data.requestId);
@@ -982,6 +986,7 @@ async function OnPopupOpened(popupId) {
 // DOCK : TESTS DISPONIBLES ET DERNIÈRES ALERTES //
 //////////////////////////////////////////////
 
+let ttsError = null; // dernière erreur de synthèse vocale (affichée par le dock)
 const HISTORY_MAX = 20; // dernières alertes gardées (dock), pas plus
 let history = [];
 
