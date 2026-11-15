@@ -60,46 +60,68 @@ for t, label, _ in TYPES:
     add(id=f"test{t.capitalize()}", label=f"Tester : {label}", type="button",
         callFunction=f"Test{t.capitalize()}", group="Tester dans l’aperçu")
 
-# ---------- Alertes ----------
-for t, label, _ in TYPES:
-    add(id=f"alert{t.capitalize()}", label=label, type="checkbox", defaultValue=True, group="Alertes")
-add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte", type="number",
-    min=1, max=100000, defaultValue=1, group="Alertes", showIf="alertCheer")
-add(id="minRaid", label="Viewers minimum pour un raid", type="number", min=1, max=100000, defaultValue=1,
-    group="Alertes", showIf="alertRaid")
+# ---------- Plateformes et leurs alertes ----------
+# Alertes produites par chaque plateforme (voir EVENT_MAP dans helpers.js)
+PLATEFORMES = [
+    ("Twitch", "twitch", [("follow", "Follow"), ("sub", "Abonnement"), ("resub", "Réabonnement"),
+                          ("gift", "Abonnements offerts"), ("cheer", "Bits"), ("raid", "Raid")]),
+    ("Kick", "kick", [("follow", "Follow"), ("sub", "Abonnement"), ("resub", "Réabonnement"),
+                      ("gift", "Abonnements offerts")]),
+    ("YouTube", "youtube", [("follow", "Nouvel abonné"), ("sub", "Nouveau membre"), ("resub", "Palier de membre"),
+                            ("gift", "Abonnements offerts"), ("cheer", "Super Chat / Super Sticker")]),
+    ("TikTok", "tiktok", [("follow", "Follow"), ("sub", "Abonnement"), ("cheer", "Cadeaux")]),
+]
+PLATEFORMES_PAR_TYPE = {}
+for nom, cle, types in PLATEFORMES:
+    add(id=f"platform{nom}", label=f"Alertes {nom}", type="checkbox", defaultValue=True, group=nom)
+    for t, label in types:
+        # alias « alertSub »… : les anciennes URL (un réglage par type) restent valables
+        add(id=f"{cle}{t.capitalize()}", label=label, type="checkbox", defaultValue=True, group=nom,
+            showIf=f"platform{nom}", aliases=[f"alert{t.capitalize()}"])
+        PLATEFORMES_PAR_TYPE.setdefault(t, []).append(f"{cle}{t.capitalize()}")
+    if cle == "twitch":
+        add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte", type="number",
+            min=1, max=100000, defaultValue=1, group=nom, showIf="twitchCheer")
+        add(id="minRaid", label="Viewers minimum pour un raid", type="number", min=1, max=100000, defaultValue=1,
+            group=nom, showIf="twitchRaid")
+
+
+def type_actif(t):
+    """Condition : le type d'alerte est activé sur au moins une plateforme."""
+    return {"any": [{"id": i} for i in PLATEFORMES_PAR_TYPE.get(t, [])]}
+
+
 # Abonnements spéciaux (anniversaires…) : jusqu'à 6 règles, affichées selon le nombre choisi
 NB_REGLES_SUB = 6
 add(id="subRuleCount", label="Abonnements spéciaux",
     description="Visuel et son propres pour certains mois d’abonnement (ex. 9 mois, tous les 12 mois)",
     type="select", options=opts([(str(n), "Aucun" if n == 0 else f"{n} règle{'s' if n > 1 else ''}") for n in range(NB_REGLES_SUB + 1)]),
-    defaultValue="0", group="Alertes")
+    defaultValue="0", group="Réglages des alertes")
 for n in range(1, NB_REGLES_SUB + 1):
     visible = {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}
     add(id=f"subRule{n}Kind", label=f"Règle {n}",
         description="Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
         type="select", options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
-        defaultValue="every" if n == 1 else "exact", group="Alertes", showIf=visible)
+        defaultValue="every" if n == 1 else "exact", group="Réglages des alertes", showIf=visible)
     add(id=f"subRule{n}Months", label=f"Règle {n} : nombre de mois", type="number", min=1, max=240,
-        defaultValue=12 if n == 1 else 9, group="Alertes", showIf=visible)
+        defaultValue=12 if n == 1 else 9, group="Réglages des alertes", showIf=visible)
 
 add(id="alertGap", label="Pause entre deux alertes", description="En secondes", type="number",
-    min=0, max=30, step=0.5, defaultValue=1, group="Alertes")
+    min=0, max=30, step=0.5, defaultValue=1, group="Réglages des alertes")
 
-# ---------- Plateformes ----------
-for p, l in [("Twitch", "Twitch"), ("Kick", "Kick"), ("YouTube", "YouTube"), ("TikTok", "TikTok")]:
-    add(id=f"platform{p}", label=l, type="checkbox", defaultValue=True, group="Plateformes")
 
 # ---------- Organisation par scénario ----------
 # « Scénario à modifier » (aperçu seulement) : seules les sections du scénario choisi s'affichent,
 # et les tests de l'aperçu utilisent ce scénario.
 add(id="editScenario", label="Scénario à modifier",
     description="Affiche les réglages de ce scénario ; les tests de l’aperçu l’utilisent",
-    type="select", options=opts([("defaut", "Par défaut")] + [(str(n), f"Scénario {n}") for n in range(1, NB_SCENARIOS + 1)]),
+    type="select", options=opts([("defaut", "Par défaut")] + [(str(n), f"Scénario {n}") for n in range(1, NB_SCENARIOS + 1)]
+                               + [("new", "+ Nouveau scénario")]),
     defaultValue="defaut", previewOnly=True, group="Scénarios")
+# Nombre de scénarios : géré par « Nouveau scénario » et « Supprimer ce scénario » (jamais affiché)
 add(id="scenarioCount", label="Nombre de scénarios actifs",
-    description="Chaque scénario a son sous-dossier, du même nom, dans le dossier source. Le premier scénario dont la règle correspond est utilisé.",
     type="select", options=[{"value": str(n), "label": str(n)} for n in range(0, NB_SCENARIOS + 1)],
-    defaultValue="1", group="Scénarios")
+    defaultValue="1", group="Scénarios", hidden=True)
 
 DEF = {"id": "editScenario", "value": "defaut"}
 
@@ -135,7 +157,7 @@ def style_settings(prefix, cond):
     for t, label, text in TYPES:
         add(id=i(f"text{t.capitalize()}"), label=f"Texte : {label}", description=PLACEHOLDERS,
             type="text", defaultValue=text, group="Textes",
-            showIf={"all": [cond, {"id": f"alert{t.capitalize()}"}]})
+            showIf={"all": [cond, type_actif(t)]})
 
 
 # ---------- Scénario par défaut ----------
@@ -163,10 +185,6 @@ for n in range(1, NB_SCENARIOS + 1):
     p = f"sc{n}"
     v = vis(n)
     name, kw, cats = EXEMPLES.get(n, ("", "", ""))
-    add(id=f"{p}Inactive", label=f"Scénario {n} désactivé",
-        description="Augmentez « Nombre de scénarios actifs » pour l’utiliser", type="info", defaultValue="Inactif",
-        group="Scénarios", showIf={"all": [{"id": "editScenario", "value": str(n)},
-                                           {"id": "scenarioCount", "value": [str(k) for k in range(0, n)]}]})
     add(id=f"{p}Name", label="Nom du scénario (= nom du dossier)",
         description="Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
         type="text", datalist="alertes-dossiers", defaultValue=name, group="Déclenchement", showIf=v)
@@ -188,6 +206,10 @@ for n in range(1, NB_SCENARIOS + 1):
         group="Visuel et son", showIf={"id": f"{p}Sound", "value": "own"})
     style_settings(p, {"id": f"{p}Visual", "value": "own"})
 
+# Supprimer le scénario affiché (pas le scénario par défaut), en bas des sections du scénario
+add(id="deleteScenario", label="Supprimer ce scénario", type="button", callFunction="DeleteScenario", confirm=True,
+    danger=True, group="Gérer le scénario", showIf={"id": "editScenario", "notValue": "defaut"})
+
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")
 add(id="cmdMute", label="Commande pour couper le son", description="Plusieurs possibles, séparées par des virgules",
@@ -208,7 +230,7 @@ add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a r
 
 # Ordre des sections : les commandes de chat avant les scénarios
 ORDRE = ["Dossier source", "Scénarios", "Tester dans l’aperçu", "Déclenchement", "Visuel et son", "Style", "Textes",
-         "Alertes", "Plateformes", "Commandes de chat", "Connexion"]
+         "Gérer le scénario", "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Commandes de chat", "Connexion"]
 S.sort(key=lambda s: ORDRE.index(s["group"]) if s["group"] in ORDRE else len(ORDRE))
 
 out = {

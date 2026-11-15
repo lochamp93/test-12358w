@@ -169,6 +169,83 @@ function ResolveMedia(sc, type, info) {
 	};
 }
 
+///////////////////////////////////////////////
+// SCÉNARIOS DANS LA PAGE DE PARAMÉTRAGE      //
+// (liste des scénarios existants, nouveau, suppression)
+///////////////////////////////////////////////
+
+function PostToSettings(message) {
+	if (!ws.demo || window.parent === window) return;
+	try { window.parent.postMessage(message, '*'); } catch (e) { }
+}
+
+// « Scénario à modifier » : Par défaut, les scénarios existants (par leur nom), Nouveau scénario
+function PostScenarioOptions() {
+	const s = ws.values;
+	const count = ScenarioCount();
+	const options = [{ value: 'defaut', label: 'Par défaut' }];
+	for (let n = 1; n <= count; n++) {
+		const name = String(s[`sc${n}Name`] || '').trim();
+		options.push({ value: String(n), label: name || `Scénario ${n} (sans nom)` });
+	}
+	if (count < 12) options.push({ value: 'new', label: '+ Nouveau scénario' });
+	PostToSettings({ type: 'widget-options', id: 'editScenario', options });
+}
+
+// Réglages propres au scénario n (sc1Name, sc1Keywords…) : suffixes communs à tous les scénarios
+function ScenarioSuffixes() {
+	return ws.definition.settings
+		.map(x => /^sc1([A-Z].*)$/.exec(x.id))
+		.filter(Boolean)
+		.map(m => m[1]);
+}
+
+function ManageScenarios(values, previous) {
+	if (!ws.demo) return;
+	const count = ScenarioCount();
+
+	// « + Nouveau scénario » : un scénario de plus, vide, affiché aussitôt
+	if (values.editScenario === 'new') {
+		if (count >= 12) { PostToSettings({ type: 'widget-set', values: { editScenario: 'defaut' } }); return; }
+		const n = count + 1;
+		const reset = {};
+		for (const suffix of ScenarioSuffixes()) {
+			const def = ws.definition.settings.find(x => x.id === `sc${n}${suffix}`);
+			if (def) reset[def.id] = def.defaultValue;
+		}
+		reset[`sc${n}Name`] = '';
+		reset.scenarioCount = String(n);
+		reset.editScenario = String(n);
+		PostToSettings({ type: 'widget-set', values: reset });
+		return;
+	}
+
+	// Un scénario désactivé n'est plus proposé : retour au scénario par défaut
+	const edit = parseInt(values.editScenario, 10);
+	if (edit > count) { PostToSettings({ type: 'widget-set', values: { editScenario: 'defaut' } }); return; }
+
+	PostScenarioOptions();
+}
+
+// Bouton « Supprimer ce scénario » : les scénarios suivants remontent d'un cran
+window.DeleteScenario = function () {
+	const s = ws.values;
+	const count = ScenarioCount();
+	const n = parseInt(s.editScenario, 10);
+	if (!n || n > count) return;
+	const changes = {};
+	for (let k = n; k < count; k++)
+		for (const suffix of ScenarioSuffixes())
+			if (`sc${k + 1}${suffix}` in s) changes[`sc${k}${suffix}`] = s[`sc${k + 1}${suffix}`];
+	for (const suffix of ScenarioSuffixes()) {
+		const def = ws.definition.settings.find(x => x.id === `sc${count}${suffix}`);
+		if (def) changes[def.id] = def.defaultValue;
+	}
+	changes.scenarioCount = String(count - 1);
+	changes.editScenario = 'defaut';
+	PostToSettings({ type: 'widget-set', values: changes });
+};
+
 //////////////
 // FICHIERS //
 //////////////
@@ -212,8 +289,15 @@ async function PreloadActive() {
 // ALERTES //
 /////////////
 
-function TypeEnabled(type) {
-	return ws.values[`alert${type[0].toUpperCase()}${type.slice(1)}`] === true;
+// Alertes activées par plateforme (twitchSub, kickFollow…). Sans plateforme (tests) :
+// le type est actif s'il l'est sur au moins une plateforme activée.
+const PLATFORM_KEYS = { Twitch: 'twitch', Kick: 'kick', YouTube: 'youtube', TikTok: 'tiktok' };
+
+function TypeEnabled(type, platform) {
+	const T = type[0].toUpperCase() + type.slice(1);
+	if (platform && PLATFORM_KEYS[platform])
+		return PlatformEnabled(platform) && ws.values[`${PLATFORM_KEYS[platform]}${T}`] === true;
+	return Object.keys(PLATFORM_KEYS).some(p => PlatformEnabled(p) && ws.values[`${PLATFORM_KEYS[p]}${T}`] === true);
 }
 
 function PlatformEnabled(platform) {
@@ -221,8 +305,7 @@ function PlatformEnabled(platform) {
 }
 
 function Enqueue(info) {
-	if (!TypeEnabled(info.type)) return;
-	if (info.platform && !PlatformEnabled(info.platform)) return;
+	if (!TypeEnabled(info.type, info.platform)) return;
 	if (info.type === 'cheer' && info.platform === 'Twitch' && info.bits && info.bits < ws.values.minBits) return;
 	if (info.type === 'raid' && info.viewers && info.viewers < ws.values.minRaid) return;
 	if (sbState.mute && ws.values.muteEffect === 'all' && !info.test) return;
@@ -429,7 +512,7 @@ function Report() {
 			raison: active.reason,
 			defaut: String(ws.values.defaultFolder || 'defaut'),
 			scenarios: Scenarios().map(sc => ({ name: sc.name, visual: sc.visual, sound: sc.sound })),
-			types: ALERT_TYPES.filter(TypeEnabled),
+			types: ALERT_TYPES.filter(t => TypeEnabled(t)),
 			enAttente: queue.length,
 			enCours: !!current,
 			botReply: ws.values.botReply,
@@ -628,6 +711,7 @@ for (const type of ALERT_TYPES) {
 (async function Init() {
 	try {
 		ws = await WidgetSettings.load('settings/settings.json', (values, previous) => {
+			ManageScenarios(values, previous);
 			ConnectStreamerBot(); // ne reconnecte que si l'adresse ou le port ont changé
 			if (values.actionName !== previous.actionName) DoAction({ mode: 'etat' });
 			PreloadActive();
@@ -637,5 +721,6 @@ for (const type of ALERT_TYPES) {
 		console.error('[Alertes variables] Réglages illisibles :', e);
 		return;
 	}
+	ManageScenarios(ws.values, {});
 	ConnectStreamerBot();
 })();

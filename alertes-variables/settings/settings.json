@@ -88,6 +88,10 @@
 				{
 					"value": "12",
 					"label": "Scénario 12"
+				},
+				{
+					"value": "new",
+					"label": "+ Nouveau scénario"
 				}
 			],
 			"defaultValue": "defaut",
@@ -97,7 +101,6 @@
 		{
 			"id": "scenarioCount",
 			"label": "Nombre de scénarios actifs",
-			"description": "Chaque scénario a son sous-dossier, du même nom, dans le dossier source. Le premier scénario dont la règle correspond est utilisé.",
 			"type": "select",
 			"options": [
 				{
@@ -154,337 +157,9 @@
 				}
 			],
 			"defaultValue": "1",
-			"group": "Scénarios"
-		},
-		{
-			"id": "sc1Inactive",
-			"label": "Scénario 1 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
 			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "1"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2Inactive",
-			"label": "Scénario 2 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "2"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3Inactive",
-			"label": "Scénario 3 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "3"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4Inactive",
-			"label": "Scénario 4 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "4"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5Inactive",
-			"label": "Scénario 5 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "5"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6Inactive",
-			"label": "Scénario 6 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "6"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7Inactive",
-			"label": "Scénario 7 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "7"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8Inactive",
-			"label": "Scénario 8 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "8"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6",
-							"7"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9Inactive",
-			"label": "Scénario 9 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "9"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6",
-							"7",
-							"8"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10Inactive",
-			"label": "Scénario 10 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "10"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6",
-							"7",
-							"8",
-							"9"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11Inactive",
-			"label": "Scénario 11 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "11"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6",
-							"7",
-							"8",
-							"9",
-							"10"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12Inactive",
-			"label": "Scénario 12 désactivé",
-			"description": "Augmentez « Nombre de scénarios actifs » pour l’utiliser",
-			"type": "info",
-			"defaultValue": "Inactif",
-			"group": "Scénarios",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "12"
-					},
-					{
-						"id": "scenarioCount",
-						"value": [
-							"0",
-							"1",
-							"2",
-							"3",
-							"4",
-							"5",
-							"6",
-							"7",
-							"8",
-							"9",
-							"10",
-							"11"
-						]
-					}
-				]
-			}
+			"hidden": true,
+			"description": ""
 		},
 		{
 			"id": "testFollow",
@@ -5717,7 +5392,20 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -5736,7 +5424,20 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -5755,7 +5456,17 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -5774,7 +5485,17 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -5793,7 +5514,17 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -5812,7 +5543,11 @@
 						"value": "defaut"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -5831,7 +5566,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -5850,7 +5598,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -5869,7 +5630,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -5888,7 +5659,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -5907,7 +5688,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -5926,7 +5717,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -5945,7 +5740,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -5964,7 +5772,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -5983,7 +5804,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6002,7 +5833,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6021,7 +5862,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6040,7 +5891,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6059,7 +5914,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6078,7 +5946,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6097,7 +5978,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6116,7 +6007,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6135,7 +6036,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6154,7 +6065,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6173,7 +6088,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6192,7 +6120,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6211,7 +6152,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6230,7 +6181,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6249,7 +6210,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6268,7 +6239,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6287,7 +6262,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6306,7 +6294,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6325,7 +6326,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6344,7 +6355,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6363,7 +6384,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6382,7 +6413,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6401,7 +6436,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6420,7 +6468,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6439,7 +6500,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6458,7 +6529,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6477,7 +6558,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6496,7 +6587,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6515,7 +6610,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6534,7 +6642,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6553,7 +6674,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6572,7 +6703,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6591,7 +6732,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6610,7 +6761,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6629,7 +6784,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6648,7 +6816,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6667,7 +6848,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6686,7 +6877,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6705,7 +6906,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6724,7 +6935,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6743,7 +6958,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6762,7 +6990,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6781,7 +7022,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6800,7 +7051,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6819,7 +7080,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6838,7 +7109,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6857,7 +7132,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6876,7 +7164,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -6895,7 +7196,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -6914,7 +7225,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -6933,7 +7254,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -6952,7 +7283,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -6971,7 +7306,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -6990,7 +7338,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -7009,7 +7370,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -7028,7 +7399,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -7047,7 +7428,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -7066,7 +7457,11 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
@@ -7085,7 +7480,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertFollow"
+						"any": [
+							{
+								"id": "twitchFollow"
+							},
+							{
+								"id": "kickFollow"
+							},
+							{
+								"id": "youtubeFollow"
+							},
+							{
+								"id": "tiktokFollow"
+							}
+						]
 					}
 				]
 			}
@@ -7104,7 +7512,20 @@
 						"value": "own"
 					},
 					{
-						"id": "alertSub"
+						"any": [
+							{
+								"id": "twitchSub"
+							},
+							{
+								"id": "kickSub"
+							},
+							{
+								"id": "youtubeSub"
+							},
+							{
+								"id": "tiktokSub"
+							}
+						]
 					}
 				]
 			}
@@ -7123,7 +7544,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertResub"
+						"any": [
+							{
+								"id": "twitchResub"
+							},
+							{
+								"id": "kickResub"
+							},
+							{
+								"id": "youtubeResub"
+							}
+						]
 					}
 				]
 			}
@@ -7142,7 +7573,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertGift"
+						"any": [
+							{
+								"id": "twitchGift"
+							},
+							{
+								"id": "kickGift"
+							},
+							{
+								"id": "youtubeGift"
+							}
+						]
 					}
 				]
 			}
@@ -7161,7 +7602,17 @@
 						"value": "own"
 					},
 					{
-						"id": "alertCheer"
+						"any": [
+							{
+								"id": "twitchCheer"
+							},
+							{
+								"id": "youtubeCheer"
+							},
+							{
+								"id": "tiktokCheer"
+							}
+						]
 					}
 				]
 			}
@@ -7180,57 +7631,107 @@
 						"value": "own"
 					},
 					{
-						"id": "alertRaid"
+						"any": [
+							{
+								"id": "twitchRaid"
+							}
+						]
 					}
 				]
 			}
 		},
 		{
-			"id": "alertFollow",
+			"id": "deleteScenario",
+			"label": "Supprimer ce scénario",
+			"type": "button",
+			"callFunction": "DeleteScenario",
+			"confirm": true,
+			"danger": true,
+			"group": "Gérer le scénario",
+			"showIf": {
+				"id": "editScenario",
+				"notValue": "defaut"
+			},
+			"description": ""
+		},
+		{
+			"id": "platformTwitch",
+			"label": "Alertes Twitch",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch",
+			"description": ""
+		},
+		{
+			"id": "twitchFollow",
 			"label": "Follow",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertFollow"
+			],
 			"description": ""
 		},
 		{
-			"id": "alertSub",
+			"id": "twitchSub",
 			"label": "Abonnement",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertSub"
+			],
 			"description": ""
 		},
 		{
-			"id": "alertResub",
+			"id": "twitchResub",
 			"label": "Réabonnement",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertResub"
+			],
 			"description": ""
 		},
 		{
-			"id": "alertGift",
+			"id": "twitchGift",
 			"label": "Abonnements offerts",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertGift"
+			],
 			"description": ""
 		},
 		{
-			"id": "alertCheer",
-			"label": "Bits / dons",
+			"id": "twitchCheer",
+			"label": "Bits",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertCheer"
+			],
 			"description": ""
 		},
 		{
-			"id": "alertRaid",
+			"id": "twitchRaid",
 			"label": "Raid",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Alertes",
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertRaid"
+			],
 			"description": ""
 		},
 		{
@@ -7241,8 +7742,8 @@
 			"min": 1,
 			"max": 100000,
 			"defaultValue": 1,
-			"group": "Alertes",
-			"showIf": "alertCheer"
+			"group": "Twitch",
+			"showIf": "twitchCheer"
 		},
 		{
 			"id": "minRaid",
@@ -7251,8 +7752,176 @@
 			"min": 1,
 			"max": 100000,
 			"defaultValue": 1,
-			"group": "Alertes",
-			"showIf": "alertRaid",
+			"group": "Twitch",
+			"showIf": "twitchRaid",
+			"description": ""
+		},
+		{
+			"id": "platformKick",
+			"label": "Alertes Kick",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"description": ""
+		},
+		{
+			"id": "kickFollow",
+			"label": "Follow",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"showIf": "platformKick",
+			"aliases": [
+				"alertFollow"
+			],
+			"description": ""
+		},
+		{
+			"id": "kickSub",
+			"label": "Abonnement",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"showIf": "platformKick",
+			"aliases": [
+				"alertSub"
+			],
+			"description": ""
+		},
+		{
+			"id": "kickResub",
+			"label": "Réabonnement",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"showIf": "platformKick",
+			"aliases": [
+				"alertResub"
+			],
+			"description": ""
+		},
+		{
+			"id": "kickGift",
+			"label": "Abonnements offerts",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"showIf": "platformKick",
+			"aliases": [
+				"alertGift"
+			],
+			"description": ""
+		},
+		{
+			"id": "platformYouTube",
+			"label": "Alertes YouTube",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"description": ""
+		},
+		{
+			"id": "youtubeFollow",
+			"label": "Nouvel abonné",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertFollow"
+			],
+			"description": ""
+		},
+		{
+			"id": "youtubeSub",
+			"label": "Nouveau membre",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertSub"
+			],
+			"description": ""
+		},
+		{
+			"id": "youtubeResub",
+			"label": "Palier de membre",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertResub"
+			],
+			"description": ""
+		},
+		{
+			"id": "youtubeGift",
+			"label": "Abonnements offerts",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertGift"
+			],
+			"description": ""
+		},
+		{
+			"id": "youtubeCheer",
+			"label": "Super Chat / Super Sticker",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertCheer"
+			],
+			"description": ""
+		},
+		{
+			"id": "platformTikTok",
+			"label": "Alertes TikTok",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "TikTok",
+			"description": ""
+		},
+		{
+			"id": "tiktokFollow",
+			"label": "Follow",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "TikTok",
+			"showIf": "platformTikTok",
+			"aliases": [
+				"alertFollow"
+			],
+			"description": ""
+		},
+		{
+			"id": "tiktokSub",
+			"label": "Abonnement",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "TikTok",
+			"showIf": "platformTikTok",
+			"aliases": [
+				"alertSub"
+			],
+			"description": ""
+		},
+		{
+			"id": "tiktokCheer",
+			"label": "Cadeaux",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "TikTok",
+			"showIf": "platformTikTok",
+			"aliases": [
+				"alertCheer"
+			],
 			"description": ""
 		},
 		{
@@ -7291,7 +7960,7 @@
 				}
 			],
 			"defaultValue": "0",
-			"group": "Alertes"
+			"group": "Réglages des alertes"
 		},
 		{
 			"id": "subRule1Kind",
@@ -7309,7 +7978,7 @@
 				}
 			],
 			"defaultValue": "every",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7329,7 +7998,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 12,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7359,7 +8028,7 @@
 				}
 			],
 			"defaultValue": "exact",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7378,7 +8047,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 9,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7407,7 +8076,7 @@
 				}
 			],
 			"defaultValue": "exact",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7425,7 +8094,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 9,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7453,7 +8122,7 @@
 				}
 			],
 			"defaultValue": "exact",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7470,7 +8139,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 9,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7497,7 +8166,7 @@
 				}
 			],
 			"defaultValue": "exact",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7513,7 +8182,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 9,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7539,7 +8208,7 @@
 				}
 			],
 			"defaultValue": "exact",
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7554,7 +8223,7 @@
 			"min": 1,
 			"max": 240,
 			"defaultValue": 9,
-			"group": "Alertes",
+			"group": "Réglages des alertes",
 			"showIf": {
 				"id": "subRuleCount",
 				"value": [
@@ -7572,39 +8241,7 @@
 			"max": 30,
 			"step": 0.5,
 			"defaultValue": 1,
-			"group": "Alertes"
-		},
-		{
-			"id": "platformTwitch",
-			"label": "Twitch",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Plateformes",
-			"description": ""
-		},
-		{
-			"id": "platformKick",
-			"label": "Kick",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Plateformes",
-			"description": ""
-		},
-		{
-			"id": "platformYouTube",
-			"label": "YouTube",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Plateformes",
-			"description": ""
-		},
-		{
-			"id": "platformTikTok",
-			"label": "TikTok",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Plateformes",
-			"description": ""
+			"group": "Réglages des alertes"
 		},
 		{
 			"id": "cmdEnabled",

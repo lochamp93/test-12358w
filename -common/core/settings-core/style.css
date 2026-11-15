@@ -428,3 +428,7 @@ html.apple #header button svg:not(.icon-sun):not(.icon-moon) {
 
 .setting-info[data-status="ok"] { color: #3be477; }
 .setting-info[data-status="warn"] { color: #e8a23b; }
+
+/* Boutons sensibles et confirmation (style d’origine) */
+.setting-item-content > button.danger { color: #ff6b6b; }
+.setting-item-content > button.confirming { background-color: #c93f3f !important; color: #fff !important; }

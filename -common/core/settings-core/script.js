@@ -212,8 +212,26 @@ function LoadJSON(settingsJson) {
 							inputElement = document.createElement('button');
 							inputElement.id = setting.id; // Added setting ID
 							inputElement.textContent = setting.label;
+							if (setting.danger) inputElement.classList.add('danger');
 
 							inputElement.addEventListener('click', () => {
+								// "confirm": true : un second clic dans les 3 secondes est demandé
+								if (setting.confirm) {
+									if (!inputElement.classList.contains('confirming')) {
+										inputElement.classList.add('confirming');
+										inputElement.textContent = 'Cliquez à nouveau pour confirmer';
+										clearTimeout(inputElement._confirmTimer);
+										inputElement._confirmTimer = setTimeout(() => {
+											inputElement.classList.remove('confirming');
+											inputElement.textContent = setting.label;
+										}, 3000);
+										return;
+									}
+									clearTimeout(inputElement._confirmTimer);
+									inputElement.classList.remove('confirming');
+									inputElement.textContent = setting.label;
+								}
+
 								widgetPreview.contentWindow[setting.callFunction]();
 
 								const defaultBackgroundColor = "#2e2e2e";
@@ -317,6 +335,12 @@ function LoadJSON(settingsJson) {
 
 			function UpdateSettingItemVisibility() {
 				data.settings.forEach(setting => {
+					// "hidden": true : réglage jamais affiché (géré par le widget), mais présent dans l’URL
+					if (setting.hidden) {
+						const hiddenItem = document.getElementById(`item-${setting.id}`);
+						if (hiddenItem) hiddenItem.style.display = 'none';
+						return;
+					}
 					if (setting.showIf) {
 						let shouldShow = true;
 
@@ -696,6 +720,50 @@ window.addEventListener('message', (event) => {
 			option.value = String(value);
 			datalist.appendChild(option);
 		});
+		return;
+	}
+
+	// Choix d'une liste déroulante fournis par l'aperçu :
+	// { type: 'widget-options', id: '<id>', options: [{ value, label }] }
+	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-options'
+		&& typeof event.data.id === 'string' && Array.isArray(event.data.options)) {
+		const select = document.getElementById(event.data.id);
+		if (select && select.tagName === 'SELECT') {
+			const current = select.value;
+			select.innerHTML = '';
+			event.data.options.forEach(o => {
+				const option = document.createElement('option');
+				option.value = String(o.value);
+				option.textContent = String(o.label);
+				select.appendChild(option);
+			});
+			if ([...select.options].some(o => o.value === current)) select.value = current;
+		}
+		return;
+	}
+
+	// Valeurs de réglages modifiées par l'aperçu (ex. « Nouveau scénario ») :
+	// { type: 'widget-set', values: { id: valeur, … } } ; formulaire, aperçu et URL sont mis à jour
+	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-set'
+		&& event.data.values && typeof event.data.values === 'object') {
+		let last = null;
+		for (const [id, value] of Object.entries(event.data.values)) {
+			const el = document.getElementById(id);
+			if (!el) continue;
+			if (el.type === 'checkbox') el.checked = value === true || String(value) === 'true';
+			else {
+				if (el.tagName === 'SELECT' && ![...el.options].some(o => o.value === String(value))) {
+					const option = document.createElement('option');
+					option.value = String(value);
+					option.textContent = String(value);
+					el.appendChild(option);
+				}
+				el.value = String(value);
+			}
+			settingsMap.set(id, el.type === 'checkbox' ? el.checked : el.value);
+			last = el;
+		}
+		if (last) last.dispatchEvent(new Event('input', { bubbles: true })); // sauvegarde, visibilité, aperçu, URL
 		return;
 	}
 

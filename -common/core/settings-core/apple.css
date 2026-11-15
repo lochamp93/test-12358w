@@ -286,3 +286,10 @@ html.apple .setting-info {
 
 html.apple .setting-info[data-status="ok"] { color: var(--ui-green); }
 html.apple .setting-info[data-status="warn"] { color: #ff9f0a; }
+
+/* Boutons sensibles (ex. supprimer) et confirmation */
+html.apple .setting-item-content > button.danger { color: var(--ui-red); }
+html.apple .setting-item-content > button.confirming {
+	background: var(--ui-red) !important;
+	color: #fff !important;
+}

@@ -149,6 +149,11 @@ public class CPHInline
 			return;
 		}
 		CPH.SetGlobalVar(VAR_DOSSIER, chemin, true);
+		string relu = Dossier();
+		if (relu != chemin)
+			CPH.LogWarn("[Alertes variables] Le dossier n’a pas été enregistré (relu : « " + relu + " »)");
+		else
+			CPH.LogInfo("[Alertes variables] Dossier source enregistré : " + chemin);
 		EnvoyerEtat(true);
 	}
 
@@ -681,8 +686,15 @@ public class CPHInline
 
 	// ---------- Outils ----------
 
+	// Lit une variable globale texte (en string d'abord, puis en object selon la version de Streamer.bot)
 	string LireTexte(string nom, bool persistante)
 	{
+		try
+		{
+			string t = CPH.GetGlobalVar<string>(nom, persistante);
+			if (!string.IsNullOrEmpty(t)) return t;
+		}
+		catch (Exception) { }
 		try
 		{
 			object v = CPH.GetGlobalVar<object>(nom, persistante);
