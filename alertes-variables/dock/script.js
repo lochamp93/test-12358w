@@ -172,7 +172,20 @@ async function CheckAction() {
 		actionFound = false;
 	}
 	Render();
-	if (actionFound) Send({ mode: 'etat' });
+	if (actionFound) AskState();
+}
+
+// Demande l'état ; si l'action ne répond pas, on l'indique (code C# non compilé, action désactivée…)
+let stateTimer = null;
+function AskState(mode = 'etat') {
+	clearTimeout(stateTimer);
+	const before = state;
+	Send({ mode });
+	stateTimer = setTimeout(() => {
+		if (state === before && connected && actionFound)
+			Toast('L’action ne répond pas : vérifiez dans Streamer.bot qu’elle est activée et que le code C# compile (onglet Compiling Log).');
+		if (!state) { $('issues').innerHTML = '<li class="warn">L’action « ' + Escape(ws.values.actionName) + ' » ne répond pas. Ouvrez-la dans Streamer.bot : elle doit être activée et le code C# doit afficher « Compiled successfully ».</li>'; }
+	}, 4000);
 }
 
 function ConnectStreamerBot() {
@@ -229,7 +242,7 @@ $('chooseFolderButton').addEventListener('click', () => {
 	Toast('Fenêtre de choix ouverte sur le PC de Streamer.bot');
 	Send({ mode: 'choisirDossier' });
 });
-$('refreshButton').addEventListener('click', () => Send({ mode: 'actualiser' }));
+$('refreshButton').addEventListener('click', () => AskState('actualiser'));
 
 function SubmitFolder() {
 	const path = $('folderInput').value.trim();
