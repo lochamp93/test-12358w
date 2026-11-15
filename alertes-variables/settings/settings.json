@@ -1,0 +1,5832 @@
+{
+	"title": "Alertes variables",
+	"design": "apple",
+	"showLogo": false,
+	"checkerPreview": true,
+	"livePreview": true,
+	"demo": true,
+	"compactURL": true,
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "Adresse du serveur WebSocket de Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion",
+			"description": ""
+		},
+		{
+			"id": "actionName",
+			"label": "Action Streamer.bot",
+			"description": "Nom de l’action importée depuis le dock (lit le dossier, le son coupé, le titre et la catégorie)",
+			"type": "text",
+			"defaultValue": "Alertes variables | Moteur",
+			"group": "Connexion"
+		},
+		{
+			"id": "chooseFolder",
+			"label": "Choisir le dossier source",
+			"type": "button",
+			"callFunction": "ChooseFolder",
+			"group": "Dossier source",
+			"description": ""
+		},
+		{
+			"id": "refreshFolders",
+			"label": "Actualiser les dossiers",
+			"type": "button",
+			"callFunction": "RefreshFolders",
+			"group": "Dossier source",
+			"description": ""
+		},
+		{
+			"id": "testFollow",
+			"label": "Tester : Follow",
+			"type": "button",
+			"callFunction": "TestFollow",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "testSub",
+			"label": "Tester : Abonnement",
+			"type": "button",
+			"callFunction": "TestSub",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "testResub",
+			"label": "Tester : Réabonnement",
+			"type": "button",
+			"callFunction": "TestResub",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "testGift",
+			"label": "Tester : Abonnements offerts",
+			"type": "button",
+			"callFunction": "TestGift",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "testCheer",
+			"label": "Tester : Bits / dons",
+			"type": "button",
+			"callFunction": "TestCheer",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "testRaid",
+			"label": "Tester : Raid",
+			"type": "button",
+			"callFunction": "TestRaid",
+			"group": "Tester dans l’aperçu",
+			"description": ""
+		},
+		{
+			"id": "alertFollow",
+			"label": "Follow",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "alertSub",
+			"label": "Abonnement",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "alertResub",
+			"label": "Réabonnement",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "alertGift",
+			"label": "Abonnements offerts",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "alertCheer",
+			"label": "Bits / dons",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "alertRaid",
+			"label": "Raid",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Alertes",
+			"description": ""
+		},
+		{
+			"id": "minBits",
+			"label": "Bits minimum",
+			"description": "En dessous, pas d’alerte",
+			"type": "number",
+			"min": 1,
+			"max": 100000,
+			"defaultValue": 1,
+			"group": "Alertes",
+			"showIf": "alertCheer"
+		},
+		{
+			"id": "minRaid",
+			"label": "Viewers minimum pour un raid",
+			"type": "number",
+			"min": 1,
+			"max": 100000,
+			"defaultValue": 1,
+			"group": "Alertes",
+			"showIf": "alertRaid",
+			"description": ""
+		},
+		{
+			"id": "alertGap",
+			"label": "Pause entre deux alertes",
+			"description": "En secondes",
+			"type": "number",
+			"min": 0,
+			"max": 30,
+			"step": 0.5,
+			"defaultValue": 1,
+			"group": "Alertes"
+		},
+		{
+			"id": "platformTwitch",
+			"label": "Twitch",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Plateformes",
+			"description": ""
+		},
+		{
+			"id": "platformKick",
+			"label": "Kick",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Plateformes",
+			"description": ""
+		},
+		{
+			"id": "platformYouTube",
+			"label": "YouTube",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Plateformes",
+			"description": ""
+		},
+		{
+			"id": "platformTikTok",
+			"label": "TikTok",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Plateformes",
+			"description": ""
+		},
+		{
+			"id": "cmdEnabled",
+			"label": "Activer les commandes",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Commandes de chat",
+			"description": ""
+		},
+		{
+			"id": "cmdMute",
+			"label": "Commande pour couper le son",
+			"description": "Plusieurs possibles, séparées par des virgules",
+			"type": "text",
+			"defaultValue": "!mutealerte, !mutealert",
+			"group": "Commandes de chat",
+			"showIf": "cmdEnabled"
+		},
+		{
+			"id": "cmdUnmute",
+			"label": "Commande pour réactiver le son",
+			"description": "Plusieurs possibles, séparées par des virgules",
+			"type": "text",
+			"defaultValue": "!unmutealerte, !unmutealert",
+			"group": "Commandes de chat",
+			"showIf": "cmdEnabled"
+		},
+		{
+			"id": "cmdPermission",
+			"label": "Qui peut l’utiliser",
+			"type": "select",
+			"options": [
+				{
+					"value": "30",
+					"label": "Streamer et modos"
+				},
+				{
+					"value": "40",
+					"label": "Streamer seul"
+				},
+				{
+					"value": "20",
+					"label": "Streamer, modos et VIP"
+				}
+			],
+			"defaultValue": "30",
+			"group": "Commandes de chat",
+			"showIf": "cmdEnabled",
+			"description": ""
+		},
+		{
+			"id": "muteEffect",
+			"label": "Effet du mute",
+			"type": "select",
+			"options": [
+				{
+					"value": "sound",
+					"label": "Couper seulement le son"
+				},
+				{
+					"value": "all",
+					"label": "Masquer aussi les alertes"
+				}
+			],
+			"defaultValue": "sound",
+			"group": "Commandes de chat",
+			"description": ""
+		},
+		{
+			"id": "botReply",
+			"label": "Réponse du bot dans le chat",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Commandes de chat",
+			"description": ""
+		},
+		{
+			"id": "msgMute",
+			"label": "Message au mute",
+			"description": "{user} : qui a coupé le son",
+			"type": "text",
+			"defaultValue": "🔇 Sons des alertes coupés par {user}",
+			"group": "Commandes de chat",
+			"showIf": "botReply"
+		},
+		{
+			"id": "msgUnmute",
+			"label": "Message à l’unmute",
+			"description": "{user} : qui a réactivé le son",
+			"type": "text",
+			"defaultValue": "🔊 Sons des alertes réactivés par {user}",
+			"group": "Commandes de chat",
+			"showIf": "botReply"
+		},
+		{
+			"id": "font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "fontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "textColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario par défaut",
+			"description": ""
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "textPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario par défaut",
+			"description": ""
+		},
+		{
+			"id": "mediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "animIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario par défaut",
+			"description": ""
+		},
+		{
+			"id": "animOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario par défaut",
+			"description": ""
+		},
+		{
+			"id": "duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "textFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertFollow"
+			}
+		},
+		{
+			"id": "textSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertSub"
+			}
+		},
+		{
+			"id": "textResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertResub"
+			}
+		},
+		{
+			"id": "textGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertGift"
+			}
+		},
+		{
+			"id": "textCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertCheer"
+			}
+		},
+		{
+			"id": "textRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario par défaut — textes",
+			"showIf": {
+				"id": "alertRaid"
+			}
+		},
+		{
+			"id": "animDuration",
+			"label": "Durée des animations",
+			"description": "En millisecondes",
+			"type": "number",
+			"min": 0,
+			"max": 5000,
+			"defaultValue": 600,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "waitMedia",
+			"label": "Attendre la fin du son ou de la vidéo",
+			"description": "L’alerte reste affichée tant que le son ou la vidéo joue",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "textShadow",
+			"label": "Ombre du texte",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Scénario par défaut",
+			"description": ""
+		},
+		{
+			"id": "showMessage",
+			"label": "Afficher le message du viewer",
+			"description": "Réabonnements, bits et dons",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "messageSize",
+			"label": "Taille du message",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 200,
+			"defaultValue": 26,
+			"group": "Scénario par défaut",
+			"showIf": "showMessage"
+		},
+		{
+			"id": "defaultFolder",
+			"label": "Dossier du scénario par défaut",
+			"description": "Sous-dossier du dossier source",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "defaut",
+			"group": "Scénario par défaut"
+		},
+		{
+			"id": "scenarioCount",
+			"label": "Nombre de scénarios",
+			"description": "Chaque scénario a son sous-dossier, du même nom, dans le dossier source. Le premier scénario dont la règle correspond est utilisé.",
+			"type": "select",
+			"options": [
+				{
+					"value": "0",
+					"label": "0"
+				},
+				{
+					"value": "1",
+					"label": "1"
+				},
+				{
+					"value": "2",
+					"label": "2"
+				},
+				{
+					"value": "3",
+					"label": "3"
+				},
+				{
+					"value": "4",
+					"label": "4"
+				},
+				{
+					"value": "5",
+					"label": "5"
+				},
+				{
+					"value": "6",
+					"label": "6"
+				},
+				{
+					"value": "7",
+					"label": "7"
+				},
+				{
+					"value": "8",
+					"label": "8"
+				},
+				{
+					"value": "9",
+					"label": "9"
+				},
+				{
+					"value": "10",
+					"label": "10"
+				},
+				{
+					"value": "11",
+					"label": "11"
+				},
+				{
+					"value": "12",
+					"label": "12"
+				}
+			],
+			"defaultValue": "1",
+			"group": "Scénarios"
+		},
+		{
+			"id": "sc1Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "Horreur",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc1Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "horreur, horror, peur",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc1Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc1Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc1Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 1",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc1TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 1 — textes",
+			"showIf": {
+				"id": "sc1Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc2Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc2Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc2Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc2Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 2",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc2TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 2 — textes",
+			"showIf": {
+				"id": "sc2Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc3Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc3Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc3Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc3Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 3",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc3TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 3 — textes",
+			"showIf": {
+				"id": "sc3Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc4Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc4Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc4Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"4",
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc4Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 4",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc4TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 4 — textes",
+			"showIf": {
+				"id": "sc4Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc5Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc5Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc5Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"5",
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc5Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 5",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc5TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 5 — textes",
+			"showIf": {
+				"id": "sc5Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc6Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc6Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc6Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"6",
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc6Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 6",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc6TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 6 — textes",
+			"showIf": {
+				"id": "sc6Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc7Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc7Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc7Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"7",
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc7Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 7",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc7TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 7 — textes",
+			"showIf": {
+				"id": "sc7Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc8Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc8Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc8Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"8",
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc8Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 8",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc8TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 8 — textes",
+			"showIf": {
+				"id": "sc8Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc9Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc9Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc9Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"9",
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc9Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 9",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc9TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 9 — textes",
+			"showIf": {
+				"id": "sc9Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc10Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc10Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc10Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"10",
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc10Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 10",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc10TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 10 — textes",
+			"showIf": {
+				"id": "sc10Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc11Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc11Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc11Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"11",
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc11Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 11",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc11TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 11 — textes",
+			"showIf": {
+				"id": "sc11Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12Name",
+			"label": "Nom du scénario (= nom du dossier)",
+			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
+			"type": "text",
+			"datalist": "alertes-dossiers",
+			"defaultValue": "",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc12Keywords",
+			"label": "Mots-clés du titre",
+			"description": "Séparés par des virgules (majuscules et accents ignorés)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc12Categories",
+			"label": "Catégories",
+			"description": "Séparées par des virgules, ex. : Just Chatting, Minecraft",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			}
+		},
+		{
+			"id": "sc12Match",
+			"label": "Combinaison",
+			"type": "select",
+			"options": [
+				{
+					"value": "any",
+					"label": "Mot-clé OU catégorie"
+				},
+				{
+					"value": "all",
+					"label": "Mot-clé ET catégorie"
+				}
+			],
+			"defaultValue": "any",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12Visual",
+			"label": "Visuel",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Visuel propre au scénario"
+				}
+			],
+			"defaultValue": "default",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12Sound",
+			"label": "Son",
+			"type": "select",
+			"options": [
+				{
+					"value": "default",
+					"label": "Celui du scénario par défaut"
+				},
+				{
+					"value": "own",
+					"label": "Son propre au scénario"
+				}
+			],
+			"defaultValue": "own",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "scenarioCount",
+				"value": [
+					"12"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12Volume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 80,
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Sound",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12Font",
+			"label": "Police",
+			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12FontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 42,
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextColor",
+			"label": "Couleur du texte",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12AccentColor",
+			"label": "Couleur du pseudo",
+			"description": "Couleur de {user} et des nombres",
+			"type": "color",
+			"defaultValue": "#ff4d6d",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextPosition",
+			"label": "Position du texte",
+			"type": "select",
+			"options": [
+				{
+					"value": "below",
+					"label": "Sous l’image"
+				},
+				{
+					"value": "above",
+					"label": "Au-dessus de l’image"
+				},
+				{
+					"value": "over",
+					"label": "Sur l’image"
+				}
+			],
+			"defaultValue": "below",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12MediaHeight",
+			"label": "Hauteur de l’image",
+			"description": "En pixels (largeur automatique)",
+			"type": "number",
+			"min": 20,
+			"max": 2000,
+			"defaultValue": 320,
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12AnimIn",
+			"label": "Animation d’entrée",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement depuis la droite"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement depuis la gauche"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				},
+				{
+					"value": "shake",
+					"label": "Secousse"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "bounce",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12AnimOut",
+			"label": "Animation de sortie",
+			"type": "select",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slideUp",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "slideDown",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "slideLeft",
+					"label": "Glissement vers la gauche"
+				},
+				{
+					"value": "slideRight",
+					"label": "Glissement vers la droite"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"defaultValue": "fade",
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			},
+			"description": ""
+		},
+		{
+			"id": "sc12Duration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"min": 1,
+			"max": 120,
+			"step": 0.5,
+			"defaultValue": 6,
+			"group": "Scénario 12",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextFollow",
+			"label": "Texte : Follow",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextSub",
+			"label": "Texte : Abonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextResub",
+			"label": "Texte : Réabonnement",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextGift",
+			"label": "Texte : Abonnements offerts",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextCheer",
+			"label": "Texte : Bits / dons",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		},
+		{
+			"id": "sc12TextRaid",
+			"label": "Texte : Raid",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Scénario 12 — textes",
+			"showIf": {
+				"id": "sc12Visual",
+				"value": "own"
+			}
+		}
+	]
+}

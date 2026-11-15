@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr" class="apple">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Alertes variables • Dock</title>
+	<link rel="icon" href="../../-common/resources/logo.png" type="image/png">
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111516" />
+	<script src="../../-common/utils/color-scheme.js?v=2026111516"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111516" />
+	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
+</head>
+
+<body>
+	<!-- En-tête -->
+	<div id="header">
+		<span class="dock-title">Alertes variables</span>
+		<span id="status" class="status off" title="Connexion à Streamer.bot">Déconnecté</span>
+		<button id="schemeToggle" class="ui-icon" type="button" data-scheme-toggle></button>
+	</div>
+
+	<!-- Streamer.bot non connecté -->
+	<div id="panelDisconnected" class="panel warning" hidden>
+		<strong>Streamer.bot n’est pas connecté</strong>
+		<p>Le dock essaie de joindre <code id="sbTarget"></code>. Vérifiez que Streamer.bot est ouvert et que le serveur WebSocket est démarré (Servers/Clients → WebSocket Server).</p>
+		<div class="row">
+			<input id="sbAddressInput" type="text" placeholder="Adresse (127.0.0.1)" />
+			<input id="sbPortInput" type="number" placeholder="Port (8080)" />
+			<button id="sbConnectButton" type="button">Se connecter</button>
+		</div>
+	</div>
+
+	<!-- Action manquante -->
+	<div id="panelMissingAction" class="panel warning" hidden>
+		<strong>Action introuvable : « <span id="missingActionName"></span> »</strong>
+		<ol>
+			<li>Cliquez sur <em>Copier le code d’import</em> ci-dessous.</li>
+			<li>Dans Streamer.bot, cliquez sur <em>Import</em> en haut, collez le texte dans <em>Import String</em>, puis <em>Import</em>.</li>
+			<li>Aucun déclencheur à ajouter : l’overlay et le dock appellent l’action eux-mêmes.</li>
+		</ol>
+		<div class="row">
+			<button id="copyCodeButton" type="button">Copier le code d’import</button>
+			<button id="recheckButton" type="button">Vérifier à nouveau</button>
+		</div>
+	</div>
+
+	<!-- Overlay absent -->
+	<div id="panelNoOverlay" class="panel warning" hidden>
+		<strong>Aucun overlay actif</strong>
+		<p>Le scénario s’affiche dès que la source navigateur « Alertes variables » est chargée dans OBS (et visible dans une scène au moins une fois).</p>
+	</div>
+
+	<div id="main">
+		<!-- Scénario actif -->
+		<div class="card">
+			<div class="label">Scénario actif</div>
+			<div id="scenarioName">—</div>
+			<div id="scenarioReason"></div>
+			<div id="liveInfo"></div>
+		</div>
+
+		<!-- Son -->
+		<div class="row">
+			<button id="muteButton" type="button">Couper les sons</button>
+		</div>
+
+		<!-- Forcer un scénario -->
+		<div class="section">
+			<h3>Scénario</h3>
+			<div class="row">
+				<select id="forceSelect"></select>
+			</div>
+		</div>
+
+		<!-- Tester -->
+		<div class="section">
+			<h3>Tester une alerte</h3>
+			<div class="test-grid">
+				<button type="button" data-test="follow">Follow</button>
+				<button type="button" data-test="sub">Sub</button>
+				<button type="button" data-test="resub">Resub</button>
+				<button type="button" data-test="gift">Gift</button>
+				<button type="button" data-test="cheer">Bits</button>
+				<button type="button" data-test="raid">Raid</button>
+			</div>
+		</div>
+
+		<!-- File d'attente -->
+		<div class="section">
+			<h3>File d’attente</h3>
+			<div class="row">
+				<div class="card" style="margin:0"><span id="queueInfo">—</span></div>
+				<button id="skipButton" type="button">Passer l’alerte</button>
+			</div>
+		</div>
+
+		<!-- Dossier source -->
+		<div class="section">
+			<h3>Dossier source</h3>
+			<div class="card">
+				<div id="folderPath">Aucun dossier choisi</div>
+				<div class="row">
+					<button id="chooseFolderButton" type="button">Choisir le dossier</button>
+					<button id="refreshButton" type="button">Actualiser</button>
+				</div>
+				<div class="row">
+					<input id="folderInput" type="text" placeholder="Ou collez le chemin : C:\Alertes" />
+					<button id="setFolderButton" type="button" style="flex:0 0 auto">Définir</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Vérification des fichiers -->
+		<div class="section">
+			<h3>Fichiers</h3>
+			<div class="card"><ul id="issues"></ul></div>
+		</div>
+
+		<div class="section">
+			<div class="row">
+				<button id="copyCodeButton2" type="button">Copier le code d’import Streamer.bot</button>
+			</div>
+		</div>
+	</div>
+
+	<div id="toast"></div>
+
+	<script src="../../-common/utils/widget-settings.js?v=2026111516"></script>
+	<script src="../helpers.js?v=2026111516"></script>
+	<script src="./script.js?v=2026111516"></script>
+</body>
+
+</html>

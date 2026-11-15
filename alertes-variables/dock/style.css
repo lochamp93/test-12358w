@@ -1,0 +1,293 @@
+/* Alertes variables — dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
+
+html.apple {
+	--dock-accent: var(--ui-accent);
+}
+
+html,
+body {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	padding: 0 12px 16px;
+	box-sizing: border-box;
+	font-size: 13px;
+}
+
+.card {
+	background: var(--ui-bg-elevated);
+	border-radius: 14px;
+	box-shadow: var(--ui-shadow);
+}
+
+/* ---------- En-tête ---------- */
+
+#header {
+	position: sticky;
+	top: 0;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 -12px 12px;
+	padding: 10px 12px;
+	background: var(--ui-glass);
+	backdrop-filter: blur(24px) saturate(180%);
+	-webkit-backdrop-filter: blur(24px) saturate(180%);
+	border-bottom: 0.5px solid var(--ui-separator);
+}
+
+.dock-title {
+	flex: 1;
+	font-family: var(--ui-font-display);
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.status {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--ui-text-secondary);
+	white-space: nowrap;
+}
+
+.status::before {
+	content: "";
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: var(--ui-red);
+}
+
+.status.on::before { background: var(--ui-green); }
+
+/* ---------- Bandeaux ---------- */
+
+.panel {
+	border-radius: 14px;
+	padding: 12px 14px;
+	margin-bottom: 12px;
+	font-size: 12px;
+	line-height: 1.45;
+	background: var(--ui-bg-elevated);
+	box-shadow: var(--ui-shadow);
+}
+
+.panel.warning strong {
+	display: block;
+	font-size: 13px;
+	margin-bottom: 4px;
+}
+
+.panel.warning strong::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-right: 6px;
+	border-radius: 50%;
+	background: #ff9f0a;
+	vertical-align: 1px;
+}
+
+.panel p,
+.panel ol {
+	margin: 6px 0;
+	color: var(--ui-text-secondary);
+}
+
+.panel ol { padding-left: 18px; }
+
+.panel .row { margin-top: 10px; }
+
+code {
+	font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+	font-size: 11px;
+	background: var(--ui-fill);
+	padding: 1px 5px;
+	border-radius: 4px;
+}
+
+#main.disabled {
+	opacity: 0.4;
+	pointer-events: none;
+}
+
+/* ---------- Contrôles ---------- */
+
+.row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.row > * {
+	flex: 1;
+	min-width: 0;
+}
+
+html.apple .row.big button {
+	height: 48px;
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0;
+	line-height: 1;
+	font-family: var(--ui-font-display);
+	font-size: 28px;
+	font-weight: 500;
+}
+
+html.apple button.danger {
+	color: var(--ui-red);
+}
+
+html.apple button.danger.confirming {
+	background: var(--ui-red);
+	color: #fff;
+}
+
+.toggle-line {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 10px 14px;
+	margin: 4px 0 0;
+	cursor: pointer;
+}
+
+/* ---------- Sections ---------- */
+
+.section {
+	margin-top: 18px;
+}
+
+.section h3 {
+	margin: 0 0 6px 4px;
+	font-family: var(--ui-font-display);
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ui-text);
+}
+
+/* Champ nombre sans flèches */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield;
+	appearance: textfield;
+}
+
+
+
+.muted {
+	color: var(--ui-text-secondary);
+	font-size: 12px;
+	margin: 4px;
+}
+
+/* ---------- Notification ---------- */
+
+#toast {
+	position: fixed;
+	left: 50%;
+	bottom: 14px;
+	transform: translateX(-50%) translateY(8px);
+	background: var(--ui-bg-elevated);
+	color: var(--ui-text);
+	box-shadow: var(--ui-shadow-pop);
+	padding: 8px 14px;
+	border-radius: 999px;
+	font-size: 12px;
+	opacity: 0;
+	transition: opacity 0.2s, transform 0.2s;
+	pointer-events: none;
+	max-width: 90vw;
+	text-align: center;
+}
+
+#toast.show {
+	opacity: 1;
+	transform: translateX(-50%) translateY(0);
+}
+
+[hidden] {
+	display: none !important;
+}
+
+/* ---------- Alertes variables ---------- */
+
+.card { padding: 12px 14px; margin-bottom: 10px; }
+
+.label {
+	font-size: 11px;
+	font-weight: 500;
+	color: var(--ui-text-secondary);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+#scenarioName {
+	font-family: var(--ui-font-display);
+	font-size: 26px;
+	font-weight: 700;
+	line-height: 1.15;
+	margin: 2px 0 4px;
+	overflow-wrap: anywhere;
+}
+
+#scenarioReason,
+#liveInfo { font-size: 12px; color: var(--ui-text-secondary); }
+
+#liveInfo { margin-top: 6px; }
+
+html.apple button#muteButton {
+	height: 44px;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+html.apple button#muteButton.muted-on {
+	background: var(--ui-red);
+	color: #fff;
+}
+
+.test-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+}
+
+#folderPath {
+	font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+	font-size: 11px;
+	overflow-wrap: anywhere;
+	margin: 2px 0 8px;
+}
+
+#issues { margin: 0; padding-left: 18px; font-size: 12px; line-height: 1.5; }
+#issues li.ok { list-style: none; margin-left: -18px; color: var(--ui-green); }
+#issues li.warn { color: var(--ui-text); }
+#issues li.info { color: var(--ui-text-secondary); }
+
+select { width: 100%; }
+
+.badge {
+	font-size: 10px;
+	font-weight: 500;
+	padding: 2px 7px;
+	border-radius: 999px;
+	background: var(--ui-fill);
+	color: var(--ui-text-secondary);
+	white-space: nowrap;
+}

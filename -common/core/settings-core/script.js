@@ -115,6 +115,11 @@ function LoadJSON(settingsJson) {
 							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							inputElement.autocomplete = 'new-password';
+							// Suggestions optionnelles ("datalist": "id") : remplies par l’aperçu via postMessage
+							if (setting.datalist) {
+								inputElement.setAttribute('list', setting.datalist);
+								inputElement.autocomplete = 'off';
+							}
 							break;
 						case 'password':
 							inputElement = document.createElement('input');
@@ -417,14 +422,23 @@ function RefreshWidgetPreview() {
 	});
 
 	// Construire la chaîne de paramètres (URLSearchParams gère couleurs, espaces, virgules…)
+	// "compactURL": true dans settings.json : seuls les réglages différents de leur valeur
+	// par défaut vont dans l’URL (le widget lit les autres dans settings.json). Sinon : tout.
+	const defaults = {};
+	if (settingsData.compactURL === true)
+		settingsData.settings.forEach(setting => { defaults[setting.id] = setting.defaultValue; });
+
 	const searchParams = new URLSearchParams();
-	Object.entries(settings).forEach(([key, value]) => searchParams.set(key, value));
+	Object.entries(settings).forEach(([key, value]) => {
+		if (settingsData.compactURL === true && key in defaults && String(value) === String(defaults[key])) return;
+		searchParams.set(key, value);
+	});
 	const paramString = searchParams.toString();
 
 	console.debug('Chaîne de paramètres :', paramString);
 
 	// URL copiée pour OBS : jamais de paramètre demo
-	widgetUrlInput.value = widgetURL + "?" + paramString;
+	widgetUrlInput.value = paramString ? widgetURL + "?" + paramString : widgetURL;
 
 	// URL de l’aperçu : demo=true si settings.json le demande ("demo": true)
 	const previewParams = new URLSearchParams(searchParams);
@@ -585,6 +599,18 @@ function CloseSettings() {
 function LoadSettings() {
 	const url = new URL(loadURLBox.value);
 
+	// URL compacte : un réglage absent de l’URL reprend sa valeur par défaut
+	if (settingsData && settingsData.compactURL === true) {
+		settingsData.settings.forEach(setting => {
+			if (setting.type === 'button') return;
+			const el = document.getElementById(setting.id);
+			if (!el) return;
+			if (el.type === 'checkbox') el.checked = setting.defaultValue === true;
+			else el.value = setting.defaultValue;
+			settingsMap.set(setting.id, setting.defaultValue);
+		});
+	}
+
 	url.searchParams.forEach((value, key) => {
 
 		// Alias : un ancien nom de paramètre déclaré dans settings.json ("aliases": [...])
@@ -603,6 +629,12 @@ function LoadSettings() {
 			inputElement.dispatchEvent(new Event('input', { bubbles: true })); // Déclenche le rafraîchissement (bubbles : nécessaire pour les interrupteurs)
 		}
 	});
+
+	// URL compacte sans paramètre : rafraîchir quand même le formulaire, l’aperçu et le lien
+	if (settingsData && settingsData.compactURL === true) {
+		const first = settingsData.settings.find(st => st.type !== 'button' && document.getElementById(st.id));
+		if (first) document.getElementById(first.id).dispatchEvent(new Event('input', { bubbles: true }));
+	}
 
 	loadURLBox.value = '';
 
@@ -632,6 +664,25 @@ function OpenLoadSettingsPopup() {
 
 // Gérer la première interaction avec la fenêtre
 window.addEventListener('message', (event) => {
+	// Suggestions envoyées par l’aperçu : { type: 'widget-datalist', id: 'liste', options: ['a', 'b'] }
+	// (utilisées par les champs texte qui déclarent "datalist": "liste" dans settings.json)
+	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-datalist'
+		&& typeof event.data.id === 'string' && Array.isArray(event.data.options)) {
+		let datalist = document.getElementById(event.data.id);
+		if (!datalist) {
+			datalist = document.createElement('datalist');
+			datalist.id = event.data.id;
+			document.body.appendChild(datalist);
+		}
+		datalist.innerHTML = '';
+		event.data.options.forEach(value => {
+			const option = document.createElement('option');
+			option.value = String(value);
+			datalist.appendChild(option);
+		});
+		return;
+	}
+
 	if (event.origin === new URL(widgetPreview.src).origin && event.data === 'iframe-interacted') {
 		iframeHasBeenInteractedWith = true;
 		console.log('Interaction avec l’iframe détectée !');

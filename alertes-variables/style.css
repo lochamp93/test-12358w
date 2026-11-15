@@ -1,0 +1,124 @@
+/* Alertes variables — overlay (centré dans la source OBS) */
+
+html,
+body {
+	margin: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: transparent;
+}
+
+#stage {
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#alert {
+	--anim-ms: 600ms;
+	--font: inherit;
+	--font-size: 42px;
+	--text-color: #ffffff;
+	--accent-color: #ff4d6d;
+	--media-height: 320px;
+	--message-size: 26px;
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+	max-width: 96vw;
+	font-family: var(--font), -apple-system, "Segoe UI", sans-serif;
+	text-align: center;
+	color: var(--text-color);
+}
+
+#alert.hidden { visibility: hidden; }
+
+#alert.pos-above { flex-direction: column-reverse; }
+
+#alert.pos-over { display: grid; }
+#alert.pos-over > * { grid-area: 1 / 1; }
+#alert.pos-over #textWrap { align-self: end; padding-bottom: 6%; }
+
+#mediaWrap:empty { display: none; }
+
+#mediaWrap img,
+#mediaWrap video {
+	display: block;
+	height: var(--media-height);
+	max-width: 96vw;
+	object-fit: contain;
+}
+
+#alertTitle {
+	font-size: var(--font-size);
+	font-weight: 800;
+	line-height: 1.15;
+}
+
+#alertTitle .accent { color: var(--accent-color); }
+
+#alertMessage {
+	margin-top: 6px;
+	font-size: var(--message-size);
+	font-weight: 500;
+	opacity: 0.92;
+	max-width: 80vw;
+	overflow-wrap: anywhere;
+}
+
+#alertMessage:empty { display: none; }
+
+#alert.shadow #textWrap {
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8), 0 0 14px rgba(0, 0, 0, 0.55);
+}
+
+/* ---------- Animations d'entrée ---------- */
+
+#alert.in-fade { animation: av-fade-in var(--anim-ms) ease-out both; }
+#alert.in-slideUp { animation: av-slide-up-in var(--anim-ms) cubic-bezier(.2, .9, .3, 1) both; }
+#alert.in-slideDown { animation: av-slide-down-in var(--anim-ms) cubic-bezier(.2, .9, .3, 1) both; }
+#alert.in-slideLeft { animation: av-slide-left-in var(--anim-ms) cubic-bezier(.2, .9, .3, 1) both; }
+#alert.in-slideRight { animation: av-slide-right-in var(--anim-ms) cubic-bezier(.2, .9, .3, 1) both; }
+#alert.in-zoom { animation: av-zoom-in var(--anim-ms) cubic-bezier(.2, .9, .3, 1.2) both; }
+#alert.in-bounce { animation: av-bounce-in var(--anim-ms) ease-out both; }
+#alert.in-shake { animation: av-fade-in calc(var(--anim-ms) * 0.4) ease-out both, av-shake var(--anim-ms) ease-in-out both; }
+
+/* ---------- Animations de sortie ---------- */
+
+#alert.out-fade { animation: av-fade-out var(--anim-ms) ease-in both; }
+#alert.out-slideUp { animation: av-slide-up-out var(--anim-ms) ease-in both; }
+#alert.out-slideDown { animation: av-slide-down-out var(--anim-ms) ease-in both; }
+#alert.out-slideLeft { animation: av-slide-left-out var(--anim-ms) ease-in both; }
+#alert.out-slideRight { animation: av-slide-right-out var(--anim-ms) ease-in both; }
+#alert.out-zoom { animation: av-zoom-out var(--anim-ms) ease-in both; }
+
+@keyframes av-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes av-slide-up-in { from { opacity: 0; transform: translateY(60vh); } to { opacity: 1; transform: none; } }
+@keyframes av-slide-down-in { from { opacity: 0; transform: translateY(-60vh); } to { opacity: 1; transform: none; } }
+@keyframes av-slide-left-in { from { opacity: 0; transform: translateX(60vw); } to { opacity: 1; transform: none; } }
+@keyframes av-slide-right-in { from { opacity: 0; transform: translateX(-60vw); } to { opacity: 1; transform: none; } }
+@keyframes av-zoom-in { from { opacity: 0; transform: scale(0.3); } to { opacity: 1; transform: none; } }
+@keyframes av-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes av-slide-up-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-60vh); } }
+@keyframes av-slide-down-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(60vh); } }
+@keyframes av-slide-left-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(-60vw); } }
+@keyframes av-slide-right-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(60vw); } }
+@keyframes av-zoom-out { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.3); } }
+
+@keyframes av-bounce-in {
+	0% { opacity: 0; transform: scale(0.3); }
+	50% { opacity: 1; transform: scale(1.08); }
+	70% { transform: scale(0.95); }
+	100% { opacity: 1; transform: none; }
+}
+
+@keyframes av-shake {
+	0%, 100% { transform: none; }
+	15%, 45%, 75% { transform: translateX(-14px) rotate(-1.5deg); }
+	30%, 60%, 90% { transform: translateX(14px) rotate(1.5deg); }
+}
