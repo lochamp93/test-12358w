@@ -162,54 +162,6 @@
 			"description": ""
 		},
 		{
-			"id": "testFollow",
-			"label": "Tester : Follow",
-			"type": "button",
-			"callFunction": "TestFollow",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
-			"id": "testSub",
-			"label": "Tester : Abonnement",
-			"type": "button",
-			"callFunction": "TestSub",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
-			"id": "testResub",
-			"label": "Tester : Réabonnement",
-			"type": "button",
-			"callFunction": "TestResub",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
-			"id": "testGift",
-			"label": "Tester : Abonnements offerts",
-			"type": "button",
-			"callFunction": "TestGift",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
-			"id": "testCheer",
-			"label": "Tester : Bits / dons",
-			"type": "button",
-			"callFunction": "TestCheer",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
-			"id": "testRaid",
-			"label": "Tester : Raid",
-			"type": "button",
-			"callFunction": "TestRaid",
-			"group": "Tester dans l’aperçu",
-			"description": ""
-		},
-		{
 			"id": "sc1Name",
 			"label": "Nom du scénario (= nom du dossier)",
 			"description": "Choisissez parmi les dossiers détectés, ou tapez le nom exact du sous-dossier",
@@ -5379,2282 +5331,6 @@
 			}
 		},
 		{
-			"id": "textFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "textSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "textResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "textGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "textCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "textRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "editScenario",
-						"value": "defaut"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc1TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc1Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc2TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc2Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc3TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc3Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc4TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc4Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc5TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc5Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc6TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc6Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc7TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc7Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc8TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc8Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc9TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc9Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc10TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc10Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc11TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc11Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextFollow",
-			"label": "Texte : Follow",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchFollow"
-							},
-							{
-								"id": "kickFollow"
-							},
-							{
-								"id": "youtubeFollow"
-							},
-							{
-								"id": "tiktokFollow"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextSub",
-			"label": "Texte : Abonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchSub"
-							},
-							{
-								"id": "kickSub"
-							},
-							{
-								"id": "youtubeSub"
-							},
-							{
-								"id": "tiktokSub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextResub",
-			"label": "Texte : Réabonnement",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchResub"
-							},
-							{
-								"id": "kickResub"
-							},
-							{
-								"id": "youtubeResub"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextGift",
-			"label": "Texte : Abonnements offerts",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchGift"
-							},
-							{
-								"id": "kickGift"
-							},
-							{
-								"id": "youtubeGift"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextCheer",
-			"label": "Texte : Bits / dons",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} envoie {amount} !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchCheer"
-							},
-							{
-								"id": "youtubeCheer"
-							},
-							{
-								"id": "tiktokCheer"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "sc12TextRaid",
-			"label": "Texte : Raid",
-			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
-			"type": "text",
-			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Textes",
-			"showIf": {
-				"all": [
-					{
-						"id": "sc12Visual",
-						"value": "own"
-					},
-					{
-						"any": [
-							{
-								"id": "twitchRaid"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "deleteScenario",
-			"label": "Supprimer ce scénario",
-			"type": "button",
-			"callFunction": "DeleteScenario",
-			"confirm": true,
-			"danger": true,
-			"group": "Gérer le scénario",
-			"showIf": {
-				"id": "editScenario",
-				"notValue": "defaut"
-			},
-			"description": ""
-		},
-		{
 			"id": "platformTwitch",
 			"label": "Alertes Twitch",
 			"type": "checkbox",
@@ -7675,6 +5351,325 @@
 			"description": ""
 		},
 		{
+			"id": "twitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textFollow"
+			]
+		},
+		{
+			"id": "sc1TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextFollow"
+			]
+		},
+		{
+			"id": "sc2TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextFollow"
+			]
+		},
+		{
+			"id": "sc3TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextFollow"
+			]
+		},
+		{
+			"id": "sc4TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextFollow"
+			]
+		},
+		{
+			"id": "sc5TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextFollow"
+			]
+		},
+		{
+			"id": "sc6TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextFollow"
+			]
+		},
+		{
+			"id": "sc7TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextFollow"
+			]
+		},
+		{
+			"id": "sc8TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextFollow"
+			]
+		},
+		{
+			"id": "sc9TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextFollow"
+			]
+		},
+		{
+			"id": "sc10TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextFollow"
+			]
+		},
+		{
+			"id": "sc11TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextFollow"
+			]
+		},
+		{
+			"id": "sc12TwitchFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchFollow"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextFollow"
+			]
+		},
+		{
+			"id": "twitchFollowFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchFollow",
+			"description": ""
+		},
+		{
+			"id": "twitchFollowTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchFollow",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchFollow",
+			"description": ""
+		},
+		{
 			"id": "twitchSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -7684,6 +5679,1357 @@
 			"aliases": [
 				"alertSub"
 			],
+			"description": ""
+		},
+		{
+			"id": "twitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textSub"
+			]
+		},
+		{
+			"id": "sc1TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextSub"
+			]
+		},
+		{
+			"id": "sc2TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextSub"
+			]
+		},
+		{
+			"id": "sc3TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextSub"
+			]
+		},
+		{
+			"id": "sc4TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextSub"
+			]
+		},
+		{
+			"id": "sc5TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextSub"
+			]
+		},
+		{
+			"id": "sc6TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextSub"
+			]
+		},
+		{
+			"id": "sc7TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextSub"
+			]
+		},
+		{
+			"id": "sc8TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextSub"
+			]
+		},
+		{
+			"id": "sc9TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextSub"
+			]
+		},
+		{
+			"id": "sc10TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextSub"
+			]
+		},
+		{
+			"id": "sc11TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextSub"
+			]
+		},
+		{
+			"id": "sc12TwitchSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextSub"
+			]
+		},
+		{
+			"id": "twitchSubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchSub",
+			"description": ""
+		},
+		{
+			"id": "twitchSubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchSub",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchSub",
+			"description": ""
+		},
+		{
+			"id": "subRule1Name",
+			"label": "Règle 1 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "Anniversaire",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule1Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "every",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule1Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 12,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule1Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule1Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule1",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule1Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule1",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Name",
+			"label": "Règle 2 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule2Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule2",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule2",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Name",
+			"label": "Règle 3 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule3Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule3",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule3",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Name",
+			"label": "Règle 4 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule4Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule4",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule4",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Name",
+			"label": "Règle 5 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule5Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule5",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule5",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Name",
+			"label": "Règle 6 : nom",
+			"description": "Pour vous repérer (ex. Anniversaire)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "subRule6Kind",
+			"label": "Quand",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Months",
+			"label": "Nombre de mois (N)",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Files",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Test",
+			"label": "Tester la règle",
+			"type": "button",
+			"callFunction": "TestSubRule6",
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Delete",
+			"label": "Supprimer la règle",
+			"type": "button",
+			"callFunction": "DeleteSubRule6",
+			"confirm": true,
+			"danger": true,
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "addSubRule",
+			"label": "+ Ajouter une règle (ex. tous les 12 mois)",
+			"type": "button",
+			"callFunction": "AddSubRule",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"0",
+							"1",
+							"2",
+							"3",
+							"4",
+							"5"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRuleCount",
+			"label": "Nombre de règles",
+			"type": "select",
+			"options": [
+				{
+					"value": "0",
+					"label": "0"
+				},
+				{
+					"value": "1",
+					"label": "1"
+				},
+				{
+					"value": "2",
+					"label": "2"
+				},
+				{
+					"value": "3",
+					"label": "3"
+				},
+				{
+					"value": "4",
+					"label": "4"
+				},
+				{
+					"value": "5",
+					"label": "5"
+				},
+				{
+					"value": "6",
+					"label": "6"
+				}
+			],
+			"defaultValue": "0",
+			"group": "Twitch",
+			"hidden": true,
 			"description": ""
 		},
 		{
@@ -7699,6 +7045,325 @@
 			"description": ""
 		},
 		{
+			"id": "twitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textResub"
+			]
+		},
+		{
+			"id": "sc1TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextResub"
+			]
+		},
+		{
+			"id": "sc2TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextResub"
+			]
+		},
+		{
+			"id": "sc3TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextResub"
+			]
+		},
+		{
+			"id": "sc4TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextResub"
+			]
+		},
+		{
+			"id": "sc5TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextResub"
+			]
+		},
+		{
+			"id": "sc6TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextResub"
+			]
+		},
+		{
+			"id": "sc7TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextResub"
+			]
+		},
+		{
+			"id": "sc8TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextResub"
+			]
+		},
+		{
+			"id": "sc9TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextResub"
+			]
+		},
+		{
+			"id": "sc10TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextResub"
+			]
+		},
+		{
+			"id": "sc11TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextResub"
+			]
+		},
+		{
+			"id": "sc12TwitchResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchResub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextResub"
+			]
+		},
+		{
+			"id": "twitchResubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchResub",
+			"description": ""
+		},
+		{
+			"id": "twitchResubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchResub",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchResub",
+			"description": ""
+		},
+		{
 			"id": "twitchGift",
 			"label": "Abonnements offerts",
 			"type": "checkbox",
@@ -7708,6 +7373,325 @@
 			"aliases": [
 				"alertGift"
 			],
+			"description": ""
+		},
+		{
+			"id": "twitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGift"
+			]
+		},
+		{
+			"id": "sc1TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGift"
+			]
+		},
+		{
+			"id": "sc2TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGift"
+			]
+		},
+		{
+			"id": "sc3TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGift"
+			]
+		},
+		{
+			"id": "sc4TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGift"
+			]
+		},
+		{
+			"id": "sc5TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGift"
+			]
+		},
+		{
+			"id": "sc6TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGift"
+			]
+		},
+		{
+			"id": "sc7TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGift"
+			]
+		},
+		{
+			"id": "sc8TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGift"
+			]
+		},
+		{
+			"id": "sc9TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGift"
+			]
+		},
+		{
+			"id": "sc10TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGift"
+			]
+		},
+		{
+			"id": "sc11TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGift"
+			]
+		},
+		{
+			"id": "sc12TwitchGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGift"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGift"
+			]
+		},
+		{
+			"id": "twitchGiftFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchGift",
+			"description": ""
+		},
+		{
+			"id": "twitchGiftTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchGift",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchGift",
 			"description": ""
 		},
 		{
@@ -7723,6 +7707,337 @@
 			"description": ""
 		},
 		{
+			"id": "twitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textCheer"
+			]
+		},
+		{
+			"id": "sc1TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextCheer"
+			]
+		},
+		{
+			"id": "sc2TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextCheer"
+			]
+		},
+		{
+			"id": "sc3TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextCheer"
+			]
+		},
+		{
+			"id": "sc4TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextCheer"
+			]
+		},
+		{
+			"id": "sc5TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextCheer"
+			]
+		},
+		{
+			"id": "sc6TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextCheer"
+			]
+		},
+		{
+			"id": "sc7TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextCheer"
+			]
+		},
+		{
+			"id": "sc8TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextCheer"
+			]
+		},
+		{
+			"id": "sc9TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextCheer"
+			]
+		},
+		{
+			"id": "sc10TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextCheer"
+			]
+		},
+		{
+			"id": "sc11TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextCheer"
+			]
+		},
+		{
+			"id": "sc12TwitchCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchCheer"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextCheer"
+			]
+		},
+		{
+			"id": "twitchCheerFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchCheer",
+			"description": ""
+		},
+		{
+			"id": "minBits",
+			"label": "Bits minimum",
+			"description": "En dessous, pas d’alerte",
+			"type": "number",
+			"min": 1,
+			"max": 100000,
+			"defaultValue": 1,
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchCheer"
+		},
+		{
+			"id": "twitchCheerTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchCheer",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchCheer",
+			"description": ""
+		},
+		{
 			"id": "twitchRaid",
 			"label": "Raid",
 			"type": "checkbox",
@@ -7735,24 +8050,333 @@
 			"description": ""
 		},
 		{
-			"id": "minBits",
-			"label": "Bits minimum",
-			"description": "En dessous, pas d’alerte",
-			"type": "number",
-			"min": 1,
-			"max": 100000,
-			"defaultValue": 1,
+			"id": "twitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"showIf": "twitchCheer"
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textRaid"
+			]
+		},
+		{
+			"id": "sc1TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextRaid"
+			]
+		},
+		{
+			"id": "sc2TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextRaid"
+			]
+		},
+		{
+			"id": "sc3TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextRaid"
+			]
+		},
+		{
+			"id": "sc4TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextRaid"
+			]
+		},
+		{
+			"id": "sc5TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextRaid"
+			]
+		},
+		{
+			"id": "sc6TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextRaid"
+			]
+		},
+		{
+			"id": "sc7TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextRaid"
+			]
+		},
+		{
+			"id": "sc8TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextRaid"
+			]
+		},
+		{
+			"id": "sc9TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextRaid"
+			]
+		},
+		{
+			"id": "sc10TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextRaid"
+			]
+		},
+		{
+			"id": "sc11TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextRaid"
+			]
+		},
+		{
+			"id": "sc12TwitchRaidText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} débarque avec {viewers} viewers !",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchRaid"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextRaid"
+			]
+		},
+		{
+			"id": "twitchRaidFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchRaid",
+			"description": ""
 		},
 		{
 			"id": "minRaid",
-			"label": "Viewers minimum pour un raid",
+			"label": "Viewers minimum",
 			"type": "number",
 			"min": 1,
 			"max": 100000,
 			"defaultValue": 1,
 			"group": "Twitch",
+			"indent": 1,
+			"showIf": "twitchRaid",
+			"description": ""
+		},
+		{
+			"id": "twitchRaidTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTwitchRaid",
+			"group": "Twitch",
+			"indent": 1,
 			"showIf": "twitchRaid",
 			"description": ""
 		},
@@ -7777,6 +8401,325 @@
 			"description": ""
 		},
 		{
+			"id": "kickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textFollow"
+			]
+		},
+		{
+			"id": "sc1KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextFollow"
+			]
+		},
+		{
+			"id": "sc2KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextFollow"
+			]
+		},
+		{
+			"id": "sc3KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextFollow"
+			]
+		},
+		{
+			"id": "sc4KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextFollow"
+			]
+		},
+		{
+			"id": "sc5KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextFollow"
+			]
+		},
+		{
+			"id": "sc6KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextFollow"
+			]
+		},
+		{
+			"id": "sc7KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextFollow"
+			]
+		},
+		{
+			"id": "sc8KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextFollow"
+			]
+		},
+		{
+			"id": "sc9KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextFollow"
+			]
+		},
+		{
+			"id": "sc10KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextFollow"
+			]
+		},
+		{
+			"id": "sc11KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextFollow"
+			]
+		},
+		{
+			"id": "sc12KickFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickFollow"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextFollow"
+			]
+		},
+		{
+			"id": "kickFollowFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickFollow",
+			"description": ""
+		},
+		{
+			"id": "kickFollowTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestKickFollow",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickFollow",
+			"description": ""
+		},
+		{
 			"id": "kickSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -7786,6 +8729,325 @@
 			"aliases": [
 				"alertSub"
 			],
+			"description": ""
+		},
+		{
+			"id": "kickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textSub"
+			]
+		},
+		{
+			"id": "sc1KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextSub"
+			]
+		},
+		{
+			"id": "sc2KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextSub"
+			]
+		},
+		{
+			"id": "sc3KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextSub"
+			]
+		},
+		{
+			"id": "sc4KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextSub"
+			]
+		},
+		{
+			"id": "sc5KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextSub"
+			]
+		},
+		{
+			"id": "sc6KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextSub"
+			]
+		},
+		{
+			"id": "sc7KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextSub"
+			]
+		},
+		{
+			"id": "sc8KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextSub"
+			]
+		},
+		{
+			"id": "sc9KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextSub"
+			]
+		},
+		{
+			"id": "sc10KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextSub"
+			]
+		},
+		{
+			"id": "sc11KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextSub"
+			]
+		},
+		{
+			"id": "sc12KickSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickSub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextSub"
+			]
+		},
+		{
+			"id": "kickSubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickSub",
+			"description": ""
+		},
+		{
+			"id": "kickSubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestKickSub",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickSub",
 			"description": ""
 		},
 		{
@@ -7801,6 +9063,325 @@
 			"description": ""
 		},
 		{
+			"id": "kickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textResub"
+			]
+		},
+		{
+			"id": "sc1KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextResub"
+			]
+		},
+		{
+			"id": "sc2KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextResub"
+			]
+		},
+		{
+			"id": "sc3KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextResub"
+			]
+		},
+		{
+			"id": "sc4KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextResub"
+			]
+		},
+		{
+			"id": "sc5KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextResub"
+			]
+		},
+		{
+			"id": "sc6KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextResub"
+			]
+		},
+		{
+			"id": "sc7KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextResub"
+			]
+		},
+		{
+			"id": "sc8KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextResub"
+			]
+		},
+		{
+			"id": "sc9KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextResub"
+			]
+		},
+		{
+			"id": "sc10KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextResub"
+			]
+		},
+		{
+			"id": "sc11KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextResub"
+			]
+		},
+		{
+			"id": "sc12KickResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickResub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextResub"
+			]
+		},
+		{
+			"id": "kickResubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickResub",
+			"description": ""
+		},
+		{
+			"id": "kickResubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestKickResub",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickResub",
+			"description": ""
+		},
+		{
 			"id": "kickGift",
 			"label": "Abonnements offerts",
 			"type": "checkbox",
@@ -7810,6 +9391,325 @@
 			"aliases": [
 				"alertGift"
 			],
+			"description": ""
+		},
+		{
+			"id": "kickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGift"
+			]
+		},
+		{
+			"id": "sc1KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGift"
+			]
+		},
+		{
+			"id": "sc2KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGift"
+			]
+		},
+		{
+			"id": "sc3KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGift"
+			]
+		},
+		{
+			"id": "sc4KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGift"
+			]
+		},
+		{
+			"id": "sc5KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGift"
+			]
+		},
+		{
+			"id": "sc6KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGift"
+			]
+		},
+		{
+			"id": "sc7KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGift"
+			]
+		},
+		{
+			"id": "sc8KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGift"
+			]
+		},
+		{
+			"id": "sc9KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGift"
+			]
+		},
+		{
+			"id": "sc10KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGift"
+			]
+		},
+		{
+			"id": "sc11KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGift"
+			]
+		},
+		{
+			"id": "sc12KickGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGift"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGift"
+			]
+		},
+		{
+			"id": "kickGiftFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickGift",
+			"description": ""
+		},
+		{
+			"id": "kickGiftTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestKickGift",
+			"group": "Kick",
+			"indent": 1,
+			"showIf": "kickGift",
 			"description": ""
 		},
 		{
@@ -7833,6 +9733,325 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textFollow"
+			]
+		},
+		{
+			"id": "sc1YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextFollow"
+			]
+		},
+		{
+			"id": "sc2YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextFollow"
+			]
+		},
+		{
+			"id": "sc3YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextFollow"
+			]
+		},
+		{
+			"id": "sc4YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextFollow"
+			]
+		},
+		{
+			"id": "sc5YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextFollow"
+			]
+		},
+		{
+			"id": "sc6YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextFollow"
+			]
+		},
+		{
+			"id": "sc7YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextFollow"
+			]
+		},
+		{
+			"id": "sc8YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextFollow"
+			]
+		},
+		{
+			"id": "sc9YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextFollow"
+			]
+		},
+		{
+			"id": "sc10YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextFollow"
+			]
+		},
+		{
+			"id": "sc11YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextFollow"
+			]
+		},
+		{
+			"id": "sc12YoutubeFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeFollow"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextFollow"
+			]
+		},
+		{
+			"id": "youtubeFollowFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeFollow",
+			"description": ""
+		},
+		{
+			"id": "youtubeFollowTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestYouTubeFollow",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeFollow",
+			"description": ""
+		},
+		{
 			"id": "youtubeSub",
 			"label": "Nouveau membre",
 			"type": "checkbox",
@@ -7842,6 +10061,325 @@
 			"aliases": [
 				"alertSub"
 			],
+			"description": ""
+		},
+		{
+			"id": "youtubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textSub"
+			]
+		},
+		{
+			"id": "sc1YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextSub"
+			]
+		},
+		{
+			"id": "sc2YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextSub"
+			]
+		},
+		{
+			"id": "sc3YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextSub"
+			]
+		},
+		{
+			"id": "sc4YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextSub"
+			]
+		},
+		{
+			"id": "sc5YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextSub"
+			]
+		},
+		{
+			"id": "sc6YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextSub"
+			]
+		},
+		{
+			"id": "sc7YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextSub"
+			]
+		},
+		{
+			"id": "sc8YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextSub"
+			]
+		},
+		{
+			"id": "sc9YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextSub"
+			]
+		},
+		{
+			"id": "sc10YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextSub"
+			]
+		},
+		{
+			"id": "sc11YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextSub"
+			]
+		},
+		{
+			"id": "sc12YoutubeSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeSub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextSub"
+			]
+		},
+		{
+			"id": "youtubeSubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeSub",
+			"description": ""
+		},
+		{
+			"id": "youtubeSubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestYouTubeSub",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeSub",
 			"description": ""
 		},
 		{
@@ -7857,6 +10395,325 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textResub"
+			]
+		},
+		{
+			"id": "sc1YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextResub"
+			]
+		},
+		{
+			"id": "sc2YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextResub"
+			]
+		},
+		{
+			"id": "sc3YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextResub"
+			]
+		},
+		{
+			"id": "sc4YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextResub"
+			]
+		},
+		{
+			"id": "sc5YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextResub"
+			]
+		},
+		{
+			"id": "sc6YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextResub"
+			]
+		},
+		{
+			"id": "sc7YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextResub"
+			]
+		},
+		{
+			"id": "sc8YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextResub"
+			]
+		},
+		{
+			"id": "sc9YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextResub"
+			]
+		},
+		{
+			"id": "sc10YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextResub"
+			]
+		},
+		{
+			"id": "sc11YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextResub"
+			]
+		},
+		{
+			"id": "sc12YoutubeResubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} se réabonne depuis {months} mois !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeResub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextResub"
+			]
+		},
+		{
+			"id": "youtubeResubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeResub",
+			"description": ""
+		},
+		{
+			"id": "youtubeResubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestYouTubeResub",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeResub",
+			"description": ""
+		},
+		{
 			"id": "youtubeGift",
 			"label": "Abonnements offerts",
 			"type": "checkbox",
@@ -7869,6 +10726,325 @@
 			"description": ""
 		},
 		{
+			"id": "youtubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGift"
+			]
+		},
+		{
+			"id": "sc1YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGift"
+			]
+		},
+		{
+			"id": "sc2YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGift"
+			]
+		},
+		{
+			"id": "sc3YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGift"
+			]
+		},
+		{
+			"id": "sc4YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGift"
+			]
+		},
+		{
+			"id": "sc5YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGift"
+			]
+		},
+		{
+			"id": "sc6YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGift"
+			]
+		},
+		{
+			"id": "sc7YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGift"
+			]
+		},
+		{
+			"id": "sc8YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGift"
+			]
+		},
+		{
+			"id": "sc9YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGift"
+			]
+		},
+		{
+			"id": "sc10YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGift"
+			]
+		},
+		{
+			"id": "sc11YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGift"
+			]
+		},
+		{
+			"id": "sc12YoutubeGiftText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGift"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGift"
+			]
+		},
+		{
+			"id": "youtubeGiftFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeGift",
+			"description": ""
+		},
+		{
+			"id": "youtubeGiftTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestYouTubeGift",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeGift",
+			"description": ""
+		},
+		{
 			"id": "youtubeCheer",
 			"label": "Super Chat / Super Sticker",
 			"type": "checkbox",
@@ -7878,6 +11054,325 @@
 			"aliases": [
 				"alertCheer"
 			],
+			"description": ""
+		},
+		{
+			"id": "youtubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textCheer"
+			]
+		},
+		{
+			"id": "sc1YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextCheer"
+			]
+		},
+		{
+			"id": "sc2YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextCheer"
+			]
+		},
+		{
+			"id": "sc3YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextCheer"
+			]
+		},
+		{
+			"id": "sc4YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextCheer"
+			]
+		},
+		{
+			"id": "sc5YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextCheer"
+			]
+		},
+		{
+			"id": "sc6YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextCheer"
+			]
+		},
+		{
+			"id": "sc7YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextCheer"
+			]
+		},
+		{
+			"id": "sc8YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextCheer"
+			]
+		},
+		{
+			"id": "sc9YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextCheer"
+			]
+		},
+		{
+			"id": "sc10YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextCheer"
+			]
+		},
+		{
+			"id": "sc11YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextCheer"
+			]
+		},
+		{
+			"id": "sc12YoutubeCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeCheer"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextCheer"
+			]
+		},
+		{
+			"id": "youtubeCheerFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeCheer",
+			"description": ""
+		},
+		{
+			"id": "youtubeCheerTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestYouTubeCheer",
+			"group": "YouTube",
+			"indent": 1,
+			"showIf": "youtubeCheer",
 			"description": ""
 		},
 		{
@@ -7901,6 +11396,325 @@
 			"description": ""
 		},
 		{
+			"id": "tiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textFollow"
+			]
+		},
+		{
+			"id": "sc1TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextFollow"
+			]
+		},
+		{
+			"id": "sc2TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextFollow"
+			]
+		},
+		{
+			"id": "sc3TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextFollow"
+			]
+		},
+		{
+			"id": "sc4TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextFollow"
+			]
+		},
+		{
+			"id": "sc5TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextFollow"
+			]
+		},
+		{
+			"id": "sc6TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextFollow"
+			]
+		},
+		{
+			"id": "sc7TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextFollow"
+			]
+		},
+		{
+			"id": "sc8TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextFollow"
+			]
+		},
+		{
+			"id": "sc9TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextFollow"
+			]
+		},
+		{
+			"id": "sc10TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextFollow"
+			]
+		},
+		{
+			"id": "sc11TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextFollow"
+			]
+		},
+		{
+			"id": "sc12TiktokFollowText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de suivre la chaîne !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokFollow"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextFollow"
+			]
+		},
+		{
+			"id": "tiktokFollowFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokFollow",
+			"description": ""
+		},
+		{
+			"id": "tiktokFollowTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTikTokFollow",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokFollow",
+			"description": ""
+		},
+		{
 			"id": "tiktokSub",
 			"label": "Abonnement",
 			"type": "checkbox",
@@ -7910,6 +11724,325 @@
 			"aliases": [
 				"alertSub"
 			],
+			"description": ""
+		},
+		{
+			"id": "tiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textSub"
+			]
+		},
+		{
+			"id": "sc1TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextSub"
+			]
+		},
+		{
+			"id": "sc2TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextSub"
+			]
+		},
+		{
+			"id": "sc3TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextSub"
+			]
+		},
+		{
+			"id": "sc4TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextSub"
+			]
+		},
+		{
+			"id": "sc5TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextSub"
+			]
+		},
+		{
+			"id": "sc6TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextSub"
+			]
+		},
+		{
+			"id": "sc7TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextSub"
+			]
+		},
+		{
+			"id": "sc8TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextSub"
+			]
+		},
+		{
+			"id": "sc9TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextSub"
+			]
+		},
+		{
+			"id": "sc10TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextSub"
+			]
+		},
+		{
+			"id": "sc11TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextSub"
+			]
+		},
+		{
+			"id": "sc12TiktokSubText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} vient de s’abonner !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokSub"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextSub"
+			]
+		},
+		{
+			"id": "tiktokSubFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokSub",
+			"description": ""
+		},
+		{
+			"id": "tiktokSubTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTikTokSub",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokSub",
 			"description": ""
 		},
 		{
@@ -7925,311 +12058,322 @@
 			"description": ""
 		},
 		{
-			"id": "subRuleCount",
-			"label": "Abonnements spéciaux",
-			"description": "Visuel et son propres pour certains mois d’abonnement (ex. 9 mois, tous les 12 mois)",
-			"type": "select",
-			"options": [
-				{
-					"value": "0",
-					"label": "Aucun"
-				},
-				{
-					"value": "1",
-					"label": "1 règle"
-				},
-				{
-					"value": "2",
-					"label": "2 règles"
-				},
-				{
-					"value": "3",
-					"label": "3 règles"
-				},
-				{
-					"value": "4",
-					"label": "4 règles"
-				},
-				{
-					"value": "5",
-					"label": "5 règles"
-				},
-				{
-					"value": "6",
-					"label": "6 règles"
-				}
-			],
-			"defaultValue": "0",
-			"group": "Réglages des alertes"
-		},
-		{
-			"id": "subRule1Kind",
-			"label": "Règle 1",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "every",
-			"group": "Réglages des alertes",
+			"id": "tiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
 			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule1Months",
-			"label": "Règle 1 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 12,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"1",
-					"2",
-					"3",
-					"4",
-					"5",
-					"6"
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
 				]
 			},
+			"aliases": [
+				"textCheer"
+			]
+		},
+		{
+			"id": "sc1TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextCheer"
+			]
+		},
+		{
+			"id": "sc2TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextCheer"
+			]
+		},
+		{
+			"id": "sc3TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextCheer"
+			]
+		},
+		{
+			"id": "sc4TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextCheer"
+			]
+		},
+		{
+			"id": "sc5TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextCheer"
+			]
+		},
+		{
+			"id": "sc6TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextCheer"
+			]
+		},
+		{
+			"id": "sc7TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextCheer"
+			]
+		},
+		{
+			"id": "sc8TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextCheer"
+			]
+		},
+		{
+			"id": "sc9TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextCheer"
+			]
+		},
+		{
+			"id": "sc10TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextCheer"
+			]
+		},
+		{
+			"id": "sc11TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextCheer"
+			]
+		},
+		{
+			"id": "sc12TiktokCheerText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} envoie {amount} !",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": {
+				"all": [
+					{
+						"id": "tiktokCheer"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextCheer"
+			]
+		},
+		{
+			"id": "tiktokCheerFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokCheer",
 			"description": ""
 		},
 		{
-			"id": "subRule2Kind",
-			"label": "Règle 2",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "exact",
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"2",
-					"3",
-					"4",
-					"5",
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule2Months",
-			"label": "Règle 2 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 9,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"2",
-					"3",
-					"4",
-					"5",
-					"6"
-				]
-			},
-			"description": ""
-		},
-		{
-			"id": "subRule3Kind",
-			"label": "Règle 3",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "exact",
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"3",
-					"4",
-					"5",
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule3Months",
-			"label": "Règle 3 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 9,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"3",
-					"4",
-					"5",
-					"6"
-				]
-			},
-			"description": ""
-		},
-		{
-			"id": "subRule4Kind",
-			"label": "Règle 4",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "exact",
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"4",
-					"5",
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule4Months",
-			"label": "Règle 4 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 9,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"4",
-					"5",
-					"6"
-				]
-			},
-			"description": ""
-		},
-		{
-			"id": "subRule5Kind",
-			"label": "Règle 5",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "exact",
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"5",
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule5Months",
-			"label": "Règle 5 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 9,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"5",
-					"6"
-				]
-			},
-			"description": ""
-		},
-		{
-			"id": "subRule6Kind",
-			"label": "Règle 6",
-			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-			"type": "select",
-			"options": [
-				{
-					"value": "exact",
-					"label": "Exactement N mois"
-				},
-				{
-					"value": "every",
-					"label": "Tous les N mois"
-				}
-			],
-			"defaultValue": "exact",
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"6"
-				]
-			}
-		},
-		{
-			"id": "subRule6Months",
-			"label": "Règle 6 : nombre de mois",
-			"type": "number",
-			"min": 1,
-			"max": 240,
-			"defaultValue": 9,
-			"group": "Réglages des alertes",
-			"showIf": {
-				"id": "subRuleCount",
-				"value": [
-					"6"
-				]
-			},
+			"id": "tiktokCheerTest",
+			"label": "Tester l’alerte",
+			"type": "button",
+			"callFunction": "TestTikTokCheer",
+			"group": "TikTok",
+			"indent": 1,
+			"showIf": "tiktokCheer",
 			"description": ""
 		},
 		{
@@ -8361,6 +12505,21 @@
 			"type": "text",
 			"defaultValue": "Alertes variables | Moteur",
 			"group": "Connexion"
+		},
+		{
+			"id": "deleteScenario",
+			"label": "Supprimer ce scénario",
+			"type": "button",
+			"callFunction": "DeleteScenario",
+			"confirm": true,
+			"danger": true,
+			"bare": true,
+			"group": "Gérer le scénario",
+			"showIf": {
+				"id": "editScenario",
+				"notValue": "defaut"
+			},
+			"description": ""
 		}
 	]
 }

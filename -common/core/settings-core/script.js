@@ -80,6 +80,8 @@ function LoadJSON(settingsJson) {
 			for (const groupName in groupedSettings) {
 				const groupDiv = document.createElement('div');
 				groupDiv.classList.add('setting-group');
+				// Section sans cadre ni titre si tous ses réglages ont "bare": true (ex. bouton seul en bas)
+				if (groupedSettings[groupName].every(s => s.bare)) groupDiv.classList.add('setting-group-bare');
 
 				const groupHeader = document.createElement('h2');
 				groupHeader.textContent = groupName;
@@ -89,6 +91,8 @@ function LoadJSON(settingsJson) {
 					const settingItem = document.createElement('div');
 					settingItem.classList.add('setting-item');
 					settingItem.id = `item-${setting.id}`;
+					// "indent": 1 | 2 : réglage imbriqué sous le précédent (détails d’une alerte…)
+					if (setting.indent) settingItem.classList.add(`indent-${setting.indent}`);
 
 					const labelDescriptionDiv = document.createElement('div');
 

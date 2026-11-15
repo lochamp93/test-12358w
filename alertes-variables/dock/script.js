@@ -51,8 +51,12 @@ function Render() {
 
 	// Son
 	const mute = !!st.mute;
-	$('muteButton').textContent = mute ? '🔇 Sons coupés · Réactiver' : '🔊 Sons actifs · Couper';
+	// État du son (texte non cliquable) et bouton rond : haut-parleur barré pour couper,
+	// haut-parleur avec onde pour réactiver
+	$('soundStatus').textContent = mute ? 'Sons coupés' : 'Sons actifs';
+	$('soundStatus').className = 'sound-status ' + (mute ? 'off' : 'on');
 	$('muteButton').classList.toggle('muted-on', mute);
+	$('muteButton').title = mute ? 'Réactiver les sons' : 'Couper les sons';
 
 	// Forcer un scénario
 	const select = $('forceSelect');
@@ -244,7 +248,7 @@ $('muteButton').addEventListener('click', () => {
 
 $('forceSelect').addEventListener('change', (e) => Send({ mode: 'forcer', scenario: e.target.value }));
 
-document.querySelectorAll('[data-test]').forEach(b => b.addEventListener('click', () => Send({ mode: 'tester', type: b.dataset.test })));
+$('testButton').addEventListener('click', () => Send({ mode: 'tester', type: $('testSelect').value }));
 
 $('skipButton').addEventListener('click', () => Send({ mode: 'passer' }));
 

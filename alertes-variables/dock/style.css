@@ -251,12 +251,6 @@ input[type="number"] {
 
 #liveInfo { margin-top: 6px; }
 
-html.apple button#muteButton {
-	height: 44px;
-	font-size: 15px;
-	font-weight: 600;
-}
-
 html.apple button#muteButton.muted-on {
 	background: var(--ui-red);
 	color: #fff;
@@ -334,3 +328,69 @@ select { width: 100%; }
 	overflow-wrap: anywhere;
 	font-family: inherit;
 }
+
+/* Lignes « état + bouton rond » (son, test, file d'attente) : même hauteur partout */
+.control-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.control-row > .card,
+.control-row > select {
+	flex: 1;
+	min-width: 0;
+	margin: 0;
+	height: 40px;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+}
+
+.control-row > .status-card {
+	padding: 0 14px;
+	font-weight: 600;
+}
+
+html.apple .control-row > select { height: 40px; border-radius: 12px; }
+
+.sound-status::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-right: 8px;
+	border-radius: 50%;
+	vertical-align: 1px;
+}
+
+.sound-status.on::before { background: var(--ui-green, #34c759); }
+.sound-status.off::before { background: var(--ui-red, #ff3b30); }
+
+/* Boutons ronds avec icône */
+html.apple .round-btn {
+	flex: 0 0 40px;
+	width: 40px;
+	height: 40px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.round-btn svg {
+	width: 17px;
+	height: 17px;
+	fill: currentColor;
+}
+
+html.apple .round-btn.accent { background: var(--ui-accent); color: #fff; }
+
+/* Bouton son : barré pour couper, onde pour réactiver */
+.round-btn .icon-mute,
+.round-btn .icon-unmute { display: inline-flex; }
+.round-btn:not(.muted-on) .icon-unmute,
+.round-btn.muted-on .icon-mute { display: none; }
+html.apple .round-btn.muted-on { background: var(--ui-red); color: #fff; }

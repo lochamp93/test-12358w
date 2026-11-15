@@ -94,6 +94,21 @@ function ActiveScenario() {
 	return { scenario: null, reason: 'Aucune règle ne correspond' };
 }
 
+const Cap = (t) => t ? t[0].toUpperCase() + t.slice(1) : t;
+
+function TextKey(n, cle, type) {
+	return n ? `sc${n}${Cap(cle)}${Cap(type)}Text` : `${cle}${Cap(type)}Text`;
+}
+
+// Texte pour une plateforme ; sans plateforme (tests du dock), la première qui gère ce type
+function TextFor(n, platform, type) {
+	const s = ws.values;
+	let cle = PLATFORM_KEYS[platform];
+	if (!cle || !(TextKey(n, cle, type) in s))
+		cle = Object.values(PLATFORM_KEYS).find(c => TextKey(n, c, type) in s) || 'twitch';
+	return s[TextKey(n, cle, type)] || '';
+}
+
 // Réglages de style d'un scénario (visuel propre) ou du scénario par défaut
 function StyleOf(sc) {
 	const s = ws.values;
@@ -102,8 +117,8 @@ function StyleOf(sc) {
 	const style = {};
 	for (const name of ['font', 'fontSize', 'textColor', 'accentColor', 'textPosition', 'mediaHeight', 'animIn', 'animOut', 'duration'])
 		style[name] = s[k(name)];
-	style.texts = {};
-	for (const t of ALERT_TYPES) style.texts[t] = s[k(`text${t[0].toUpperCase()}${t.slice(1)}`)];
+	// Texte d'une alerte : propre à la plateforme (twitchSubText, sc1TwitchSubText…)
+	style.text = (info) => TextFor(sc && own ? sc.n : 0, info.platform, info.type);
 	style.volume = sc && sc.sound === 'own' ? s[`sc${sc.n}Volume`] : s.volume;
 	return style;
 }
@@ -225,6 +240,7 @@ function ManageScenarios(values, previous) {
 	if (edit > count) { PostToSettings({ type: 'widget-set', values: { editScenario: 'defaut' } }); return; }
 
 	PostScenarioOptions();
+	PostFilesInfo();
 }
 
 // Bouton « Supprimer ce scénario » : les scénarios suivants remontent d'un cran
@@ -393,7 +409,7 @@ async function PlayAlert(info) {
 	}
 
 	// Textes
-	titleEl.innerHTML = FillTemplate(style.texts[info.type] || '', info);
+	titleEl.innerHTML = FillTemplate(style.text(info), info);
 	const showMsg = s.showMessage && ['resub', 'cheer'].includes(info.type) && info.message;
 	messageEl.textContent = showMsg ? info.message : '';
 
@@ -480,6 +496,7 @@ function SetState(next) {
 		} catch (e) { }
 	}
 
+	PostFilesInfo();
 	if (sbState.mute && !wasMuted) ApplyMuteToCurrent();
 	PreloadActive();
 	Report();
@@ -594,6 +611,7 @@ function ConnectStreamerBot() {
 			connected = false;
 			console.warn('[Alertes variables] Déconnecté de Streamer.bot');
 			PostFolderInfo('Streamer.bot non connecté');
+			PostFilesInfo();
 		}
 	});
 
@@ -699,9 +717,110 @@ window.RefreshFolders = function () {
 };
 
 for (const type of ALERT_TYPES) {
-	window[`Test${type[0].toUpperCase()}${type.slice(1)}`] = function () {
+	window[`Test${Cap(type)}`] = function () {
 		Enqueue(Object.assign({ type, test: true, platform: '' }, DEMO_INFO[type]));
 	};
+	// Boutons « Tester l'alerte » sous chaque alerte de chaque plateforme
+	for (const platform of ['Twitch', 'Kick', 'YouTube', 'TikTok']) {
+		window[`Test${platform}${Cap(type)}`] = function () {
+			Enqueue(Object.assign({ type, test: true }, DEMO_INFO[type], { platform }));
+		};
+	}
+}
+
+/////////////////////////////////////////////////
+// RÈGLES D'ABONNEMENT ET FICHIERS (paramétrage) //
+/////////////////////////////////////////////////
+
+const NB_SUB_RULES = 6;
+const RULE_FIELDS = ['Name', 'Kind', 'Months'];
+
+function RuleFileName(n) {
+	const s = ws.values;
+	const N = Number(s[`subRule${n}Months`]) || 0;
+	return s[`subRule${n}Kind`] === 'exact' ? `sub-${N}mois` : `sub-tous-les-${N}mois`;
+}
+
+for (let n = 1; n <= NB_SUB_RULES; n++) {
+	// Tester une règle : abonnement de N mois
+	window[`TestSubRule${n}`] = function () {
+		const months = Number(ws.values[`subRule${n}Months`]) || 12;
+		Enqueue(Object.assign({}, DEMO_INFO.resub, { type: months > 1 ? 'resub' : 'sub', test: true, platform: 'Twitch', months }));
+	};
+	// Supprimer une règle : les suivantes remontent d'un cran
+	window[`DeleteSubRule${n}`] = function () {
+		const s = ws.values;
+		const count = Math.min(NB_SUB_RULES, Number(s.subRuleCount) || 0);
+		if (n > count) return;
+		const changes = {};
+		for (let k = n; k < count; k++)
+			for (const f of RULE_FIELDS) changes[`subRule${k}${f}`] = s[`subRule${k + 1}${f}`];
+		for (const f of RULE_FIELDS) {
+			const def = ws.definition.settings.find(x => x.id === `subRule${count}${f}`);
+			if (def) changes[def.id] = def.defaultValue;
+		}
+		changes.subRuleCount = String(count - 1);
+		PostToSettings({ type: 'widget-set', values: changes });
+	};
+}
+
+window.AddSubRule = function () {
+	const count = Math.min(NB_SUB_RULES, Number(ws.values.subRuleCount) || 0);
+	if (count >= NB_SUB_RULES) return;
+	const n = count + 1;
+	PostToSettings({ type: 'widget-set', values: {
+		[`subRule${n}Name`]: '', [`subRule${n}Kind`]: 'every', [`subRule${n}Months`]: '12', subRuleCount: String(n)
+	} });
+};
+
+// « Fichiers » sous chaque alerte : image et son trouvés pour le scénario en cours de modification
+function DescribeFile(found, what) {
+	if (!found) return `${what} : aucun`;
+	const def = String(ws.values.defaultFolder || 'defaut').trim().toLowerCase();
+	const from = found.dossier.toLowerCase() === def ? 'défaut' : found.dossier;
+	return `${what} : ${found.fichier} (${from})`;
+}
+
+function PostFilesInfo() {
+	if (!ws.demo) return;
+	const s = ws.values;
+	const post = (id, text, status) => PostToSettings({ type: 'widget-info', id, text, status });
+	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
+
+	if (!connected || !sbState.dossier || !sbState.dossierExiste) {
+		const why = !connected ? 'Streamer.bot non connecté' : 'Choisissez le dossier source';
+		ids.forEach(id => { if (id.endsWith('Files')) post(id, why, 'warn'); });
+		return;
+	}
+
+	const sc = ActiveScenario().scenario;
+	for (const id of ids) {
+		const m = /^(twitch|kick|youtube|tiktok)([A-Z][a-z]+)Files$/.exec(id);
+		if (!m) continue;
+		const type = m[2].toLowerCase();
+		const media = ResolveMedia(sc, type, { type, months: 1 });
+		post(id, `${DescribeFile(media.visual, 'Image')} · ${DescribeFile(media.sound, 'Son')}`,
+			media.visual && media.sound ? 'ok' : 'warn');
+	}
+
+	// Règles : fichiers spéciaux, sinon ceux de l'abonnement habituel
+	const def = FolderFiles(String(s.defaultFolder || 'defaut').trim());
+	for (let n = 1; n <= NB_SUB_RULES; n++) {
+		if (!ids.has(`subRule${n}Files`)) continue;
+		const name = RuleFileName(n);
+		const pick = (useOwn, ext) => {
+			const own = useOwn && sc ? FolderFiles(sc.name) : null;
+			const fo = own && FindNamed(own.fichiers, [name], ext);
+			if (fo) return { dossier: own.nom, fichier: fo };
+			const fd = def && FindNamed(def.fichiers, [name], ext);
+			return fd ? { dossier: def.nom, fichier: fd } : null;
+		};
+		const v = pick(sc && sc.visual === 'own', VISUAL_EXT), a = pick(sc && sc.sound === 'own', SOUND_EXT);
+		const missing = [!v && 'image', !a && 'son'].filter(Boolean);
+		const text = `${DescribeFile(v, 'Image')} · ${DescribeFile(a, 'Son')}` +
+			(missing.length ? ` · nommez le fichier ${name}` : '');
+		post(`subRule${n}Files`, text, v && a ? 'ok' : 'warn');
+	}
 }
 
 ///////////////

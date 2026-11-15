@@ -293,3 +293,31 @@ html.apple .setting-item-content > button.confirming {
 	background: var(--ui-red) !important;
 	color: #fff !important;
 }
+
+/* Réglages imbriqués (détails d’une alerte, règles) */
+html.apple .setting-item.indent-1 {
+	margin-left: 18px;
+	padding-left: 12px;
+	border-left: 2px solid var(--ui-fill-strong);
+}
+
+html.apple .setting-item.indent-2 {
+	margin-left: 36px;
+	padding-left: 12px;
+	border-left: 2px solid var(--ui-accent-soft);
+}
+
+html.apple .setting-item.indent-1 + .setting-item.indent-1,
+html.apple .setting-item.indent-2 + .setting-item.indent-2 {
+	border-top-color: transparent;
+}
+
+/* Section sans cadre (bouton seul) */
+html.apple .setting-group.setting-group-bare {
+	background: none;
+	box-shadow: none;
+	padding: 0;
+	margin-top: 24px;
+}
+
+html.apple .setting-group.setting-group-bare h2 { display: none; }

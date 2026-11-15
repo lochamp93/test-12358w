@@ -55,13 +55,7 @@ add(id="folderInfo", label="Dossier sélectionné", type="info", defaultValue="C
 add(id="chooseFolder", label="Choisir le dossier source", type="button", callFunction="ChooseFolder", group="Dossier source")
 add(id="refreshFolders", label="Actualiser les dossiers", type="button", callFunction="RefreshFolders", group="Dossier source")
 
-# ---------- Aperçu ----------
-for t, label, _ in TYPES:
-    add(id=f"test{t.capitalize()}", label=f"Tester : {label}", type="button",
-        callFunction=f"Test{t.capitalize()}", group="Tester dans l’aperçu")
-
-# ---------- Plateformes et leurs alertes ----------
-# Alertes produites par chaque plateforme (voir EVENT_MAP dans helpers.js)
+# Les sections par plateforme sont générées plus bas (après le style des scénarios)
 PLATEFORMES = [
     ("Twitch", "twitch", [("follow", "Follow"), ("sub", "Abonnement"), ("resub", "Réabonnement"),
                           ("gift", "Abonnements offerts"), ("cheer", "Bits"), ("raid", "Raid")]),
@@ -71,40 +65,7 @@ PLATEFORMES = [
                             ("gift", "Abonnements offerts"), ("cheer", "Super Chat / Super Sticker")]),
     ("TikTok", "tiktok", [("follow", "Follow"), ("sub", "Abonnement"), ("cheer", "Cadeaux")]),
 ]
-PLATEFORMES_PAR_TYPE = {}
-for nom, cle, types in PLATEFORMES:
-    add(id=f"platform{nom}", label=f"Alertes {nom}", type="checkbox", defaultValue=True, group=nom)
-    for t, label in types:
-        # alias « alertSub »… : les anciennes URL (un réglage par type) restent valables
-        add(id=f"{cle}{t.capitalize()}", label=label, type="checkbox", defaultValue=True, group=nom,
-            showIf=f"platform{nom}", aliases=[f"alert{t.capitalize()}"])
-        PLATEFORMES_PAR_TYPE.setdefault(t, []).append(f"{cle}{t.capitalize()}")
-    if cle == "twitch":
-        add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte", type="number",
-            min=1, max=100000, defaultValue=1, group=nom, showIf="twitchCheer")
-        add(id="minRaid", label="Viewers minimum pour un raid", type="number", min=1, max=100000, defaultValue=1,
-            group=nom, showIf="twitchRaid")
-
-
-def type_actif(t):
-    """Condition : le type d'alerte est activé sur au moins une plateforme."""
-    return {"any": [{"id": i} for i in PLATEFORMES_PAR_TYPE.get(t, [])]}
-
-
-# Abonnements spéciaux (anniversaires…) : jusqu'à 6 règles, affichées selon le nombre choisi
 NB_REGLES_SUB = 6
-add(id="subRuleCount", label="Abonnements spéciaux",
-    description="Visuel et son propres pour certains mois d’abonnement (ex. 9 mois, tous les 12 mois)",
-    type="select", options=opts([(str(n), "Aucun" if n == 0 else f"{n} règle{'s' if n > 1 else ''}") for n in range(NB_REGLES_SUB + 1)]),
-    defaultValue="0", group="Réglages des alertes")
-for n in range(1, NB_REGLES_SUB + 1):
-    visible = {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}
-    add(id=f"subRule{n}Kind", label=f"Règle {n}",
-        description="Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
-        type="select", options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
-        defaultValue="every" if n == 1 else "exact", group="Réglages des alertes", showIf=visible)
-    add(id=f"subRule{n}Months", label=f"Règle {n} : nombre de mois", type="number", min=1, max=240,
-        defaultValue=12 if n == 1 else 9, group="Réglages des alertes", showIf=visible)
 
 add(id="alertGap", label="Pause entre deux alertes", description="En secondes", type="number",
     min=0, max=30, step=0.5, defaultValue=1, group="Réglages des alertes")
@@ -154,10 +115,6 @@ def style_settings(prefix, cond):
         group=g, showIf=cond)
     add(id=i("duration"), label="Durée d’affichage", description="En secondes", type="number", min=1, max=120,
         step=0.5, defaultValue=6, group=g, showIf=cond)
-    for t, label, text in TYPES:
-        add(id=i(f"text{t.capitalize()}"), label=f"Texte : {label}", description=PLACEHOLDERS,
-            type="text", defaultValue=text, group="Textes",
-            showIf={"all": [cond, type_actif(t)]})
 
 
 # ---------- Scénario par défaut ----------
@@ -208,7 +165,61 @@ for n in range(1, NB_SCENARIOS + 1):
 
 # Supprimer le scénario affiché (pas le scénario par défaut), en bas des sections du scénario
 add(id="deleteScenario", label="Supprimer ce scénario", type="button", callFunction="DeleteScenario", confirm=True,
-    danger=True, group="Gérer le scénario", showIf={"id": "editScenario", "notValue": "defaut"})
+    danger=True, bare=True, group="Gérer le scénario", showIf={"id": "editScenario", "notValue": "defaut"})
+
+# ---------- Plateformes : chaque alerte et ses détails imbriqués ----------
+TEXTES = {t: text for t, _, text in TYPES}
+SCOPES = [("", {"id": "editScenario", "value": "defaut"})] + \
+         [(f"sc{n}", {"id": f"sc{n}Visual", "value": "own"}) for n in range(1, NB_SCENARIOS + 1)]
+
+for nom, cle, types in PLATEFORMES:
+    add(id=f"platform{nom}", label=f"Alertes {nom}", type="checkbox", defaultValue=True, group=nom)
+    for t, label in types:
+        T = t.capitalize()
+        tid = f"{cle}{T}"
+        # alias « alertSub »… : les anciennes URL (un réglage par type) restent valables
+        add(id=tid, label=label, type="checkbox", defaultValue=True, group=nom,
+            showIf=f"platform{nom}", aliases=[f"alert{T}"])
+        # Texte (scénario par défaut, puis chaque scénario à visuel propre)
+        for prefix, scope in SCOPES:
+            ident = f"{cle}{T}Text" if not prefix else f"{prefix}{cle.capitalize()}{T}Text"
+            ancien = f"text{T}" if not prefix else f"{prefix}Text{T}"
+            add(id=ident, label="Texte", description=PLACEHOLDERS, type="text", defaultValue=TEXTES[t],
+                group=nom, indent=1, showIf={"all": [{"id": tid}, scope]}, aliases=[ancien])
+        add(id=f"{tid}Files", label="Fichiers", type="info", defaultValue="Connexion à Streamer.bot…",
+            group=nom, indent=1, showIf=tid)
+        if cle == "twitch" and t == "cheer":
+            add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte", type="number",
+                min=1, max=100000, defaultValue=1, group=nom, indent=1, showIf=tid)
+        if cle == "twitch" and t == "raid":
+            add(id="minRaid", label="Viewers minimum", type="number", min=1, max=100000, defaultValue=1,
+                group=nom, indent=1, showIf=tid)
+        add(id=f"{tid}Test", label="Tester l’alerte", type="button", callFunction=f"Test{nom}{T}",
+            group=nom, indent=1, showIf=tid)
+
+        # Abonnements spéciaux (anniversaires) sous Twitch > Abonnement, avec « + Ajouter une règle »
+        if cle == "twitch" and t == "sub":
+            for n in range(1, NB_REGLES_SUB + 1):
+                v = {"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}]}
+                add(id=f"subRule{n}Name", label=f"Règle {n} : nom", description="Pour vous repérer (ex. Anniversaire)",
+                    type="text", defaultValue="Anniversaire" if n == 1 else "", group=nom, indent=2, showIf=v)
+                add(id=f"subRule{n}Kind", label="Quand", type="select",
+                    options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
+                    defaultValue="every" if n == 1 else "exact", group=nom, indent=2, showIf=v)
+                add(id=f"subRule{n}Months", label="Nombre de mois (N)", type="number", min=1, max=240,
+                    defaultValue=12 if n == 1 else 9, group=nom, indent=2, showIf=v)
+                add(id=f"subRule{n}Files", label="Fichiers", type="info", defaultValue="",
+                    group=nom, indent=2, showIf=v)
+                add(id=f"subRule{n}Test", label="Tester la règle", type="button", callFunction=f"TestSubRule{n}",
+                    group=nom, indent=2, showIf=v)
+                add(id=f"subRule{n}Delete", label="Supprimer la règle", type="button", callFunction=f"DeleteSubRule{n}",
+                    confirm=True, danger=True, group=nom, indent=2, showIf=v)
+            add(id="addSubRule", label="+ Ajouter une règle (ex. tous les 12 mois)", type="button",
+                callFunction="AddSubRule", group=nom, indent=1,
+                showIf={"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(0, NB_REGLES_SUB)]}]})
+            add(id="subRuleCount", label="Nombre de règles", type="select",
+                options=[{"value": str(k), "label": str(k)} for k in range(NB_REGLES_SUB + 1)],
+                defaultValue="0", group=nom, hidden=True)
 
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")
@@ -229,8 +240,9 @@ add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a r
     defaultValue="🔊 Sons des alertes réactivés par {user}", group="Commandes de chat", showIf="botReply")
 
 # Ordre des sections : les commandes de chat avant les scénarios
-ORDRE = ["Dossier source", "Scénarios", "Tester dans l’aperçu", "Déclenchement", "Visuel et son", "Style", "Textes",
-         "Gérer le scénario", "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Commandes de chat", "Connexion"]
+ORDRE = ["Dossier source", "Scénarios", "Déclenchement", "Visuel et son", "Style",
+         "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Commandes de chat", "Connexion",
+         "Gérer le scénario"]
 S.sort(key=lambda s: ORDRE.index(s["group"]) if s["group"] in ORDRE else len(ORDRE))
 
 out = {

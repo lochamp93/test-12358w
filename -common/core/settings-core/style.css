@@ -432,3 +432,8 @@ html.apple #header button svg:not(.icon-sun):not(.icon-moon) {
 /* Boutons sensibles et confirmation (style d’origine) */
 .setting-item-content > button.danger { color: #ff6b6b; }
 .setting-item-content > button.confirming { background-color: #c93f3f !important; color: #fff !important; }
+
+/* Réglages imbriqués et sections sans cadre (style d’origine) */
+.setting-item.indent-1 { margin-left: 16px; padding-left: 10px; border-left: 2px solid #3a3a3a; }
+.setting-item.indent-2 { margin-left: 32px; padding-left: 10px; border-left: 2px solid #2b4f73; }
+.setting-group.setting-group-bare h2 { display: none; }
