@@ -455,3 +455,33 @@ html.apple .round-btn.muted-on { background: var(--ui-red); color: #fff; }
 .history-empty { padding: 8px 0; font-size: 13px; color: var(--ui-text-secondary, #8e8e93); }
 html.apple .round-btn.small { flex: 0 0 30px; width: 30px; height: 30px; }
 .round-btn.small svg { width: 13px; height: 13px; }
+
+/* Photo de profil (ou initiale) à gauche du pseudo */
+.history-avatar {
+	flex: 0 0 32px;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: var(--ui-fill-strong, #3a3a3c);
+}
+
+.history-avatar img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.history-avatar.initial {
+	position: relative;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--ui-text);
+}

@@ -44,10 +44,6 @@ function Render() {
 	// Scénario actif
 	$('scenarioName').textContent = report ? (r.scenario || `Par défaut (${r.defaut || 'defaut'})`) : '-';
 	$('scenarioReason').textContent = report ? r.raison || '' : '';
-	const live = [];
-	if (st.titre) live.push(`Titre : ${st.titre}`);
-	if (st.categorie) live.push(`Catégorie : ${st.categorie}`);
-	$('liveInfo').textContent = live.join(' • ') || (state ? 'Titre et catégorie inconnus (compte Twitch connecté dans Streamer.bot ?)' : '');
 
 	// Son
 	const mute = !!st.mute;
@@ -124,14 +120,42 @@ function RenderTests() {
 // Dernières alertes jouées : pseudo, alerte, heure et bouton pour la rejouer
 const REPLAY_ICON = '<svg viewBox="0 0 25 30" aria-hidden="true"><path d="M12.21 29.7C18.95 29.7 24.42 24.23 24.42 17.49C24.42 10.73 18.95 5.28 12.21 5.28C11.56 5.28 10.93 5.33 10.32 5.43L13.55 2.27C13.79 2.02 13.92 1.71 13.92 1.35C13.92 0.6 13.34 0 12.62 0C12.22 0 11.92 0.150002 11.67 0.400002L6.05 6.1C5.79 6.37 5.64 6.73 5.64 7.08C5.64 7.47 5.77 7.78 6.05 8.08L11.67 13.73C11.92 13.96 12.22 14.11 12.6 14.11C13.34 14.11 13.92 13.52 13.92 12.78C13.92 12.43 13.79 12.11 13.53 11.88L9.85 8.23C10.61 8.04 11.4 7.94 12.21 7.94C17.47 7.94 21.74 12.21 21.74 17.47C21.74 22.74 17.47 27 12.21 27C6.94 27 2.68 22.74 2.68 17.47C2.68 16.73 2.06 16.13 1.34 16.13C0.6 16.13 0 16.73 0 17.47C0 24.23 5.45 29.7 12.21 29.7Z"/></svg>';
 
+// Photo de profil : celle de l'événement, sinon (Twitch) recherchée une fois via decapi.me ;
+// à défaut, l'initiale du pseudo. Pas de recherche pour les tests.
+const avatarCache = new Map(); // login → URL ('' si introuvable)
+
+function AvatarFor(info, isTest) {
+	if (info.avatar) return info.avatar;
+	if (isTest || (info.platform && info.platform !== 'Twitch')) return '';
+	const login = String(info.user || '').trim().toLowerCase();
+	if (!/^[a-z0-9_]{2,25}$/.test(login)) return '';
+	if (avatarCache.has(login)) return avatarCache.get(login);
+	avatarCache.set(login, '');
+	fetch(`https://decapi.me/twitch/avatar/${encodeURIComponent(login)}`)
+		.then(r => r.ok ? r.text() : '')
+		.then(t => {
+			const url = String(t || '').trim();
+			if (/^https:\/\//.test(url)) { avatarCache.set(login, url); RenderHistory(); }
+		})
+		.catch(() => { });
+	return '';
+}
+
 function RenderHistory() {
 	const list = $('history');
 	const items = report && Array.isArray(report.historique) ? report.historique : [];
 	if (!report) { list.innerHTML = '<li class="history-empty">Ouvrez l’overlay dans OBS pour voir les dernières alertes.</li>'; return; }
 	if (!items.length) { list.innerHTML = '<li class="history-empty">Aucune alerte pour l’instant.</li>'; return; }
 	list.innerHTML = items.map(h => {
+		const info = h.info || {};
+		const avatar = AvatarFor(info, h.test);
+		const initial = Escape((String(h.user || '?').trim()[0] || '?').toUpperCase());
+		// Initiale toujours dessous ; la photo se pose par-dessus et s'efface si elle ne charge pas
+		const avatarHtml = `<span class="history-avatar initial">${initial}${avatar
+			? `<img src="${Escape(avatar)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}</span>`;
 		const time = new Date(h.time || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
 		return `<li class="history-item">
+			${avatarHtml}
 			<div class="history-text">
 				<span class="history-user">${Escape(h.user || 'Anonyme')}</span>
 				<span class="history-label">${Escape(h.label || '')}${h.test ? ' · test' : ''} · ${time}</span>

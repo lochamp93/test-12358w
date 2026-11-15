@@ -105,12 +105,17 @@ function ParseEvent(source, eventType, type, data) {
 	else if (/2000|2/.test(tierRaw)) tier = 'tier2';
 	else if (/1000|1/.test(tierRaw) || tierRaw === '0') tier = 'tier1';
 
+	// Photo de profil si l'événement la fournit (sinon le dock la cherche ou affiche l'initiale)
+	const avatar = String(Pick(d, ['user.profileImageUrl', 'user.profile_image_url', 'user.profilePicture',
+		'user.profilePictureUrl', 'user.avatar', 'profileImageUrl', 'profile_image_url', 'profilePictureUrl',
+		'author.profileImageUrl', 'author.profileImage', 'avatar', 'userAvatar']) || '');
+
 	const message = String(Pick(d, ['message.message', 'message.text', 'text', 'message', 'userMessage', 'comment']) || '');
 
 	// Twitch : chaque abonnement d'un « gift bomb » arrive aussi seul : on garde uniquement le total
 	const fromBomb = !!(d.fromCommunitySubGift || d.isFromGiftBomb || d.fromGiftBomb || d.communityGift || d.isCommunityGift);
 
-	return { platform: source, eventType, type, user: String(user), months, count, amount, bits, value, tier, viewers, message, fromBomb };
+	return { platform: source, eventType, type, user: String(user), avatar, months, count, amount, bits, value, tier, viewers, message, fromBomb };
 }
 
 // Remplit un texte d'alerte : {user} et les nombres prennent la couleur du pseudo

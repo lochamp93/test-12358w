@@ -131,17 +131,16 @@ function FolderFiles(name) {
 // Règles d'une alerte (anniversaires, paliers, montants…) : noms de fichiers à essayer en premier.
 // Priorité : « exactement N » et type d'abonnement, puis « tous les N » (N le plus grand d'abord),
 // puis « à partir de N » (N le plus grand d'abord).
-function SpecialNames(info) {
+function MatchingRules(info) {
 	if (!info) return [];
 	const tid = AlertId(info.platform, info.type);
-	const hits = [];
-	for (const rule of RulesOf(tid)) {
-		if (!RuleMatches(info.type, rule, info)) continue;
-		const prio = { exact: 0, prime: 0, tier1: 0, tier2: 0, tier3: 0, every: 1, atleast: 2 }[rule.kind] ?? 3;
-		hits.push({ name: RuleFile(info.type, rule), prio, N: rule.value });
-	}
-	hits.sort((x, y) => x.prio - y.prio || y.N - x.N);
-	return hits.map(h => h.name);
+	const prio = (r) => ({ exact: 0, prime: 0, tier1: 0, tier2: 0, tier3: 0, every: 1, atleast: 2 }[r.kind] ?? 3);
+	return RulesOf(tid).filter(r => RuleMatches(info.type, r, info))
+		.sort((x, y) => prio(x) - prio(y) || y.value - x.value);
+}
+
+function SpecialNames(info) {
+	return MatchingRules(info).map(r => RuleFile(info.type, r));
 }
 
 function FindNamed(folderFiles, names, extensions) {
@@ -809,7 +808,7 @@ function RuleMatches(type, rule, info) {
 
 // Événement de test qui déclenche la règle
 function RuleTestInfo(type, rule, platform) {
-	const info = Object.assign({}, DEMO_INFO[type], { type, test: true, platform });
+	const info = Object.assign({}, DEMO_INFO[type], { type, test: true, platform, ruleN: rule.n });
 	const N = rule.value || 1;
 	if (type === 'sub') info.tier = rule.kind;
 	if (type === 'resub') info.months = N;
@@ -967,7 +966,8 @@ function RuleLabel(type, rule, platform) {
 function PlayedLabel(info) {
 	const platform = info.platform || 'Twitch';
 	const tid = AlertId(platform, info.type);
-	const rule = RulesOf(tid).find(r => RuleMatches(info.type, r, info));
+	// La règle qui l'emporte (même priorité que pour choisir les fichiers) ; un test de règle garde la sienne
+	const rule = (info.ruleN && RulesOf(tid).find(r => r.n === info.ruleN)) || MatchingRules(info)[0];
 	return AlertLabel(platform, info.type) + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
 }
 
