@@ -32,10 +32,19 @@ function ResolveCoverURL(game, fallback, coverWidth) {
 	if (game && game.boxArt) {
 		// Résolution doublée pour rester net à l'écran
 		const w = Math.round(Math.max(40, coverWidth) * 2);
-		const h = Math.round(w * 4 / 3);
-		return game.boxArt.replace('{width}', w).replace('{height}', h);
+		return SizeBoxArt(game.boxArt, w, Math.round(w * 4 / 3));
 	}
 	return (fallback || '').trim();
+}
+
+// Adapte une adresse de jaquette Twitch à la taille voulue :
+// modèle {width}x{height}, ou taille déjà fixée (ex. …-52x72.jpg, souvent trop petite)
+function SizeBoxArt(url, w, h) {
+	if (url.includes('{width}') || url.includes('{height}'))
+		return url.replace('{width}', w).replace('{height}', h);
+	if (/static-cdn\.jtvnw\.net\/ttv-boxart\//.test(url))
+		return url.replace(/-\d+x\d+(\.[a-z]+)(\?.*)?$/i, `-${w}x${h}$1`);
+	return url;
 }
 
 // Jaquettes fictives pour la démo (SVG généré, aucune image externe)

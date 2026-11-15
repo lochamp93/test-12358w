@@ -43,7 +43,10 @@ let openCoverEditor = null; // clé du jeu dont l'éditeur de jaquette est ouver
 // Miniature : jaquette perso, sinon modèle Twitch en petite taille
 function CoverThumb(g) {
 	if (g.cover) return g.cover;
-	if (g.boxArt) return g.boxArt.replace('{width}', '60').replace('{height}', '80');
+	if (g.boxArt) {
+		if (g.boxArt.includes('{width}')) return g.boxArt.replace('{width}', '60').replace('{height}', '80');
+		return g.boxArt.replace(/(static-cdn\.jtvnw\.net\/ttv-boxart\/.*)-\d+x\d+(\.[a-z]+)(\?.*)?$/i, '$1-60x80$2');
+	}
 	return '';
 }
 

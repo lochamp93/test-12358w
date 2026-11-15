@@ -171,6 +171,19 @@ function LoadJSON(settingsJson) {
 							inputElement.setAttribute('list', 'streamer-bot-actions');
 							inputElement.autocomplete = 'off';
 							break;
+						case 'font':
+							// Police système : liste des polices installées (API Local Font Access de Chrome),
+							// chargée au premier clic dans le champ (le navigateur demande l’autorisation)
+							inputElement = document.createElement('input');
+							inputElement.type = 'text';
+							inputElement.id = setting.id;
+							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
+							inputElement.placeholder = 'Tapez pour rechercher...';
+							inputElement.autocomplete = 'off';
+							inputElement.setAttribute('list', 'local-fonts');
+							inputElement.addEventListener('mousedown', LoadLocalFonts);
+							inputElement.addEventListener('focus', LoadLocalFonts);
+							break;
 						case 'button':
 							inputElement = document.createElement('button');
 							inputElement.id = setting.id; // Added setting ID
@@ -297,6 +310,40 @@ function LoadJSON(settingsJson) {
 			SaveSettingsToStorage();
 		})
 		.catch(error => console.error('Erreur lors du chargement des paramètres :', error));
+}
+
+// Liste des polices installées, partagée par tous les champs de type 'font'
+let localFontsPromise = null;
+
+function LoadLocalFonts() {
+	if (localFontsPromise) return localFontsPromise;
+	if (!('queryLocalFonts' in window)) {
+		console.warn('Ce navigateur ne permet pas de lister les polices installées (Chrome ou Edge requis).');
+		return Promise.resolve();
+	}
+
+	localFontsPromise = window.queryLocalFonts()
+		.then(fonts => {
+			const families = [...new Set(fonts.map(f => f.family))].sort((a, b) => a.localeCompare(b));
+			let datalist = document.getElementById('local-fonts');
+			if (!datalist) {
+				datalist = document.createElement('datalist');
+				datalist.id = 'local-fonts';
+				document.body.appendChild(datalist);
+			}
+			datalist.innerHTML = '';
+			families.forEach(family => {
+				const option = document.createElement('option');
+				option.value = family;
+				datalist.appendChild(option);
+			});
+		})
+		.catch(err => {
+			console.warn('Accès aux polices refusé :', err);
+			localFontsPromise = null; // on pourra redemander au prochain clic
+		});
+
+	return localFontsPromise;
 }
 
 function SaveSettingsToStorage() {

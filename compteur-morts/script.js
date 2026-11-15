@@ -271,6 +271,7 @@ async function RefreshFromStreamerBot() {
 			if (parsed) ShowLive(parsed);
 		} else if (ws.demo) {
 			// Aperçu : pas encore de compteur dans Streamer.bot, on garde l'exemple
+			if (!liveData) SetPreviewStatus(`Aperçu : exemple — la variable « ${ws.values.variableName} » n’existe pas encore (lancez !addmort une fois)`, false);
 		} else {
 			// Variable pas encore créée : on affiche 0 en attendant la première action
 			SetState(state || { name: '', count: 0 });
@@ -298,7 +299,10 @@ function ConnectStreamerBot() {
 			console.log(`[Compteur de morts] Connecté à Streamer.bot (${host}:${port})`);
 			RefreshFromStreamerBot();
 		},
-		onDisconnect: () => console.warn('[Compteur de morts] Déconnecté de Streamer.bot')
+		onDisconnect: () => {
+			console.warn('[Compteur de morts] Déconnecté de Streamer.bot');
+			if (!liveData) SetPreviewStatus(`Aperçu : exemple — Streamer.bot injoignable (${host}:${port})`, false);
+		}
 	});
 
 	// Mise à jour quand l'action modifie la variable
@@ -314,6 +318,19 @@ function ConnectStreamerBot() {
 	});
 }
 
+// Indicateur affiché uniquement dans l'aperçu de la page de paramétrage (jamais dans OBS)
+let previewBadge = null;
+function SetPreviewStatus(text, live) {
+	if (!ws.demo) return;
+	if (!previewBadge) {
+		previewBadge = document.createElement('div');
+		previewBadge.style.cssText = 'position:fixed;left:8px;bottom:8px;padding:4px 10px;border-radius:999px;font:600 12px Segoe UI,sans-serif;color:#fff;z-index:10;pointer-events:none';
+		document.body.appendChild(previewBadge);
+	}
+	previewBadge.textContent = text;
+	previewBadge.style.background = live ? 'rgba(46,160,90,.85)' : 'rgba(90,90,90,.85)';
+}
+
 // Vraies valeurs : la première arrive sans animation (remplace l'exemple de l'aperçu)
 function ShowLive(game) {
 	if (!liveData && ws.demo) {
@@ -323,6 +340,7 @@ function ShowLive(game) {
 		hasData = false;
 	}
 	liveData = true;
+	SetPreviewStatus('Aperçu : valeurs réelles de Streamer.bot', true);
 	SetState(game);
 }
 
@@ -365,6 +383,9 @@ window.PreviewTestGame = function () {
 	ApplySettings();
 
 	// Aperçu : exemple fixe en attendant les vraies valeurs de Streamer.bot
-	if (ws.demo) SetState({ ...DEMO_GAMES[0] });
+	if (ws.demo) {
+		SetState({ ...DEMO_GAMES[0] });
+		SetPreviewStatus('Aperçu : exemple — connexion à Streamer.bot…', false);
+	}
 	ConnectStreamerBot();
 })();

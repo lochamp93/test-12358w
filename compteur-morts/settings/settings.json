@@ -502,8 +502,8 @@
 		{
 			"id": "font",
 			"label": "Police d’écriture",
-			"description": "Nom d’une police <a href=\"https://fonts.google.com\" target=\"_blank\">Google Fonts</a> (ex. : Montserrat, Bangers, Press Start 2P)",
-			"type": "text",
+			"description": "Police installée sur votre ordinateur (cliquez dans le champ pour afficher la liste) — <a href=\"ms-settings:fonts\">Voir les polices installées</a>. Une police Google Fonts fonctionne aussi.",
+			"type": "font",
 			"defaultValue": "Montserrat",
 			"group": "Texte"
 		},

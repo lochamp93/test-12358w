@@ -10,13 +10,15 @@
 //    jeu     : nom du jeu à modifier (sinon : jeu choisi à la main, puis catégorie Twitch)
 //    annonce : false pour ne pas écrire dans le chat (true par défaut)
 //
-//  Jaquettes : l'action récupère l'image officielle de la catégorie via l'API Twitch
-//  (compte Twitch connecté dans Streamer.bot), une fois par jeu.
+//  Jaquettes : l'action utilise la variable Streamer.bot %gameBoxArt% (catégorie
+//  Twitch en cours) ; à défaut, elle interroge l'API Twitch une fois par jeu.
 //
 //  Après exécution, les arguments %jeu% et %morts% sont disponibles pour les
 //  sous-actions suivantes (par exemple un texte OBS).
 // =====================================================================
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -101,7 +103,15 @@ public class CPHInline
 			return true;
 		}
 
-		// Jaquette officielle Twitch (une seule recherche par jeu)
+		// Jaquette officielle : variable Streamer.bot %gameBoxArt% si elle concerne ce jeu,
+		// sinon API Twitch (une seule recherche par jeu)
+		string nomTwitch, idTwitch, jaquetteTwitch;
+		InfosTwitch(out nomTwitch, out idTwitch, out jaquetteTwitch);
+		if (nomTwitch != "" && Cle(nomTwitch) == cle)
+		{
+			if (twitchId == "") twitchId = idTwitch;
+			if (jaquetteTwitch != "") jeu["boxArt"] = jaquetteTwitch;
+		}
 		if (twitchId != "") jeu["twitchId"] = twitchId;
 		CompleterJaquette(jeu, nomJeu);
 
@@ -202,16 +212,10 @@ public class CPHInline
 	// Catégorie Twitch en cours : arguments du déclencheur, sinon infos de la chaîne
 	string JeuTwitch(out string gameId)
 	{
+		string nom, jaquette;
+		InfosTwitch(out nom, out gameId, out jaquette);
+		if (nom != "") return nom;
 		gameId = "";
-		foreach (string cle in new[] { "gameName", "game", "targetUserGame" })
-		{
-			string v = Arg(cle).Trim();
-			if (v != "")
-			{
-				gameId = Arg(cle == "targetUserGame" ? "targetUserGameId" : "gameId").Trim();
-				return v;
-			}
-		}
 		try
 		{
 			string id = Arg("broadcastUserId");
@@ -228,6 +232,80 @@ public class CPHInline
 			CPH.LogWarn("[Compteur de morts] Catégorie Twitch introuvable : " + e.Message);
 			return "";
 		}
+	}
+
+	// Catégorie Twitch en cours d'après les arguments de l'action :
+	// arguments directs (%gameName%, %gameId%, %gameBoxArt%…) ou objets comme %broadcasterChannel.gameName%
+	void InfosTwitch(out string nom, out string id, out string jaquette)
+	{
+		nom = PremierArg("gameName", "game", "targetUserGame");
+		id = PremierArg("gameId", "targetUserGameId");
+		jaquette = PremierArg("gameBoxArt", "boxArt", "targetUserGameBoxArt", "gameBoxArtUrl");
+
+		// Clés « composées » (ex. broadcasterChannel.gameBoxArt) et objets imbriqués
+		foreach (KeyValuePair<string, object> a in args)
+		{
+			if (a.Value == null) continue;
+			string k = a.Key ?? "";
+			string texte = a.Value as string;
+			if (texte != null)
+			{
+				if (jaquette == "" && k.EndsWith("gameBoxArt", StringComparison.OrdinalIgnoreCase)) jaquette = texte.Trim();
+				if (nom == "" && k.EndsWith(".gameName", StringComparison.OrdinalIgnoreCase)) nom = texte.Trim();
+				if (id == "" && k.EndsWith(".gameId", StringComparison.OrdinalIgnoreCase)) id = texte.Trim();
+				continue;
+			}
+			if (a.Value.GetType().IsPrimitive) continue;
+			if (nom == "") nom = Texte(Membre(a.Value, "gameName"));
+			if (id == "") id = Texte(Membre(a.Value, "gameId"));
+			if (jaquette == "") jaquette = Texte(Membre(a.Value, "gameBoxArt"));
+		}
+	}
+
+	string PremierArg(params string[] noms)
+	{
+		foreach (string n in noms)
+		{
+			string v = Arg(n).Trim();
+			if (v != "") return v;
+		}
+		return "";
+	}
+
+	static string Texte(object v) => v == null ? "" : v.ToString().Trim();
+
+	// Lit un membre d'un objet quelconque (dictionnaire, JSON, propriété ou champ), sans tenir compte de la casse
+	static object Membre(object obj, string nom)
+	{
+		try
+		{
+			IDictionary<string, object> dg = obj as IDictionary<string, object>;
+			if (dg != null)
+			{
+				foreach (KeyValuePair<string, object> e in dg)
+					if (string.Equals(e.Key, nom, StringComparison.OrdinalIgnoreCase)) return e.Value;
+				return null;
+			}
+			IDictionary d = obj as IDictionary;
+			if (d != null)
+			{
+				foreach (DictionaryEntry e in d)
+					if (string.Equals(Convert.ToString(e.Key), nom, StringComparison.OrdinalIgnoreCase)) return e.Value;
+				return null;
+			}
+			JObject jo = obj as JObject;
+			if (jo != null)
+			{
+				JToken t = jo.GetValue(nom, StringComparison.OrdinalIgnoreCase);
+				return t == null ? null : t.ToString();
+			}
+			BindingFlags f = BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
+			PropertyInfo p = obj.GetType().GetProperty(nom, f);
+			if (p != null && p.GetIndexParameters().Length == 0) return p.GetValue(obj);
+			FieldInfo fi = obj.GetType().GetField(nom, f);
+			return fi?.GetValue(obj);
+		}
+		catch (Exception) { return null; }
 	}
 
 	// Récupère l'adresse de la jaquette via l'API Twitch (jeton du compte connecté dans Streamer.bot)
