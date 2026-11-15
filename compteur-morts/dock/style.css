@@ -319,13 +319,10 @@ html.apple .game-item button {
 }
 
 html.apple .game-item button svg {
-	width: 15px;
-	height: 15px;
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 1.8;
-	stroke-linecap: round;
-	stroke-linejoin: round;
+	width: 14px;
+	height: 14px;
+	fill: currentColor;
+	stroke: none;
 }
 
 html.apple .game-item button.choose { color: var(--ui-accent); }

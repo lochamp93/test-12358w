@@ -308,7 +308,15 @@ select { width: 100%; }
 }
 
 .folder-box.ok .folder-icon { background: var(--ui-green, #34c759); }
-.folder-box.ok .folder-icon::before { content: "✓"; }
+/* Coche : symbole checkmark fourni */
+.folder-box.ok .folder-icon::before {
+	content: "";
+	width: 13px;
+	height: 13px;
+	background: currentColor;
+	-webkit-mask: url("../../-common/resources/icons/checkmark.svg") center / contain no-repeat;
+	mask: url("../../-common/resources/icons/checkmark.svg") center / contain no-repeat;
+}
 .folder-box.warn .folder-icon { background: #ff9f0a; }
 .folder-box.warn .folder-icon::before { content: "!"; }
 

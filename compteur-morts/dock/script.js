@@ -39,11 +39,11 @@ let data = { games: {}, current: '', manual: false }; // contenu de la variable 
 
 const ANNOUNCE_KEY = 'compteur-morts-dock-announce';
 
-// Icônes (SVG maison, style SF)
+// Icônes : SF Symbols fournis (trash.fill, checkmark) ; « photo » reste un tracé maison en attendant le symbole
 const ICON = {
-	photo: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>',
-	trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7h15M10 4h4M6.5 7l.8 11.2A2 2 0 0 0 9.3 20h5.4a2 2 0 0 0 2-1.8L17.5 7M10 10.5v6M14 10.5v6"/></svg>',
-	check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'
+	photo: '<svg viewBox="0 0 24 24" aria-hidden="true" style="fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg>',
+	trash: '<svg viewBox="0 0 27 31" aria-hidden="true"><path d="M7.21 30.85H19.77C21.86 30.85 23.22 29.58 23.31 27.48L24.24 7.77H25.75C26.43 7.77 26.96 7.26 26.96 6.57C26.96 5.9 26.43 5.38 25.75 5.38H19.66V3.33C19.66 1.24 18.34 0 16.07 0H10.87C8.62 0 7.28 1.24 7.28 3.33V5.38H1.2C0.55 5.38 0 5.9 0 6.57C0 7.26 0.55 7.77 1.2 7.77H2.72L3.65 27.49C3.75 29.6 5.09 30.85 7.21 30.85ZM9.79 3.45C9.79 2.74 10.28 2.29 11.05 2.29H15.89C16.65 2.29 17.15 2.74 17.15 3.45V5.38H9.79V3.45ZM9.29 26.61C8.7 26.61 8.31 26.26 8.29 25.68L7.88 10.81C7.86 10.24 8.25 9.87 8.85 9.87C9.41 9.87 9.82 10.22 9.83 10.81L10.26 25.67C10.28 26.23 9.89 26.61 9.29 26.61ZM13.48 26.61C12.89 26.61 12.48 26.25 12.48 25.68V10.81C12.48 10.24 12.89 9.87 13.48 9.87C14.07 9.87 14.48 10.24 14.48 10.81V25.68C14.48 26.25 14.07 26.61 13.48 26.61ZM17.68 26.61C17.08 26.61 16.68 26.25 16.7 25.67L17.13 10.81C17.15 10.24 17.54 9.87 18.12 9.87C18.72 9.87 19.1 10.24 19.09 10.81L18.66 25.68C18.64 26.26 18.25 26.61 17.68 26.61Z"/></svg>',
+	check: '<svg viewBox="0 0 25 24" aria-hidden="true"><path d="M9.24 23.72C9.96 23.72 10.51 23.42 10.91 22.84L23.76 2.79C24.05 2.36 24.15 1.97 24.15 1.6C24.15 0.66 23.5 0 22.54 0C21.87 0 21.47 0.239999 21.06 0.879999L9.18 19.75L3.06 11.88C2.66 11.35 2.25 11.13 1.65 11.13C0.69 11.13 0 11.82 0 12.76C0 13.17 0.15 13.57 0.49 13.99L7.57 22.85C8.05 23.44 8.55 23.72 9.24 23.72Z"/></svg>'
 };
 const CONNECTION_KEY = 'compteur-morts-dock-connection';
 let openCoverEditor = null;

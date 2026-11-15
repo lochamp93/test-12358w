@@ -102,13 +102,10 @@ html.apple #header #schemeToggle {
 }
 
 html.apple #header svg {
-	width: 16px;
-	height: 16px;
-	fill: none;
-	stroke: currentColor;
-	stroke-width: 1.7;
-	stroke-linecap: round;
-	stroke-linejoin: round;
+	width: 15px;
+	height: 15px;
+	fill: currentColor;
+	stroke: none;
 }
 
 /* ---------- Panneau des réglages ---------- */
@@ -478,7 +475,23 @@ html.apple .setting-item-copy input.setting-info.copyable {
 	font-weight: 600;
 }
 
-html.apple .setting-item-content > button.copy-info-button,
+html.apple .setting-item-content > button.copy-info-button {
+	flex: 0 0 34px;
+	width: 34px;
+	height: 34px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--ui-accent);
+	color: #fff;
+	box-shadow: none;
+}
+
+.copy-info-button svg { width: 15px; height: 15px; fill: currentColor; }
+html.apple .setting-item-content > button.copy-info-button.copied { background: var(--ui-green); }
+
 html.apple .settings-popup-footer > button.settings-popup-close {
 	width: auto;
 	height: 34px;
