@@ -331,9 +331,9 @@ add(id="muteEffect", label="Effet du mute", type="select",
     options=opts([("sound", "Couper seulement le son"), ("all", "Masquer aussi les alertes")]),
     defaultValue="sound", group="Commandes de chat")
 add(id="botReply", label="Réponse du bot dans le chat", type="checkbox", defaultValue=True, group="Commandes de chat")
-add(id="msgMute", label="Message au mute", description="{user} : qui a coupé le son", type="text",
+add(id="msgMute", label="Message au mute", description="{user} : qui a coupé le son (pas de pseudo si c’est le streameur ou le dock)", type="text",
     defaultValue="🔇 Sons des alertes coupés par {user}", group="Commandes de chat", showIf="botReply")
-add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a réactivé le son", type="text",
+add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a réactivé le son (pas de pseudo si c’est le streameur ou le dock)", type="text",
     defaultValue="🔊 Sons des alertes réactivés par {user}", group="Commandes de chat", showIf="botReply")
 
 # Ordre des sections : les commandes de chat avant les scénarios

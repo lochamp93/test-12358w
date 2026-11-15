@@ -24679,7 +24679,7 @@
 		{
 			"id": "msgMute",
 			"label": "Message au mute",
-			"description": "{user} : qui a coupé le son",
+			"description": "{user} : qui a coupé le son (pas de pseudo si c’est le streameur ou le dock)",
 			"type": "text",
 			"defaultValue": "🔇 Sons des alertes coupés par {user}",
 			"group": "Commandes de chat",
@@ -24688,7 +24688,7 @@
 		{
 			"id": "msgUnmute",
 			"label": "Message à l’unmute",
-			"description": "{user} : qui a réactivé le son",
+			"description": "{user} : qui a réactivé le son (pas de pseudo si c’est le streameur ou le dock)",
 			"type": "text",
 			"defaultValue": "🔊 Sons des alertes réactivés par {user}",
 			"group": "Commandes de chat",

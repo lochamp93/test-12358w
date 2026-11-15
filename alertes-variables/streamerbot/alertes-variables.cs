@@ -440,14 +440,27 @@ public class CPHInline
 		{
 			string message = Arg("message");
 			string qui = Arg("user").Trim();
-			if (qui == "") qui = Arg("broadcastUser").Trim();
-			if (qui == "") qui = "la régie";
-			message = message.Replace("{user}", qui).Trim();
+			// Pas de pseudo quand c'est le streameur (commande de chat ou dock) : « Sons des alertes coupés »
+			bool streameur = qui == "" || Arg("diffuseur").Trim().ToLowerInvariant() == "true"
+				|| string.Equals(qui, Arg("broadcastUser").Trim(), StringComparison.OrdinalIgnoreCase)
+				|| string.Equals(qui, Arg("broadcastUserName").Trim(), StringComparison.OrdinalIgnoreCase);
+			message = streameur ? SansPseudo(message) : message.Replace("{user}", qui).Trim();
 			if (message != "") EnvoyerChat(message, Arg("plateforme").Trim().ToLowerInvariant());
 		}
 
 		EnvoyerEtat(false);
 		return true;
+	}
+
+	// Retire {user} et le « par » / « by » qui le précède, puis les espaces en trop
+	static string SansPseudo(string message)
+	{
+		string m = message ?? "";
+		foreach (string avant in new[] { " de la part de ", " par ", " by ", " Par ", " By ", " PAR " })
+			m = m.Replace(avant + "{user}", "");
+		m = m.Replace("{user}", "");
+		while (m.Contains("  ")) m = m.Replace("  ", " ");
+		return m.Replace(" !", " !").Replace(" .", ".").Replace(" ,", ",").Trim();
 	}
 
 	void EnvoyerChat(string message, string plateforme)

@@ -740,6 +740,8 @@ function HandleChatCommand(data, platform) {
 	DoAction({
 		mode,
 		user: ChatUser(data),
+		// Le streameur lui-même : le message du bot ne donne pas de pseudo
+		diffuseur: ChatPermissionLevel(data) >= 40 ? 'true' : 'false',
 		plateforme: platform,
 		msgId: ChatMessageId(data),
 		annonce: s.botReply ? 'true' : 'false',
