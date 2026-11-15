@@ -950,7 +950,7 @@ async function OnPopupOpened(popupId) {
 // DOCK : TESTS DISPONIBLES ET DERNIÈRES ALERTES //
 //////////////////////////////////////////////
 
-const HISTORY_MAX = 10;
+const HISTORY_MAX = 20; // dernières alertes gardées (dock), pas plus
 let history = [];
 
 function AlertLabel(platform, type) {
@@ -971,7 +971,16 @@ function PlayedLabel(info) {
 	const rule = (info.ruleN && RulesOf(tid).find(r => r.n === info.ruleN)) || MatchingRules(info)[0];
 	// Abonnement offert : « Twitch · Abonnement offert à Alice »
 	const to = info.type === 'gift' && info.recipient ? ` à ${info.recipient}` : '';
-	return AlertLabel(platform, info.type) + to + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
+	// Détail chiffré : 25 abonnements, 500 bits, 12 viewers, 14 mois
+	const n = (x) => Number(x) || 0;
+	const plural = (k, one, many) => `${k} ${k > 1 ? many : one}`;
+	const detail = {
+		giftbomb: n(info.count) ? plural(n(info.count), 'abonnement', 'abonnements') : '',
+		cheer: String(info.amount || (n(info.bits) ? plural(n(info.bits), 'bit', 'bits') : '')),
+		raid: n(info.viewers) ? plural(n(info.viewers), 'viewer', 'viewers') : '',
+		resub: n(info.months) ? `${n(info.months)} mois` : ''
+	}[info.type] || '';
+	return AlertLabel(platform, info.type) + to + (detail ? ` · ${detail}` : '') + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
 }
 
 // Tests proposés dans le dock : chaque alerte activée, puis ses règles
