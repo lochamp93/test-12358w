@@ -39,7 +39,8 @@ let data = { games: {}, current: '', manual: false }; // contenu de la variable 
 
 const ANNOUNCE_KEY = 'compteur-morts-dock-announce';
 const CONNECTION_KEY = 'compteur-morts-dock-connection';
-let openCoverEditor = null; // clé du jeu dont l'éditeur de jaquette est ouvert
+let openCoverEditor = null;
+let syncedOnConnect = false; // synchronisation avec la catégorie Twitch faite à la connexion // clé du jeu dont l'éditeur de jaquette est ouvert
 
 // Miniature : jaquette perso, sinon modèle Twitch en petite taille
 function CoverThumb(g) {
@@ -92,7 +93,7 @@ function Render() {
 
 	// Sections conditionnelles
 	els.gameSection.hidden = !s.allowManualGame;
-	els.auto.disabled = !data.manual;
+	els.auto.textContent = data.manual ? 'Suivre la catégorie Twitch' : 'Actualiser la catégorie Twitch';
 	els.listSection.hidden = !s.showGameList;
 
 	// Liste des jeux (triée par dernière modification)
@@ -234,8 +235,9 @@ function WithConfirmation(button, enabled, confirmText, action) {
 async function Send(mode, extra = {}) {
 	const args = { mode, annonce: els.announce.checked ? 'true' : 'false', ...extra };
 
-	// Les modifications portent sur le jeu affiché dans le dock
-	if (['add', 'sub', 'set', 'reset'].includes(mode) && !args.jeu) {
+	// En choix manuel, les modifications portent sur le jeu affiché ; sinon l'action
+	// lit elle-même la catégorie Twitch en cours
+	if (['add', 'sub', 'set', 'reset'].includes(mode) && !args.jeu && data.manual) {
 		const game = CurrentGame();
 		if (game) args.jeu = game.name;
 	}
@@ -345,6 +347,13 @@ async function CheckAction() {
 		actionFound = false;
 	}
 	Render();
+
+	// À la connexion : on se cale sur la catégorie Twitch en cours (sauf choix manuel)
+	if (actionFound && !syncedOnConnect) {
+		syncedOnConnect = true;
+		await RefreshData();
+		if (!data.manual) Send('sync', { annonce: 'false' });
+	}
 }
 
 function ConnectStreamerBot() {
@@ -367,6 +376,7 @@ function ConnectStreamerBot() {
 		},
 		onDisconnect: () => {
 			connected = false;
+			syncedOnConnect = false;
 			Render();
 		}
 	});

@@ -1,5 +1,5 @@
 /* Compteur de morts — overlay OBS (fond transparent)
-   Trois styles : .layout-card (carte avec jaquette), .layout-classic, .layout-minimal */
+   Deux styles : .layout-card (carte avec jaquette) et .layout-minimal (texte) */
 
 html,
 body {
@@ -94,7 +94,7 @@ body {
 /* Nom du jeu autour du compteur */
 #mainRow {
 	display: flex;
-	align-items: center;
+	align-items: baseline; /* le nom du jeu s'aligne sur la ligne de base du nombre */
 	gap: 0.3em;
 	order: 2;
 }
@@ -111,18 +111,20 @@ body {
 
 #core {
 	display: flex;
-	align-items: center;
+	align-items: baseline; /* le libellé s'aligne sur la ligne de base du nombre */
 	gap: 0.3em;
 }
 
 #core.label-before { flex-direction: row; }
 #core.label-after { flex-direction: row-reverse; }
+#core.label-above,
+#core.label-below { align-items: center; }
 #core.label-above { flex-direction: column; gap: 0.02em; }
 #core.label-below { flex-direction: column-reverse; gap: 0.02em; }
 #core.label-hidden .label { display: none; }
 
 .label {
-	font-size: 0.55em;
+	font-size: var(--label-size, 0.55em);
 	font-weight: 800;
 	white-space: nowrap;
 }
@@ -130,6 +132,7 @@ body {
 #valueRow {
 	display: flex;
 	align-items: center;
+	align-self: auto;
 	gap: 0.2em;
 }
 
@@ -184,9 +187,9 @@ body {
 
 #box.shadow #icon { filter: drop-shadow(0 0 calc(var(--shadow-blur) / 2) var(--shadow-color)); }
 
-/* ---------- Style Classique ---------- */
+/* ---------- Fond (style Texte) ---------- */
 
-#box.layout-classic.with-bg {
+#box.layout-minimal.with-bg {
 	background: var(--bg-color);
 	border-radius: var(--bg-radius);
 	padding: var(--bg-padding) calc(var(--bg-padding) * 1.5);
@@ -264,8 +267,8 @@ body {
 
 /* ---------- Style Minimal (inspiré du subgoal) ---------- */
 
-#box.layout-minimal .label,
-#box.layout-minimal .game { opacity: 0.7; }
+#box.layout-minimal.muted .label,
+#box.layout-minimal.muted .game { opacity: 0.7; }
 
 #box.layout-minimal .label { font-weight: 600; }
 #box.layout-minimal #count { font-weight: 700; }

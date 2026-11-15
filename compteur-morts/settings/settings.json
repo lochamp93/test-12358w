@@ -8,7 +8,7 @@
 		{
 			"id": "layout",
 			"label": "Style d’affichage",
-			"description": "Chaque style a son propre rendu ; seuls ses réglages sont affichés",
+			"description": "Carte avec la jaquette, ou texte seul (avec fond, icône et ligne décorative en option)",
 			"type": "select",
 			"options": [
 				{
@@ -16,12 +16,8 @@
 					"label": "Carte (jaquette du jeu)"
 				},
 				{
-					"value": "classic",
-					"label": "Classique"
-				},
-				{
 					"value": "minimal",
-					"label": "Minimal"
+					"label": "Texte"
 				}
 			],
 			"defaultValue": "card",
@@ -96,6 +92,17 @@
 			"showIf": "showLabel"
 		},
 		{
+			"id": "labelFontSize",
+			"label": "Taille du libellé",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 300,
+			"defaultValue": 36,
+			"group": "Compteur",
+			"showIf": "showLabel"
+		},
+		{
 			"id": "cardShowGame",
 			"label": "Afficher le nom du jeu",
 			"description": "",
@@ -116,10 +123,7 @@
 			"group": "Compteur",
 			"showIf": {
 				"id": "layout",
-				"value": [
-					"classic",
-					"minimal"
-				]
+				"value": "minimal"
 			}
 		},
 		{
@@ -329,34 +333,6 @@
 			"showIf": "border"
 		},
 		{
-			"id": "cardRadius",
-			"label": "Arrondi de la carte",
-			"description": "En pixels ; la jaquette suit automatiquement",
-			"type": "number",
-			"min": 0,
-			"max": 200,
-			"defaultValue": 28,
-			"group": "Carte",
-			"showIf": {
-				"id": "layout",
-				"value": "card"
-			}
-		},
-		{
-			"id": "cardPadding",
-			"label": "Marge intérieure",
-			"description": "En pixels",
-			"type": "number",
-			"min": 0,
-			"max": 100,
-			"defaultValue": 12,
-			"group": "Carte",
-			"showIf": {
-				"id": "layout",
-				"value": "card"
-			}
-		},
-		{
 			"id": "icon",
 			"label": "Icône",
 			"description": "",
@@ -383,10 +359,7 @@
 			"group": "Icône",
 			"showIf": {
 				"id": "layout",
-				"value": [
-					"classic",
-					"minimal"
-				]
+				"value": "minimal"
 			}
 		},
 		{
@@ -425,10 +398,10 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Classique",
+			"group": "Fond",
 			"showIf": {
 				"id": "layout",
-				"value": "classic"
+				"value": "minimal"
 			}
 		},
 		{
@@ -437,7 +410,7 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#000000",
-			"group": "Classique",
+			"group": "Fond",
 			"showIf": "background"
 		},
 		{
@@ -448,7 +421,7 @@
 			"min": 0,
 			"max": 100,
 			"defaultValue": 60,
-			"group": "Classique",
+			"group": "Fond",
 			"showIf": "background"
 		},
 		{
@@ -459,7 +432,7 @@
 			"min": 0,
 			"max": 200,
 			"defaultValue": 12,
-			"group": "Classique",
+			"group": "Fond",
 			"showIf": "background"
 		},
 		{
@@ -470,7 +443,7 @@
 			"min": 0,
 			"max": 200,
 			"defaultValue": 16,
-			"group": "Classique",
+			"group": "Fond",
 			"showIf": "background"
 		},
 		{
@@ -479,7 +452,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Minimal",
+			"group": "Texte seul",
 			"showIf": {
 				"id": "layout",
 				"value": "minimal"
@@ -491,7 +464,7 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#ffffff",
-			"group": "Minimal",
+			"group": "Texte seul",
 			"showIf": "decorLine"
 		},
 		{
@@ -502,7 +475,7 @@
 			"min": 20,
 			"max": 2000,
 			"defaultValue": 320,
-			"group": "Minimal",
+			"group": "Texte seul",
 			"showIf": "decorLine"
 		},
 		{
@@ -521,8 +494,20 @@
 				}
 			],
 			"defaultValue": "above",
-			"group": "Minimal",
+			"group": "Texte seul",
 			"showIf": "decorLine"
+		},
+		{
+			"id": "mutedText",
+			"label": "Atténuer le libellé et le nom du jeu",
+			"description": "Le nombre ressort davantage (style du subgoal)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Texte seul",
+			"showIf": {
+				"id": "layout",
+				"value": "minimal"
+			}
 		},
 		{
 			"id": "font",
@@ -592,6 +577,17 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#000000",
+			"group": "Texte",
+			"showIf": "shadow"
+		},
+		{
+			"id": "shadowOpacity",
+			"label": "Opacité de l’ombre",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 60,
 			"group": "Texte",
 			"showIf": "shadow"
 		},

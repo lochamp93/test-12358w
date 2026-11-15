@@ -55,6 +55,7 @@ function ApplySettings() {
 	SetVar('--font-size', `${s.fontSize}px`);
 	SetVar('--text-color', s.textColor);
 	SetVar('--game-size', `${s.gameFontSize}px`);
+	SetVar('--label-size', `${s.labelFontSize}px`);
 	SetVar('--icon-size', `${s.iconSize}px`);
 	SetVar('--anim-duration', `${s.animationDuration}ms`);
 
@@ -72,7 +73,7 @@ function ApplySettings() {
 	SetVar('--outline-color', s.outlineColor);
 	SetVar('--outline-width', `${s.outlineWidth}px`);
 	boxEl.classList.toggle('shadow', s.shadow);
-	SetVar('--shadow-color', s.shadowColor);
+	SetVar('--shadow-color', HexToRgba(s.shadowColor, s.shadowOpacity));
 	SetVar('--shadow-blur', `${s.shadowBlur}px`);
 
 	// Libellé
@@ -99,8 +100,9 @@ function ApplySettings() {
 		}
 	}
 
-	// Style Classique : fond
-	if (layout === 'classic') {
+	// Style Texte : fond optionnel et texte secondaire atténué
+	if (layout === 'minimal') {
+		boxEl.classList.toggle('muted', s.mutedText);
 		boxEl.classList.toggle('with-bg', s.background);
 		SetVar('--bg-color', HexToRgba(s.bgColor, s.bgOpacity));
 		SetVar('--bg-radius', `${s.bgRadius}px`);
@@ -114,8 +116,6 @@ function ApplySettings() {
 		boxEl.classList.toggle('no-cover', !s.showCover);
 		boxEl.classList.toggle('cover-right', on('coverPosition') && s.coverPosition === 'right');
 		SetVar('--cover-width', `${s.coverWidth}px`);
-		SetVar('--card-radius', `${s.cardRadius}px`);
-		SetVar('--card-padding', `${s.cardPadding}px`);
 		SetVar('--border-width', s.border ? `${s.borderWidth}px` : '0px');
 		SetVar('--border-color', s.borderColor);
 		SetVar('--card-bg', s.cardBackground === 'color' ? HexToRgba(s.cardBgColor, s.cardBgOpacity) : 'rgba(0, 0, 0, 0.55)');

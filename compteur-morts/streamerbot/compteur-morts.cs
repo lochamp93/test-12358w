@@ -65,6 +65,7 @@ public class CPHInline
 				break;
 			default:
 				nomJeu = Arg("jeu").Trim();
+				if (nomJeu == SANS_JEU) nomJeu = "";
 				if (nomJeu == "")
 				{
 					bool manuel = data.Value<bool?>("manual") ?? false;
@@ -208,7 +209,8 @@ public class CPHInline
 	{
 		string cle = data.Value<string>("current") ?? "";
 		JObject jeu = data["games"][cle] as JObject;
-		return jeu != null ? (jeu.Value<string>("name") ?? "") : "";
+		string nom = jeu != null ? (jeu.Value<string>("name") ?? "") : "";
+		return nom == SANS_JEU ? "" : nom; // « Sans catégorie » n'est jamais retenu comme jeu en cours
 	}
 
 	// Catégorie Twitch en cours : arguments du déclencheur, sinon infos de la chaîne
@@ -216,24 +218,9 @@ public class CPHInline
 	{
 		string nom, jaquette;
 		InfosTwitch(out nom, out gameId, out jaquette);
-		if (nom != "") return nom;
-		gameId = "";
-		try
-		{
-			string id = Arg("broadcastUserId");
-			if (id == "") return "";
-			MethodInfo m = CPH.GetType().GetMethod("TwitchGetExtendedUserInfoById", new[] { typeof(string) });
-			if (m == null) return "";
-			object info = m.Invoke(CPH, new object[] { id });
-			string jeu = Propriete(info, "Game");
-			gameId = Propriete(info, "GameId");
-			return jeu.Trim();
-		}
-		catch (Exception e)
-		{
-			CPH.LogWarn("[Compteur de morts] Catégorie Twitch introuvable : " + e.Message);
-			return "";
-		}
+		if (nom == "")
+			CPH.LogWarn("[Compteur de morts] Catégorie Twitch introuvable (compte diffuseur connecté dans Streamer.bot ?)");
+		return nom;
 	}
 
 	// Catégorie Twitch en cours d'après les arguments de l'action :
@@ -293,11 +280,28 @@ public class CPHInline
 		try
 		{
 			string id = Arg("broadcastUserId");
-			if (id == "") return null;
-			MethodInfo m = CPH.GetType().GetMethod("TwitchGetExtendedUserInfoById", new[] { typeof(string) });
+			string login = Arg("broadcastUserName");
+			if (login == "") login = Arg("broadcastUser");
+
+			// Action lancée depuis le dock : on demande le compte diffuseur à Streamer.bot
+			if (id == "" && login == "")
+			{
+				MethodInfo mb = CPH.GetType().GetMethod("TwitchGetBroadcaster", Type.EmptyTypes);
+				object diffuseur = mb?.Invoke(CPH, null);
+				id = Texte(Membre(diffuseur, "UserId"));
+				login = Texte(Membre(diffuseur, "UserLogin"));
+				if (login == "") login = Texte(Membre(diffuseur, "UserName"));
+			}
+
+			MethodInfo m = id != "" ? CPH.GetType().GetMethod("TwitchGetExtendedUserInfoById", new[] { typeof(string) }) : null;
 			if (m != null) infosChaine = m.Invoke(CPH, new object[] { id });
+			if (infosChaine == null && login != "")
+			{
+				MethodInfo ml = CPH.GetType().GetMethod("TwitchGetExtendedUserInfoByLogin", new[] { typeof(string) });
+				if (ml != null) infosChaine = ml.Invoke(CPH, new object[] { login });
+			}
 		}
-		catch (Exception) { }
+		catch (Exception e) { CPH.LogWarn("[Compteur de morts] Infos de la chaîne Twitch illisibles : " + e.Message); }
 		return infosChaine;
 	}
 
@@ -415,30 +419,60 @@ public class CPHInline
 		}
 	}
 
-	// Requête HTTP sans référence à System.dll : la bibliothèque réseau est chargée
-	// par réflexion (Streamer.bot n'expose pas System.Net au code C# par défaut).
+	// Requête HTTP sans référence directe aux bibliothèques réseau (Streamer.bot ne les
+	// expose pas au code C#) : WebClient ou HttpClient sont retrouvés par réflexion
+	// parmi les bibliothèques déjà chargées par Streamer.bot.
+	static Type TrouverType(string nomComplet, params string[] assemblies)
+	{
+		foreach (string a in assemblies)
+		{
+			Type t = Type.GetType(nomComplet + ", " + a, false);
+			if (t != null) return t;
+		}
+		foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+		{
+			Type t = asm.GetType(nomComplet, false);
+			if (t != null) return t;
+		}
+		return null;
+	}
+
 	static string TelechargerTexte(string url, string clientId, string token, int delaiMs)
 	{
-		Type typeClient = Type.GetType("System.Net.WebClient, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
-		if (typeClient == null) return "";
+		// 1) HttpClient (présent dans toutes les versions récentes de .NET)
+		Type typeHttp = TrouverType("System.Net.Http.HttpClient", "System.Net.Http");
+		if (typeHttp != null)
+		{
+			object client = Activator.CreateInstance(typeHttp);
+			try
+			{
+				object entetes = typeHttp.GetProperty("DefaultRequestHeaders").GetValue(client);
+				MethodInfo ajouter = entetes.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+				ajouter.Invoke(entetes, new object[] { "Client-Id", clientId });
+				ajouter.Invoke(entetes, new object[] { "Authorization", "Bearer " + token });
+				MethodInfo get = typeHttp.GetMethod("GetStringAsync", new[] { typeof(string) });
+				Task<string> tache = (Task<string>)get.Invoke(client, new object[] { url });
+				return tache.Wait(delaiMs) ? tache.Result : "";
+			}
+			finally { (client as IDisposable)?.Dispose(); }
+		}
 
-		object client = Activator.CreateInstance(typeClient);
+		// 2) WebClient (anciennes versions)
+		Type typeClient = TrouverType("System.Net.WebClient", "System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "System.Net.WebClient");
+		if (typeClient == null) return "";
+		object wc = Activator.CreateInstance(typeClient);
 		try
 		{
-			typeClient.GetProperty("Encoding").SetValue(client, Encoding.UTF8);
-			object entetes = typeClient.GetProperty("Headers").GetValue(client);
-			MethodInfo ajouter = entetes.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
-			ajouter.Invoke(entetes, new object[] { "Client-Id", clientId });
-			ajouter.Invoke(entetes, new object[] { "Authorization", "Bearer " + token });
-
-			MethodInfo telecharger = typeClient.GetMethod("DownloadString", new[] { typeof(string) });
-			Task<string> tache = Task.Run(() => (string)telecharger.Invoke(client, new object[] { url }));
-			return tache.Wait(delaiMs) ? tache.Result : "";
+			typeClient.GetProperty("Encoding").SetValue(wc, Encoding.UTF8);
+			object h = typeClient.GetProperty("Headers").GetValue(wc);
+			MethodInfo add = h.GetType().GetMethod("Add", new[] { typeof(string), typeof(string) });
+			add.Invoke(h, new object[] { "Client-Id", clientId });
+			add.Invoke(h, new object[] { "Authorization", "Bearer " + token });
+			MethodInfo dl = typeClient.GetMethod("DownloadString", new[] { typeof(string) });
+			Task<string> t2 = Task.Run(() => (string)dl.Invoke(wc, new object[] { url }));
+			return t2.Wait(delaiMs) ? t2.Result : "";
 		}
-		finally
-		{
-			(client as IDisposable)?.Dispose();
-		}
+		finally { (wc as IDisposable)?.Dispose(); }
 	}
 
 	// Encodage d'URL (équivalent de Uri.EscapeDataString, sans System.dll)
