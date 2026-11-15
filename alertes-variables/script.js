@@ -963,24 +963,27 @@ function RuleLabel(type, rule, platform) {
 	return rule.name || RuleSummary(type, rule, platform);
 }
 
-// Libellé d'une alerte jouée : « Twitch · Réabonnement | Anniversaire » si une règle s'applique
+// Libellé d'une alerte jouée (historique du dock) : la plateforme puis le contenu, sans la règle :
+// « Twitch · 100 bits », « Twitch · 25 abonnements offerts », « Twitch · Abonnement offert à Alice »
 function PlayedLabel(info) {
 	const platform = info.platform || 'Twitch';
-	const tid = AlertId(platform, info.type);
-	// La règle qui l'emporte (même priorité que pour choisir les fichiers) ; un test de règle garde la sienne
-	const rule = (info.ruleN && RulesOf(tid).find(r => r.n === info.ruleN)) || MatchingRules(info)[0];
-	// Abonnement offert : « Twitch · Abonnement offert à Alice »
-	const to = info.type === 'gift' && info.recipient ? ` à ${info.recipient}` : '';
-	// Détail chiffré : 25 abonnements, 500 bits, 12 viewers, 14 mois
 	const n = (x) => Number(x) || 0;
 	const plural = (k, one, many) => `${k} ${k > 1 ? many : one}`;
-	const detail = {
-		giftbomb: n(info.count) ? plural(n(info.count), 'abonnement', 'abonnements') : '',
-		cheer: String(info.amount || (n(info.bits) ? plural(n(info.bits), 'bit', 'bits') : '')),
-		raid: n(info.viewers) ? plural(n(info.viewers), 'viewer', 'viewers') : '',
-		resub: n(info.months) ? `${n(info.months)} mois` : ''
-	}[info.type] || '';
-	return AlertLabel(platform, info.type) + to + (detail ? ` · ${detail}` : '') + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
+	const tierName = { prime: 'Prime Gaming', tier1: 'palier 1', tier2: 'palier 2', tier3: 'palier 3' }[info.tier];
+	let what;
+	switch (info.type) {
+		case 'cheer': what = String(info.amount || (n(info.bits) ? plural(n(info.bits), 'bit', 'bits') : 'Don')); break;
+		case 'giftbomb': what = n(info.count) ? `${plural(n(info.count), 'abonnement offert', 'abonnements offerts')}` : 'Abonnements offerts'; break;
+		case 'gift': what = info.recipient ? `Abonnement offert à ${info.recipient}` : 'Abonnement offert'; break;
+		case 'resub': what = n(info.months) ? `Réabonnement · ${n(info.months)} mois` : 'Réabonnement'; break;
+		case 'raid': what = n(info.viewers) ? `Raid · ${plural(n(info.viewers), 'viewer', 'viewers')}` : 'Raid'; break;
+		case 'sub': what = tierName ? `Abonnement ${tierName}` : 'Abonnement'; break;
+		default: {
+			const def = ws.definition.settings.find(x => x.id === AlertId(platform, info.type));
+			what = def ? def.label : info.type;
+		}
+	}
+	return `${platform} · ${what}`;
 }
 
 // Tests proposés dans le dock : chaque alerte activée, puis ses règles
