@@ -1,5 +1,5 @@
 /*
- * widget-settings.js — lecture des réglages d'un widget (module commun, optionnel)
+ * widget-settings.js : lecture des réglages d'un widget (module commun, optionnel)
  *
  * settings.json est la définition unique des réglages : ce module en lit les
  * valeurs par défaut, les types et les bornes, puis interprète les paramètres
@@ -70,7 +70,7 @@
 	function parseAll(definition, params) {
 		const values = {};
 		for (const setting of definition.settings || []) {
-			if (setting.type === 'button') continue;
+			if (setting.type === 'button' || setting.type === 'info') continue;
 			values[setting.id] = parseValue(setting, readRaw(setting, params));
 		}
 		return values;

@@ -200,6 +200,14 @@ function LoadJSON(settingsJson) {
 							inputElement.addEventListener('mousedown', LoadLocalFonts);
 							inputElement.addEventListener('focus', LoadLocalFonts);
 							break;
+						case 'info':
+							// Texte d'information mis à jour par l'aperçu :
+							// { type: 'widget-info', id: '<id>', text: '…', status: 'ok' | 'warn' }
+							inputElement = document.createElement('span');
+							inputElement.id = setting.id;
+							inputElement.className = 'setting-info';
+							inputElement.textContent = setting.defaultValue || '';
+							break;
 						case 'button':
 							inputElement = document.createElement('button');
 							inputElement.id = setting.id; // Added setting ID
@@ -409,7 +417,7 @@ function LoadDefaultSettings() {
 function RefreshWidgetPreview() {
 	const settings = {};
 	settingsData.settings.forEach(setting => {
-		if (setting.type === 'button') return; // Ignorer les boutons
+		if (setting.type === 'button' || setting.type === 'info') return; // Ignorer les boutons et les infos
 
 		let inputElement = document.getElementById(setting.id);
 		if (!inputElement) return;
@@ -602,7 +610,7 @@ function LoadSettings() {
 	// URL compacte : un réglage absent de l’URL reprend sa valeur par défaut
 	if (settingsData && settingsData.compactURL === true) {
 		settingsData.settings.forEach(setting => {
-			if (setting.type === 'button') return;
+			if (setting.type === 'button' || setting.type === 'info') return;
 			const el = document.getElementById(setting.id);
 			if (!el) return;
 			if (el.type === 'checkbox') el.checked = setting.defaultValue === true;
@@ -680,6 +688,18 @@ window.addEventListener('message', (event) => {
 			option.value = String(value);
 			datalist.appendChild(option);
 		});
+		return;
+	}
+
+	// Texte d'information envoyé par l'aperçu (réglages de type "info")
+	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-info'
+		&& typeof event.data.id === 'string') {
+		const el = document.getElementById(event.data.id);
+		if (el && el.classList.contains('setting-info')) {
+			el.textContent = String(event.data.text || '');
+			el.dataset.status = event.data.status || '';
+			if (event.data.title) el.title = String(event.data.title);
+		}
 		return;
 	}
 

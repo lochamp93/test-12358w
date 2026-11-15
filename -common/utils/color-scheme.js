@@ -1,5 +1,5 @@
 /*
- * color-scheme.js — thème clair/sombre des pages de paramétrage et des docks (DA Apple)
+ * color-scheme.js : thème clair/sombre des pages de paramétrage et des docks (DA Apple)
  *
  * - Par défaut, suit le thème du système (prefers-color-scheme).
  * - Le choix de l'utilisateur est mémorisé (localStorage, partagé par tous les widgets

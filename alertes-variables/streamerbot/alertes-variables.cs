@@ -1,5 +1,5 @@
 // =====================================================================
-//  Alertes variables | Moteur — action Streamer.bot (sous-action « Execute C# Code »)
+//  Alertes variables | Moteur : action Streamer.bot (sous-action « Execute C# Code »)
 //  Aucun déclencheur à ajouter : l'overlay et le dock appellent cette action.
 //
 //  Elle lit le dossier source des alertes sur le PC, garde l'état partagé
@@ -162,7 +162,14 @@ public class CPHInline
 		{
 			try
 			{
-				Assembly wf = Assembly.Load("System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+				// 1) Fenêtre WPF « OpenFolderDialog » (.NET 8, version récente de Streamer.bot)
+				string wpf = ChoisirDossierWpf(depart);
+				if (wpf != null) { choisi = wpf == "" ? null : wpf; return; }
+
+				// 2) Fenêtre WinForms « FolderBrowserDialog »
+				Assembly wf = ChargerAssembly("System.Windows.Forms",
+					"System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089");
+				if (wf == null) throw new Exception("System.Windows.Forms indisponible");
 				Type typeDialogue = wf.GetType("System.Windows.Forms.FolderBrowserDialog", true);
 				Type typeForm = wf.GetType("System.Windows.Forms.Form", true);
 				Type typeOwner = wf.GetType("System.Windows.Forms.IWin32Window", true);
@@ -207,6 +214,33 @@ public class CPHInline
 		if (string.IsNullOrEmpty(choisi)) { EnvoyerEtat(false); return; } // annulé
 		CPH.SetGlobalVar(VAR_DOSSIER, choisi, true);
 		EnvoyerEtat(true);
+	}
+
+	// Charge une bibliothèque par son nom court, puis par son nom complet (null si absente)
+	static Assembly ChargerAssembly(params string[] noms)
+	{
+		foreach (Assembly deja in AppDomain.CurrentDomain.GetAssemblies())
+			foreach (string n in noms)
+				if (deja.GetName().Name == n.Split(',')[0].Trim()) return deja;
+		foreach (string n in noms)
+		{
+			try { return Assembly.Load(n); } catch (Exception) { }
+		}
+		return null;
+	}
+
+	// Fenêtre WPF (Microsoft.Win32.OpenFolderDialog) : chemin choisi, "" si annulé, null si indisponible
+	static string ChoisirDossierWpf(string depart)
+	{
+		Assembly pf = ChargerAssembly("PresentationFramework");
+		Type type = pf?.GetType("Microsoft.Win32.OpenFolderDialog", false);
+		if (type == null) return null;
+		object dialogue = Activator.CreateInstance(type);
+		type.GetProperty("Title")?.SetValue(dialogue, "Dossier source des Alertes variables (un sous-dossier par scénario)");
+		if (depart != "" && Directory.Exists(depart)) type.GetProperty("InitialDirectory")?.SetValue(dialogue, depart);
+		object ok = type.GetMethod("ShowDialog", Type.EmptyTypes).Invoke(dialogue, null);
+		if (ok is bool && (bool)ok) return (string)type.GetProperty("FolderName").GetValue(dialogue) ?? "";
+		return "";
 	}
 
 	// ---------- Fichiers ----------

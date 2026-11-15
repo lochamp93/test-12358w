@@ -1,4 +1,4 @@
-/* Alertes variables — dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
+/* Alertes variables : dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
 
 html.apple {
 	--dock-accent: var(--ui-accent);
@@ -290,4 +290,47 @@ select { width: 100%; }
 	background: var(--ui-fill);
 	color: var(--ui-text-secondary);
 	white-space: nowrap;
+}
+
+/* Dossier source : nom bien visible */
+.folder-box {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.folder-icon {
+	flex-shrink: 0;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 15px;
+	font-weight: 700;
+	color: #fff;
+}
+
+.folder-box.ok .folder-icon { background: var(--ui-green, #34c759); }
+.folder-box.ok .folder-icon::before { content: "✓"; }
+.folder-box.warn .folder-icon { background: #ff9f0a; }
+.folder-box.warn .folder-icon::before { content: "!"; }
+
+.folder-text { min-width: 0; }
+
+#folderName {
+	font-weight: 600;
+	font-size: 14px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#folderPath {
+	font-size: 11.5px;
+	color: var(--ui-text-secondary, #8e8e93);
+	overflow-wrap: anywhere;
+	font-family: inherit;
 }

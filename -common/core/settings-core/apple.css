@@ -1,5 +1,5 @@
 /*
- * Page de paramétrage — DA Apple (Réglages Système macOS)
+ * Page de paramétrage : DA Apple (Réglages Système macOS)
  * Actif seulement si settings.json contient "design": "apple" (classe « apple » sur <html>).
  */
 
@@ -274,3 +274,15 @@ html.apple #loadDefaultsContainer button[style] {
 	background: var(--ui-accent) !important;
 	color: #fff;
 }
+
+/* Réglage de type "info" */
+html.apple .setting-info {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ui-text);
+	text-align: right;
+	max-width: 230px;
+}
+
+html.apple .setting-info[data-status="ok"] { color: var(--ui-green); }
+html.apple .setting-info[data-status="warn"] { color: #ff9f0a; }

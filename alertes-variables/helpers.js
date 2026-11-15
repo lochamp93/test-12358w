@@ -1,4 +1,4 @@
-// Alertes variables — outils de l'overlay : lecture des événements, règles, fichiers
+// Alertes variables : outils de l'overlay : lecture des événements, règles, fichiers
 
 const ALERT_TYPES = ['follow', 'sub', 'resub', 'gift', 'cheer', 'raid'];
 
@@ -6,7 +6,7 @@ const ALERT_TYPES = ['follow', 'sub', 'resub', 'gift', 'cheer', 'raid'];
 const FILE_NAMES = {
 	follow: ['follow'],
 	sub: ['sub', 'abonnement'],
-	resub: ['resub', 'reabonnement'],
+	resub: ['resub', 'reabonnement', 'sub'], // sans fichier dédié : celui de l'abonnement
 	gift: ['gift', 'subgift'],
 	cheer: ['cheer', 'bits', 'don'],
 	raid: ['raid']
@@ -90,7 +90,7 @@ function ParseEvent(source, eventType, type, data) {
 
 	const message = String(Pick(d, ['message.message', 'message.text', 'text', 'message', 'userMessage', 'comment']) || '');
 
-	// Twitch : chaque abonnement d'un « gift bomb » arrive aussi seul — on garde uniquement le total
+	// Twitch : chaque abonnement d'un « gift bomb » arrive aussi seul : on garde uniquement le total
 	const fromBomb = !!(d.fromCommunitySubGift || d.isFromGiftBomb || d.fromGiftBomb || d.communityGift || d.isCommunityGift);
 
 	return { platform: source, eventType, type, user: String(user), months, count, amount, bits, viewers, message, fromBomb };

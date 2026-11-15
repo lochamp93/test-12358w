@@ -1,4 +1,4 @@
-// Compteur de morts — overlay
+// Compteur de morts : overlay
 // Les réglages viennent de settings/settings.json (valeurs par défaut, bornes, conditions)
 // et de l'URL. Aucune valeur par défaut n'est redéfinie ici.
 

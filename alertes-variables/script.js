@@ -1,4 +1,4 @@
-// Alertes variables — overlay
+// Alertes variables : overlay
 // Les réglages viennent de settings/settings.json et de l'URL (aucune valeur par défaut ici).
 // Les médias sont lus dans un dossier du PC par l'action Streamer.bot « Alertes variables | Moteur » :
 //   <dossier source>/<nom du scénario>/<type>.<ext>   (ex. Horreur/sub.mp3, Horreur/alerte.gif)
@@ -105,12 +105,48 @@ function FolderFiles(name) {
 	return f ? f : null;
 }
 
+// Abonnements spéciaux : noms de fichiers à essayer en premier pour ce nombre de mois
+//   « Exactement N mois » → sub-Nmois ; « Tous les N mois » → sub-tous-les-Nmois
+function SpecialSubNames(info) {
+	if (!info || (info.type !== 'sub' && info.type !== 'resub')) return [];
+	const s = ws.values;
+	const count = Number(s.subRuleCount) || 0;
+	const months = Number(info.months) || 0;
+	const exact = [], every = [];
+	for (let n = 1; n <= count; n++) {
+		const N = Number(s[`subRule${n}Months`]) || 0;
+		if (N <= 0 || months <= 0) continue;
+		if (s[`subRule${n}Kind`] === 'exact' && months === N) exact.push(`sub-${N}mois`);
+		if (s[`subRule${n}Kind`] === 'every' && months % N === 0) every.push(`sub-tous-les-${N}mois`);
+	}
+	return [...exact, ...every.sort((a, b) => parseInt(b.match(/\d+/)) - parseInt(a.match(/\d+/)))];
+}
+
+function FindNamed(folderFiles, names, extensions) {
+	if (!folderFiles) return null;
+	for (const name of names)
+		for (const ext of extensions) {
+			const real = folderFiles[`${name}.${ext}`];
+			if (real) return real;
+		}
+	return null;
+}
+
 // Fichiers à jouer : visuel et son, avec secours en cascade
-//   dossier du scénario (type, puis « alerte ») → dossier par défaut (type, puis « alerte »)
-function ResolveMedia(sc, type) {
+//   abonnement spécial (scénario, puis défaut) → dossier du scénario (type, puis « alerte »)
+//   → dossier par défaut (type, puis « alerte »)
+function ResolveMedia(sc, type, info) {
 	const defName = String(ws.values.defaultFolder || 'defaut').trim();
 	const def = FolderFiles(defName);
+	const special = SpecialSubNames(info);
 	const pick = (useOwn, extensions) => {
+		if (special.length) {
+			const own = useOwn && sc ? FolderFiles(sc.name) : null;
+			const fo = own && FindNamed(own.fichiers, special, extensions);
+			if (fo) return { dossier: own.nom, fichier: fo };
+			const fd = def && FindNamed(def.fichiers, special, extensions);
+			if (fd) return { dossier: def.nom, fichier: fd };
+		}
 		if (useOwn && sc) {
 			const folder = FolderFiles(sc.name);
 			const f = folder && FindFile(folder.fichiers, type, extensions);
@@ -225,7 +261,7 @@ async function PlayAlert(info) {
 	const s = ws.values;
 	const { scenario } = ActiveScenario();
 	const style = StyleOf(scenario);
-	const media = ResolveMedia(scenario, info.type);
+	const media = ResolveMedia(scenario, info.type, info);
 
 	// Fichiers (lus par Streamer.bot, puis gardés en mémoire)
 	const [visualURI, soundURI] = await Promise.all([RequestFile(media.visual), RequestFile(media.sound)]);
@@ -345,15 +381,32 @@ function SetState(next) {
 		folderIndex[name.toLowerCase()] = { nom: name, fichiers: IndexFiles(files) };
 
 	// Aperçu : la page de paramétrage propose les dossiers détectés dans les champs « Nom du scénario »
+	// et affiche le dossier source sélectionné
 	if (ws.demo && window.parent !== window) {
 		try {
 			window.parent.postMessage({ type: 'widget-datalist', id: 'alertes-dossiers', options: Object.keys(sbState.dossiers || {}) }, '*');
+			PostFolderInfo();
 		} catch (e) { }
 	}
 
 	if (sbState.mute && !wasMuted) ApplyMuteToCurrent();
 	PreloadActive();
 	Report();
+}
+
+// Nom du dossier source pour la page de paramétrage (réglage « Dossier sélectionné »)
+function FolderSummary(st) {
+	if (!st.dossier) return { text: 'Aucun dossier choisi', status: 'warn', title: '' };
+	const name = st.dossier.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || st.dossier;
+	if (!st.dossierExiste) return { text: `${name} (introuvable)`, status: 'warn', title: st.dossier };
+	const n = Object.keys(st.dossiers || {}).length;
+	return { text: `${name} · ${n} scénario${n > 1 ? 's' : ''}`, status: n ? 'ok' : 'warn', title: st.dossier };
+}
+
+function PostFolderInfo(text) {
+	if (!ws.demo || window.parent === window) return;
+	const info = text ? { text, status: 'warn', title: '' } : FolderSummary(sbState);
+	window.parent.postMessage({ type: 'widget-info', id: 'folderInfo', ...info }, '*');
 }
 
 // Compte rendu pour le dock (scénario actif, file d'attente, scénarios configurés)
@@ -405,6 +458,7 @@ function OnCustom(data) {
 			break;
 		case 'erreur':
 			console.warn('[Alertes variables] Streamer.bot :', data.message);
+			if (/dossier/i.test(String(data.message || ''))) PostFolderInfo(String(data.message));
 			break;
 	}
 }
@@ -448,6 +502,7 @@ function ConnectStreamerBot() {
 		onDisconnect: () => {
 			connected = false;
 			console.warn('[Alertes variables] Déconnecté de Streamer.bot');
+			PostFolderInfo('Streamer.bot non connecté');
 		}
 	});
 

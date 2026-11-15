@@ -1,4 +1,4 @@
-/* Compteur de morts — dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
+/* Compteur de morts : dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
 
 html.apple {
 	--dock-accent: var(--ui-accent);

@@ -1,5 +1,5 @@
 // =====================================================================
-//  Compteur de morts | Modifier — action Streamer.bot (sous-action « Execute C# Code »)
+//  Compteur de morts | Modifier : action Streamer.bot (sous-action « Execute C# Code »)
 //  Un compteur par jeu, stocké dans une variable globale persistante (JSON).
 //
 //  Arguments acceptés (envoyés par le dock ou réglés dans l'action) :

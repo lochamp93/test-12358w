@@ -1,4 +1,4 @@
-// Alertes variables — dock de contrôle (OBS : Docks → Docks de navigateur personnalisés)
+// Alertes variables : dock de contrôle (OBS : Docks → Docks de navigateur personnalisés)
 // Tout passe par l'action Streamer.bot : le dock, les overlays et les commandes du chat
 // partagent donc le même état (son coupé, scénario forcé, dossier source).
 
@@ -41,7 +41,7 @@ function Render() {
 	const r = report || {};
 
 	// Scénario actif
-	$('scenarioName').textContent = report ? (r.scenario || `Par défaut (${r.defaut || 'defaut'})`) : '—';
+	$('scenarioName').textContent = report ? (r.scenario || `Par défaut (${r.defaut || 'defaut'})`) : '-';
 	$('scenarioReason').textContent = report ? r.raison || '' : '';
 	const live = [];
 	if (st.titre) live.push(`Titre : ${st.titre}`);
@@ -50,7 +50,7 @@ function Render() {
 
 	// Son
 	const mute = !!st.mute;
-	$('muteButton').textContent = mute ? '🔇 Sons coupés — Réactiver' : '🔊 Sons actifs — Couper';
+	$('muteButton').textContent = mute ? '🔇 Sons coupés · Réactiver' : '🔊 Sons actifs · Couper';
 	$('muteButton').classList.toggle('muted-on', mute);
 
 	// Forcer un scénario
@@ -71,12 +71,16 @@ function Render() {
 	const waiting = Number(r.enAttente) || 0;
 	$('queueInfo').textContent = report
 		? (r.enCours ? `Alerte en cours${waiting ? ` + ${waiting} en attente` : ''}` : (waiting ? `${waiting} en attente` : 'Vide'))
-		: '—';
+		: '-';
 
-	// Dossier source
-	$('folderPath').textContent = st.dossier
-		? (st.dossierExiste ? st.dossier : `${st.dossier} (introuvable)`)
-		: 'Aucun dossier choisi';
+	// Dossier source : nom du dossier bien visible, chemin complet en dessous
+	const folderName = st.dossier ? (st.dossier.replace(/[\\/]+$/, '').split(/[\\/]/).pop() || st.dossier) : '';
+	const nbScenarios = Object.keys(st.dossiers || {}).length;
+	const folderOk = !!st.dossier && st.dossierExiste;
+	$('folderBox').className = 'folder-box ' + (folderOk ? 'ok' : 'warn');
+	$('folderName').textContent = !st.dossier ? 'Aucun dossier choisi'
+		: (st.dossierExiste ? `${folderName} · ${nbScenarios} sous-dossier${nbScenarios > 1 ? 's' : ''}` : `${folderName} (introuvable)`);
+	$('folderPath').textContent = st.dossier || 'Cliquez sur « Choisir le dossier » ou collez son chemin';
 
 	RenderIssues();
 }

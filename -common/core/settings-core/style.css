@@ -417,3 +417,14 @@ button:hover {
 html.apple #header button svg:not(.icon-sun):not(.icon-moon) {
     display: block;
 }
+
+/* Réglage de type "info" (texte envoyé par l’aperçu) */
+.setting-info {
+    font-size: 0.9em;
+    text-align: right;
+    max-width: 260px;
+    overflow-wrap: anywhere;
+}
+
+.setting-info[data-status="ok"] { color: #3be477; }
+.setting-info[data-status="warn"] { color: #e8a23b; }

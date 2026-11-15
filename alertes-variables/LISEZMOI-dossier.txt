@@ -1,0 +1,77 @@
+ALERTES VARIABLES : DOSSIER DES SONS ET DES VISUELS
+===================================================
+
+Ce dossier reste sur VOTRE ordinateur. Streamer.bot lit les fichiers et les
+envoie à l'overlay : rien n'est hébergé sur le site du widget.
+
+
+1. ORGANISATION
+---------------
+
+alertes-variables/          Dossier source (à choisir dans le dock)
+├── defaut/                 Scénario par défaut (obligatoire)
+├── _modele-scenario/       Modèle vide à copier pour un nouveau scénario
+└── (vos scénarios)         Ex. : horreur/, chill/ …
+
+- Dans le dock, choisissez le dossier « alertes-variables » lui-même
+  (celui qui contient « defaut »), pas un des sous-dossiers.
+- Si le bouton « Choisir le dossier » ne fait rien, collez le chemin du dossier
+  dans le champ du dock puis cliquez sur « Définir ».
+- Un scénario = un sous-dossier. Son nom doit être EXACTEMENT celui du scénario
+  dans la page de paramétrage.
+- Nouveau scénario : copiez « _modele-scenario », renommez la copie
+  (ex. « horreur »), déposez-y vos fichiers, puis cliquez sur « Actualiser ».
+- Noms conseillés : minuscules, sans espaces ni accents.
+
+
+2. NOM DES FICHIERS
+-------------------
+
+Un type d'alerte = un nom de fichier. Le son et le visuel portent le MÊME nom,
+seule l'extension change :  cheer.gif  +  cheer.mp3
+
+    follow        Follow
+    sub           Abonnement
+    resub         Réabonnement (sans fichier resub : celui de « sub »)
+    gift          Abonnement(s) offert(s)
+    cheer         Bits / dons (« bits » fonctionne aussi)
+    raid          Raid
+    alerte        Fichier de secours pour tous les types (optionnel)
+
+Les noms comme « Twitch_sub_1.gif » ou « Twitch_Raid.gif » ne sont PAS
+reconnus : renommez-les (ex. Twitch_Raid.gif → raid.gif).
+
+
+3. ABONNEMENTS SPÉCIAUX (anniversaires de sub)
+----------------------------------------------
+
+Dans la page de paramétrage, section « Alertes », réglage « Abonnements
+spéciaux » : choisissez le nombre de règles (jusqu'à 6), puis pour chacune :
+
+    Exactement N mois   → fichiers  sub-Nmois           ex. sub-9mois.gif
+    Tous les N mois     → fichiers  sub-tous-les-Nmois  ex. sub-tous-les-12mois.gif
+                                    (joué à 12, 24, 36 mois…)
+
+« Exactement » passe avant « Tous les ». Sans fichier spécial, l'alerte
+« sub » ou « resub » habituelle est jouée.
+
+
+4. FORMATS ACCEPTÉS
+-------------------
+
+Sons    : .mp3 (recommandé), .ogg, .wav, .m4a
+Visuels : .webm (recommandé : vidéo avec transparence), .mp4, .gif, .webp,
+          .apng, .png, .jpg, .svg
+Taille maximale : 25 Mo par fichier.
+Un seul son et un seul visuel par nom (pas de « sub.mp3 » ET « sub.wav »).
+
+
+5. FICHIER MANQUANT = FICHIER PAR DÉFAUT
+----------------------------------------
+
+Un scénario n'a besoin que des fichiers qu'il change : si un fichier manque,
+le widget prend celui du dossier « defaut ». Exemple : « horreur » ne contient
+que des sons → les visuels restent ceux du scénario par défaut.
+
+Le dossier « defaut » doit donc contenir un son et un visuel pour chaque type
+d'alerte utilisé.

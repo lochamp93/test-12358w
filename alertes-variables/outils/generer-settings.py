@@ -50,6 +50,8 @@ add(id="actionName", label="Action Streamer.bot",
     type="text", defaultValue="Alertes variables | Moteur", group="Connexion")
 
 # ---------- Dossier source ----------
+add(id="folderInfo", label="Dossier sélectionné", type="info", defaultValue="Connexion à Streamer.bot…",
+    group="Dossier source")
 add(id="chooseFolder", label="Choisir le dossier source", type="button", callFunction="ChooseFolder", group="Dossier source")
 add(id="refreshFolders", label="Actualiser les dossiers", type="button", callFunction="RefreshFolders", group="Dossier source")
 
@@ -65,6 +67,21 @@ add(id="minBits", label="Bits minimum", description="En dessous, pas d’alerte"
     min=1, max=100000, defaultValue=1, group="Alertes", showIf="alertCheer")
 add(id="minRaid", label="Viewers minimum pour un raid", type="number", min=1, max=100000, defaultValue=1,
     group="Alertes", showIf="alertRaid")
+# Abonnements spéciaux (anniversaires…) : jusqu'à 6 règles, affichées selon le nombre choisi
+NB_REGLES_SUB = 6
+add(id="subRuleCount", label="Abonnements spéciaux",
+    description="Visuel et son propres pour certains mois d’abonnement (ex. 9 mois, tous les 12 mois)",
+    type="select", options=opts([(str(n), "Aucun" if n == 0 else f"{n} règle{'s' if n > 1 else ''}") for n in range(NB_REGLES_SUB + 1)]),
+    defaultValue="0", group="Alertes")
+for n in range(1, NB_REGLES_SUB + 1):
+    visible = {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}
+    add(id=f"subRule{n}Kind", label=f"Règle {n}",
+        description="Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+        type="select", options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
+        defaultValue="every" if n == 1 else "exact", group="Alertes", showIf=visible)
+    add(id=f"subRule{n}Months", label=f"Règle {n} : nombre de mois", type="number", min=1, max=240,
+        defaultValue=12 if n == 1 else 9, group="Alertes", showIf=visible)
+
 add(id="alertGap", label="Pause entre deux alertes", description="En secondes", type="number",
     min=0, max=30, step=0.5, defaultValue=1, group="Alertes")
 
@@ -85,7 +102,7 @@ def style_settings(prefix, group, cond):
             return cond
         return extra
 
-    add(id=i("font"), label="Police", description="Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+    add(id=i("font"), label="Police", description="Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
         type="font", defaultValue="SF Pro Display", group=group, **({"showIf": cond} if cond else {}))
     add(id=i("fontSize"), label="Taille du texte", description="En pixels", type="number", min=8, max=300,
         defaultValue=42, group=group, **({"showIf": cond} if cond else {}))
@@ -106,7 +123,7 @@ def style_settings(prefix, group, cond):
     for t, label, text in TYPES:
         show = {"id": f"alert{t.capitalize()}"}
         add(id=i(f"text{t.capitalize()}"), label=f"Texte : {label}", description=PLACEHOLDERS,
-            type="text", defaultValue=text, group=group + " — textes",
+            type="text", defaultValue=text, group=group + " : textes",
             showIf={"any": [show]} if not cond else show_and(cond, show))
 
 

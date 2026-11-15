@@ -1,5 +1,5 @@
 /*
- * apple.css — DA inspirée d'Apple (Réglages Système macOS / widgets iOS), clair et sombre
+ * apple.css : DA inspirée d'Apple (Réglages Système macOS / widgets iOS), clair et sombre
  *
  * Activée seulement si <html> porte la classe « apple » (rien ne change pour les pages
  * qui ne l'activent pas). Le thème clair/sombre est porté par data-scheme="light|dark"

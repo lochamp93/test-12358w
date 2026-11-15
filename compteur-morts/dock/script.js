@@ -1,4 +1,4 @@
-// Compteur de morts — dock de contrôle (à ajouter dans OBS : Docks → Docks de navigateur personnalisés)
+// Compteur de morts : dock de contrôle (à ajouter dans OBS : Docks → Docks de navigateur personnalisés)
 // Toutes les modifications passent par l'action Streamer.bot : le dock, l'overlay et
 // les commandes du chat partagent donc toujours la même valeur.
 

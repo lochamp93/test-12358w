@@ -34,6 +34,14 @@
 			"group": "Connexion"
 		},
 		{
+			"id": "folderInfo",
+			"label": "Dossier sélectionné",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Dossier source",
+			"description": ""
+		},
+		{
 			"id": "chooseFolder",
 			"label": "Choisir le dossier source",
 			"type": "button",
@@ -165,6 +173,314 @@
 			"defaultValue": 1,
 			"group": "Alertes",
 			"showIf": "alertRaid",
+			"description": ""
+		},
+		{
+			"id": "subRuleCount",
+			"label": "Abonnements spéciaux",
+			"description": "Visuel et son propres pour certains mois d’abonnement (ex. 9 mois, tous les 12 mois)",
+			"type": "select",
+			"options": [
+				{
+					"value": "0",
+					"label": "Aucun"
+				},
+				{
+					"value": "1",
+					"label": "1 règle"
+				},
+				{
+					"value": "2",
+					"label": "2 règles"
+				},
+				{
+					"value": "3",
+					"label": "3 règles"
+				},
+				{
+					"value": "4",
+					"label": "4 règles"
+				},
+				{
+					"value": "5",
+					"label": "5 règles"
+				},
+				{
+					"value": "6",
+					"label": "6 règles"
+				}
+			],
+			"defaultValue": "0",
+			"group": "Alertes"
+		},
+		{
+			"id": "subRule1Kind",
+			"label": "Règle 1",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "every",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule1Months",
+			"label": "Règle 1 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 12,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"1",
+					"2",
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule2Kind",
+			"label": "Règle 2",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule2Months",
+			"label": "Règle 2 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"2",
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule3Kind",
+			"label": "Règle 3",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule3Months",
+			"label": "Règle 3 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"3",
+					"4",
+					"5",
+					"6"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule4Kind",
+			"label": "Règle 4",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"4",
+					"5",
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule4Months",
+			"label": "Règle 4 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"4",
+					"5",
+					"6"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule5Kind",
+			"label": "Règle 5",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"5",
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule5Months",
+			"label": "Règle 5 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"5",
+					"6"
+				]
+			},
+			"description": ""
+		},
+		{
+			"id": "subRule6Kind",
+			"label": "Règle 6",
+			"description": "Fichiers : sub-9mois (exactement 9 mois) ou sub-tous-les-12mois (12, 24, 36…)",
+			"type": "select",
+			"options": [
+				{
+					"value": "exact",
+					"label": "Exactement N mois"
+				},
+				{
+					"value": "every",
+					"label": "Tous les N mois"
+				}
+			],
+			"defaultValue": "exact",
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"6"
+				]
+			}
+		},
+		{
+			"id": "subRule6Months",
+			"label": "Règle 6 : nombre de mois",
+			"type": "number",
+			"min": 1,
+			"max": 240,
+			"defaultValue": 9,
+			"group": "Alertes",
+			"showIf": {
+				"id": "subRuleCount",
+				"value": [
+					"6"
+				]
+			},
 			"description": ""
 		},
 		{
@@ -306,7 +622,7 @@
 		{
 			"id": "font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario par défaut"
@@ -470,7 +786,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertFollow"
 			}
@@ -481,7 +797,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertSub"
 			}
@@ -492,7 +808,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertResub"
 			}
@@ -503,7 +819,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertGift"
 			}
@@ -514,7 +830,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertCheer"
 			}
@@ -525,7 +841,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario par défaut — textes",
+			"group": "Scénario par défaut : textes",
 			"showIf": {
 				"id": "alertRaid"
 			}
@@ -854,7 +1170,7 @@
 		{
 			"id": "sc1Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 1",
@@ -1054,7 +1370,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1066,7 +1382,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1078,7 +1394,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1090,7 +1406,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1102,7 +1418,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1114,7 +1430,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 1 — textes",
+			"group": "Scénario 1 : textes",
 			"showIf": {
 				"id": "sc1Visual",
 				"value": "own"
@@ -1312,7 +1628,7 @@
 		{
 			"id": "sc2Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 2",
@@ -1512,7 +1828,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1524,7 +1840,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1536,7 +1852,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1548,7 +1864,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1560,7 +1876,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1572,7 +1888,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 2 — textes",
+			"group": "Scénario 2 : textes",
 			"showIf": {
 				"id": "sc2Visual",
 				"value": "own"
@@ -1764,7 +2080,7 @@
 		{
 			"id": "sc3Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 3",
@@ -1964,7 +2280,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -1976,7 +2292,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -1988,7 +2304,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -2000,7 +2316,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -2012,7 +2328,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -2024,7 +2340,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 3 — textes",
+			"group": "Scénario 3 : textes",
 			"showIf": {
 				"id": "sc3Visual",
 				"value": "own"
@@ -2210,7 +2526,7 @@
 		{
 			"id": "sc4Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 4",
@@ -2410,7 +2726,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2422,7 +2738,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2434,7 +2750,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2446,7 +2762,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2458,7 +2774,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2470,7 +2786,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 4 — textes",
+			"group": "Scénario 4 : textes",
 			"showIf": {
 				"id": "sc4Visual",
 				"value": "own"
@@ -2650,7 +2966,7 @@
 		{
 			"id": "sc5Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 5",
@@ -2850,7 +3166,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -2862,7 +3178,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -2874,7 +3190,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -2886,7 +3202,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -2898,7 +3214,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -2910,7 +3226,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 5 — textes",
+			"group": "Scénario 5 : textes",
 			"showIf": {
 				"id": "sc5Visual",
 				"value": "own"
@@ -3084,7 +3400,7 @@
 		{
 			"id": "sc6Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 6",
@@ -3284,7 +3600,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3296,7 +3612,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3308,7 +3624,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3320,7 +3636,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3332,7 +3648,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3344,7 +3660,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 6 — textes",
+			"group": "Scénario 6 : textes",
 			"showIf": {
 				"id": "sc6Visual",
 				"value": "own"
@@ -3512,7 +3828,7 @@
 		{
 			"id": "sc7Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 7",
@@ -3712,7 +4028,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3724,7 +4040,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3736,7 +4052,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3748,7 +4064,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3760,7 +4076,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3772,7 +4088,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 7 — textes",
+			"group": "Scénario 7 : textes",
 			"showIf": {
 				"id": "sc7Visual",
 				"value": "own"
@@ -3934,7 +4250,7 @@
 		{
 			"id": "sc8Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 8",
@@ -4134,7 +4450,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4146,7 +4462,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4158,7 +4474,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4170,7 +4486,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4182,7 +4498,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4194,7 +4510,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 8 — textes",
+			"group": "Scénario 8 : textes",
 			"showIf": {
 				"id": "sc8Visual",
 				"value": "own"
@@ -4350,7 +4666,7 @@
 		{
 			"id": "sc9Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 9",
@@ -4550,7 +4866,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4562,7 +4878,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4574,7 +4890,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4586,7 +4902,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4598,7 +4914,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4610,7 +4926,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 9 — textes",
+			"group": "Scénario 9 : textes",
 			"showIf": {
 				"id": "sc9Visual",
 				"value": "own"
@@ -4760,7 +5076,7 @@
 		{
 			"id": "sc10Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 10",
@@ -4960,7 +5276,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -4972,7 +5288,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -4984,7 +5300,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -4996,7 +5312,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -5008,7 +5324,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -5020,7 +5336,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 10 — textes",
+			"group": "Scénario 10 : textes",
 			"showIf": {
 				"id": "sc10Visual",
 				"value": "own"
@@ -5164,7 +5480,7 @@
 		{
 			"id": "sc11Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 11",
@@ -5364,7 +5680,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5376,7 +5692,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5388,7 +5704,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5400,7 +5716,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5412,7 +5728,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5424,7 +5740,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 11 — textes",
+			"group": "Scénario 11 : textes",
 			"showIf": {
 				"id": "sc11Visual",
 				"value": "own"
@@ -5562,7 +5878,7 @@
 		{
 			"id": "sc12Font",
 			"label": "Police",
-			"description": "Police installée ou Google Fonts — <a href=\"ms-settings:fonts\">voir les polices</a>",
+			"description": "Police installée ou Google Fonts. <a href=\"ms-settings:fonts\">voir les polices</a>",
 			"type": "font",
 			"defaultValue": "SF Pro Display",
 			"group": "Scénario 12",
@@ -5762,7 +6078,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
@@ -5774,7 +6090,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
@@ -5786,7 +6102,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
@@ -5798,7 +6114,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
@@ -5810,7 +6126,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
@@ -5822,7 +6138,7 @@
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
-			"group": "Scénario 12 — textes",
+			"group": "Scénario 12 : textes",
 			"showIf": {
 				"id": "sc12Visual",
 				"value": "own"
