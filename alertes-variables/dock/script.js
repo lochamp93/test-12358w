@@ -186,7 +186,13 @@ $('clearHistory').addEventListener('click', () => {
 	clearTimeout(btn._t);
 	btn.classList.remove('confirming');
 	btn.textContent = 'Effacer';
+	// L'overlay vide sa liste ; le dock vide aussi celle gardée par Streamer.bot (overlay ancien ou absent)
 	Send({ mode: 'tester', type: 'effacer:historique' });
+	if (report) {
+		report = Object.assign({}, report, { historique: [] });
+		Send({ mode: 'rapport', rapport: JSON.stringify(report) });
+		Render();
+	}
 });
 
 $('history').addEventListener('click', (e) => {

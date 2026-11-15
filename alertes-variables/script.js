@@ -986,6 +986,9 @@ async function OnPopupOpened(popupId) {
 // DOCK : TESTS DISPONIBLES ET DERNIÈRES ALERTES //
 //////////////////////////////////////////////
 
+// Mise à jour automatique (fresh.js) : jamais pendant une alerte ni avec des alertes en attente
+window.FreshCanReload = () => !playing && !queue.length && !current;
+
 let ttsError = null; // dernière erreur de synthèse vocale (affichée par le dock)
 const HISTORY_MAX = 20; // dernières alertes gardées (dock), pas plus
 let history = [];
