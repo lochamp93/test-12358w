@@ -70,7 +70,7 @@
 	function parseAll(definition, params) {
 		const values = {};
 		for (const setting of definition.settings || []) {
-			if (setting.type === 'button' || setting.type === 'info') continue;
+			if (setting.type === 'button' || setting.type === 'info' || setting.type === 'actions') continue;
 			values[setting.id] = parseValue(setting, readRaw(setting, params));
 		}
 		return values;

@@ -787,6 +787,10 @@ function PostFilesInfo() {
 	const post = (id, text, status) => PostToSettings({ type: 'widget-info', id, text, status });
 	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
 
+	// Nom de fichier à donner pour chaque règle (champ copiable), même sans Streamer.bot
+	for (let n = 1; n <= NB_SUB_RULES; n++)
+		if (ids.has(`subRule${n}FileName`)) post(`subRule${n}FileName`, RuleFileName(n), '');
+
 	if (!connected || !sbState.dossier || !sbState.dossierExiste) {
 		const why = !connected ? 'Streamer.bot non connecté' : 'Choisissez le dossier source';
 		ids.forEach(id => { if (id.endsWith('Files')) post(id, why, 'warn'); });
@@ -816,10 +820,7 @@ function PostFilesInfo() {
 			return fd ? { dossier: def.nom, fichier: fd } : null;
 		};
 		const v = pick(sc && sc.visual === 'own', VISUAL_EXT), a = pick(sc && sc.sound === 'own', SOUND_EXT);
-		const missing = [!v && 'image', !a && 'son'].filter(Boolean);
-		const text = `${DescribeFile(v, 'Image')} · ${DescribeFile(a, 'Son')}` +
-			(missing.length ? ` · nommez le fichier ${name}` : '');
-		post(`subRule${n}Files`, text, v && a ? 'ok' : 'warn');
+		post(`subRule${n}Files`, `${DescribeFile(v, 'Image')} · ${DescribeFile(a, 'Son')}`, v && a ? 'ok' : 'warn');
 	}
 }
 

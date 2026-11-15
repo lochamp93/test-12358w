@@ -6001,13 +6001,61 @@
 			"description": ""
 		},
 		{
+			"id": "subRule1Row",
+			"labelTemplate": "Règle 1 : {subRule1Name|sans nom}",
+			"label": "Règle 1",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule1"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule1",
+					"popupTitle": "Règle 1 : {subRule1Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule1",
+					"confirm": true
+				}
+			],
+			"group": "Twitch",
+			"indent": 2,
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchSub"
+					},
+					{
+						"id": "subRuleCount",
+						"value": [
+							"1",
+							"2",
+							"3",
+							"4",
+							"5",
+							"6"
+						]
+					}
+				]
+			},
+			"description": ""
+		},
+		{
 			"id": "subRule1Name",
-			"label": "Règle 1 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "Anniversaire",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule1",
 			"showIf": {
 				"all": [
 					{
@@ -6043,7 +6091,7 @@
 			],
 			"defaultValue": "every",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule1",
 			"showIf": {
 				"all": [
 					{
@@ -6072,7 +6120,7 @@
 			"max": 240,
 			"defaultValue": 12,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule1",
 			"showIf": {
 				"all": [
 					{
@@ -6095,11 +6143,11 @@
 		},
 		{
 			"id": "subRule1Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule1",
 			"showIf": {
 				"all": [
 					{
@@ -6121,12 +6169,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule1Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule1",
+			"id": "subRule1FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule1",
 			"showIf": {
 				"all": [
 					{
@@ -6144,16 +6194,34 @@
 						]
 					}
 				]
-			},
-			"description": ""
+			}
 		},
 		{
-			"id": "subRule1Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule1",
-			"confirm": true,
-			"danger": true,
+			"id": "subRule2Row",
+			"labelTemplate": "Règle 2 : {subRule2Name|sans nom}",
+			"label": "Règle 2",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule2"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule2",
+					"popupTitle": "Règle 2 : {subRule2Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule2",
+					"confirm": true
+				}
+			],
 			"group": "Twitch",
 			"indent": 2,
 			"showIf": {
@@ -6164,7 +6232,6 @@
 					{
 						"id": "subRuleCount",
 						"value": [
-							"1",
 							"2",
 							"3",
 							"4",
@@ -6178,12 +6245,12 @@
 		},
 		{
 			"id": "subRule2Name",
-			"label": "Règle 2 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule2",
 			"showIf": {
 				"all": [
 					{
@@ -6218,7 +6285,7 @@
 			],
 			"defaultValue": "exact",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule2",
 			"showIf": {
 				"all": [
 					{
@@ -6246,7 +6313,7 @@
 			"max": 240,
 			"defaultValue": 9,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule2",
 			"showIf": {
 				"all": [
 					{
@@ -6268,11 +6335,11 @@
 		},
 		{
 			"id": "subRule2Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule2",
 			"showIf": {
 				"all": [
 					{
@@ -6293,12 +6360,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule2Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule2",
+			"id": "subRule2FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule2",
 			"showIf": {
 				"all": [
 					{
@@ -6315,16 +6384,34 @@
 						]
 					}
 				]
-			},
-			"description": ""
+			}
 		},
 		{
-			"id": "subRule2Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule2",
-			"confirm": true,
-			"danger": true,
+			"id": "subRule3Row",
+			"labelTemplate": "Règle 3 : {subRule3Name|sans nom}",
+			"label": "Règle 3",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule3"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule3",
+					"popupTitle": "Règle 3 : {subRule3Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule3",
+					"confirm": true
+				}
+			],
 			"group": "Twitch",
 			"indent": 2,
 			"showIf": {
@@ -6335,7 +6422,6 @@
 					{
 						"id": "subRuleCount",
 						"value": [
-							"2",
 							"3",
 							"4",
 							"5",
@@ -6348,12 +6434,12 @@
 		},
 		{
 			"id": "subRule3Name",
-			"label": "Règle 3 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule3",
 			"showIf": {
 				"all": [
 					{
@@ -6387,7 +6473,7 @@
 			],
 			"defaultValue": "exact",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule3",
 			"showIf": {
 				"all": [
 					{
@@ -6414,7 +6500,7 @@
 			"max": 240,
 			"defaultValue": 9,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule3",
 			"showIf": {
 				"all": [
 					{
@@ -6435,11 +6521,11 @@
 		},
 		{
 			"id": "subRule3Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule3",
 			"showIf": {
 				"all": [
 					{
@@ -6459,12 +6545,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule3Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule3",
+			"id": "subRule3FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule3",
 			"showIf": {
 				"all": [
 					{
@@ -6480,16 +6568,34 @@
 						]
 					}
 				]
-			},
-			"description": ""
+			}
 		},
 		{
-			"id": "subRule3Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule3",
-			"confirm": true,
-			"danger": true,
+			"id": "subRule4Row",
+			"labelTemplate": "Règle 4 : {subRule4Name|sans nom}",
+			"label": "Règle 4",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule4"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule4",
+					"popupTitle": "Règle 4 : {subRule4Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule4",
+					"confirm": true
+				}
+			],
 			"group": "Twitch",
 			"indent": 2,
 			"showIf": {
@@ -6500,7 +6606,6 @@
 					{
 						"id": "subRuleCount",
 						"value": [
-							"3",
 							"4",
 							"5",
 							"6"
@@ -6512,12 +6617,12 @@
 		},
 		{
 			"id": "subRule4Name",
-			"label": "Règle 4 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule4",
 			"showIf": {
 				"all": [
 					{
@@ -6550,7 +6655,7 @@
 			],
 			"defaultValue": "exact",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule4",
 			"showIf": {
 				"all": [
 					{
@@ -6576,7 +6681,7 @@
 			"max": 240,
 			"defaultValue": 9,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule4",
 			"showIf": {
 				"all": [
 					{
@@ -6596,11 +6701,11 @@
 		},
 		{
 			"id": "subRule4Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule4",
 			"showIf": {
 				"all": [
 					{
@@ -6619,12 +6724,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule4Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule4",
+			"id": "subRule4FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule4",
 			"showIf": {
 				"all": [
 					{
@@ -6639,16 +6746,34 @@
 						]
 					}
 				]
-			},
-			"description": ""
+			}
 		},
 		{
-			"id": "subRule4Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule4",
-			"confirm": true,
-			"danger": true,
+			"id": "subRule5Row",
+			"labelTemplate": "Règle 5 : {subRule5Name|sans nom}",
+			"label": "Règle 5",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule5"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule5",
+					"popupTitle": "Règle 5 : {subRule5Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule5",
+					"confirm": true
+				}
+			],
 			"group": "Twitch",
 			"indent": 2,
 			"showIf": {
@@ -6659,7 +6784,6 @@
 					{
 						"id": "subRuleCount",
 						"value": [
-							"4",
 							"5",
 							"6"
 						]
@@ -6670,12 +6794,12 @@
 		},
 		{
 			"id": "subRule5Name",
-			"label": "Règle 5 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule5",
 			"showIf": {
 				"all": [
 					{
@@ -6707,7 +6831,7 @@
 			],
 			"defaultValue": "exact",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule5",
 			"showIf": {
 				"all": [
 					{
@@ -6732,7 +6856,7 @@
 			"max": 240,
 			"defaultValue": 9,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule5",
 			"showIf": {
 				"all": [
 					{
@@ -6751,11 +6875,11 @@
 		},
 		{
 			"id": "subRule5Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule5",
 			"showIf": {
 				"all": [
 					{
@@ -6773,12 +6897,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule5Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule5",
+			"id": "subRule5FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule5",
 			"showIf": {
 				"all": [
 					{
@@ -6792,16 +6918,34 @@
 						]
 					}
 				]
-			},
-			"description": ""
+			}
 		},
 		{
-			"id": "subRule5Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule5",
-			"confirm": true,
-			"danger": true,
+			"id": "subRule6Row",
+			"labelTemplate": "Règle 6 : {subRule6Name|sans nom}",
+			"label": "Règle 6",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester la règle",
+					"callFunction": "TestSubRule6"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer la règle",
+					"popup": "subRule6",
+					"popupTitle": "Règle 6 : {subRule6Name|sans nom}"
+				},
+				{
+					"icon": "trash",
+					"style": "danger",
+					"title": "Supprimer la règle (deux clics)",
+					"callFunction": "DeleteSubRule6",
+					"confirm": true
+				}
+			],
 			"group": "Twitch",
 			"indent": 2,
 			"showIf": {
@@ -6812,7 +6956,6 @@
 					{
 						"id": "subRuleCount",
 						"value": [
-							"5",
 							"6"
 						]
 					}
@@ -6822,12 +6965,12 @@
 		},
 		{
 			"id": "subRule6Name",
-			"label": "Règle 6 : nom",
+			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule6",
 			"showIf": {
 				"all": [
 					{
@@ -6858,7 +7001,7 @@
 			],
 			"defaultValue": "exact",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule6",
 			"showIf": {
 				"all": [
 					{
@@ -6882,7 +7025,7 @@
 			"max": 240,
 			"defaultValue": 9,
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule6",
 			"showIf": {
 				"all": [
 					{
@@ -6900,11 +7043,11 @@
 		},
 		{
 			"id": "subRule6Files",
-			"label": "Fichiers",
+			"label": "Fichiers trouvés",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule6",
 			"showIf": {
 				"all": [
 					{
@@ -6921,12 +7064,14 @@
 			"description": ""
 		},
 		{
-			"id": "subRule6Test",
-			"label": "Tester la règle",
-			"type": "button",
-			"callFunction": "TestSubRule6",
+			"id": "subRule6FileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
 			"group": "Twitch",
-			"indent": 2,
+			"popup": "subRule6",
 			"showIf": {
 				"all": [
 					{
@@ -6939,32 +7084,7 @@
 						]
 					}
 				]
-			},
-			"description": ""
-		},
-		{
-			"id": "subRule6Delete",
-			"label": "Supprimer la règle",
-			"type": "button",
-			"callFunction": "DeleteSubRule6",
-			"confirm": true,
-			"danger": true,
-			"group": "Twitch",
-			"indent": 2,
-			"showIf": {
-				"all": [
-					{
-						"id": "twitchSub"
-					},
-					{
-						"id": "subRuleCount",
-						"value": [
-							"6"
-						]
-					}
-				]
-			},
-			"description": ""
+			}
 		},
 		{
 			"id": "addSubRule",

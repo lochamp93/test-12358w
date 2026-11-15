@@ -201,19 +201,29 @@ for nom, cle, types in PLATEFORMES:
         if cle == "twitch" and t == "sub":
             for n in range(1, NB_REGLES_SUB + 1):
                 v = {"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(n, NB_REGLES_SUB + 1)]}]}
-                add(id=f"subRule{n}Name", label=f"Règle {n} : nom", description="Pour vous repérer (ex. Anniversaire)",
-                    type="text", defaultValue="Anniversaire" if n == 1 else "", group=nom, indent=2, showIf=v)
+                titre = f"Règle {n} : {{subRule{n}Name|sans nom}}"
+                pop = f"subRule{n}"
+                # Ligne compacte : « Règle n : nom » + tester / paramétrer / supprimer
+                add(id=f"subRule{n}Row", labelTemplate=titre, label=f"Règle {n}", type="actions",
+                    buttons=[
+                        {"icon": "play", "style": "accent", "title": "Tester la règle", "callFunction": f"TestSubRule{n}"},
+                        {"icon": "gear", "title": "Paramétrer la règle", "popup": pop, "popupTitle": titre},
+                        {"icon": "trash", "style": "danger", "title": "Supprimer la règle (deux clics)",
+                         "callFunction": f"DeleteSubRule{n}", "confirm": True},
+                    ], group=nom, indent=2, showIf=v)
+                # Réglages de la règle, dans sa fenêtre « Paramétrer »
+                add(id=f"subRule{n}Name", label="Nom de la règle", description="Pour vous repérer (ex. Anniversaire)",
+                    type="text", defaultValue="Anniversaire" if n == 1 else "", group=nom, popup=pop, showIf=v)
                 add(id=f"subRule{n}Kind", label="Quand", type="select",
                     options=opts([("exact", "Exactement N mois"), ("every", "Tous les N mois")]),
-                    defaultValue="every" if n == 1 else "exact", group=nom, indent=2, showIf=v)
+                    defaultValue="every" if n == 1 else "exact", group=nom, popup=pop, showIf=v)
                 add(id=f"subRule{n}Months", label="Nombre de mois (N)", type="number", min=1, max=240,
-                    defaultValue=12 if n == 1 else 9, group=nom, indent=2, showIf=v)
-                add(id=f"subRule{n}Files", label="Fichiers", type="info", defaultValue="",
-                    group=nom, indent=2, showIf=v)
-                add(id=f"subRule{n}Test", label="Tester la règle", type="button", callFunction=f"TestSubRule{n}",
-                    group=nom, indent=2, showIf=v)
-                add(id=f"subRule{n}Delete", label="Supprimer la règle", type="button", callFunction=f"DeleteSubRule{n}",
-                    confirm=True, danger=True, group=nom, indent=2, showIf=v)
+                    defaultValue=12 if n == 1 else 9, group=nom, popup=pop, showIf=v)
+                add(id=f"subRule{n}Files", label="Fichiers trouvés", type="info", defaultValue="",
+                    group=nom, popup=pop, showIf=v)
+                add(id=f"subRule{n}FileName", label="Nom à donner à l’image et au son",
+                    description="Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+                    type="info", copyable=True, defaultValue="", group=nom, popup=pop, showIf=v)
             add(id="addSubRule", label="+ Ajouter une règle (ex. tous les 12 mois)", type="button",
                 callFunction="AddSubRule", group=nom, indent=1,
                 showIf={"all": [{"id": tid}, {"id": "subRuleCount", "value": [str(k) for k in range(0, NB_REGLES_SUB)]}]})

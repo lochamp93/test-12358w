@@ -321,3 +321,170 @@ html.apple .setting-group.setting-group-bare {
 }
 
 html.apple .setting-group.setting-group-bare h2 { display: none; }
+
+/* ---------- Lignes d'actions : libellé + boutons ronds à icône ---------- */
+
+html.apple .setting-item.setting-item-actions { align-items: center; }
+html.apple .setting-item-actions label { font-weight: 600; }
+
+.setting-actions {
+	display: flex;
+	gap: 8px;
+	justify-content: flex-end;
+	flex-wrap: nowrap;
+}
+
+.setting-actions .icon-button {
+	width: 30px;
+	height: 30px;
+	min-width: 30px;
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	background: var(--ui-fill-strong, #3a3a3a);
+	color: var(--ui-text, #fff);
+	transition: transform .12s ease, filter .12s ease, background .15s ease;
+}
+
+.setting-actions .icon-button:hover { filter: brightness(1.08); }
+.setting-actions .icon-button:active { transform: scale(.92); }
+.setting-actions .icon-button svg { width: 14px; height: 14px; fill: currentColor; }
+.setting-actions .icon-button.accent { background: var(--ui-accent, #0a84ff); color: #fff; }
+.setting-actions .icon-button.danger { color: var(--ui-red, #ff3b30); }
+.setting-actions .icon-button.confirming { background: var(--ui-red, #ff3b30); color: #fff; }
+
+/* ---------- Fenêtre de réglages ---------- */
+
+dialog.settings-popup {
+	width: min(460px, calc(100vw - 40px));
+	max-height: calc(100vh - 80px);
+	padding: 20px 20px 16px;
+	border: none;
+	border-radius: 18px;
+	background: var(--ui-bg-elevated, #2b2b2b);
+	color: var(--ui-text, #fff);
+	box-shadow: var(--ui-shadow-pop, 0 20px 60px rgba(0, 0, 0, .35));
+	font-family: var(--ui-font, inherit);
+	overflow: auto;
+}
+
+dialog.settings-popup::backdrop {
+	background: rgba(0, 0, 0, .35);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}
+
+dialog.settings-popup[open] { animation: popupIn .18s ease-out; }
+
+@keyframes popupIn {
+	from { opacity: 0; transform: translateY(8px) scale(.98); }
+	to { opacity: 1; transform: none; }
+}
+
+.settings-popup-title {
+	margin: 0 0 12px;
+	font-size: 17px;
+	font-weight: 700;
+}
+
+.settings-popup-body .setting-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 10px 0;
+	border-bottom: 1px solid var(--ui-separator, rgba(255, 255, 255, .1));
+}
+
+.settings-popup-body .setting-item:last-child { border-bottom: none; }
+.settings-popup-body .setting-item > div:first-child { flex: 1; min-width: 0; }
+
+.settings-popup-footer {
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 14px;
+}
+
+.settings-popup-close {
+	padding: 8px 18px;
+	border: none;
+	border-radius: 999px;
+	background: var(--ui-accent, #0a84ff);
+	color: #fff;
+	font: inherit;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+/* Champ d'information copiable (nom de fichier…) */
+input.setting-info.copyable {
+	width: 100%;
+	max-width: none;
+	text-align: left;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	cursor: text;
+}
+
+.setting-item-content:has(> input.copyable) {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex: 1;
+}
+
+.copy-info-button {
+	flex: 0 0 auto;
+	padding: 6px 12px;
+	border: none;
+	border-radius: 999px;
+	background: var(--ui-accent, #0a84ff);
+	color: #fff;
+	font: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+/* Champ copiable : libellé au-dessus, champ + « Copier » sur toute la largeur */
+.setting-item.setting-item-copy,
+html.apple .setting-item.setting-item-copy {
+	flex-direction: column;
+	align-items: stretch;
+	gap: 8px;
+}
+
+.setting-item-copy .setting-item-content {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	width: 100%;
+}
+
+html.apple .setting-item-copy input.setting-info.copyable {
+	flex: 1;
+	min-width: 0;
+	height: 34px;
+	padding: 0 12px;
+	border: none;
+	border-radius: 10px;
+	background: var(--ui-fill);
+	color: var(--ui-text);
+	font-size: 14px;
+	font-weight: 600;
+}
+
+html.apple .setting-item-content > button.copy-info-button,
+html.apple .settings-popup-footer > button.settings-popup-close {
+	width: auto;
+	height: 34px;
+	padding: 0 16px;
+	border-radius: 999px;
+	background: var(--ui-accent);
+	color: #fff;
+	box-shadow: none;
+}
