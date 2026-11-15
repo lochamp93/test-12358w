@@ -285,9 +285,12 @@ html.apple .setting-info[data-status="ok"] { color: var(--ui-green); }
 html.apple .setting-info[data-status="warn"] { color: #ff9f0a; }
 
 /* Boutons sensibles (ex. supprimer) et confirmation */
-html.apple .setting-item-content > button.danger { color: var(--ui-red); }
+html.apple .setting-item-content > button.danger {
+	background: var(--ui-red);
+	color: #fff;
+}
 html.apple .setting-item-content > button.confirming {
-	background: var(--ui-red) !important;
+	background: #c4271c !important;
 	color: #fff !important;
 }
 
@@ -322,7 +325,6 @@ html.apple .setting-group.setting-group-bare h2 { display: none; }
 /* ---------- Lignes d'actions : libellé + boutons ronds à icône ---------- */
 
 html.apple .setting-item.setting-item-actions { align-items: center; }
-html.apple .setting-item-actions label { font-weight: 600; }
 
 .setting-actions {
 	display: flex;
@@ -352,8 +354,13 @@ html.apple .setting-item-actions label { font-weight: 600; }
 .setting-actions .icon-button:active { transform: scale(.92); }
 .setting-actions .icon-button svg { width: 14px; height: 14px; fill: currentColor; }
 .setting-actions .icon-button.accent { background: var(--ui-accent, #0a84ff); color: #fff; }
-.setting-actions .icon-button.danger { color: var(--ui-red, #ff3b30); }
-.setting-actions .icon-button.confirming { background: var(--ui-red, #ff3b30); color: #fff; }
+/* Supprimer : fond rouge, icône blanche ; confirmation : rouge plus sombre qui pulse */
+.setting-actions .icon-button.danger { background: var(--ui-red, #ff3b30); color: #fff; }
+.setting-actions .icon-button.confirming { background: #c4271c; color: #fff; animation: confirmPulse .8s ease-in-out infinite; }
+
+@keyframes confirmPulse {
+	50% { box-shadow: 0 0 0 4px rgba(255, 59, 48, .25); }
+}
 
 /* ---------- Fenêtre de réglages ---------- */
 
@@ -501,3 +508,84 @@ html.apple .settings-popup-footer > button.settings-popup-close {
 	color: #fff;
 	box-shadow: none;
 }
+
+/* Interrupteur avec boutons (tester, paramétrer) : boutons à gauche, masqués s'il est désactivé */
+.setting-item-with-actions .setting-item-content {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 12px;
+}
+
+.setting-actions.off { display: none; }
+
+/* Bouton discret façon lien (« Ajouter une règle ») */
+html.apple .setting-item.setting-item-link { padding-top: 6px; padding-bottom: 10px; }
+
+html.apple .setting-item-content > button.link-button {
+	width: auto;
+	height: auto;
+	padding: 2px 0;
+	background: none !important;
+	box-shadow: none;
+	color: var(--ui-accent);
+	font-size: 13px;
+	font-weight: 600;
+	text-align: left;
+}
+
+html.apple .setting-item-content > button.link-button::before {
+	content: "+";
+	display: inline-block;
+	width: 18px;
+	height: 18px;
+	margin-right: 8px;
+	border-radius: 50%;
+	background: var(--ui-accent-soft, rgba(10, 132, 255, .15));
+	line-height: 18px;
+	text-align: center;
+	font-size: 15px;
+	font-weight: 600;
+	vertical-align: -1px;
+}
+
+html.apple .setting-item-content > button.link-button:hover { text-decoration: underline; }
+
+/* Fichiers : une ligne pour l'image, une pour le son, point de couleur */
+html.apple .setting-info.setting-info-lines {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	color: var(--ui-text) !important;
+	font-weight: 500;
+	text-align: left;
+	max-width: 260px;
+}
+
+.info-line {
+	display: flex;
+	align-items: baseline;
+	gap: 6px;
+	min-width: 0;
+}
+
+.info-dot {
+	flex: 0 0 8px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--ui-text-secondary, #8e8e93);
+	transform: translateY(-1px);
+}
+
+.info-dot[data-status="ok"] { background: var(--ui-green, #34c759); }
+.info-dot[data-status="warn"] { background: #ff9f0a; }
+.info-dot[data-status="error"] { background: var(--ui-red, #ff3b30); }
+.info-label { color: var(--ui-text-secondary, #8e8e93); flex: 0 0 auto; }
+.info-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+
+/* Lignes d'actions sans interrupteur (règles) : le dernier bouton prend la place de
+   l'interrupteur, pour que tester / paramétrer restent alignés d'une ligne à l'autre */
+.setting-item-actions .setting-actions .icon-button:last-child { margin: 0 4px 0 8px; }
+
+html.apple .setting-info.setting-info-lines { font-size: 13px; }

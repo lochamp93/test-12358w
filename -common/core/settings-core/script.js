@@ -38,7 +38,7 @@ loadUrlBox.placeholder = `${widgetURL}?...`
 /////////////////////////////
 
 function LoadJSON(settingsJson) {
-	fetch(settingsJson)
+	fetch(settingsJson, { cache: 'no-cache' }) // toujours la dernière définition des réglages
 		.then(response => response.json())
 		.then(data => {
 			settingsData = data;
@@ -116,29 +116,14 @@ function LoadJSON(settingsJson) {
 
 					let inputElement;
 					let extraElement = null;
+					let extraBeforeElement = null;
 					switch (setting.type) {
 						case 'actions':
 							// Ligne « libellé + boutons ronds à icône » :
 							// "buttons": [{ "icon": "play"|"gear"|"trash"…, "title": "…", "callFunction": "…",
 							//               "popup": "<id>", "popupTitle": "…", "style": "accent"|"danger", "confirm": true }]
-							inputElement = document.createElement('div');
+							inputElement = MakeActionButtons(setting);
 							inputElement.id = setting.id;
-							inputElement.className = 'setting-actions';
-							(setting.buttons || []).forEach(b => {
-								const btn = document.createElement('button');
-								btn.type = 'button';
-								btn.className = 'icon-button' + (b.style ? ` ${b.style}` : '');
-								btn.innerHTML = ACTION_ICONS[b.icon] || '';
-								btn.title = b.title || '';
-								btn.dataset.title = b.title || '';
-								btn.setAttribute('aria-label', b.title || b.icon || '');
-								btn.addEventListener('click', () => {
-									if (b.confirm && !ConfirmClick(btn)) return;
-									if (b.popup) OpenPopup(b.popup, b.popupTitle || setting.labelTemplate || setting.label);
-									if (b.callFunction) CallPreview(b.callFunction);
-								});
-								inputElement.appendChild(btn);
-							});
 							break;
 						case 'text':
 							inputElement = document.createElement('input');
@@ -179,6 +164,12 @@ function LoadJSON(settingsJson) {
 								UpdateSettingItemVisibility();
 							});
 							inputElement = labelDiv;
+							// "buttons" sur un interrupteur : boutons ronds à gauche de l'interrupteur,
+							// visibles seulement quand il est activé (tester, paramétrer…)
+							if (Array.isArray(setting.buttons) && setting.buttons.length) {
+								extraBeforeElement = MakeActionButtons(setting);
+								extraBeforeElement.dataset.forToggle = setting.id;
+							}
 							break;
 						case 'select':
 							inputElement = document.createElement('select');
@@ -249,6 +240,7 @@ function LoadJSON(settingsJson) {
 								extraElement.className = 'copy-info-button';
 								extraElement.title = 'Copier';
 								extraElement.setAttribute('aria-label', 'Copier');
+								extraElement.dataset.icon = 'copy';
 								extraElement.innerHTML = ACTION_ICONS.copy;
 								extraElement.addEventListener('click', () => {
 									const done = () => {
@@ -271,6 +263,8 @@ function LoadJSON(settingsJson) {
 							inputElement.id = setting.id; // Added setting ID
 							inputElement.textContent = setting.label;
 							if (setting.danger) inputElement.classList.add('danger');
+							// "link": true : bouton discret façon lien (ex. « Ajouter une règle »)
+							if (setting.link) inputElement.classList.add('link-button');
 
 							inputElement.addEventListener('click', () => {
 								// "confirm": true : un second clic dans les 3 secondes est demandé
@@ -318,12 +312,17 @@ function LoadJSON(settingsJson) {
 						RefreshWidgetPreview();
 					});
 
+					if (extraBeforeElement) settingItemContent.appendChild(extraBeforeElement);
 					settingItemContent.appendChild(inputElement);
 					if (extraElement) settingItemContent.appendChild(extraElement);
 					if (setting.type === 'actions') settingItem.classList.add('setting-item-actions');
 					if (setting.copyable) settingItem.classList.add('setting-item-copy');
+					// "sub": true : ligne rattachée à la précédente (règles sous une alerte), même alignement
+					if (setting.sub) settingItem.classList.add('setting-item-sub');
+					if (extraBeforeElement) settingItem.classList.add('setting-item-with-actions');
 
 					if (setting.type == 'button') {
+						if (setting.link) settingItem.classList.add('setting-item-link');
 						settingItem.style.display = 'block'
 						settingItem.appendChild(settingItemContent);
 					}
@@ -417,6 +416,10 @@ function LoadJSON(settingsJson) {
 				});
 
 				RefreshActionLabels();
+				document.querySelectorAll('.setting-actions[data-for-toggle]').forEach(div => {
+					const box = document.getElementById(div.dataset.forToggle);
+					div.classList.toggle('off', !(box && box.checked));
+				});
 
 				// Une section dont tous les réglages sont masqués disparaît aussi (titre compris)
 				settingsPanel.querySelectorAll('.setting-group').forEach(group => {
@@ -427,6 +430,7 @@ function LoadJSON(settingsJson) {
 			}
 
 			UpdateSettingItemVisibility();
+			EnsureIcons();
 			RefreshWidgetPreview();
 			SaveSettingsToStorage();
 		})
@@ -824,7 +828,31 @@ window.addEventListener('message', (event) => {
 		const el = document.getElementById(event.data.id);
 		if (el && el.classList.contains('setting-info')) {
 			if (el.tagName === 'INPUT') el.value = String(event.data.text || '');
-			else el.textContent = String(event.data.text || '');
+			else if (Array.isArray(event.data.lines)) {
+				// { lines: [{ label: 'Image', text: 'sub.gif (défaut)', status: 'ok'|'warn'|'error' }] }
+				// une ligne par élément, avec un point de couleur
+				el.textContent = '';
+				el.classList.add('setting-info-lines');
+				event.data.lines.forEach(line => {
+					const row = document.createElement('div');
+					row.className = 'info-line';
+					const dot = document.createElement('span');
+					dot.className = 'info-dot';
+					dot.dataset.status = line.status || '';
+					const label = document.createElement('span');
+					label.className = 'info-label';
+					label.textContent = line.label ? `${line.label} : ` : '';
+					const text = document.createElement('span');
+					text.className = 'info-text';
+					text.textContent = String(line.text || '');
+					row.append(dot, label, text);
+					el.appendChild(row);
+				});
+			}
+			else {
+				el.classList.remove('setting-info-lines');
+				el.textContent = String(event.data.text || '');
+			}
 			el.dataset.status = event.data.status || '';
 			if (event.data.title) el.title = String(event.data.title);
 		}
@@ -843,6 +871,50 @@ window.addEventListener('message', (event) => {
 
 // Icônes des boutons d'action ("actions") : -common/utils/icons.js (play, gear, trash, copy…)
 const ACTION_ICONS = new Proxy({}, { get: (t, name) => (window.UIIcon ? window.UIIcon(String(name)) : '') });
+
+// Boutons ronds à icône d'une ligne d'actions ou d'un interrupteur
+function MakeActionButtons(setting) {
+	const div = document.createElement('div');
+	div.className = 'setting-actions';
+	(setting.buttons || []).forEach(b => {
+		const btn = document.createElement('button');
+		btn.type = 'button';
+		btn.className = 'icon-button' + (b.style ? ` ${b.style}` : '');
+		btn.dataset.icon = b.icon || '';
+		btn.innerHTML = ACTION_ICONS[b.icon] || '';
+		btn.title = b.title || '';
+		btn.dataset.title = b.title || '';
+		btn.setAttribute('aria-label', b.title || b.icon || '');
+		btn.addEventListener('click', (e) => {
+			e.stopPropagation();
+			if (b.confirm && !ConfirmClick(btn)) return;
+			if (b.popup) OpenPopup(b.popup, b.popupTitle || setting.labelTemplate || setting.label);
+			if (b.callFunction) CallPreview(b.callFunction);
+		});
+		div.appendChild(btn);
+	});
+	return div;
+}
+
+// Les icônes viennent de -common/utils/icons.js. Si la page (ancienne version en cache)
+// ne l'a pas chargé, on le charge ici puis on dessine les icônes restées vides.
+function PaintIcons() {
+	if (!window.UIIcon) return;
+	document.querySelectorAll('[data-icon]').forEach(el => {
+		if (!el.innerHTML.trim() && el.dataset.icon) el.innerHTML = window.UIIcon(el.dataset.icon);
+	});
+}
+
+let iconsLoading = false;
+function EnsureIcons() {
+	if (window.UIIcon) { PaintIcons(); return; }
+	if (iconsLoading) return;
+	iconsLoading = true;
+	const script = document.createElement('script');
+	script.src = new URL('../../utils/icons.js?v=' + Date.now(), document.baseURI).href;
+	script.onload = PaintIcons;
+	document.head.appendChild(script);
+}
 
 // Réglages sans valeur (jamais dans l’URL) : boutons, infos, lignes d’actions
 function IsValueless(setting) {

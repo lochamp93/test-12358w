@@ -5348,6 +5348,20 @@
 			"aliases": [
 				"alertFollow"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchFollow"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchFollow",
+					"popupTitle": "Twitch · Follow"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -5357,7 +5371,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5380,7 +5394,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5403,7 +5417,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5426,7 +5440,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5449,7 +5463,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5472,7 +5486,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5495,7 +5509,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5518,7 +5532,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5541,7 +5555,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5564,7 +5578,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5587,7 +5601,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5610,7 +5624,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5633,7 +5647,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": {
 				"all": [
 					{
@@ -5655,17 +5669,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchFollow",
-			"description": ""
-		},
-		{
-			"id": "twitchFollowTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchFollow",
-			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchFollow",
 			"showIf": "twitchFollow",
 			"description": ""
 		},
@@ -5679,6 +5683,20 @@
 			"aliases": [
 				"alertSub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchSub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchSub",
+					"popupTitle": "Twitch · Abonnement"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -5688,7 +5706,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5711,7 +5729,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5734,7 +5752,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5757,7 +5775,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5780,7 +5798,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5803,7 +5821,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5826,7 +5844,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5849,7 +5867,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5872,7 +5890,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5895,7 +5913,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5918,7 +5936,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5941,7 +5959,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5964,7 +5982,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": {
 				"all": [
 					{
@@ -5986,17 +6004,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchSub",
-			"description": ""
-		},
-		{
-			"id": "twitchSubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchSub",
-			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchSub",
 			"showIf": "twitchSub",
 			"description": ""
 		},
@@ -6027,7 +6035,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -6143,7 +6151,7 @@
 		},
 		{
 			"id": "subRule1Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -6223,7 +6231,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -6335,7 +6343,7 @@
 		},
 		{
 			"id": "subRule2Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -6413,7 +6421,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -6521,7 +6529,7 @@
 		},
 		{
 			"id": "subRule3Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -6597,7 +6605,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -6701,7 +6709,7 @@
 		},
 		{
 			"id": "subRule4Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -6775,7 +6783,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -6875,7 +6883,7 @@
 		},
 		{
 			"id": "subRule5Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -6947,7 +6955,7 @@
 				}
 			],
 			"group": "Twitch",
-			"indent": 2,
+			"sub": true,
 			"showIf": {
 				"all": [
 					{
@@ -7043,7 +7051,7 @@
 		},
 		{
 			"id": "subRule6Files",
-			"label": "Fichiers trouvés",
+			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
@@ -7088,11 +7096,11 @@
 		},
 		{
 			"id": "addSubRule",
-			"label": "+ Ajouter une règle (ex. tous les 12 mois)",
+			"label": "Ajouter une règle d’abonnement",
 			"type": "button",
+			"link": true,
 			"callFunction": "AddSubRule",
 			"group": "Twitch",
-			"indent": 1,
 			"showIf": {
 				"all": [
 					{
@@ -7162,6 +7170,20 @@
 			"aliases": [
 				"alertResub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchResub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchResub",
+					"popupTitle": "Twitch · Réabonnement"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -7171,7 +7193,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7194,7 +7216,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7217,7 +7239,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7240,7 +7262,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7263,7 +7285,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7286,7 +7308,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7309,7 +7331,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7332,7 +7354,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7355,7 +7377,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7378,7 +7400,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7401,7 +7423,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7424,7 +7446,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7447,7 +7469,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": {
 				"all": [
 					{
@@ -7469,17 +7491,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchResub",
-			"description": ""
-		},
-		{
-			"id": "twitchResubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchResub",
-			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchResub",
 			"showIf": "twitchResub",
 			"description": ""
 		},
@@ -7493,6 +7505,20 @@
 			"aliases": [
 				"alertGift"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchGift"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchGift",
+					"popupTitle": "Twitch · Abonnements offerts"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -7502,7 +7528,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7525,7 +7551,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7548,7 +7574,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7571,7 +7597,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7594,7 +7620,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7617,7 +7643,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7640,7 +7666,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7663,7 +7689,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7686,7 +7712,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7709,7 +7735,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7732,7 +7758,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7755,7 +7781,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7778,7 +7804,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": {
 				"all": [
 					{
@@ -7800,17 +7826,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchGift",
-			"description": ""
-		},
-		{
-			"id": "twitchGiftTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchGift",
-			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchGift",
 			"showIf": "twitchGift",
 			"description": ""
 		},
@@ -7824,6 +7840,20 @@
 			"aliases": [
 				"alertCheer"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchCheer"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchCheer",
+					"popupTitle": "Twitch · Bits"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -7833,7 +7863,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7856,7 +7886,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7879,7 +7909,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7902,7 +7932,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7925,7 +7955,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7948,7 +7978,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7971,7 +8001,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -7994,7 +8024,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8017,7 +8047,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8040,7 +8070,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8063,7 +8093,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8086,7 +8116,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8109,7 +8139,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": {
 				"all": [
 					{
@@ -8126,16 +8156,6 @@
 			]
 		},
 		{
-			"id": "twitchCheerFiles",
-			"label": "Fichiers",
-			"type": "info",
-			"defaultValue": "Connexion à Streamer.bot…",
-			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchCheer",
-			"description": ""
-		},
-		{
 			"id": "minBits",
 			"label": "Bits minimum",
 			"description": "En dessous, pas d’alerte",
@@ -8144,16 +8164,16 @@
 			"max": 100000,
 			"defaultValue": 1,
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": "twitchCheer"
 		},
 		{
-			"id": "twitchCheerTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchCheer",
+			"id": "twitchCheerFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchCheer",
 			"showIf": "twitchCheer",
 			"description": ""
 		},
@@ -8167,6 +8187,20 @@
 			"aliases": [
 				"alertRaid"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchRaid"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchRaid",
+					"popupTitle": "Twitch · Raid"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -8176,7 +8210,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8199,7 +8233,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8222,7 +8256,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8245,7 +8279,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8268,7 +8302,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8291,7 +8325,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8314,7 +8348,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8337,7 +8371,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8360,7 +8394,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8383,7 +8417,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8406,7 +8440,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8429,7 +8463,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8452,7 +8486,7 @@
 			"type": "text",
 			"defaultValue": "{user} débarque avec {viewers} viewers !",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": {
 				"all": [
 					{
@@ -8469,16 +8503,6 @@
 			]
 		},
 		{
-			"id": "twitchRaidFiles",
-			"label": "Fichiers",
-			"type": "info",
-			"defaultValue": "Connexion à Streamer.bot…",
-			"group": "Twitch",
-			"indent": 1,
-			"showIf": "twitchRaid",
-			"description": ""
-		},
-		{
 			"id": "minRaid",
 			"label": "Viewers minimum",
 			"type": "number",
@@ -8486,17 +8510,17 @@
 			"max": 100000,
 			"defaultValue": 1,
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": "twitchRaid",
 			"description": ""
 		},
 		{
-			"id": "twitchRaidTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTwitchRaid",
+			"id": "twitchRaidFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Twitch",
-			"indent": 1,
+			"popup": "twitchRaid",
 			"showIf": "twitchRaid",
 			"description": ""
 		},
@@ -8518,6 +8542,20 @@
 			"aliases": [
 				"alertFollow"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestKickFollow"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "kickFollow",
+					"popupTitle": "Kick · Follow"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -8527,7 +8565,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8550,7 +8588,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8573,7 +8611,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8596,7 +8634,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8619,7 +8657,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8642,7 +8680,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8665,7 +8703,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8688,7 +8726,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8711,7 +8749,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8734,7 +8772,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8757,7 +8795,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8780,7 +8818,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8803,7 +8841,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": {
 				"all": [
 					{
@@ -8825,17 +8863,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Kick",
-			"indent": 1,
-			"showIf": "kickFollow",
-			"description": ""
-		},
-		{
-			"id": "kickFollowTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestKickFollow",
-			"group": "Kick",
-			"indent": 1,
+			"popup": "kickFollow",
 			"showIf": "kickFollow",
 			"description": ""
 		},
@@ -8849,6 +8877,20 @@
 			"aliases": [
 				"alertSub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestKickSub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "kickSub",
+					"popupTitle": "Kick · Abonnement"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -8858,7 +8900,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8881,7 +8923,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8904,7 +8946,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8927,7 +8969,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8950,7 +8992,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8973,7 +9015,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -8996,7 +9038,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9019,7 +9061,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9042,7 +9084,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9065,7 +9107,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9088,7 +9130,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9111,7 +9153,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9134,7 +9176,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": {
 				"all": [
 					{
@@ -9156,17 +9198,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Kick",
-			"indent": 1,
-			"showIf": "kickSub",
-			"description": ""
-		},
-		{
-			"id": "kickSubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestKickSub",
-			"group": "Kick",
-			"indent": 1,
+			"popup": "kickSub",
 			"showIf": "kickSub",
 			"description": ""
 		},
@@ -9180,6 +9212,20 @@
 			"aliases": [
 				"alertResub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestKickResub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "kickResub",
+					"popupTitle": "Kick · Réabonnement"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -9189,7 +9235,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9212,7 +9258,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9235,7 +9281,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9258,7 +9304,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9281,7 +9327,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9304,7 +9350,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9327,7 +9373,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9350,7 +9396,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9373,7 +9419,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9396,7 +9442,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9419,7 +9465,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9442,7 +9488,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9465,7 +9511,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": {
 				"all": [
 					{
@@ -9487,17 +9533,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Kick",
-			"indent": 1,
-			"showIf": "kickResub",
-			"description": ""
-		},
-		{
-			"id": "kickResubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestKickResub",
-			"group": "Kick",
-			"indent": 1,
+			"popup": "kickResub",
 			"showIf": "kickResub",
 			"description": ""
 		},
@@ -9511,6 +9547,20 @@
 			"aliases": [
 				"alertGift"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestKickGift"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "kickGift",
+					"popupTitle": "Kick · Abonnements offerts"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -9520,7 +9570,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9543,7 +9593,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9566,7 +9616,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9589,7 +9639,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9612,7 +9662,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9635,7 +9685,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9658,7 +9708,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9681,7 +9731,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9704,7 +9754,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9727,7 +9777,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9750,7 +9800,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9773,7 +9823,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9796,7 +9846,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": {
 				"all": [
 					{
@@ -9818,17 +9868,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "Kick",
-			"indent": 1,
-			"showIf": "kickGift",
-			"description": ""
-		},
-		{
-			"id": "kickGiftTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestKickGift",
-			"group": "Kick",
-			"indent": 1,
+			"popup": "kickGift",
 			"showIf": "kickGift",
 			"description": ""
 		},
@@ -9850,6 +9890,20 @@
 			"aliases": [
 				"alertFollow"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeFollow"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeFollow",
+					"popupTitle": "YouTube · Nouvel abonné"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -9859,7 +9913,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9882,7 +9936,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9905,7 +9959,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9928,7 +9982,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9951,7 +10005,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9974,7 +10028,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -9997,7 +10051,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10020,7 +10074,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10043,7 +10097,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10066,7 +10120,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10089,7 +10143,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10112,7 +10166,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10135,7 +10189,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": {
 				"all": [
 					{
@@ -10157,17 +10211,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "YouTube",
-			"indent": 1,
-			"showIf": "youtubeFollow",
-			"description": ""
-		},
-		{
-			"id": "youtubeFollowTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestYouTubeFollow",
-			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeFollow",
 			"showIf": "youtubeFollow",
 			"description": ""
 		},
@@ -10181,6 +10225,20 @@
 			"aliases": [
 				"alertSub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeSub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeSub",
+					"popupTitle": "YouTube · Nouveau membre"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -10190,7 +10248,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10213,7 +10271,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10236,7 +10294,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10259,7 +10317,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10282,7 +10340,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10305,7 +10363,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10328,7 +10386,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10351,7 +10409,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10374,7 +10432,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10397,7 +10455,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10420,7 +10478,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10443,7 +10501,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10466,7 +10524,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": {
 				"all": [
 					{
@@ -10488,17 +10546,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "YouTube",
-			"indent": 1,
-			"showIf": "youtubeSub",
-			"description": ""
-		},
-		{
-			"id": "youtubeSubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestYouTubeSub",
-			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeSub",
 			"showIf": "youtubeSub",
 			"description": ""
 		},
@@ -10512,6 +10560,20 @@
 			"aliases": [
 				"alertResub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeResub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeResub",
+					"popupTitle": "YouTube · Palier de membre"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -10521,7 +10583,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10544,7 +10606,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10567,7 +10629,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10590,7 +10652,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10613,7 +10675,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10636,7 +10698,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10659,7 +10721,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10682,7 +10744,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10705,7 +10767,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10728,7 +10790,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10751,7 +10813,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10774,7 +10836,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10797,7 +10859,7 @@
 			"type": "text",
 			"defaultValue": "{user} se réabonne depuis {months} mois !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": {
 				"all": [
 					{
@@ -10819,17 +10881,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "YouTube",
-			"indent": 1,
-			"showIf": "youtubeResub",
-			"description": ""
-		},
-		{
-			"id": "youtubeResubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestYouTubeResub",
-			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeResub",
 			"showIf": "youtubeResub",
 			"description": ""
 		},
@@ -10843,6 +10895,20 @@
 			"aliases": [
 				"alertGift"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeGift"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeGift",
+					"popupTitle": "YouTube · Abonnements offerts"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -10852,7 +10918,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10875,7 +10941,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10898,7 +10964,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10921,7 +10987,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10944,7 +11010,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10967,7 +11033,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -10990,7 +11056,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11013,7 +11079,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11036,7 +11102,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11059,7 +11125,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11082,7 +11148,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11105,7 +11171,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11128,7 +11194,7 @@
 			"type": "text",
 			"defaultValue": "{user} offre {count} abonnement(s) !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": {
 				"all": [
 					{
@@ -11150,17 +11216,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "YouTube",
-			"indent": 1,
-			"showIf": "youtubeGift",
-			"description": ""
-		},
-		{
-			"id": "youtubeGiftTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestYouTubeGift",
-			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeGift",
 			"showIf": "youtubeGift",
 			"description": ""
 		},
@@ -11174,6 +11230,20 @@
 			"aliases": [
 				"alertCheer"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeCheer"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeCheer",
+					"popupTitle": "YouTube · Super Chat / Super Sticker"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -11183,7 +11253,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11206,7 +11276,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11229,7 +11299,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11252,7 +11322,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11275,7 +11345,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11298,7 +11368,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11321,7 +11391,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11344,7 +11414,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11367,7 +11437,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11390,7 +11460,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11413,7 +11483,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11436,7 +11506,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11459,7 +11529,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": {
 				"all": [
 					{
@@ -11481,17 +11551,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "YouTube",
-			"indent": 1,
-			"showIf": "youtubeCheer",
-			"description": ""
-		},
-		{
-			"id": "youtubeCheerTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestYouTubeCheer",
-			"group": "YouTube",
-			"indent": 1,
+			"popup": "youtubeCheer",
 			"showIf": "youtubeCheer",
 			"description": ""
 		},
@@ -11513,6 +11573,20 @@
 			"aliases": [
 				"alertFollow"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTikTokFollow"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "tiktokFollow",
+					"popupTitle": "TikTok · Follow"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -11522,7 +11596,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11545,7 +11619,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11568,7 +11642,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11591,7 +11665,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11614,7 +11688,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11637,7 +11711,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11660,7 +11734,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11683,7 +11757,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11706,7 +11780,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11729,7 +11803,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11752,7 +11826,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11775,7 +11849,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11798,7 +11872,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de suivre la chaîne !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": {
 				"all": [
 					{
@@ -11820,17 +11894,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "TikTok",
-			"indent": 1,
-			"showIf": "tiktokFollow",
-			"description": ""
-		},
-		{
-			"id": "tiktokFollowTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTikTokFollow",
-			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokFollow",
 			"showIf": "tiktokFollow",
 			"description": ""
 		},
@@ -11844,6 +11908,20 @@
 			"aliases": [
 				"alertSub"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTikTokSub"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "tiktokSub",
+					"popupTitle": "TikTok · Abonnement"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -11853,7 +11931,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11876,7 +11954,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11899,7 +11977,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11922,7 +12000,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11945,7 +12023,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11968,7 +12046,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -11991,7 +12069,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12014,7 +12092,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12037,7 +12115,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12060,7 +12138,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12083,7 +12161,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12106,7 +12184,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12129,7 +12207,7 @@
 			"type": "text",
 			"defaultValue": "{user} vient de s’abonner !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": {
 				"all": [
 					{
@@ -12151,17 +12229,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "TikTok",
-			"indent": 1,
-			"showIf": "tiktokSub",
-			"description": ""
-		},
-		{
-			"id": "tiktokSubTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTikTokSub",
-			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokSub",
 			"showIf": "tiktokSub",
 			"description": ""
 		},
@@ -12175,6 +12243,20 @@
 			"aliases": [
 				"alertCheer"
 			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTikTokCheer"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "tiktokCheer",
+					"popupTitle": "TikTok · Cadeaux"
+				}
+			],
 			"description": ""
 		},
 		{
@@ -12184,7 +12266,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12207,7 +12289,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12230,7 +12312,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12253,7 +12335,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12276,7 +12358,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12299,7 +12381,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12322,7 +12404,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12345,7 +12427,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12368,7 +12450,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12391,7 +12473,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12414,7 +12496,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12437,7 +12519,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12460,7 +12542,7 @@
 			"type": "text",
 			"defaultValue": "{user} envoie {amount} !",
 			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": {
 				"all": [
 					{
@@ -12482,17 +12564,7 @@
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
 			"group": "TikTok",
-			"indent": 1,
-			"showIf": "tiktokCheer",
-			"description": ""
-		},
-		{
-			"id": "tiktokCheerTest",
-			"label": "Tester l’alerte",
-			"type": "button",
-			"callFunction": "TestTikTokCheer",
-			"group": "TikTok",
-			"indent": 1,
+			"popup": "tiktokCheer",
 			"showIf": "tiktokCheer",
 			"description": ""
 		},

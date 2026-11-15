@@ -318,7 +318,14 @@ select { width: 100%; }
 	mask: url("../../-common/resources/icons/checkmark.svg") center / contain no-repeat;
 }
 .folder-box.warn .folder-icon { background: #ff9f0a; }
-.folder-box.warn .folder-icon::before { content: "!"; }
+.folder-box.warn .folder-icon::before {
+	content: "";
+	width: 13px;
+	height: 13px;
+	background: currentColor;
+	-webkit-mask: url("../../-common/resources/icons/exclamationmark.svg") center / contain no-repeat;
+	mask: url("../../-common/resources/icons/exclamationmark.svg") center / contain no-repeat;
+}
 
 .folder-text { min-width: 0; }
 

@@ -332,13 +332,9 @@ html.apple .game-item button.active {
 	color: #fff;
 }
 
-html.apple .game-item button.trash { color: var(--ui-red); }
-
-/* Confirmation de suppression : icône blanche sur fond rouge */
-html.apple .game-item button.trash.confirming {
-	background: var(--ui-red);
-	color: #fff;
-}
+/* Supprimer : icône blanche sur fond rouge ; confirmation : rouge plus sombre */
+html.apple .game-item button.trash { background: var(--ui-red); color: #fff; }
+html.apple .game-item button.trash.confirming { background: #c4271c; color: #fff; }
 
 /* Champ nombre sans flèches */
 input[type="number"]::-webkit-inner-spin-button,

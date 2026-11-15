@@ -773,27 +773,30 @@ window.AddSubRule = function () {
 	} });
 };
 
-// « Fichiers » sous chaque alerte : image et son trouvés pour le scénario en cours de modification
-function DescribeFile(found, what) {
-	if (!found) return `${what} : aucun`;
+// « Fichiers » de chaque alerte : une ligne image, une ligne son, avec un état
+//   ok (vert) : fichier propre trouvé ; warn (orange) : fichier de repli (alerte.*, sub.* pour une règle) ;
+//   error (rouge) : aucun fichier
+function FileLine(found, label, preferred) {
+	if (!found) return { label, text: 'aucun', status: 'error' };
 	const def = String(ws.values.defaultFolder || 'defaut').trim().toLowerCase();
 	const from = found.dossier.toLowerCase() === def ? 'défaut' : found.dossier;
-	return `${what} : ${found.fichier} (${from})`;
+	const base = found.fichier.replace(/\.[^.]+$/, '').toLowerCase();
+	const status = preferred && !preferred.includes(base) ? 'warn' : 'ok';
+	return { label, text: `${found.fichier} (${from})`, status };
 }
 
 function PostFilesInfo() {
 	if (!ws.demo) return;
-	const s = ws.values;
-	const post = (id, text, status) => PostToSettings({ type: 'widget-info', id, text, status });
+	const post = (id, data) => PostToSettings(Object.assign({ type: 'widget-info', id }, data));
 	const ids = new Set(ws.definition.settings.filter(x => x.type === 'info').map(x => x.id));
 
 	// Nom de fichier à donner pour chaque règle (champ copiable), même sans Streamer.bot
 	for (let n = 1; n <= NB_SUB_RULES; n++)
-		if (ids.has(`subRule${n}FileName`)) post(`subRule${n}FileName`, RuleFileName(n), '');
+		if (ids.has(`subRule${n}FileName`)) post(`subRule${n}FileName`, { text: RuleFileName(n) });
 
 	if (!connected || !sbState.dossier || !sbState.dossierExiste) {
 		const why = !connected ? 'Streamer.bot non connecté' : 'Choisissez le dossier source';
-		ids.forEach(id => { if (id.endsWith('Files')) post(id, why, 'warn'); });
+		ids.forEach(id => { if (id.endsWith('Files')) post(id, { lines: [{ text: why, status: 'warn' }] }); });
 		return;
 	}
 
@@ -803,24 +806,28 @@ function PostFilesInfo() {
 		if (!m) continue;
 		const type = m[2].toLowerCase();
 		const media = ResolveMedia(sc, type, { type, months: 1 });
-		post(id, `${DescribeFile(media.visual, 'Image')} · ${DescribeFile(media.sound, 'Son')}`,
-			media.visual && media.sound ? 'ok' : 'warn');
+		const names = [].concat(FILE_NAMES[type] || [type]).map(x => String(x).toLowerCase());
+		post(id, { lines: [FileLine(media.visual, 'Image', names), FileLine(media.sound, 'Son', names)] });
 	}
 
-	// Règles : fichiers spéciaux, sinon ceux de l'abonnement habituel
-	const def = FolderFiles(String(s.defaultFolder || 'defaut').trim());
+	// Règles : fichiers spéciaux, sinon ceux de l'abonnement habituel (orange)
+	const def = FolderFiles(String(ws.values.defaultFolder || 'defaut').trim());
 	for (let n = 1; n <= NB_SUB_RULES; n++) {
 		if (!ids.has(`subRule${n}Files`)) continue;
 		const name = RuleFileName(n);
-		const pick = (useOwn, ext) => {
+		const pick = (useOwn, ext, type) => {
 			const own = useOwn && sc ? FolderFiles(sc.name) : null;
 			const fo = own && FindNamed(own.fichiers, [name], ext);
 			if (fo) return { dossier: own.nom, fichier: fo };
 			const fd = def && FindNamed(def.fichiers, [name], ext);
-			return fd ? { dossier: def.nom, fichier: fd } : null;
+			if (fd) return { dossier: def.nom, fichier: fd };
+			const media = ResolveMedia(sc, 'sub', { type: 'sub', months: 1 });
+			return type === 'visual' ? media.visual : media.sound;
 		};
-		const v = pick(sc && sc.visual === 'own', VISUAL_EXT), a = pick(sc && sc.sound === 'own', SOUND_EXT);
-		post(`subRule${n}Files`, `${DescribeFile(v, 'Image')} · ${DescribeFile(a, 'Son')}`, v && a ? 'ok' : 'warn');
+		post(`subRule${n}Files`, { lines: [
+			FileLine(pick(sc && sc.visual === 'own', VISUAL_EXT, 'visual'), 'Image', [name]),
+			FileLine(pick(sc && sc.sound === 'own', SOUND_EXT, 'sound'), 'Son', [name])
+		] });
 	}
 }
 

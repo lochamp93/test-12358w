@@ -20,4 +20,5 @@ console.debug("Base URL: " + baseURL);
 console.debug("Settings JSON: " + settingsJSON);
 console.debug("Widget URL: " + widgetURL);
 
-widgetContainer.src = settingsPageURL + settingsJSON + widgetURL;
+// &t=… : la page du moteur n'est jamais reprise d'un ancien cache du navigateur
+widgetContainer.src = settingsPageURL + settingsJSON + widgetURL + "&t=" + Date.now();
