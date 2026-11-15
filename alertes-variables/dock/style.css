@@ -485,3 +485,19 @@ html.apple .round-btn.small { flex: 0 0 30px; width: 30px; height: 30px; }
 	font-weight: 600;
 	color: var(--ui-text);
 }
+
+/* Titre de section avec un lien à droite (« Effacer ») */
+.section-title-row { display: flex; align-items: center; justify-content: space-between; }
+html.apple button.text-link {
+	width: auto;
+	height: auto;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+}
+html.apple button.text-link:hover { text-decoration: underline; }
+html.apple button.text-link.confirming { color: var(--ui-red); }

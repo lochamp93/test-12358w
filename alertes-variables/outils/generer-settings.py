@@ -70,7 +70,7 @@ NB_REGLES = 5
 
 # Règles par catégorie : (genre, libellé) ; "valeur" = libellé du nombre N (None : pas de nombre)
 REGLES = {
-    "sub": {"kinds": [("prime", "Prime Gaming"), ("tier1", "Palier 1"), ("tier2", "Palier 2"), ("tier3", "Palier 3")],
+    "sub": {"kinds": [("prime", "Prime Gaming"), ("tier1", "Tier 1"), ("tier2", "Tier 2"), ("tier3", "Tier 3")],
             "valeur": None, "label": "Type d’abonnement"},
     "resub": {"kinds": [("every", "Tous les N mois"), ("exact", "Exactement N mois"), ("atleast", "À partir de N mois")],
               "valeur": "Nombre de mois (N)", "defaut": 12},
@@ -238,7 +238,7 @@ for nom, cle, types in PLATEFORMES:
             description="Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
             type="info", copyable=True, defaultValue="", group=nom, popup=pop, showIf=tid)
 
-        # Règles de la catégorie (anniversaires, paliers, montants…), sous l'alerte, en retrait
+        # Règles de la catégorie (anniversaires, tiers, montants…), sous l'alerte, en retrait
         if t in REGLES_PLATEFORME.get(cle, []):
             R = REGLES[t]
             valeur, defaut = R.get("valeur"), R.get("defaut")
@@ -300,7 +300,7 @@ add(id="ttsEnabled", label="Lire les messages à voix haute",
     description="Messages des réabonnements, bits et Super Chat, avec Fish Audio (activable alerte par alerte)",
     type="checkbox", defaultValue=False, group=G_TTS)
 add(id="ttsKeyStatus", label="Clé API Fish Audio", type="info", defaultValue="Connexion à Streamer.bot…",
-    group=G_TTS, showIf=TTS_ON)
+    infoAction={"label": "Effacer", "callFunction": "ClearTtsKey", "confirm": True}, group=G_TTS, showIf=TTS_ON)
 add(id="ttsKeyInput", label="Nouvelle clé API",
     description="Une clé par streameur : <a href=\"https://fish.audio/fr/text-to-speech-api/\" target=\"_blank\" rel=\"noopener\">créer son compte et sa clé</a>. Gardée par Streamer.bot, jamais dans l’URL de l’overlay",
     type="text", defaultValue="", previewOnly=True, group=G_TTS, showIf=TTS_ON)

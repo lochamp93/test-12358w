@@ -44,7 +44,7 @@ Les noms comme « Twitch_sub_1.gif » ou « Twitch_Raid.gif » ne sont PAS
 reconnus : renommez-les (ex. Twitch_Raid.gif → raid.gif).
 
 
-3. RÈGLES (anniversaires, paliers, montants)
+3. RÈGLES (anniversaires, tiers, montants)
 --------------------------------------------
 
 Dans la page de paramétrage, sous chaque alerte qui le permet, « Ajouter une
@@ -52,7 +52,7 @@ règle » (jusqu'à 5 par alerte). L'engrenage de la règle affiche le nom exact
 donner au fichier, avec un bouton pour le copier.
 
   Abonnement (Twitch)
-    Prime Gaming / Palier 1, 2, 3   → sub-prime, sub-tier1, sub-tier2, sub-tier3
+    Prime Gaming / Tier 1, 2, 3      → sub-prime, sub-tier1, sub-tier2, sub-tier3
   Réabonnement
     Tous les N mois                 → sub-tous-les-Nmois   ex. sub-tous-les-12mois.gif
     Exactement N mois               → sub-Nmois            ex. sub-9mois.gif

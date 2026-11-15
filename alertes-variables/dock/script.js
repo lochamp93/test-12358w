@@ -173,6 +173,22 @@ function RenderHistory() {
 	}).join('');
 }
 
+// « Effacer » : vide la liste des dernières alertes (deux clics)
+$('clearHistory').addEventListener('click', () => {
+	const btn = $('clearHistory');
+	if (!btn.classList.contains('confirming')) {
+		btn.classList.add('confirming');
+		btn.textContent = 'Confirmer';
+		clearTimeout(btn._t);
+		btn._t = setTimeout(() => { btn.classList.remove('confirming'); btn.textContent = 'Effacer'; }, 3000);
+		return;
+	}
+	clearTimeout(btn._t);
+	btn.classList.remove('confirming');
+	btn.textContent = 'Effacer';
+	Send({ mode: 'tester', type: 'effacer:historique' });
+});
+
 $('history').addEventListener('click', (e) => {
 	const btn = e.target.closest('[data-replay]');
 	if (btn) Send({ mode: 'tester', type: `replay:${btn.dataset.replay}` });

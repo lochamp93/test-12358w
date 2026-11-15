@@ -628,3 +628,19 @@ html.apple #widgetSubtitle {
 	text-overflow: ellipsis;
 }
 html.apple #widgetSubtitle:empty { display: none; }
+
+/* Lien discret à côté d'une info (ex. « Effacer » la clé API) */
+html.apple .setting-item-content > button.info-action {
+	width: auto;
+	height: auto;
+	margin-left: 10px;
+	padding: 0;
+	background: none !important;
+	box-shadow: none;
+	color: var(--ui-accent);
+	font-size: 13px;
+	font-weight: 600;
+}
+html.apple .setting-item-content > button.info-action:hover { text-decoration: underline; }
+html.apple .setting-item-content > button.info-action.confirming { color: var(--ui-red) !important; background: none !important; }
+html.apple .setting-item-content:has(> .info-action) { display: flex; align-items: center; justify-content: flex-end; }

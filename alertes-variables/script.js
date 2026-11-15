@@ -826,7 +826,7 @@ function RuleSummary(type, rule, platform) {
 	const N = rule.value;
 	const unit = { resub: 'mois', gift: 'abonnements', giftbomb: 'abonnements', raid: 'viewers',
 		cheer: platform === 'Twitch' ? 'bits' : platform === 'TikTok' ? 'pièces' : '€' }[type] || '';
-	if (type === 'sub') return { prime: 'Prime Gaming', tier1: 'Palier 1', tier2: 'Palier 2', tier3: 'Palier 3' }[rule.kind] || '';
+	if (type === 'sub') return { prime: 'Prime Gaming', tier1: 'Tier 1', tier2: 'Tier 2', tier3: 'Tier 3' }[rule.kind] || '';
 	if (rule.kind === 'every') return `Tous les ${N} ${unit}`;
 	if (rule.kind === 'exact') return `Exactement ${N} ${unit}`;
 	return `À partir de ${N} ${unit}`;
@@ -1006,7 +1006,7 @@ function PlayedLabel(info) {
 	const platform = info.platform || 'Twitch';
 	const n = (x) => Number(x) || 0;
 	const plural = (k, one, many) => `${k} ${k > 1 ? many : one}`;
-	const tierName = { prime: 'Prime Gaming', tier1: 'palier 1', tier2: 'palier 2', tier3: 'palier 3' }[info.tier];
+	const tierName = { prime: 'Prime Gaming', tier1: 'Tier 1', tier2: 'Tier 2', tier3: 'Tier 3' }[info.tier];
 	let what;
 	switch (info.type) {
 		case 'cheer': what = String(info.amount || (n(info.bits) ? plural(n(info.bits), 'bit', 'bits') : 'Don')); break;
@@ -1057,6 +1057,11 @@ function RunDockTest(cmd) {
 	const [kind, a, b] = cmd.split(':');
 	if (ALERT_TYPES.includes(kind)) {
 		Enqueue(Object.assign({ type: kind, test: true, platform: '' }, DEMO_INFO[kind]));
+		return;
+	}
+	if (kind === 'effacer' && a === 'historique') {
+		history = [];
+		Report();
 		return;
 	}
 	if (kind === 'replay') {
@@ -1117,6 +1122,12 @@ window.SaveTtsKey = function () {
 	PostToSettings({ type: 'widget-set', values: { ttsKeyInput: '' } });
 };
 
+// « Effacer » : supprime la clé gardée par Streamer.bot
+window.ClearTtsKey = function () {
+	if (!connected) return;
+	DoAction({ mode: 'cletts', cle: '' });
+};
+
 window.TestTts = async function () {
 	const uri = await RequestTts('Merci pour le réabonnement, ça fait super plaisir !');
 	if (!uri) return;
@@ -1129,7 +1140,8 @@ function PostTtsStatus() {
 	if (!ws.demo) return;
 	const text = !connected ? 'Streamer.bot non connecté'
 		: sbState.ttsCle ? 'Enregistrée dans Streamer.bot' : 'Aucune clé enregistrée';
-	PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text, status: connected && sbState.ttsCle ? 'ok' : 'warn' });
+	PostToSettings({ type: 'widget-info', id: 'ttsKeyStatus', text, status: connected && sbState.ttsCle ? 'ok' : 'warn',
+		showAction: connected && !!sbState.ttsCle });
 }
 
 // Scénarios : « Reprendre le style du scénario par défaut » (page de paramétrage)

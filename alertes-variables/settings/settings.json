@@ -6380,15 +6380,15 @@
 				},
 				{
 					"value": "tier1",
-					"label": "Palier 1"
+					"label": "Tier 1"
 				},
 				{
 					"value": "tier2",
-					"label": "Palier 2"
+					"label": "Tier 2"
 				},
 				{
 					"value": "tier3",
-					"label": "Palier 3"
+					"label": "Tier 3"
 				}
 			],
 			"defaultValue": "prime",
@@ -6559,15 +6559,15 @@
 				},
 				{
 					"value": "tier1",
-					"label": "Palier 1"
+					"label": "Tier 1"
 				},
 				{
 					"value": "tier2",
-					"label": "Palier 2"
+					"label": "Tier 2"
 				},
 				{
 					"value": "tier3",
-					"label": "Palier 3"
+					"label": "Tier 3"
 				}
 			],
 			"defaultValue": "prime",
@@ -6733,15 +6733,15 @@
 				},
 				{
 					"value": "tier1",
-					"label": "Palier 1"
+					"label": "Tier 1"
 				},
 				{
 					"value": "tier2",
-					"label": "Palier 2"
+					"label": "Tier 2"
 				},
 				{
 					"value": "tier3",
-					"label": "Palier 3"
+					"label": "Tier 3"
 				}
 			],
 			"defaultValue": "prime",
@@ -6902,15 +6902,15 @@
 				},
 				{
 					"value": "tier1",
-					"label": "Palier 1"
+					"label": "Tier 1"
 				},
 				{
 					"value": "tier2",
-					"label": "Palier 2"
+					"label": "Tier 2"
 				},
 				{
 					"value": "tier3",
-					"label": "Palier 3"
+					"label": "Tier 3"
 				}
 			],
 			"defaultValue": "prime",
@@ -7066,15 +7066,15 @@
 				},
 				{
 					"value": "tier1",
-					"label": "Palier 1"
+					"label": "Tier 1"
 				},
 				{
 					"value": "tier2",
-					"label": "Palier 2"
+					"label": "Tier 2"
 				},
 				{
 					"value": "tier3",
-					"label": "Palier 3"
+					"label": "Tier 3"
 				}
 			],
 			"defaultValue": "prime",
@@ -24510,6 +24510,11 @@
 			"label": "Clé API Fish Audio",
 			"type": "info",
 			"defaultValue": "Connexion à Streamer.bot…",
+			"infoAction": {
+				"label": "Effacer",
+				"callFunction": "ClearTtsKey",
+				"confirm": true
+			},
 			"group": "Synthèse vocale",
 			"showIf": "ttsEnabled",
 			"description": ""

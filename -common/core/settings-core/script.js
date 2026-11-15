@@ -278,6 +278,20 @@ function LoadJSON(settingsJson) {
 							inputElement.id = setting.id;
 							inputElement.className = 'setting-info';
 							inputElement.textContent = setting.defaultValue || '';
+							// "infoAction": { "label": "Effacer", "callFunction": "…", "confirm": true } : lien bleu à côté de l'info,
+							// affiché ou masqué par l'aperçu ({ type: 'widget-info', …, showAction: true|false })
+							if (setting.infoAction) {
+								const act = setting.infoAction;
+								extraElement = document.createElement('button');
+								extraElement.type = 'button';
+								extraElement.className = 'info-action';
+								extraElement.id = `${setting.id}Action`;
+								extraElement.textContent = act.label || 'Effacer';
+								extraElement.addEventListener('click', () => {
+									if (act.confirm && !ConfirmClick(extraElement, act.label || 'Effacer')) return;
+									if (act.callFunction) CallPreview(act.callFunction);
+								});
+							}
 							break;
 						case 'button':
 							inputElement = document.createElement('button');
@@ -887,6 +901,10 @@ window.addEventListener('message', (event) => {
 			}
 			el.dataset.status = event.data.status || '';
 			if (event.data.title) el.title = String(event.data.title);
+			if ('showAction' in event.data) {
+				const action = document.getElementById(`${event.data.id}Action`);
+				if (action) action.style.display = event.data.showAction ? '' : 'none';
+			}
 			RefreshActionLabels();
 		}
 		return;
