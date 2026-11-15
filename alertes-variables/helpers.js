@@ -1,6 +1,7 @@
 // Alertes variables : outils de l'overlay : lecture des événements, règles, fichiers
 
-const ALERT_TYPES = ['follow', 'sub', 'resub', 'gift', 'cheer', 'raid'];
+// gift : abonnement offert à une personne ; giftbomb : plusieurs abonnements offerts à la communauté
+const ALERT_TYPES = ['follow', 'sub', 'resub', 'gift', 'giftbomb', 'cheer', 'raid'];
 
 // Noms de fichiers acceptés pour chaque type (sans extension), dans l'ordre de préférence
 const FILE_NAMES = {
@@ -8,6 +9,7 @@ const FILE_NAMES = {
 	sub: ['sub', 'abonnement'],
 	resub: ['resub', 'reabonnement', 'sub'], // sans fichier dédié : celui de l'abonnement
 	gift: ['gift', 'subgift'],
+	giftbomb: ['giftbomb', 'bomb', 'gift', 'subgift'], // sans fichier dédié : celui de l'abonnement offert
 	cheer: ['cheer', 'bits', 'don'],
 	raid: ['raid']
 };
@@ -23,18 +25,19 @@ const EVENT_MAP = [
 	['Twitch', 'Sub', 'sub'],
 	['Twitch', 'ReSub', 'resub'],
 	['Twitch', 'GiftSub', 'gift'],
-	['Twitch', 'GiftBomb', 'gift'],
+	['Twitch', 'GiftBomb', 'giftbomb'],
 	['Twitch', 'Cheer', 'cheer'],
 	['Twitch', 'Raid', 'raid'],
 	['Kick', 'Follow', 'follow'],
 	['Kick', 'Subscription', 'sub'],
 	['Kick', 'Resubscription', 'resub'],
 	['Kick', 'GiftSubscription', 'gift'],
-	['Kick', 'MassGiftSubscription', 'gift'],
+	['Kick', 'MassGiftSubscription', 'giftbomb'],
 	['YouTube', 'NewSubscriber', 'follow'],
 	['YouTube', 'NewSponsor', 'sub'],
 	['YouTube', 'MemberMileStone', 'resub'],
-	['YouTube', 'MembershipGift', 'gift'],
+	['YouTube', 'MembershipGift', 'giftbomb'],
+	['YouTube', 'GiftMembershipReceived', 'gift'],
 	['YouTube', 'SuperChat', 'cheer'],
 	['YouTube', 'SuperSticker', 'cheer'],
 	['TikTok', 'Follow', 'follow'],
@@ -163,7 +166,7 @@ function IsVideo(fileName) {
 
 // Visuel de démonstration (SVG généré) quand aucun fichier n'est disponible dans l'aperçu
 function DemoVisual(type) {
-	const emoji = { follow: '💜', sub: '⭐', resub: '🔁', gift: '🎁', cheer: '💎', raid: '🚀' }[type] || '🔔';
+	const emoji = { follow: '💜', sub: '⭐', resub: '🔁', gift: '🎁', giftbomb: '💣', cheer: '💎', raid: '🚀' }[type] || '🔔';
 	const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="g"><stop offset="0" stop-color="#ff4d6d" stop-opacity=".55"/><stop offset="1" stop-color="#ff4d6d" stop-opacity="0"/></radialGradient></defs><circle cx="100" cy="100" r="96" fill="url(#g)"/><text x="100" y="128" font-size="96" text-anchor="middle">${emoji}</text></svg>`;
 	return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
 }
@@ -172,7 +175,8 @@ const DEMO_INFO = {
 	follow: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '' },
 	sub: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 0, message: '', tier: 'tier1' },
 	resub: { user: 'Viewer_Test', months: 14, count: 1, amount: '', viewers: 0, message: 'Toujours là pour les lives horreur 👻' },
-	gift: { user: 'Viewer_Test', recipient: 'Viewer_Chanceux', months: 1, count: 5, amount: '', viewers: 0, message: '' },
+	gift: { user: 'Viewer_Test', recipient: 'Viewer_Chanceux', months: 1, count: 1, amount: '', viewers: 0, message: '' },
+	giftbomb: { user: 'Viewer_Test', months: 1, count: 5, amount: '', viewers: 0, message: '' },
 	cheer: { user: 'Viewer_Test', months: 1, count: 1, amount: '500 bits', bits: 500, value: 500, viewers: 0, message: 'Prends ça pour le courage !' },
 	raid: { user: 'Viewer_Test', months: 1, count: 1, amount: '', viewers: 42, message: '' }
 };

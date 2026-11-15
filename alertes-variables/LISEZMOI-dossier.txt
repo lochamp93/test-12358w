@@ -33,7 +33,9 @@ seule l'extension change :  cheer.gif  +  cheer.mp3
     follow        Follow
     sub           Abonnement
     resub         Réabonnement (sans fichier resub : celui de « sub »)
-    gift          Abonnement(s) offert(s)
+    gift          Abonnement offert à une personne
+    giftbomb      Gift bomb : abonnements offerts à la communauté (sans fichier
+                  giftbomb : celui de « gift »)
     cheer         Bits / dons (« bits » fonctionne aussi)
     raid          Raid
     alerte        Fichier de secours pour tous les types (optionnel)
@@ -55,8 +57,8 @@ donner au fichier, avec un bouton pour le copier.
     Tous les N mois                 → sub-tous-les-Nmois   ex. sub-tous-les-12mois.gif
     Exactement N mois               → sub-Nmois            ex. sub-9mois.gif
     À partir de N mois              → sub-Nmois-plus       ex. sub-24mois-plus.gif
-  Abonnements offerts
-    À partir de N / exactement N    → gift-N-plus / gift-N     ex. gift-10-plus.gif
+  Gift bomb (abonnements offerts à la communauté)
+    À partir de N / exactement N    → giftbomb-N-plus / giftbomb-N   ex. giftbomb-10-plus.gif
   Bits, Super Chat, cadeaux TikTok
     À partir de N / exactement N    → cheer-N-plus / cheer-N   ex. cheer-1000-plus.gif
   Raid

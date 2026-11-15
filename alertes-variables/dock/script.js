@@ -13,7 +13,7 @@ let state = null;   // dernier état envoyé par l'action
 let report = null;  // compte rendu de l'overlay (scénario actif, file d'attente…)
 
 const CONNECTION_KEY = 'alertes-variables-dock-connection';
-const TYPE_LABELS = { follow: 'Follow', sub: 'Abonnement', resub: 'Réabonnement', gift: 'Abonnements offerts', cheer: 'Bits / dons', raid: 'Raid' };
+const TYPE_LABELS = { follow: 'Follow', sub: 'Abonnement', resub: 'Réabonnement', gift: 'Abonnement offert', giftbomb: 'Gift bomb', cheer: 'Bits / dons', raid: 'Raid' };
 
 function Toast(text) {
 	const el = $('toast');
@@ -99,7 +99,7 @@ function Escape(text) {
 
 // Tests proposés : ceux que l'overlay déclare (alertes activées et leurs règles)
 const LEGACY_TESTS = [['follow', 'Follow'], ['sub', 'Abonnement'], ['resub', 'Réabonnement'],
-	['gift', 'Abonnements offerts'], ['cheer', 'Bits / dons'], ['raid', 'Raid']];
+	['gift', 'Abonnement offert'], ['giftbomb', 'Gift bomb'], ['cheer', 'Bits / dons'], ['raid', 'Raid']];
 
 function RenderTests() {
 	const select = $('testSelect');

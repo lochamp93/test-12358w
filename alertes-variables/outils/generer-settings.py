@@ -9,7 +9,8 @@ TYPES = [
     ("follow", "Follow", "{user} vient de suivre la chaîne !"),
     ("sub", "Abonnement", "{user} vient de s’abonner !"),
     ("resub", "Réabonnement", "{user} se réabonne depuis {months} mois !"),
-    ("gift", "Abonnements offerts", "{user} offre {count} abonnement(s) !"),
+    ("gift", "Abonnement offert", "{user} offre un abonnement à {recipient} !"),
+    ("giftbomb", "Gift bomb", "{user} offre {count} abonnements à la communauté !"),
     ("cheer", "Bits / dons", "{user} envoie {amount} !"),
     ("raid", "Raid", "{user} débarque avec {viewers} viewers !"),
 ]
@@ -58,11 +59,11 @@ add(id="refreshFolders", label="Actualiser les dossiers", type="button", callFun
 # Les sections par plateforme sont générées plus bas (après le style des scénarios)
 PLATEFORMES = [
     ("Twitch", "twitch", [("follow", "Follow"), ("sub", "Abonnement"), ("resub", "Réabonnement"),
-                          ("gift", "Abonnements offerts"), ("cheer", "Bits"), ("raid", "Raid")]),
+                          ("gift", "Abonnement offert"), ("giftbomb", "Gift bomb"), ("cheer", "Bits"), ("raid", "Raid")]),
     ("Kick", "kick", [("follow", "Follow"), ("sub", "Abonnement"), ("resub", "Réabonnement"),
-                      ("gift", "Abonnements offerts")]),
+                      ("gift", "Abonnement offert"), ("giftbomb", "Gift bomb")]),
     ("YouTube", "youtube", [("follow", "Nouvel abonné"), ("sub", "Nouveau membre"), ("resub", "Palier de membre"),
-                            ("gift", "Abonnements offerts"), ("cheer", "Super Chat / Super Sticker")]),
+                            ("gift", "Abonnement offert"), ("giftbomb", "Gift bomb"), ("cheer", "Super Chat / Super Sticker")]),
     ("TikTok", "tiktok", [("follow", "Follow"), ("sub", "Abonnement"), ("cheer", "Cadeaux")]),
 ]
 NB_REGLES = 5
@@ -73,7 +74,7 @@ REGLES = {
             "valeur": None, "label": "Type d’abonnement"},
     "resub": {"kinds": [("every", "Tous les N mois"), ("exact", "Exactement N mois"), ("atleast", "À partir de N mois")],
               "valeur": "Nombre de mois (N)", "defaut": 12},
-    "gift": {"kinds": [("atleast", "À partir de N abonnements"), ("exact", "Exactement N abonnements")],
+    "giftbomb": {"kinds": [("atleast", "À partir de N abonnements"), ("exact", "Exactement N abonnements")],
              "valeur": "Nombre d’abonnements (N)", "defaut": 10},
     "cheer": {"kinds": [("atleast", "À partir de N"), ("exact", "Exactement N")],
               "valeur": "Montant (N)", "defaut": 1000},
@@ -83,8 +84,8 @@ REGLES = {
 VALEUR_CHEER = {"twitch": ("Nombre de bits (N)", 1000), "youtube": ("Montant en euros (N)", 10),
                 "tiktok": ("Nombre de pièces (N)", 100)}
 # Catégories qui ont des règles, par plateforme
-REGLES_PLATEFORME = {"twitch": ["sub", "resub", "gift", "cheer", "raid"], "kick": ["resub", "gift"],
-                     "youtube": ["resub", "gift", "cheer"], "tiktok": ["cheer"]}
+REGLES_PLATEFORME = {"twitch": ["sub", "resub", "giftbomb", "cheer", "raid"], "kick": ["resub", "giftbomb"],
+                     "youtube": ["resub", "giftbomb", "cheer"], "tiktok": ["cheer"]}
 
 add(id="alertGap", label="Pause entre deux alertes", description="En secondes", type="number",
     min=0, max=30, step=0.5, defaultValue=1, group="Réglages des alertes")
@@ -240,6 +241,13 @@ for nom, cle, types in PLATEFORMES:
             if t == "cheer":
                 valeur, defaut = VALEUR_CHEER[cle]
             ancien = cle == "twitch" and t == "resub"  # anciennes règles « subRule… » (sous Abonnement)
+
+            def vieux(n, champ_sub, champ):
+                """Anciens noms de paramètres : subRule… (réabonnement Twitch), {cle}GiftRule… (gift bomb)."""
+                out = [f"subRule{n}{champ_sub}"] if ancien else []
+                if t == "giftbomb":
+                    out.append(f"{cle}GiftRule{n}{champ}")
+                return out
             for n in range(1, NB_REGLES + 1):
                 v = {"all": [{"id": tid}, {"id": f"{tid}RuleCount", "value": [str(k) for k in range(n, NB_REGLES + 1)]}]}
                 titre = f"Règle {n} : {{{tid}Rule{n}Name|{tid}Rule{n}Summary}}"
@@ -256,19 +264,19 @@ for nom, cle, types in PLATEFORMES:
                     group=nom, hidden=True)
                 add(id=f"{tid}Rule{n}Name", label="Nom de la règle", description="Pour vous repérer (ex. Anniversaire)",
                     type="text", defaultValue="", group=nom, popup=rpop, showIf=v,
-                    aliases=[f"subRule{n}Name"] if ancien else [])
+                    aliases=vieux(n, "Name", "Name"))
                 kinds = R["kinds"]
                 kdef = kinds[0][0]
                 if ancien and n > 1:
                     kdef = "exact"  # valeurs par défaut des anciennes règles
                 add(id=f"{tid}Rule{n}Kind", label=R.get("label", "Quand"), type="select", options=opts(kinds),
                     defaultValue=kdef, group=nom, popup=rpop, showIf=v,
-                    aliases=[f"subRule{n}Kind"] if ancien else [])
+                    aliases=vieux(n, "Kind", "Kind"))
                 if valeur:
                     vdef = 9 if (ancien and n > 1) else defaut
                     add(id=f"{tid}Rule{n}Value", label=valeur, type="number", min=1, max=1000000,
                         defaultValue=vdef, group=nom, popup=rpop, showIf=v,
-                        aliases=[f"subRule{n}Months"] if ancien else [])
+                        aliases=vieux(n, "Months", "Value"))
                 add(id=f"{tid}Rule{n}Files", label="Fichiers", type="info", defaultValue="",
                     group=nom, popup=rpop, showIf=v)
                 add(id=f"{tid}Rule{n}FileName", label="Nom à donner à l’image et au son",
@@ -279,7 +287,7 @@ for nom, cle, types in PLATEFORMES:
                 showIf={"all": [{"id": tid}, {"id": f"{tid}RuleCount", "value": [str(k) for k in range(0, NB_REGLES)]}]})
             add(id=f"{tid}RuleCount", label="Nombre de règles", type="select",
                 options=[{"value": str(k), "label": str(k)} for k in range(NB_REGLES + 1)],
-                defaultValue="0", group=nom, hidden=True, aliases=["subRuleCount"] if ancien else [])
+                defaultValue="0", group=nom, hidden=True, aliases=(["subRuleCount"] if ancien else []) + ([f"{cle}GiftRuleCount"] if t == "giftbomb" else []))
 
 # ---------- Commandes de chat ----------
 add(id="cmdEnabled", label="Activer les commandes", type="checkbox", defaultValue=True, group="Commandes de chat")

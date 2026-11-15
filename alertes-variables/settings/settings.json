@@ -8629,7 +8629,7 @@
 		},
 		{
 			"id": "twitchGift",
-			"label": "Abonnements offerts",
+			"label": "Abonnement offert",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Twitch",
@@ -8648,7 +8648,7 @@
 					"icon": "gear",
 					"title": "Paramétrer l’alerte",
 					"popup": "twitchGift",
-					"popupTitle": "Twitch · Abonnements offerts"
+					"popupTitle": "Twitch · Abonnement offert"
 				}
 			],
 			"description": ""
@@ -8658,7 +8658,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8681,7 +8681,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8704,7 +8704,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8727,7 +8727,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8750,7 +8750,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8773,7 +8773,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8796,7 +8796,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8819,7 +8819,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8842,7 +8842,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8865,7 +8865,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8888,7 +8888,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8911,7 +8911,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8934,7 +8934,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Twitch",
 			"popup": "twitchGift",
 			"showIf": {
@@ -8986,8 +8986,366 @@
 			"showIf": "twitchGift"
 		},
 		{
-			"id": "twitchGiftRule1Row",
-			"labelTemplate": "Règle 1 : {twitchGiftRule1Name|twitchGiftRule1Summary}",
+			"id": "twitchGiftbomb",
+			"label": "Gift bomb",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Twitch",
+			"showIf": "platformTwitch",
+			"aliases": [
+				"alertGiftbomb"
+			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestTwitchGiftbomb"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "twitchGiftbomb",
+					"popupTitle": "Twitch · Gift bomb"
+				}
+			],
+			"description": ""
+		},
+		{
+			"id": "twitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGiftbomb"
+			]
+		},
+		{
+			"id": "sc1TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc2TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc3TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc4TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc5TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc6TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc7TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc8TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc9TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc10TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc11TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc12TwitchGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "twitchGiftbomb"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGiftbomb"
+			]
+		},
+		{
+			"id": "twitchGiftbombVolume",
+			"label": "Volume",
+			"description": "En % (0 : alerte muette)",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 100,
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": "twitchGiftbomb"
+		},
+		{
+			"id": "twitchGiftbombFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": "twitchGiftbomb",
+			"description": ""
+		},
+		{
+			"id": "twitchGiftbombFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Twitch",
+			"popup": "twitchGiftbomb",
+			"showIf": "twitchGiftbomb"
+		},
+		{
+			"id": "twitchGiftbombRule1Row",
+			"labelTemplate": "Règle 1 : {twitchGiftbombRule1Name|twitchGiftbombRule1Summary}",
 			"label": "Règle 1",
 			"type": "actions",
 			"buttons": [
@@ -8995,19 +9353,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_twitchGift_1"
+					"callFunction": "TestRule_twitchGiftbomb_1"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "twitchGiftRule1",
-					"popupTitle": "Abonnements offerts · Règle 1 : {twitchGiftRule1Name|twitchGiftRule1Summary}"
+					"popup": "twitchGiftbombRule1",
+					"popupTitle": "Gift bomb · Règle 1 : {twitchGiftbombRule1Name|twitchGiftbombRule1Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_twitchGift_1",
+					"callFunction": "DeleteRule_twitchGiftbomb_1",
 					"confirm": true
 				}
 			],
@@ -9016,10 +9374,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9033,7 +9391,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule1Summary",
+			"id": "twitchGiftbombRule1Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -9042,20 +9400,20 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule1Name",
+			"id": "twitchGiftbombRule1Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule1",
+			"popup": "twitchGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9066,10 +9424,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"twitchGiftRule1Name"
+			]
 		},
 		{
-			"id": "twitchGiftRule1Kind",
+			"id": "twitchGiftbombRule1Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -9084,14 +9444,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Twitch",
-			"popup": "twitchGiftRule1",
+			"popup": "twitchGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9102,25 +9462,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule1Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule1Value",
+			"id": "twitchGiftbombRule1Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Twitch",
-			"popup": "twitchGiftRule1",
+			"popup": "twitchGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9131,23 +9493,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule1Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule1Files",
+			"id": "twitchGiftbombRule1Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule1",
+			"popup": "twitchGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9161,21 +9525,21 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule1FileName",
+			"id": "twitchGiftbombRule1FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule1",
+			"popup": "twitchGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -9188,8 +9552,8 @@
 			}
 		},
 		{
-			"id": "twitchGiftRule2Row",
-			"labelTemplate": "Règle 2 : {twitchGiftRule2Name|twitchGiftRule2Summary}",
+			"id": "twitchGiftbombRule2Row",
+			"labelTemplate": "Règle 2 : {twitchGiftbombRule2Name|twitchGiftbombRule2Summary}",
 			"label": "Règle 2",
 			"type": "actions",
 			"buttons": [
@@ -9197,19 +9561,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_twitchGift_2"
+					"callFunction": "TestRule_twitchGiftbomb_2"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "twitchGiftRule2",
-					"popupTitle": "Abonnements offerts · Règle 2 : {twitchGiftRule2Name|twitchGiftRule2Summary}"
+					"popup": "twitchGiftbombRule2",
+					"popupTitle": "Gift bomb · Règle 2 : {twitchGiftbombRule2Name|twitchGiftbombRule2Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_twitchGift_2",
+					"callFunction": "DeleteRule_twitchGiftbomb_2",
 					"confirm": true
 				}
 			],
@@ -9218,10 +9582,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9234,7 +9598,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule2Summary",
+			"id": "twitchGiftbombRule2Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -9243,20 +9607,20 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule2Name",
+			"id": "twitchGiftbombRule2Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule2",
+			"popup": "twitchGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9266,10 +9630,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"twitchGiftRule2Name"
+			]
 		},
 		{
-			"id": "twitchGiftRule2Kind",
+			"id": "twitchGiftbombRule2Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -9284,14 +9650,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Twitch",
-			"popup": "twitchGiftRule2",
+			"popup": "twitchGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9301,25 +9667,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule2Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule2Value",
+			"id": "twitchGiftbombRule2Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Twitch",
-			"popup": "twitchGiftRule2",
+			"popup": "twitchGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9329,23 +9697,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule2Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule2Files",
+			"id": "twitchGiftbombRule2Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule2",
+			"popup": "twitchGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9358,21 +9728,21 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule2FileName",
+			"id": "twitchGiftbombRule2FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule2",
+			"popup": "twitchGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -9384,8 +9754,8 @@
 			}
 		},
 		{
-			"id": "twitchGiftRule3Row",
-			"labelTemplate": "Règle 3 : {twitchGiftRule3Name|twitchGiftRule3Summary}",
+			"id": "twitchGiftbombRule3Row",
+			"labelTemplate": "Règle 3 : {twitchGiftbombRule3Name|twitchGiftbombRule3Summary}",
 			"label": "Règle 3",
 			"type": "actions",
 			"buttons": [
@@ -9393,19 +9763,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_twitchGift_3"
+					"callFunction": "TestRule_twitchGiftbomb_3"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "twitchGiftRule3",
-					"popupTitle": "Abonnements offerts · Règle 3 : {twitchGiftRule3Name|twitchGiftRule3Summary}"
+					"popup": "twitchGiftbombRule3",
+					"popupTitle": "Gift bomb · Règle 3 : {twitchGiftbombRule3Name|twitchGiftbombRule3Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_twitchGift_3",
+					"callFunction": "DeleteRule_twitchGiftbomb_3",
 					"confirm": true
 				}
 			],
@@ -9414,10 +9784,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9429,7 +9799,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule3Summary",
+			"id": "twitchGiftbombRule3Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -9438,20 +9808,20 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule3Name",
+			"id": "twitchGiftbombRule3Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule3",
+			"popup": "twitchGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9460,10 +9830,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"twitchGiftRule3Name"
+			]
 		},
 		{
-			"id": "twitchGiftRule3Kind",
+			"id": "twitchGiftbombRule3Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -9478,14 +9850,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Twitch",
-			"popup": "twitchGiftRule3",
+			"popup": "twitchGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9494,25 +9866,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule3Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule3Value",
+			"id": "twitchGiftbombRule3Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Twitch",
-			"popup": "twitchGiftRule3",
+			"popup": "twitchGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9521,23 +9895,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule3Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule3Files",
+			"id": "twitchGiftbombRule3Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule3",
+			"popup": "twitchGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9549,21 +9925,21 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule3FileName",
+			"id": "twitchGiftbombRule3FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule3",
+			"popup": "twitchGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -9574,8 +9950,8 @@
 			}
 		},
 		{
-			"id": "twitchGiftRule4Row",
-			"labelTemplate": "Règle 4 : {twitchGiftRule4Name|twitchGiftRule4Summary}",
+			"id": "twitchGiftbombRule4Row",
+			"labelTemplate": "Règle 4 : {twitchGiftbombRule4Name|twitchGiftbombRule4Summary}",
 			"label": "Règle 4",
 			"type": "actions",
 			"buttons": [
@@ -9583,19 +9959,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_twitchGift_4"
+					"callFunction": "TestRule_twitchGiftbomb_4"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "twitchGiftRule4",
-					"popupTitle": "Abonnements offerts · Règle 4 : {twitchGiftRule4Name|twitchGiftRule4Summary}"
+					"popup": "twitchGiftbombRule4",
+					"popupTitle": "Gift bomb · Règle 4 : {twitchGiftbombRule4Name|twitchGiftbombRule4Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_twitchGift_4",
+					"callFunction": "DeleteRule_twitchGiftbomb_4",
 					"confirm": true
 				}
 			],
@@ -9604,10 +9980,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9618,7 +9994,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule4Summary",
+			"id": "twitchGiftbombRule4Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -9627,20 +10003,20 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule4Name",
+			"id": "twitchGiftbombRule4Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule4",
+			"popup": "twitchGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9648,10 +10024,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"twitchGiftRule4Name"
+			]
 		},
 		{
-			"id": "twitchGiftRule4Kind",
+			"id": "twitchGiftbombRule4Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -9666,14 +10044,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Twitch",
-			"popup": "twitchGiftRule4",
+			"popup": "twitchGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9681,25 +10059,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule4Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule4Value",
+			"id": "twitchGiftbombRule4Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Twitch",
-			"popup": "twitchGiftRule4",
+			"popup": "twitchGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9707,23 +10087,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule4Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule4Files",
+			"id": "twitchGiftbombRule4Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule4",
+			"popup": "twitchGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9734,21 +10116,21 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule4FileName",
+			"id": "twitchGiftbombRule4FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule4",
+			"popup": "twitchGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -9758,8 +10140,8 @@
 			}
 		},
 		{
-			"id": "twitchGiftRule5Row",
-			"labelTemplate": "Règle 5 : {twitchGiftRule5Name|twitchGiftRule5Summary}",
+			"id": "twitchGiftbombRule5Row",
+			"labelTemplate": "Règle 5 : {twitchGiftbombRule5Name|twitchGiftbombRule5Summary}",
 			"label": "Règle 5",
 			"type": "actions",
 			"buttons": [
@@ -9767,19 +10149,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_twitchGift_5"
+					"callFunction": "TestRule_twitchGiftbomb_5"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "twitchGiftRule5",
-					"popupTitle": "Abonnements offerts · Règle 5 : {twitchGiftRule5Name|twitchGiftRule5Summary}"
+					"popup": "twitchGiftbombRule5",
+					"popupTitle": "Gift bomb · Règle 5 : {twitchGiftbombRule5Name|twitchGiftbombRule5Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_twitchGift_5",
+					"callFunction": "DeleteRule_twitchGiftbomb_5",
 					"confirm": true
 				}
 			],
@@ -9788,10 +10170,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -9801,7 +10183,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule5Summary",
+			"id": "twitchGiftbombRule5Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -9810,30 +10192,32 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule5Name",
+			"id": "twitchGiftbombRule5Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule5",
+			"popup": "twitchGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"twitchGiftRule5Name"
+			]
 		},
 		{
-			"id": "twitchGiftRule5Kind",
+			"id": "twitchGiftbombRule5Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -9848,62 +10232,66 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Twitch",
-			"popup": "twitchGiftRule5",
+			"popup": "twitchGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule5Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule5Value",
+			"id": "twitchGiftbombRule5Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Twitch",
-			"popup": "twitchGiftRule5",
+			"popup": "twitchGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRule5Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule5Files",
+			"id": "twitchGiftbombRule5Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule5",
+			"popup": "twitchGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -9913,21 +10301,21 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRule5FileName",
+			"id": "twitchGiftbombRule5FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Twitch",
-			"popup": "twitchGiftRule5",
+			"popup": "twitchGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -9936,20 +10324,20 @@
 			}
 		},
 		{
-			"id": "twitchGiftAddRule",
+			"id": "twitchGiftbombAddRule",
 			"label": "Ajouter une règle",
 			"type": "button",
 			"link": true,
 			"sub": true,
-			"callFunction": "AddRule_twitchGift",
+			"callFunction": "AddRule_twitchGiftbomb",
 			"group": "Twitch",
 			"showIf": {
 				"all": [
 					{
-						"id": "twitchGift"
+						"id": "twitchGiftbomb"
 					},
 					{
-						"id": "twitchGiftRuleCount",
+						"id": "twitchGiftbombRuleCount",
 						"value": [
 							"0",
 							"1",
@@ -9963,7 +10351,7 @@
 			"description": ""
 		},
 		{
-			"id": "twitchGiftRuleCount",
+			"id": "twitchGiftbombRuleCount",
 			"label": "Nombre de règles",
 			"type": "select",
 			"options": [
@@ -9995,7 +10383,9 @@
 			"defaultValue": "0",
 			"group": "Twitch",
 			"hidden": true,
-			"aliases": [],
+			"aliases": [
+				"twitchGiftRuleCount"
+			],
 			"description": ""
 		},
 		{
@@ -14881,7 +15271,7 @@
 		},
 		{
 			"id": "kickGift",
-			"label": "Abonnements offerts",
+			"label": "Abonnement offert",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Kick",
@@ -14900,7 +15290,7 @@
 					"icon": "gear",
 					"title": "Paramétrer l’alerte",
 					"popup": "kickGift",
-					"popupTitle": "Kick · Abonnements offerts"
+					"popupTitle": "Kick · Abonnement offert"
 				}
 			],
 			"description": ""
@@ -14910,7 +15300,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -14933,7 +15323,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -14956,7 +15346,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -14979,7 +15369,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15002,7 +15392,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15025,7 +15415,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15048,7 +15438,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15071,7 +15461,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15094,7 +15484,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15117,7 +15507,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15140,7 +15530,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15163,7 +15553,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15186,7 +15576,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "Kick",
 			"popup": "kickGift",
 			"showIf": {
@@ -15238,8 +15628,366 @@
 			"showIf": "kickGift"
 		},
 		{
-			"id": "kickGiftRule1Row",
-			"labelTemplate": "Règle 1 : {kickGiftRule1Name|kickGiftRule1Summary}",
+			"id": "kickGiftbomb",
+			"label": "Gift bomb",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Kick",
+			"showIf": "platformKick",
+			"aliases": [
+				"alertGiftbomb"
+			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestKickGiftbomb"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "kickGiftbomb",
+					"popupTitle": "Kick · Gift bomb"
+				}
+			],
+			"description": ""
+		},
+		{
+			"id": "kickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGiftbomb"
+			]
+		},
+		{
+			"id": "sc1KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc2KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc3KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc4KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc5KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc6KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc7KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc8KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc9KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc10KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc11KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc12KickGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "kickGiftbomb"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGiftbomb"
+			]
+		},
+		{
+			"id": "kickGiftbombVolume",
+			"label": "Volume",
+			"description": "En % (0 : alerte muette)",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 100,
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": "kickGiftbomb"
+		},
+		{
+			"id": "kickGiftbombFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": "kickGiftbomb",
+			"description": ""
+		},
+		{
+			"id": "kickGiftbombFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "Kick",
+			"popup": "kickGiftbomb",
+			"showIf": "kickGiftbomb"
+		},
+		{
+			"id": "kickGiftbombRule1Row",
+			"labelTemplate": "Règle 1 : {kickGiftbombRule1Name|kickGiftbombRule1Summary}",
 			"label": "Règle 1",
 			"type": "actions",
 			"buttons": [
@@ -15247,19 +15995,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_kickGift_1"
+					"callFunction": "TestRule_kickGiftbomb_1"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "kickGiftRule1",
-					"popupTitle": "Abonnements offerts · Règle 1 : {kickGiftRule1Name|kickGiftRule1Summary}"
+					"popup": "kickGiftbombRule1",
+					"popupTitle": "Gift bomb · Règle 1 : {kickGiftbombRule1Name|kickGiftbombRule1Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_kickGift_1",
+					"callFunction": "DeleteRule_kickGiftbomb_1",
 					"confirm": true
 				}
 			],
@@ -15268,10 +16016,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15285,7 +16033,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule1Summary",
+			"id": "kickGiftbombRule1Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -15294,20 +16042,20 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule1Name",
+			"id": "kickGiftbombRule1Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule1",
+			"popup": "kickGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15318,10 +16066,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"kickGiftRule1Name"
+			]
 		},
 		{
-			"id": "kickGiftRule1Kind",
+			"id": "kickGiftbombRule1Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -15336,14 +16086,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Kick",
-			"popup": "kickGiftRule1",
+			"popup": "kickGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15354,25 +16104,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule1Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule1Value",
+			"id": "kickGiftbombRule1Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Kick",
-			"popup": "kickGiftRule1",
+			"popup": "kickGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15383,23 +16135,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule1Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule1Files",
+			"id": "kickGiftbombRule1Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule1",
+			"popup": "kickGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15413,21 +16167,21 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule1FileName",
+			"id": "kickGiftbombRule1FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule1",
+			"popup": "kickGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -15440,8 +16194,8 @@
 			}
 		},
 		{
-			"id": "kickGiftRule2Row",
-			"labelTemplate": "Règle 2 : {kickGiftRule2Name|kickGiftRule2Summary}",
+			"id": "kickGiftbombRule2Row",
+			"labelTemplate": "Règle 2 : {kickGiftbombRule2Name|kickGiftbombRule2Summary}",
 			"label": "Règle 2",
 			"type": "actions",
 			"buttons": [
@@ -15449,19 +16203,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_kickGift_2"
+					"callFunction": "TestRule_kickGiftbomb_2"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "kickGiftRule2",
-					"popupTitle": "Abonnements offerts · Règle 2 : {kickGiftRule2Name|kickGiftRule2Summary}"
+					"popup": "kickGiftbombRule2",
+					"popupTitle": "Gift bomb · Règle 2 : {kickGiftbombRule2Name|kickGiftbombRule2Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_kickGift_2",
+					"callFunction": "DeleteRule_kickGiftbomb_2",
 					"confirm": true
 				}
 			],
@@ -15470,10 +16224,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15486,7 +16240,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule2Summary",
+			"id": "kickGiftbombRule2Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -15495,20 +16249,20 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule2Name",
+			"id": "kickGiftbombRule2Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule2",
+			"popup": "kickGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15518,10 +16272,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"kickGiftRule2Name"
+			]
 		},
 		{
-			"id": "kickGiftRule2Kind",
+			"id": "kickGiftbombRule2Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -15536,14 +16292,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Kick",
-			"popup": "kickGiftRule2",
+			"popup": "kickGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15553,25 +16309,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule2Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule2Value",
+			"id": "kickGiftbombRule2Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Kick",
-			"popup": "kickGiftRule2",
+			"popup": "kickGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15581,23 +16339,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule2Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule2Files",
+			"id": "kickGiftbombRule2Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule2",
+			"popup": "kickGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15610,21 +16370,21 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule2FileName",
+			"id": "kickGiftbombRule2FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule2",
+			"popup": "kickGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -15636,8 +16396,8 @@
 			}
 		},
 		{
-			"id": "kickGiftRule3Row",
-			"labelTemplate": "Règle 3 : {kickGiftRule3Name|kickGiftRule3Summary}",
+			"id": "kickGiftbombRule3Row",
+			"labelTemplate": "Règle 3 : {kickGiftbombRule3Name|kickGiftbombRule3Summary}",
 			"label": "Règle 3",
 			"type": "actions",
 			"buttons": [
@@ -15645,19 +16405,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_kickGift_3"
+					"callFunction": "TestRule_kickGiftbomb_3"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "kickGiftRule3",
-					"popupTitle": "Abonnements offerts · Règle 3 : {kickGiftRule3Name|kickGiftRule3Summary}"
+					"popup": "kickGiftbombRule3",
+					"popupTitle": "Gift bomb · Règle 3 : {kickGiftbombRule3Name|kickGiftbombRule3Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_kickGift_3",
+					"callFunction": "DeleteRule_kickGiftbomb_3",
 					"confirm": true
 				}
 			],
@@ -15666,10 +16426,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15681,7 +16441,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule3Summary",
+			"id": "kickGiftbombRule3Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -15690,20 +16450,20 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule3Name",
+			"id": "kickGiftbombRule3Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule3",
+			"popup": "kickGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15712,10 +16472,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"kickGiftRule3Name"
+			]
 		},
 		{
-			"id": "kickGiftRule3Kind",
+			"id": "kickGiftbombRule3Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -15730,14 +16492,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Kick",
-			"popup": "kickGiftRule3",
+			"popup": "kickGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15746,25 +16508,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule3Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule3Value",
+			"id": "kickGiftbombRule3Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Kick",
-			"popup": "kickGiftRule3",
+			"popup": "kickGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15773,23 +16537,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule3Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule3Files",
+			"id": "kickGiftbombRule3Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule3",
+			"popup": "kickGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15801,21 +16567,21 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule3FileName",
+			"id": "kickGiftbombRule3FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule3",
+			"popup": "kickGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -15826,8 +16592,8 @@
 			}
 		},
 		{
-			"id": "kickGiftRule4Row",
-			"labelTemplate": "Règle 4 : {kickGiftRule4Name|kickGiftRule4Summary}",
+			"id": "kickGiftbombRule4Row",
+			"labelTemplate": "Règle 4 : {kickGiftbombRule4Name|kickGiftbombRule4Summary}",
 			"label": "Règle 4",
 			"type": "actions",
 			"buttons": [
@@ -15835,19 +16601,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_kickGift_4"
+					"callFunction": "TestRule_kickGiftbomb_4"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "kickGiftRule4",
-					"popupTitle": "Abonnements offerts · Règle 4 : {kickGiftRule4Name|kickGiftRule4Summary}"
+					"popup": "kickGiftbombRule4",
+					"popupTitle": "Gift bomb · Règle 4 : {kickGiftbombRule4Name|kickGiftbombRule4Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_kickGift_4",
+					"callFunction": "DeleteRule_kickGiftbomb_4",
 					"confirm": true
 				}
 			],
@@ -15856,10 +16622,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -15870,7 +16636,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule4Summary",
+			"id": "kickGiftbombRule4Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -15879,20 +16645,20 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule4Name",
+			"id": "kickGiftbombRule4Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule4",
+			"popup": "kickGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -15900,10 +16666,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"kickGiftRule4Name"
+			]
 		},
 		{
-			"id": "kickGiftRule4Kind",
+			"id": "kickGiftbombRule4Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -15918,14 +16686,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Kick",
-			"popup": "kickGiftRule4",
+			"popup": "kickGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -15933,25 +16701,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule4Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule4Value",
+			"id": "kickGiftbombRule4Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Kick",
-			"popup": "kickGiftRule4",
+			"popup": "kickGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -15959,23 +16729,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule4Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule4Files",
+			"id": "kickGiftbombRule4Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule4",
+			"popup": "kickGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -15986,21 +16758,21 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule4FileName",
+			"id": "kickGiftbombRule4FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule4",
+			"popup": "kickGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -16010,8 +16782,8 @@
 			}
 		},
 		{
-			"id": "kickGiftRule5Row",
-			"labelTemplate": "Règle 5 : {kickGiftRule5Name|kickGiftRule5Summary}",
+			"id": "kickGiftbombRule5Row",
+			"labelTemplate": "Règle 5 : {kickGiftbombRule5Name|kickGiftbombRule5Summary}",
 			"label": "Règle 5",
 			"type": "actions",
 			"buttons": [
@@ -16019,19 +16791,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_kickGift_5"
+					"callFunction": "TestRule_kickGiftbomb_5"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "kickGiftRule5",
-					"popupTitle": "Abonnements offerts · Règle 5 : {kickGiftRule5Name|kickGiftRule5Summary}"
+					"popup": "kickGiftbombRule5",
+					"popupTitle": "Gift bomb · Règle 5 : {kickGiftbombRule5Name|kickGiftbombRule5Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_kickGift_5",
+					"callFunction": "DeleteRule_kickGiftbomb_5",
 					"confirm": true
 				}
 			],
@@ -16040,10 +16812,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -16053,7 +16825,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule5Summary",
+			"id": "kickGiftbombRule5Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -16062,30 +16834,32 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule5Name",
+			"id": "kickGiftbombRule5Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule5",
+			"popup": "kickGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"kickGiftRule5Name"
+			]
 		},
 		{
-			"id": "kickGiftRule5Kind",
+			"id": "kickGiftbombRule5Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -16100,62 +16874,66 @@
 			],
 			"defaultValue": "atleast",
 			"group": "Kick",
-			"popup": "kickGiftRule5",
+			"popup": "kickGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule5Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule5Value",
+			"id": "kickGiftbombRule5Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "Kick",
-			"popup": "kickGiftRule5",
+			"popup": "kickGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"kickGiftRule5Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule5Files",
+			"id": "kickGiftbombRule5Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule5",
+			"popup": "kickGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -16165,21 +16943,21 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRule5FileName",
+			"id": "kickGiftbombRule5FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "Kick",
-			"popup": "kickGiftRule5",
+			"popup": "kickGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -16188,20 +16966,20 @@
 			}
 		},
 		{
-			"id": "kickGiftAddRule",
+			"id": "kickGiftbombAddRule",
 			"label": "Ajouter une règle",
 			"type": "button",
 			"link": true,
 			"sub": true,
-			"callFunction": "AddRule_kickGift",
+			"callFunction": "AddRule_kickGiftbomb",
 			"group": "Kick",
 			"showIf": {
 				"all": [
 					{
-						"id": "kickGift"
+						"id": "kickGiftbomb"
 					},
 					{
-						"id": "kickGiftRuleCount",
+						"id": "kickGiftbombRuleCount",
 						"value": [
 							"0",
 							"1",
@@ -16215,7 +16993,7 @@
 			"description": ""
 		},
 		{
-			"id": "kickGiftRuleCount",
+			"id": "kickGiftbombRuleCount",
 			"label": "Nombre de règles",
 			"type": "select",
 			"options": [
@@ -16247,7 +17025,9 @@
 			"defaultValue": "0",
 			"group": "Kick",
 			"hidden": true,
-			"aliases": [],
+			"aliases": [
+				"kickGiftRuleCount"
+			],
 			"description": ""
 		},
 		{
@@ -18367,7 +19147,7 @@
 		},
 		{
 			"id": "youtubeGift",
-			"label": "Abonnements offerts",
+			"label": "Abonnement offert",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "YouTube",
@@ -18386,7 +19166,7 @@
 					"icon": "gear",
 					"title": "Paramétrer l’alerte",
 					"popup": "youtubeGift",
-					"popupTitle": "YouTube · Abonnements offerts"
+					"popupTitle": "YouTube · Abonnement offert"
 				}
 			],
 			"description": ""
@@ -18396,7 +19176,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18419,7 +19199,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18442,7 +19222,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18465,7 +19245,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18488,7 +19268,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18511,7 +19291,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18534,7 +19314,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18557,7 +19337,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18580,7 +19360,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18603,7 +19383,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18626,7 +19406,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18649,7 +19429,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18672,7 +19452,7 @@
 			"label": "Texte",
 			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}, {recipient} (personne qui reçoit l’abonnement)",
 			"type": "text",
-			"defaultValue": "{user} offre {count} abonnement(s) !",
+			"defaultValue": "{user} offre un abonnement à {recipient} !",
 			"group": "YouTube",
 			"popup": "youtubeGift",
 			"showIf": {
@@ -18724,8 +19504,366 @@
 			"showIf": "youtubeGift"
 		},
 		{
-			"id": "youtubeGiftRule1Row",
-			"labelTemplate": "Règle 1 : {youtubeGiftRule1Name|youtubeGiftRule1Summary}",
+			"id": "youtubeGiftbomb",
+			"label": "Gift bomb",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "YouTube",
+			"showIf": "platformYouTube",
+			"aliases": [
+				"alertGiftbomb"
+			],
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’alerte",
+					"callFunction": "TestYouTubeGiftbomb"
+				},
+				{
+					"icon": "gear",
+					"title": "Paramétrer l’alerte",
+					"popup": "youtubeGiftbomb",
+					"popupTitle": "YouTube · Gift bomb"
+				}
+			],
+			"description": ""
+		},
+		{
+			"id": "youtubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "editScenario",
+						"value": "defaut"
+					}
+				]
+			},
+			"aliases": [
+				"textGiftbomb"
+			]
+		},
+		{
+			"id": "sc1YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc1Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc1TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc2YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc2Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc2TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc3YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc3Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc3TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc4YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc4Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc4TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc5YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc5Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc5TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc6YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc6Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc6TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc7YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc7Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc7TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc8YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc8Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc8TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc9YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc9Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc9TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc10YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc10Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc10TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc11YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc11Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc11TextGiftbomb"
+			]
+		},
+		{
+			"id": "sc12YoutubeGiftbombText",
+			"label": "Texte",
+			"description": "Variables : {user}, {months}, {count}, {amount}, {viewers}",
+			"type": "text",
+			"defaultValue": "{user} offre {count} abonnements à la communauté !",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": {
+				"all": [
+					{
+						"id": "youtubeGiftbomb"
+					},
+					{
+						"id": "sc12Visual",
+						"value": "own"
+					}
+				]
+			},
+			"aliases": [
+				"sc12TextGiftbomb"
+			]
+		},
+		{
+			"id": "youtubeGiftbombVolume",
+			"label": "Volume",
+			"description": "En % (0 : alerte muette)",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 100,
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": "youtubeGiftbomb"
+		},
+		{
+			"id": "youtubeGiftbombFiles",
+			"label": "Fichiers",
+			"type": "info",
+			"defaultValue": "Connexion à Streamer.bot…",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": "youtubeGiftbomb",
+			"description": ""
+		},
+		{
+			"id": "youtubeGiftbombFileName",
+			"label": "Nom à donner à l’image et au son",
+			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
+			"type": "info",
+			"copyable": true,
+			"defaultValue": "",
+			"group": "YouTube",
+			"popup": "youtubeGiftbomb",
+			"showIf": "youtubeGiftbomb"
+		},
+		{
+			"id": "youtubeGiftbombRule1Row",
+			"labelTemplate": "Règle 1 : {youtubeGiftbombRule1Name|youtubeGiftbombRule1Summary}",
 			"label": "Règle 1",
 			"type": "actions",
 			"buttons": [
@@ -18733,19 +19871,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_youtubeGift_1"
+					"callFunction": "TestRule_youtubeGiftbomb_1"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "youtubeGiftRule1",
-					"popupTitle": "Abonnements offerts · Règle 1 : {youtubeGiftRule1Name|youtubeGiftRule1Summary}"
+					"popup": "youtubeGiftbombRule1",
+					"popupTitle": "Gift bomb · Règle 1 : {youtubeGiftbombRule1Name|youtubeGiftbombRule1Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_youtubeGift_1",
+					"callFunction": "DeleteRule_youtubeGiftbomb_1",
 					"confirm": true
 				}
 			],
@@ -18754,10 +19892,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18771,7 +19909,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule1Summary",
+			"id": "youtubeGiftbombRule1Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -18780,20 +19918,20 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule1Name",
+			"id": "youtubeGiftbombRule1Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule1",
+			"popup": "youtubeGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18804,10 +19942,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"youtubeGiftRule1Name"
+			]
 		},
 		{
-			"id": "youtubeGiftRule1Kind",
+			"id": "youtubeGiftbombRule1Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -18822,14 +19962,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule1",
+			"popup": "youtubeGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18840,25 +19980,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule1Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule1Value",
+			"id": "youtubeGiftbombRule1Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "YouTube",
-			"popup": "youtubeGiftRule1",
+			"popup": "youtubeGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18869,23 +20011,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule1Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule1Files",
+			"id": "youtubeGiftbombRule1Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule1",
+			"popup": "youtubeGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18899,21 +20043,21 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule1FileName",
+			"id": "youtubeGiftbombRule1FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule1",
+			"popup": "youtubeGiftbombRule1",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"1",
 							"2",
@@ -18926,8 +20070,8 @@
 			}
 		},
 		{
-			"id": "youtubeGiftRule2Row",
-			"labelTemplate": "Règle 2 : {youtubeGiftRule2Name|youtubeGiftRule2Summary}",
+			"id": "youtubeGiftbombRule2Row",
+			"labelTemplate": "Règle 2 : {youtubeGiftbombRule2Name|youtubeGiftbombRule2Summary}",
 			"label": "Règle 2",
 			"type": "actions",
 			"buttons": [
@@ -18935,19 +20079,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_youtubeGift_2"
+					"callFunction": "TestRule_youtubeGiftbomb_2"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "youtubeGiftRule2",
-					"popupTitle": "Abonnements offerts · Règle 2 : {youtubeGiftRule2Name|youtubeGiftRule2Summary}"
+					"popup": "youtubeGiftbombRule2",
+					"popupTitle": "Gift bomb · Règle 2 : {youtubeGiftbombRule2Name|youtubeGiftbombRule2Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_youtubeGift_2",
+					"callFunction": "DeleteRule_youtubeGiftbomb_2",
 					"confirm": true
 				}
 			],
@@ -18956,10 +20100,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -18972,7 +20116,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule2Summary",
+			"id": "youtubeGiftbombRule2Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -18981,20 +20125,20 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule2Name",
+			"id": "youtubeGiftbombRule2Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule2",
+			"popup": "youtubeGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -19004,10 +20148,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"youtubeGiftRule2Name"
+			]
 		},
 		{
-			"id": "youtubeGiftRule2Kind",
+			"id": "youtubeGiftbombRule2Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -19022,14 +20168,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule2",
+			"popup": "youtubeGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -19039,25 +20185,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule2Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule2Value",
+			"id": "youtubeGiftbombRule2Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "YouTube",
-			"popup": "youtubeGiftRule2",
+			"popup": "youtubeGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -19067,23 +20215,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule2Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule2Files",
+			"id": "youtubeGiftbombRule2Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule2",
+			"popup": "youtubeGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -19096,21 +20246,21 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule2FileName",
+			"id": "youtubeGiftbombRule2FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule2",
+			"popup": "youtubeGiftbombRule2",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"2",
 							"3",
@@ -19122,8 +20272,8 @@
 			}
 		},
 		{
-			"id": "youtubeGiftRule3Row",
-			"labelTemplate": "Règle 3 : {youtubeGiftRule3Name|youtubeGiftRule3Summary}",
+			"id": "youtubeGiftbombRule3Row",
+			"labelTemplate": "Règle 3 : {youtubeGiftbombRule3Name|youtubeGiftbombRule3Summary}",
 			"label": "Règle 3",
 			"type": "actions",
 			"buttons": [
@@ -19131,19 +20281,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_youtubeGift_3"
+					"callFunction": "TestRule_youtubeGiftbomb_3"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "youtubeGiftRule3",
-					"popupTitle": "Abonnements offerts · Règle 3 : {youtubeGiftRule3Name|youtubeGiftRule3Summary}"
+					"popup": "youtubeGiftbombRule3",
+					"popupTitle": "Gift bomb · Règle 3 : {youtubeGiftbombRule3Name|youtubeGiftbombRule3Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_youtubeGift_3",
+					"callFunction": "DeleteRule_youtubeGiftbomb_3",
 					"confirm": true
 				}
 			],
@@ -19152,10 +20302,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19167,7 +20317,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule3Summary",
+			"id": "youtubeGiftbombRule3Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -19176,20 +20326,20 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule3Name",
+			"id": "youtubeGiftbombRule3Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule3",
+			"popup": "youtubeGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19198,10 +20348,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"youtubeGiftRule3Name"
+			]
 		},
 		{
-			"id": "youtubeGiftRule3Kind",
+			"id": "youtubeGiftbombRule3Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -19216,14 +20368,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule3",
+			"popup": "youtubeGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19232,25 +20384,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule3Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule3Value",
+			"id": "youtubeGiftbombRule3Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "YouTube",
-			"popup": "youtubeGiftRule3",
+			"popup": "youtubeGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19259,23 +20413,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule3Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule3Files",
+			"id": "youtubeGiftbombRule3Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule3",
+			"popup": "youtubeGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19287,21 +20443,21 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule3FileName",
+			"id": "youtubeGiftbombRule3FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule3",
+			"popup": "youtubeGiftbombRule3",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"3",
 							"4",
@@ -19312,8 +20468,8 @@
 			}
 		},
 		{
-			"id": "youtubeGiftRule4Row",
-			"labelTemplate": "Règle 4 : {youtubeGiftRule4Name|youtubeGiftRule4Summary}",
+			"id": "youtubeGiftbombRule4Row",
+			"labelTemplate": "Règle 4 : {youtubeGiftbombRule4Name|youtubeGiftbombRule4Summary}",
 			"label": "Règle 4",
 			"type": "actions",
 			"buttons": [
@@ -19321,19 +20477,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_youtubeGift_4"
+					"callFunction": "TestRule_youtubeGiftbomb_4"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "youtubeGiftRule4",
-					"popupTitle": "Abonnements offerts · Règle 4 : {youtubeGiftRule4Name|youtubeGiftRule4Summary}"
+					"popup": "youtubeGiftbombRule4",
+					"popupTitle": "Gift bomb · Règle 4 : {youtubeGiftbombRule4Name|youtubeGiftbombRule4Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_youtubeGift_4",
+					"callFunction": "DeleteRule_youtubeGiftbomb_4",
 					"confirm": true
 				}
 			],
@@ -19342,10 +20498,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19356,7 +20512,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule4Summary",
+			"id": "youtubeGiftbombRule4Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -19365,20 +20521,20 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule4Name",
+			"id": "youtubeGiftbombRule4Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule4",
+			"popup": "youtubeGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19386,10 +20542,12 @@
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"youtubeGiftRule4Name"
+			]
 		},
 		{
-			"id": "youtubeGiftRule4Kind",
+			"id": "youtubeGiftbombRule4Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -19404,14 +20562,14 @@
 			],
 			"defaultValue": "atleast",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule4",
+			"popup": "youtubeGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19419,25 +20577,27 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule4Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule4Value",
+			"id": "youtubeGiftbombRule4Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "YouTube",
-			"popup": "youtubeGiftRule4",
+			"popup": "youtubeGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19445,23 +20605,25 @@
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule4Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule4Files",
+			"id": "youtubeGiftbombRule4Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule4",
+			"popup": "youtubeGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19472,21 +20634,21 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule4FileName",
+			"id": "youtubeGiftbombRule4FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule4",
+			"popup": "youtubeGiftbombRule4",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"4",
 							"5"
@@ -19496,8 +20658,8 @@
 			}
 		},
 		{
-			"id": "youtubeGiftRule5Row",
-			"labelTemplate": "Règle 5 : {youtubeGiftRule5Name|youtubeGiftRule5Summary}",
+			"id": "youtubeGiftbombRule5Row",
+			"labelTemplate": "Règle 5 : {youtubeGiftbombRule5Name|youtubeGiftbombRule5Summary}",
 			"label": "Règle 5",
 			"type": "actions",
 			"buttons": [
@@ -19505,19 +20667,19 @@
 					"icon": "play",
 					"style": "accent",
 					"title": "Tester la règle",
-					"callFunction": "TestRule_youtubeGift_5"
+					"callFunction": "TestRule_youtubeGiftbomb_5"
 				},
 				{
 					"icon": "gear",
 					"title": "Paramétrer la règle",
-					"popup": "youtubeGiftRule5",
-					"popupTitle": "Abonnements offerts · Règle 5 : {youtubeGiftRule5Name|youtubeGiftRule5Summary}"
+					"popup": "youtubeGiftbombRule5",
+					"popupTitle": "Gift bomb · Règle 5 : {youtubeGiftbombRule5Name|youtubeGiftbombRule5Summary}"
 				},
 				{
 					"icon": "trash",
 					"style": "danger",
 					"title": "Supprimer la règle (deux clics)",
-					"callFunction": "DeleteRule_youtubeGift_5",
+					"callFunction": "DeleteRule_youtubeGiftbomb_5",
 					"confirm": true
 				}
 			],
@@ -19526,10 +20688,10 @@
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -19539,7 +20701,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule5Summary",
+			"id": "youtubeGiftbombRule5Summary",
 			"label": "Résumé",
 			"type": "info",
 			"defaultValue": "",
@@ -19548,30 +20710,32 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule5Name",
+			"id": "youtubeGiftbombRule5Name",
 			"label": "Nom de la règle",
 			"description": "Pour vous repérer (ex. Anniversaire)",
 			"type": "text",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule5",
+			"popup": "youtubeGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": []
+			"aliases": [
+				"youtubeGiftRule5Name"
+			]
 		},
 		{
-			"id": "youtubeGiftRule5Kind",
+			"id": "youtubeGiftbombRule5Kind",
 			"label": "Quand",
 			"type": "select",
 			"options": [
@@ -19586,62 +20750,66 @@
 			],
 			"defaultValue": "atleast",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule5",
+			"popup": "youtubeGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule5Kind"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule5Value",
+			"id": "youtubeGiftbombRule5Value",
 			"label": "Nombre d’abonnements (N)",
 			"type": "number",
 			"min": 1,
 			"max": 1000000,
 			"defaultValue": 10,
 			"group": "YouTube",
-			"popup": "youtubeGiftRule5",
+			"popup": "youtubeGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
 					}
 				]
 			},
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRule5Value"
+			],
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule5Files",
+			"id": "youtubeGiftbombRule5Files",
 			"label": "Fichiers",
 			"type": "info",
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule5",
+			"popup": "youtubeGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -19651,21 +20819,21 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRule5FileName",
+			"id": "youtubeGiftbombRule5FileName",
 			"label": "Nom à donner à l’image et au son",
 			"description": "Sans l’extension, dans le dossier du scénario ou le dossier par défaut",
 			"type": "info",
 			"copyable": true,
 			"defaultValue": "",
 			"group": "YouTube",
-			"popup": "youtubeGiftRule5",
+			"popup": "youtubeGiftbombRule5",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"5"
 						]
@@ -19674,20 +20842,20 @@
 			}
 		},
 		{
-			"id": "youtubeGiftAddRule",
+			"id": "youtubeGiftbombAddRule",
 			"label": "Ajouter une règle",
 			"type": "button",
 			"link": true,
 			"sub": true,
-			"callFunction": "AddRule_youtubeGift",
+			"callFunction": "AddRule_youtubeGiftbomb",
 			"group": "YouTube",
 			"showIf": {
 				"all": [
 					{
-						"id": "youtubeGift"
+						"id": "youtubeGiftbomb"
 					},
 					{
-						"id": "youtubeGiftRuleCount",
+						"id": "youtubeGiftbombRuleCount",
 						"value": [
 							"0",
 							"1",
@@ -19701,7 +20869,7 @@
 			"description": ""
 		},
 		{
-			"id": "youtubeGiftRuleCount",
+			"id": "youtubeGiftbombRuleCount",
 			"label": "Nombre de règles",
 			"type": "select",
 			"options": [
@@ -19733,7 +20901,9 @@
 			"defaultValue": "0",
 			"group": "YouTube",
 			"hidden": true,
-			"aliases": [],
+			"aliases": [
+				"youtubeGiftRuleCount"
+			],
 			"description": ""
 		},
 		{

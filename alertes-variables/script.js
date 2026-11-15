@@ -628,7 +628,8 @@ function ConnectStreamerBot() {
 		try {
 			sbClient.on(`${source}.${type}`, ({ data }) => {
 				const info = ParseEvent(source, type, alertType, data);
-				if ((type === 'GiftSub') && info.fromBomb) return;
+				// Abonnements d'une gift bomb : ils arrivent aussi un par un, seule la bombe s'affiche
+				if ((type === 'GiftSub' || type === 'GiftSubscription') && info.fromBomb) return;
 				Enqueue(info);
 			});
 		} catch (e) { /* événement inconnu de cette version de Streamer.bot */ }
@@ -787,7 +788,7 @@ function RuleFile(type, rule) {
 // Résumé lisible d'une règle (affiché si elle n'a pas de nom)
 function RuleSummary(type, rule, platform) {
 	const N = rule.value;
-	const unit = { resub: 'mois', gift: 'abonnements', raid: 'viewers',
+	const unit = { resub: 'mois', gift: 'abonnements', giftbomb: 'abonnements', raid: 'viewers',
 		cheer: platform === 'Twitch' ? 'bits' : platform === 'TikTok' ? 'pièces' : '€' }[type] || '';
 	if (type === 'sub') return { prime: 'Prime Gaming', tier1: 'Palier 1', tier2: 'Palier 2', tier3: 'Palier 3' }[rule.kind] || '';
 	if (rule.kind === 'every') return `Tous les ${N} ${unit}`;
@@ -798,7 +799,7 @@ function RuleSummary(type, rule, platform) {
 // La règle s'applique-t-elle à cet événement ?
 function RuleMatches(type, rule, info) {
 	if (type === 'sub') return !!info.tier && info.tier === rule.kind;
-	const x = Number({ resub: info.months, gift: info.count, cheer: info.value, raid: info.viewers }[type]) || 0;
+	const x = Number({ resub: info.months, gift: info.count, giftbomb: info.count, cheer: info.value, raid: info.viewers }[type]) || 0;
 	const N = rule.value;
 	if (N <= 0) return false;
 	if (rule.kind === 'exact') return x === N;
@@ -812,7 +813,7 @@ function RuleTestInfo(type, rule, platform) {
 	const N = rule.value || 1;
 	if (type === 'sub') info.tier = rule.kind;
 	if (type === 'resub') info.months = N;
-	if (type === 'gift') info.count = N;
+	if (type === 'gift' || type === 'giftbomb') info.count = N;
 	if (type === 'raid') info.viewers = N;
 	if (type === 'cheer') {
 		info.value = N;
@@ -968,7 +969,9 @@ function PlayedLabel(info) {
 	const tid = AlertId(platform, info.type);
 	// La règle qui l'emporte (même priorité que pour choisir les fichiers) ; un test de règle garde la sienne
 	const rule = (info.ruleN && RulesOf(tid).find(r => r.n === info.ruleN)) || MatchingRules(info)[0];
-	return AlertLabel(platform, info.type) + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
+	// Abonnement offert : « Twitch · Abonnement offert à Alice »
+	const to = info.type === 'gift' && info.recipient ? ` à ${info.recipient}` : '';
+	return AlertLabel(platform, info.type) + to + (rule ? ` | ${RuleLabel(info.type, rule, platform)}` : '');
 }
 
 // Tests proposés dans le dock : chaque alerte activée, puis ses règles
