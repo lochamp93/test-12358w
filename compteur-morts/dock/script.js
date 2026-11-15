@@ -466,14 +466,14 @@ els.announce.addEventListener('change', () => {
 	try { stored = localStorage.getItem(ANNOUNCE_KEY); } catch (e) { }
 	els.announce.checked = stored === null ? ws.values.announce : stored === 'true';
 
-	// Copie du code C# de l'action
+	// Copie du code d'import Streamer.bot (action « Compteur de morts | Modifier »)
 	document.getElementById('copyCodeButton').addEventListener('click', async () => {
 		try {
-			const code = await (await fetch('../streamerbot/compteur-morts.cs', { cache: 'no-cache' })).text();
+			const code = (await (await fetch('../streamerbot/import.txt', { cache: 'no-cache' })).text()).trim();
 			await navigator.clipboard.writeText(code);
-			Toast('Code C# copié !');
+			Toast('Code d’import copié ! Collez-le dans Streamer.bot → Import');
 		} catch (e) {
-			Toast('Copie impossible : ouvrez streamerbot/compteur-morts.cs');
+			Toast('Copie impossible : ouvrez streamerbot/import.txt');
 		}
 	});
 	document.getElementById('recheckButton').addEventListener('click', CheckAction);
