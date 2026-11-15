@@ -1,0 +1,91 @@
+{
+	"title": "Compteur de morts • Dock",
+	"livePreview": true,
+	"demo": true,
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "Adresse du serveur WebSocket de Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion"
+		},
+		{
+			"id": "actionName",
+			"label": "Action Streamer.bot",
+			"description": "Nom de l’action qui contient le code C# du compteur",
+			"type": "sb-actions",
+			"defaultValue": "Compteur de morts | Modifier",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "variableName",
+			"label": "Variable Streamer.bot",
+			"description": "Même nom que dans l’action et l’overlay",
+			"type": "text",
+			"defaultValue": "compteursMorts",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "step",
+			"label": "Pas des boutons + et −",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 100,
+			"defaultValue": 1,
+			"group": "Contrôles"
+		},
+		{
+			"id": "announce",
+			"label": "Annoncer dans le chat",
+			"description": "Le bot écrit le nouveau total dans le chat quand on modifie le compteur depuis le dock (réglable aussi dans le dock)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Contrôles"
+		},
+		{
+			"id": "confirmReset",
+			"label": "Confirmer avant de remettre à zéro",
+			"description": "Le bouton demande un second clic",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Contrôles"
+		},
+		{
+			"id": "allowManualGame",
+			"label": "Choix manuel du jeu",
+			"description": "Permet de choisir le jeu à la main au lieu de suivre la catégorie Twitch",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Jeux"
+		},
+		{
+			"id": "showGameList",
+			"label": "Afficher la liste des jeux",
+			"description": "Tous les compteurs enregistrés, avec correction et suppression",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Jeux"
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur d’accentuation",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#2196f3",
+			"group": "Apparence"
+		}
+	]
+}

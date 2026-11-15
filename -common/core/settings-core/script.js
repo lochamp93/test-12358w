@@ -43,6 +43,15 @@ function LoadJSON(settingsJson) {
 		.then(data => {
 			settingsData = data;
 
+			// Nom du widget (optionnel) : titre de l’onglet et en-tête de la page.
+			// Sans "title" dans settings.json, rien ne change pour les widgets existants.
+			if (data.title) {
+				document.title = data.title;
+				try { if (parent && parent !== window) parent.document.title = data.title; } catch (e) { /* autre origine */ }
+				const titleLabel = document.getElementById('widgetTitle');
+				if (titleLabel) titleLabel.textContent = data.title;
+			}
+
 			// Vider le panneau des paramètres
 			settingsPanel.innerHTML = '';
 
@@ -204,6 +213,7 @@ function LoadJSON(settingsJson) {
 							settingsMap.set(setting.id, settingElement.value);
 
 						SaveSettingsToStorage();
+						UpdateSettingItemVisibility();
 						RefreshWidgetPreview();
 					});
 
@@ -224,26 +234,53 @@ function LoadJSON(settingsJson) {
 				settingsPanel.appendChild(groupDiv);
 			}
 
+			// showIf accepte :
+			//   "idInterrupteur"                               → visible si l’interrupteur est activé (format d’origine)
+			//   { "id": "idListe", "value": "slide" }           → visible si la liste vaut "slide"
+			//   { "id": "idListe", "value": ["slide", "fade"] } → visible si la liste vaut l’une de ces valeurs
+			//   { "id": "idListe", "notValue": "none" }         → visible si la liste ne vaut pas "none"
+			//   { "id": "idInterrupteur" }                      → identique au format d’origine
+			// Les dépendances en chaîne sont suivies : un réglage est masqué si l’un de ses parents l’est.
+			function ShowIfConditionMet(showIf) {
+				const cond = typeof showIf === 'string' ? { id: showIf } : showIf;
+				const parentInput = document.getElementById(cond.id);
+				if (!parentInput) return false;
+
+				if (cond.value !== undefined || cond.notValue !== undefined) {
+					const current = parentInput.type === 'checkbox' ? String(parentInput.checked) : String(parentInput.value);
+					if (cond.value !== undefined) {
+						const accepted = (Array.isArray(cond.value) ? cond.value : [cond.value]).map(String);
+						return accepted.includes(current);
+					}
+					const refused = (Array.isArray(cond.notValue) ? cond.notValue : [cond.notValue]).map(String);
+					return !refused.includes(current);
+				}
+
+				return parentInput.checked === true;
+			}
+
 			function UpdateSettingItemVisibility() {
 				data.settings.forEach(setting => {
 					if (setting.showIf) {
-						const parentElement = document.getElementById(setting.showIf);
 						let shouldShow = true;
 
 						// Remonter la chaîne de dépendances showIf
 						let currentSetting = setting;
-						while (currentSetting.showIf) {
-							const parentInput = document.getElementById(currentSetting.showIf);
-							if (!parentInput || !parentInput.checked) {
+						let depth = 0;
+						while (currentSetting.showIf && depth < 20) {
+							if (!ShowIfConditionMet(currentSetting.showIf)) {
 								shouldShow = false;
 								break;
 							}
 
 							// Retrouver l’objet parent (pour continuer à remonter)
-							currentSetting = data.settings.find(s => s.id === currentSetting.showIf) || {};
+							const parentId = typeof currentSetting.showIf === 'string' ? currentSetting.showIf : currentSetting.showIf.id;
+							currentSetting = data.settings.find(s => s.id === parentId) || {};
+							depth++;
 						}
 
-						document.getElementById(`item-${setting.id}`).style.display = shouldShow ? 'flex' : 'none';
+						const item = document.getElementById(`item-${setting.id}`);
+						if (item) item.style.display = shouldShow ? 'flex' : 'none';
 					}
 				});
 			}
@@ -295,18 +332,54 @@ function RefreshWidgetPreview() {
 		}
 	});
 
-	// Construire la chaîne de paramètres
-	const paramString = Object.entries(settings)
-		.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-		.join('&');
+	// Construire la chaîne de paramètres (URLSearchParams gère couleurs, espaces, virgules…)
+	const searchParams = new URLSearchParams();
+	Object.entries(settings).forEach(([key, value]) => searchParams.set(key, value));
+	const paramString = searchParams.toString();
 
 	console.debug('Chaîne de paramètres :', paramString);
 
+	// URL copiée pour OBS : jamais de paramètre demo
 	widgetUrlInput.value = widgetURL + "?" + paramString;
-	widgetPreview.src = widgetUrlInput.value;
+
+	// URL de l’aperçu : demo=true si settings.json le demande ("demo": true)
+	const previewParams = new URLSearchParams(searchParams);
+	if (settingsData.demo === true)
+		previewParams.set('demo', 'true');
+	const previewURL = widgetURL + "?" + previewParams.toString();
+
+	// Aperçu en direct sans rechargement si settings.json contient "livePreview": true
+	// (le widget écoute alors les messages 'widget-settings'). Sinon : comportement d’origine.
+	latestPreviewParams = previewParams.toString();
+	if (settingsData.livePreview === true && previewInitialised) {
+		SendSettingsToPreview();
+	}
+	else {
+		previewInitialised = true;
+		widgetPreview.src = previewURL;
+	}
 
 	UpdateStreamerBotConnection();
 }
+
+// Aperçu en direct : dernier jeu de paramètres envoyé à l’iframe
+let previewInitialised = false;
+let latestPreviewParams = '';
+
+function SendSettingsToPreview() {
+	if (!widgetPreview.contentWindow) return;
+	widgetPreview.contentWindow.postMessage({ type: 'widget-settings', params: latestPreviewParams }, '*');
+}
+
+// Si des réglages changent pendant le chargement de l’iframe, on les renvoie une fois chargée
+widgetPreview.addEventListener('load', () => {
+	if (settingsData && settingsData.livePreview === true)
+		SendSettingsToPreview();
+});
+
+// Ne reconnecte la page de paramétrage à Streamer.bot que si l’adresse ou le port changent
+let lastSbHost = null;
+let lastSbPort = null;
 
 function UpdateStreamerBotConnection() {
 	let addressElement = document.getElementById('address');
@@ -318,6 +391,11 @@ function UpdateStreamerBotConnection() {
 	if (portElement)
 		client.options.port = portElement.value;
 
+	if (client.options.host === lastSbHost && String(client.options.port) === String(lastSbPort))
+		return;
+
+	lastSbHost = client.options.host;
+	lastSbPort = client.options.port;
 	client.connect();
 }
 
@@ -424,13 +502,20 @@ function LoadSettings() {
 
 	url.searchParams.forEach((value, key) => {
 
+		// Alias : un ancien nom de paramètre déclaré dans settings.json ("aliases": [...])
+		if (settingsData && settingsData.settings) {
+			const aliased = settingsData.settings.find(s => Array.isArray(s.aliases) && s.aliases.includes(key));
+			if (aliased && !url.searchParams.has(aliased.id))
+				key = aliased.id;
+		}
+
 		const inputElement = document.getElementById(key);
 		if (inputElement != null) {
 			if (inputElement.type == 'checkbox')
-				inputElement.checked = value.toLocaleLowerCase() == 'true';
+				inputElement.checked = ['true', '1', 'yes', 'on', 'oui'].includes(value.toLocaleLowerCase());
 			else
 				inputElement.value = value;
-			inputElement.dispatchEvent(new Event('input')); // Déclenche le rafraîchissement
+			inputElement.dispatchEvent(new Event('input', { bubbles: true })); // Déclenche le rafraîchissement (bubbles : nécessaire pour les interrupteurs)
 		}
 	});
 

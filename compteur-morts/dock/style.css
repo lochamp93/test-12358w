@@ -1,0 +1,233 @@
+/* Compteur de morts — dock OBS (s'appuie sur -common/styles/global.css) */
+
+:root {
+	--dock-accent: #2196f3;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	padding: 0 12px 16px;
+	box-sizing: border-box;
+	font-size: 14px;
+}
+
+#header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 10px 0;
+	border-bottom: 1px solid #2e2e2e;
+	margin-bottom: 12px;
+}
+
+#header img {
+	height: 26px;
+}
+
+.dock-title {
+	font-weight: 700;
+	font-size: 1.05em;
+	flex: 1;
+}
+
+.status {
+	font-size: 0.75em;
+	padding: 3px 8px;
+	border-radius: 999px;
+	white-space: nowrap;
+}
+
+.status.on { background: #3be47733; color: var(--success-color); }
+.status.off { background: var(--error-background); color: var(--error-color); }
+
+.panel {
+	border-radius: 8px;
+	padding: 10px 12px;
+	margin-bottom: 12px;
+	font-size: 0.9em;
+	line-height: 1.4;
+}
+
+.panel.warning {
+	background: var(--error-background);
+	border: 1px solid #a82d2e66;
+}
+
+.panel p,
+.panel ol {
+	margin: 6px 0;
+	padding-left: 18px;
+}
+
+.panel p { padding-left: 0; }
+
+code {
+	background: #0006;
+	padding: 1px 4px;
+	border-radius: 4px;
+	font-size: 0.9em;
+}
+
+#main.disabled {
+	opacity: 0.45;
+	pointer-events: none;
+}
+
+#currentGame {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	text-align: center;
+}
+
+#gameName {
+	font-weight: 700;
+	font-size: 1.15em;
+}
+
+.badge {
+	font-size: 0.7em;
+	padding: 2px 7px;
+	border-radius: 999px;
+	background: #2e2e2e;
+	color: #bbb;
+	white-space: nowrap;
+}
+
+.badge.manual {
+	background: color-mix(in srgb, var(--dock-accent) 25%, transparent);
+	color: white;
+}
+
+#countDisplay {
+	text-align: center;
+	font-size: 4em;
+	font-weight: 900;
+	line-height: 1.1;
+	margin: 4px 0 10px;
+	font-variant-numeric: tabular-nums;
+}
+
+.row {
+	display: flex;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.row > * {
+	flex: 1;
+	min-width: 0;
+}
+
+.row input {
+	box-sizing: border-box;
+}
+
+.row.big button {
+	font-size: 1.6em;
+	font-weight: 800;
+	padding: 10px 0;
+}
+
+button.accent {
+	background: var(--dock-accent);
+}
+
+button.danger.confirming {
+	background: var(--mandatory-field-color);
+}
+
+.toggle-line {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin: 6px 0 4px;
+	cursor: pointer;
+}
+
+.section {
+	margin-top: 14px;
+	padding-top: 10px;
+	border-top: 1px solid #2e2e2e;
+}
+
+.section h3 {
+	margin: 0 0 8px;
+	font-size: 0.85em;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #aaa;
+}
+
+.game-item {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 8px;
+	border-radius: 6px;
+	background: #222;
+	margin-bottom: 6px;
+}
+
+.game-item.current {
+	outline: 1px solid var(--dock-accent);
+}
+
+.game-item .name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.game-item .count {
+	font-weight: 800;
+	font-variant-numeric: tabular-nums;
+}
+
+.game-item button {
+	width: auto;
+	padding: 4px 8px;
+	font-size: 0.8em;
+}
+
+.game-item button.confirming {
+	background: var(--mandatory-field-color);
+}
+
+.muted {
+	color: #888;
+	font-size: 0.85em;
+	margin: 4px 0;
+}
+
+#toast {
+	position: fixed;
+	left: 50%;
+	bottom: 12px;
+	transform: translateX(-50%);
+	background: #000c;
+	padding: 6px 12px;
+	border-radius: 6px;
+	font-size: 0.85em;
+	opacity: 0;
+	transition: opacity 0.2s;
+	pointer-events: none;
+	max-width: 90vw;
+	text-align: center;
+}
+
+#toast.show {
+	opacity: 1;
+}
+
+[hidden] {
+	display: none !important;
+}

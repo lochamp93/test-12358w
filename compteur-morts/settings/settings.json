@@ -1,0 +1,329 @@
+{
+	"title": "Compteur de morts",
+	"livePreview": true,
+	"demo": true,
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "Adresse du serveur WebSocket de Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion"
+		},
+		{
+			"id": "variableName",
+			"label": "Variable Streamer.bot",
+			"description": "Variable globale persistante qui contient les compteurs de chaque jeu (doit être la même que dans l’action)",
+			"type": "text",
+			"defaultValue": "compteursMorts",
+			"group": "Compteur"
+		},
+		{
+			"id": "showLabel",
+			"label": "Afficher le libellé",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Compteur"
+		},
+		{
+			"id": "labelText",
+			"label": "Texte du libellé",
+			"description": "",
+			"type": "text",
+			"defaultValue": "Morts :",
+			"group": "Compteur",
+			"showIf": "showLabel"
+		},
+		{
+			"id": "labelPosition",
+			"label": "Position du libellé",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": "before", "label": "Avant le nombre" },
+				{ "value": "after", "label": "Après le nombre" },
+				{ "value": "above", "label": "Au-dessus" },
+				{ "value": "below", "label": "En dessous" }
+			],
+			"defaultValue": "before",
+			"group": "Compteur",
+			"showIf": "showLabel"
+		},
+		{
+			"id": "showGame",
+			"label": "Afficher le nom du jeu",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Compteur"
+		},
+		{
+			"id": "gamePosition",
+			"label": "Position du nom du jeu",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": "above", "label": "Au-dessus" },
+				{ "value": "below", "label": "En dessous" }
+			],
+			"defaultValue": "above",
+			"group": "Compteur",
+			"showIf": "showGame"
+		},
+		{
+			"id": "gameFontSize",
+			"label": "Taille du nom du jeu",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 200,
+			"defaultValue": 24,
+			"group": "Compteur",
+			"showIf": "showGame"
+		},
+		{
+			"id": "icon",
+			"label": "Icône",
+			"description": "",
+			"type": "select",
+			"options": [
+				{ "value": "none", "label": "Aucune" },
+				{ "value": "skull", "label": "Crâne" },
+				{ "value": "cross", "label": "Croix" },
+				{ "value": "custom", "label": "Personnalisée (URL)" }
+			],
+			"defaultValue": "skull",
+			"group": "Icône"
+		},
+		{
+			"id": "iconUrl",
+			"label": "URL de l’image",
+			"description": "Lien direct vers une image (PNG, GIF, SVG…)",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Icône",
+			"showIf": { "id": "icon", "value": "custom" }
+		},
+		{
+			"id": "iconSize",
+			"label": "Taille de l’icône",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 400,
+			"defaultValue": 48,
+			"group": "Icône",
+			"showIf": { "id": "icon", "value": ["skull", "cross", "custom"] }
+		},
+		{
+			"id": "font",
+			"label": "Police d’écriture",
+			"description": "Nom d’une police <a href=\"https://fonts.google.com\" target=\"_blank\">Google Fonts</a> (ex. : Montserrat, Bangers, Press Start 2P)",
+			"type": "text",
+			"defaultValue": "Montserrat",
+			"group": "Texte"
+		},
+		{
+			"id": "fontSize",
+			"label": "Taille du nombre",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 400,
+			"defaultValue": 64,
+			"group": "Texte"
+		},
+		{
+			"id": "textColor",
+			"label": "Couleur du texte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#ffffff",
+			"group": "Texte"
+		},
+		{
+			"id": "outline",
+			"label": "Contour",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Texte"
+		},
+		{
+			"id": "outlineColor",
+			"label": "Couleur du contour",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Texte",
+			"showIf": "outline"
+		},
+		{
+			"id": "outlineWidth",
+			"label": "Épaisseur du contour",
+			"description": "En pixels",
+			"type": "number",
+			"min": 1,
+			"max": 30,
+			"defaultValue": 3,
+			"group": "Texte",
+			"showIf": "outline"
+		},
+		{
+			"id": "shadow",
+			"label": "Ombre",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Texte"
+		},
+		{
+			"id": "shadowColor",
+			"label": "Couleur de l’ombre",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Texte",
+			"showIf": "shadow"
+		},
+		{
+			"id": "shadowBlur",
+			"label": "Flou de l’ombre",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 8,
+			"group": "Texte",
+			"showIf": "shadow"
+		},
+		{
+			"id": "background",
+			"label": "Fond",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Fond"
+		},
+		{
+			"id": "bgColor",
+			"label": "Couleur du fond",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Fond",
+			"showIf": "background"
+		},
+		{
+			"id": "bgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 60,
+			"group": "Fond",
+			"showIf": "background"
+		},
+		{
+			"id": "bgRadius",
+			"label": "Arrondi des coins",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 12,
+			"group": "Fond",
+			"showIf": "background"
+		},
+		{
+			"id": "bgPadding",
+			"label": "Marge intérieure",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 16,
+			"group": "Fond",
+			"showIf": "background"
+		},
+		{
+			"id": "animation",
+			"label": "Animation au changement",
+			"description": "Jouée quand le nombre de morts change",
+			"type": "select",
+			"options": [
+				{ "value": "none", "label": "Aucune" },
+				{ "value": "pulse", "label": "Pulsation" },
+				{ "value": "bounce", "label": "Rebond" },
+				{ "value": "flip", "label": "Retournement" },
+				{ "value": "slide", "label": "Glissement" }
+			],
+			"defaultValue": "pulse",
+			"group": "Animation"
+		},
+		{
+			"id": "animationDuration",
+			"label": "Durée de l’animation",
+			"description": "En millisecondes",
+			"type": "number",
+			"min": 100,
+			"max": 5000,
+			"step": 50,
+			"defaultValue": 400,
+			"group": "Animation",
+			"showIf": { "id": "animation", "value": ["pulse", "bounce", "flip", "slide"] }
+		},
+		{
+			"id": "flashColors",
+			"label": "Couleur temporaire au changement",
+			"description": "Le nombre change brièvement de couleur quand il monte ou descend",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Animation"
+		},
+		{
+			"id": "colorUp",
+			"label": "Couleur à la hausse",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#ff4d4d",
+			"group": "Animation",
+			"showIf": "flashColors"
+		},
+		{
+			"id": "colorDown",
+			"label": "Couleur à la baisse",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#4dff88",
+			"group": "Animation",
+			"showIf": "flashColors"
+		},
+		{
+			"id": "align",
+			"label": "Alignement",
+			"description": "Position du compteur dans la source OBS",
+			"type": "select",
+			"options": [
+				{ "value": "left", "label": "Gauche" },
+				{ "value": "center", "label": "Centre" },
+				{ "value": "right", "label": "Droite" }
+			],
+			"defaultValue": "center",
+			"group": "Position"
+		}
+	]
+}

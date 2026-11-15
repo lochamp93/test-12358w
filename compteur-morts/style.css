@@ -1,0 +1,178 @@
+/* Compteur de morts — overlay OBS (fond transparent) */
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	overflow: hidden;
+}
+
+#widget {
+	--font: 'Montserrat';
+	--font-size: 64px;
+	--text-color: #ffffff;
+	--count-color: var(--text-color);
+	--game-size: 24px;
+	--icon-size: 48px;
+	--anim-duration: 400ms;
+
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100vw;
+	box-sizing: border-box;
+	padding: 10px;
+	font-family: var(--font), 'Segoe UI', sans-serif;
+	color: var(--text-color);
+	transition: opacity 0.3s ease;
+}
+
+#widget.hidden {
+	opacity: 0;
+}
+
+#widget.align-left { justify-content: flex-start; }
+#widget.align-center { justify-content: center; }
+#widget.align-right { justify-content: flex-end; }
+
+#box {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.15em;
+	font-size: var(--font-size);
+	line-height: 1.1;
+}
+
+#widget.align-left #box { align-items: flex-start; }
+#widget.align-right #box { align-items: flex-end; }
+
+/* Texte : contour et ombre appliqués via des classes */
+#box.outline .label,
+#box.outline .game,
+#box.outline #count {
+	-webkit-text-stroke: var(--outline-width) var(--outline-color);
+	paint-order: stroke fill;
+}
+
+#box.shadow .label,
+#box.shadow .game,
+#box.shadow #count {
+	text-shadow: 0 0 var(--shadow-blur) var(--shadow-color), 0 2px var(--shadow-blur) var(--shadow-color);
+}
+
+#box.shadow #icon {
+	filter: drop-shadow(0 0 calc(var(--shadow-blur) / 2) var(--shadow-color));
+}
+
+/* Nom du jeu */
+.game {
+	font-size: var(--game-size);
+	font-weight: 600;
+	opacity: 0.9;
+	white-space: nowrap;
+	transition: opacity 0.3s ease;
+}
+
+#box.game-below .game { order: 2; }
+#box.game-hidden .game { display: none; }
+
+/* Ligne principale : libellé + icône + nombre */
+#core {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
+}
+
+#core.label-before { flex-direction: row; }
+#core.label-after { flex-direction: row-reverse; }
+#core.label-above { flex-direction: column; gap: 0.05em; }
+#core.label-below { flex-direction: column-reverse; gap: 0.05em; }
+#core.label-hidden .label { display: none; }
+
+.label {
+	font-size: 0.55em;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+#valueRow {
+	display: flex;
+	align-items: center;
+	gap: 0.2em;
+}
+
+#icon {
+	display: inline-flex;
+	align-items: center;
+}
+
+#icon:empty { display: none; }
+
+#icon svg,
+#icon img {
+	width: var(--icon-size);
+	height: var(--icon-size);
+	object-fit: contain;
+}
+
+#icon svg {
+	fill: var(--text-color);
+}
+
+#box.outline #icon svg {
+	stroke: var(--outline-color);
+	stroke-width: 1.2px;
+	paint-order: stroke fill;
+}
+
+#countWrap {
+	display: inline-block;
+	overflow: visible;
+	perspective: 400px;
+}
+
+#count {
+	display: inline-block;
+	font-weight: 900;
+	font-variant-numeric: tabular-nums;
+	color: var(--count-color);
+	transition: color var(--anim-duration) ease;
+}
+
+/* Fond */
+#box.with-bg {
+	background: var(--bg-color);
+	border-radius: var(--bg-radius);
+	padding: var(--bg-padding) calc(var(--bg-padding) * 1.5);
+}
+
+/* Animations au changement */
+#count.anim-pulse { animation: cm-pulse var(--anim-duration) ease-out; }
+#count.anim-bounce { animation: cm-bounce var(--anim-duration) cubic-bezier(.3, 1.6, .5, 1); }
+#count.anim-flip { animation: cm-flip var(--anim-duration) ease-out; }
+#count.anim-slide { animation: cm-slide var(--anim-duration) ease-out; }
+
+@keyframes cm-pulse {
+	0% { transform: scale(1); }
+	40% { transform: scale(1.35); }
+	100% { transform: scale(1); }
+}
+
+@keyframes cm-bounce {
+	0% { transform: translateY(0); }
+	35% { transform: translateY(-0.35em); }
+	65% { transform: translateY(0.05em); }
+	100% { transform: translateY(0); }
+}
+
+@keyframes cm-flip {
+	0% { transform: rotateX(90deg); opacity: 0.2; }
+	100% { transform: rotateX(0); opacity: 1; }
+}
+
+@keyframes cm-slide {
+	0% { transform: translateY(-0.6em); opacity: 0; }
+	100% { transform: translateY(0); opacity: 1; }
+}

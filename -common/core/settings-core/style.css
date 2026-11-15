@@ -368,3 +368,33 @@ button:hover {
     -webkit-backdrop-filter: blur(10px);
     transform: translate(-50%, -50%);
 }
+
+/* Nom du widget dans l’en-tête (affiché seulement si settings.json définit "title") */
+#widgetTitle {
+    font-size: 1.2em;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+#widgetTitle:empty {
+    display: none;
+}
+
+/* Le libellé « Cliquez pour copier l’URL » reste sur une ligne et le champ garde une largeur utile */
+#urlLabel {
+    white-space: nowrap;
+}
+
+#widgetUrlInputWrapper {
+    width: auto;
+    flex: 1 1 160px;
+    min-width: 160px;
+}
+
+/* Sur les écrans étroits, la barre passe sur deux lignes au lieu de couper un bouton */
+#header {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
