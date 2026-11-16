@@ -19,8 +19,27 @@
 
 	// ---------- Barre latérale repliable (état mémorisé) ----------
 
+	// Page de paramétrage affichée (cadre dans le cadre), ou null si pas encore prête
+	function settingsDocument() {
+		try {
+			const inner = frame.contentWindow.document.getElementById('widgetContainer');
+			return inner && inner.contentWindow ? inner.contentWindow.document : null;
+		} catch (e) { return null; }
+	}
+
+	// Barre repliée : la page décale son titre pour laisser la place au bouton
+	function syncSettingsPage(animate) {
+		const doc = settingsDocument();
+		if (!doc) return;
+		const root = doc.documentElement;
+		if (!animate) root.classList.add('hub-no-anim');
+		root.classList.toggle('hub-collapsed', document.body.classList.contains('sidebar-collapsed'));
+		if (!animate) requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('hub-no-anim')));
+	}
+
 	function setSidebar(collapsed) {
 		document.body.classList.toggle('sidebar-collapsed', collapsed);
+		syncSettingsPage(true);
 		sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
 		try { localStorage.setItem(SIDEBAR_KEY, collapsed ? '1' : '0'); } catch (e) { }
 	}
@@ -99,6 +118,7 @@
 			} catch (e) { ready = true; }
 			if (ready || Date.now() - started > 4000) {
 				clearInterval(readyTimer);
+				syncSettingsPage(false);
 				frame.classList.remove('loading');
 			}
 		}, 50);

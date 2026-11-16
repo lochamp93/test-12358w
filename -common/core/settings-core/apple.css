@@ -997,3 +997,9 @@ html.apple .setting-item.indent-2 + .setting-item.indent-2 { border-top-color: v
 /* Barre du haut : 84 px, titre et boutons centrés à 42 px du haut (alignés sur le
    bouton de barre latérale du hub, posé à 20 px du haut) */
 html.apple #header { height: 84px; min-height: 84px; flex-shrink: 0; }
+
+/* Dans le hub, barre latérale repliée : le bouton du hub se place à gauche du titre */
+html.in-hub #widgetTitle { transition: margin-left 0.5s cubic-bezier(0.32, 0.72, 0, 1); }
+html.in-hub.hub-collapsed #widgetTitle { margin-left: 64px; }
+html.in-hub.hub-no-anim #widgetTitle { transition: none; }
+@media (prefers-reduced-motion: reduce) { html.in-hub #widgetTitle { transition: none; } }

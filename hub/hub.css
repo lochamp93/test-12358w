@@ -71,16 +71,15 @@ body.sidebar-collapsed #sidebarToggle { left: 20px; }
    et laisse la place au bouton à gauche du titre */
 body.sidebar-collapsed #sidebar { margin-left: calc(-1 * var(--hub-sidebar)); opacity: 0; pointer-events: none; }
 
-#content { transition: padding-left var(--hub-duration) var(--hub-ease); }
-body.sidebar-collapsed #content { padding-left: 64px; }
+/* Barre repliée : la page reprend toute la largeur, seul son titre se décale pour
+   laisser la place au bouton (voir « hub-collapsed » dans settings-core/apple.css) */
 
 /* Pas d'animation au chargement de la page */
 body.no-anim #sidebar,
-body.no-anim #content,
 body.no-anim #sidebarToggle { transition: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
-	#sidebar, #content, html.apple #sidebarToggle { transition: none !important; }
+	#sidebar, html.apple #sidebarToggle { transition: none !important; }
 }
 
 .sidebar-panel {
@@ -225,5 +224,4 @@ html.apple .hub-search input:focus {
 		inset: 0 auto 0 0;
 		z-index: 5;
 	}
-	body:not(.sidebar-collapsed) #content { padding-left: 0; }
 }
