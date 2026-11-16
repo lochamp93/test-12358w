@@ -2,7 +2,7 @@
 	"title": "Multichat",
 	"design": "apple",
 	"showLogo": false,
-	"nuttyLink": "icon",
+	"showNuttyLink": false,
 	"checkerPreview": true,
 	"settings": [
 		{
