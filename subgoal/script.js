@@ -571,8 +571,8 @@ function _startVibeCore(duration) {
   setVibeRingProgress(ring, 0);
 
   // Messages
-  client.sendMessage('twitch', `/me VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
-  client.sendMessage('youtube', `VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`, { bot: true });
+  SendChat('twitch', `/me VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`);
+  SendChat('youtube', `VIBE METER ! Entrez un nombre entre ${minRating} et ${maxRating}`);
 
   // Reset des notes
   ratingsMap.clear();
@@ -598,8 +598,8 @@ function _startVibeCore(duration) {
 function _endVibeCore(silent = false) {
 if (!isAcceptingSubmissions) {
   if (!silent) {
-    client.sendMessage('twitch', `/me Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
-    client.sendMessage('youtube', `Tapez "${chatCommand} on" pour lancer le Vibe Meter`, { bot: true });
+    SendChat('twitch', `/me Tapez "${chatCommand} on" pour lancer le Vibe Meter`);
+    SendChat('youtube', `Tapez "${chatCommand} on" pour lancer le Vibe Meter`);
   }
 
   // ✅ revient visuellement au subgoal
@@ -615,8 +615,8 @@ if (!isAcceptingSubmissions) {
 
   const finalRating = CalculateAverage();
 
-  client.sendMessage('twitch', `/me VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
-  client.sendMessage('youtube', `VIBE METER VERDICT: ${finalRating}/${maxRating}`, { bot: true });
+  SendChat('twitch', `/me VIBE METER VERDICT: ${finalRating}/${maxRating}`);
+  SendChat('youtube', `VIBE METER VERDICT: ${finalRating}/${maxRating}`);
 
   isInFinalAnimation = false;
   VBM._running = false;
@@ -1605,3 +1605,44 @@ window.backFromSocialsToSubgoal  = backFromSocialsToSubgoal;
 
 
 })(); // <-- fermeture propre de l'IIFE
+
+
+///////////////////////////////////////////////
+// TESTS DEPUIS LA PAGE DE PARAMÉTRAGE (APERÇU) //
+///////////////////////////////////////////////
+
+// Pendant un test, rien n'est envoyé dans le chat
+let previewTestMode = false;
+function SendChat(platform, text) {
+  if (previewTestMode) return;
+  try { client.sendMessage(platform, text, { bot: true }); } catch (e) { console.warn('Envoi impossible :', e); }
+}
+
+// Vibemeter : lance un vibe de 8 s avec de fausses notes de viewers
+window.TestVibeMeter = function () {
+  previewTestMode = true;
+  if (isVibeBusy()) return;
+  ratingsMap.clear();
+  StartVibeMeter(8);
+  let i = 0;
+  const timer = setInterval(() => {
+    if (!isAcceptingSubmissions || i >= 12) { clearInterval(timer); return; }
+    const note = Math.max(minRating, Math.min(maxRating, Math.round(5 + Math.random() * 5)));
+    ratingsMap.set('test-' + i, note);
+    i++;
+    try { CalculateAverage(); } catch (e) { console.error(e); }
+  }, 550);
+};
+
+// Réseaux : affiche le réseau comme si sa commande avait été tapée dans le chat
+function TestSocial(key) {
+  previewTestMode = true;
+  requestShowSocial(key);
+}
+window.TestSocialDiscord = () => TestSocial('discord');
+window.TestSocialInstagram = () => TestSocial('instagram');
+window.TestSocialTikTok = () => TestSocial('tiktok');
+window.TestSocialTwitch = () => TestSocial('twitch');
+window.TestSocialTwitter = () => TestSocial('twitter');
+window.TestSocialYouTube = () => TestSocial('youtube');
+window.TestSocialYouTubeVOD = () => TestSocial('youtubeVOD');

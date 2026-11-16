@@ -159,11 +159,34 @@
 			"group": "Vibemeter"
 		},
 		{
+			"id": "testVibeMeter",
+			"label": "Tester le vibemeter",
+			"description": "Vibe de 8 secondes avec de fausses notes, rien n’est envoyé dans le chat",
+			"type": "actions",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester le vibemeter",
+					"callFunction": "TestVibeMeter"
+				}
+			],
+			"group": "Vibemeter"
+		},
+		{
 			"id": "enableDiscord",
 			"label": "Discord",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialDiscord"
+				}
+			]
 		},
 		{
 			"id": "Discordchannel",
@@ -189,7 +212,15 @@
 			"label": "Instagram",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialInstagram"
+				}
+			]
 		},
 		{
 			"id": "Instagramchannel",
@@ -215,7 +246,15 @@
 			"label": "TikTok",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialTikTok"
+				}
+			]
 		},
 		{
 			"id": "TikTokchannel",
@@ -241,7 +280,15 @@
 			"label": "Twitch",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialTwitch"
+				}
+			]
 		},
 		{
 			"id": "Twitchchannel",
@@ -267,7 +314,15 @@
 			"label": "X",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialTwitter"
+				}
+			]
 		},
 		{
 			"id": "Twitterchannel",
@@ -293,7 +348,15 @@
 			"label": "YouTube",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialYouTube"
+				}
+			]
 		},
 		{
 			"id": "YouTubechannel",
@@ -319,7 +382,15 @@
 			"label": "YouTube (VOD)",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Réseaux"
+			"group": "Réseaux",
+			"buttons": [
+				{
+					"icon": "play",
+					"style": "accent",
+					"title": "Tester l’animation",
+					"callFunction": "TestSocialYouTubeVOD"
+				}
+			]
 		},
 		{
 			"id": "YouTubeVODchannel",
