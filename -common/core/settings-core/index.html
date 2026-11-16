@@ -5,12 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paramètres</title>
-    <link rel="stylesheet" href="style.css?v=2026111610">
-    <link rel="stylesheet" href="../../styles/apple.css?v=2026111610">
-    <link rel="stylesheet" href="apple.css?v=2026111610">
-    <script src="../../utils/icons.js?v=2026111610"></script>
-    <script src="../../utils/color-scheme.js?v=2026111610"></script>
+    <link rel="stylesheet" href="style.css?v=2026111611">
+    <link rel="stylesheet" href="../../styles/apple.css?v=2026111611">
+    <link rel="stylesheet" href="apple.css?v=2026111611">
+    <script src="../../utils/icons.js?v=2026111611"></script>
+    <script src="../../utils/color-scheme.js?v=2026111611"></script>
     <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
+    <!-- Page masquée tant que le design (Apple ou d'origine) n'est pas appliqué -->
+    <style>
+        html:not(.settings-ready) body { visibility: hidden; background: transparent !important; }
+        html:not(.settings-ready) { background: transparent !important; }
+    </style>
+    <script>setTimeout(function () { document.documentElement.classList.add('settings-ready'); }, 3000);</script>
 </head>
 
 <body>
@@ -73,5 +79,5 @@
 </html>
 
 <script src="../../utils/helpers.js"></script>
-<script src="../../utils/widget-settings.js?v=2026111610"></script>
-<script src="script.js?v=2026111610"></script>
+<script src="../../utils/widget-settings.js?v=2026111611"></script>
+<script src="script.js?v=2026111611"></script>

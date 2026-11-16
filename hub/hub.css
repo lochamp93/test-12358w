@@ -25,11 +25,20 @@ body {
 	white-space: nowrap;
 }
 
-/* ---------- Boutons fixes (barre latérale, clair / sombre) ---------- */
+/* ---------- Bouton de barre latérale ----------
+   Barre ouverte : en haut à droite de la barre. Barre repliée : il glisse à gauche du
+   titre du widget. Centré à 42 px du haut, comme la barre du haut des pages. */
 
-html.apple .hub-round {
+:root {
+	--hub-sidebar: 300px;
+	--hub-ease: cubic-bezier(0.32, 0.72, 0, 1);
+	--hub-duration: 0.5s;
+}
+
+html.apple #sidebarToggle {
 	position: fixed;
-	left: 20px;
+	top: 20px;
+	left: calc(var(--hub-sidebar) - 10px - 44px);
 	z-index: 10;
 	width: 44px;
 	height: 44px;
@@ -39,33 +48,40 @@ html.apple .hub-round {
 	align-items: center;
 	justify-content: center;
 	color: var(--ui-text);
+	transition: left var(--hub-duration) var(--hub-ease);
 }
 
-#sidebarToggle { top: 20px; }
-#schemeToggle { bottom: 24px; }
+body.sidebar-collapsed #sidebarToggle { left: 20px; }
 
-.hub-round svg { width: 22px; height: 22px; }
-#schemeToggle svg { width: 20px; height: 20px; fill: currentColor; }
-
-/* Une seule icône à la fois : la lune en clair, le soleil en sombre */
-#schemeToggle .icon-sun { display: none; }
-html[data-scheme="dark"] #schemeToggle .icon-sun { display: block; }
-html[data-scheme="dark"] #schemeToggle .icon-moon { display: none; }
+#sidebarToggle svg { width: 22px; height: 22px; }
 
 /* ---------- Barre latérale ---------- */
 
 #sidebar {
-	flex: 0 0 300px;
+	flex: 0 0 var(--hub-sidebar);
+	width: var(--hub-sidebar);
 	height: 100%;
 	padding: 10px 0 10px 10px;
 	box-sizing: border-box;
 	display: flex;
+	transition: margin-left var(--hub-duration) var(--hub-ease), opacity var(--hub-duration) var(--hub-ease);
 }
 
-body.sidebar-collapsed #sidebar { display: none; }
+/* Barre repliée : elle glisse hors de l'écran, le contenu suit le mouvement
+   et laisse la place au bouton à gauche du titre */
+body.sidebar-collapsed #sidebar { margin-left: calc(-1 * var(--hub-sidebar)); opacity: 0; pointer-events: none; }
 
-/* Barre repliée : le contenu laisse la place aux deux boutons fixes */
-body.sidebar-collapsed #content { padding-left: 74px; }
+#content { transition: padding-left var(--hub-duration) var(--hub-ease); }
+body.sidebar-collapsed #content { padding-left: 64px; }
+
+/* Pas d'animation au chargement de la page */
+body.no-anim #sidebar,
+body.no-anim #content,
+body.no-anim #sidebarToggle { transition: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+	#sidebar, #content, html.apple #sidebarToggle { transition: none !important; }
+}
 
 .sidebar-panel {
 	flex: 1;
@@ -110,7 +126,16 @@ html.apple .hub-search input {
 	font-size: 15px;
 }
 
-html.apple .hub-search input:focus { box-shadow: none; }
+html.apple .hub-search input,
+html.apple .hub-search input:hover,
+html.apple .hub-search input:focus {
+	background: none !important;
+	box-shadow: none !important;
+	outline: none;
+	border-radius: 0;
+	-webkit-appearance: none;
+	appearance: none;
+}
 
 #widgetList {
 	list-style: none;
@@ -171,12 +196,15 @@ html.apple .hub-search input:focus { box-shadow: none; }
 }
 
 #settingsFrame {
+	transition: opacity 0.18s ease;
 	display: block;
 	width: 100%;
 	height: 100%;
 	border: 0;
 	background: var(--ui-bg);
 }
+
+#settingsFrame.loading { opacity: 0; transition: none; }
 
 #hubEmpty {
 	position: absolute;
@@ -196,7 +224,6 @@ html.apple .hub-search input:focus { box-shadow: none; }
 		position: fixed;
 		inset: 0 auto 0 0;
 		z-index: 5;
-		width: min(300px, 86vw);
 	}
 	body:not(.sidebar-collapsed) #content { padding-left: 0; }
 }

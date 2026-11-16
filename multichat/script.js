@@ -47,7 +47,7 @@ const useCustomMessageFontSize = GetBooleanParam("useCustomMessageFontSize", fal
 const messageFontSize = urlParams.get("messageFontSize") || "";
 const lineSpacing = urlParams.get("lineSpacing") || "1.7";
 const background = urlParams.get("background") || "#000000";
-const opacity = urlParams.get("opacity") || "0";
+const opacity = urlParams.get("opacity") || "0"; // opacité du fond, en % (0 à 100)
 
 const hideAfter = GetIntParam("hideAfter", 0);
 const excludeCommands = GetBooleanParam("excludeCommands", true);
@@ -59,13 +59,13 @@ const inlineChat = GetBooleanParam("inlineChat", false);
 // Bulles de chat (repris d'orbix-67) : fond de couleur derrière chaque message
 const useChatBubbles = GetBooleanParam("useChatBubbles", false);
 const bubbleColor = urlParams.get("bubbleColor") || "#000000";
-const bubbleOpacity = urlParams.get("bubbleOpacity") || "0.9";
+const bubbleOpacity = urlParams.get("bubbleOpacity") || "90"; // en % (0 à 100)
 
 function ApplyChatBubble(messageContainerDiv) {
 	if (!useChatBubbles || !messageContainerDiv) return;
 	let alpha = parseFloat(String(bubbleOpacity).replace(',', '.'));
-	if (!Number.isFinite(alpha)) alpha = 0.9;
-	if (alpha > 1) alpha = alpha / 100; // accepte aussi un pourcentage (0 à 100)
+	if (!Number.isFinite(alpha)) alpha = 90;
+	alpha = alpha / 100;
 	const hex = Math.round(Math.min(1, Math.max(0, alpha)) * 255).toString(16).padStart(2, '0');
 	document.documentElement.style.setProperty('--bubble-color', `${bubbleColor}${hex}`);
 	messageContainerDiv.classList.add("bubble");
@@ -153,7 +153,7 @@ if (useCustomMessageFontSize)
 document.documentElement.style.setProperty('--line-spacing', `${lineSpacing}em`);
 
 // Set the background color
-const opacity255 = Math.round(parseFloat(opacity) * 255);
+const opacity255 = Math.round(Math.min(100, Math.max(0, parseFloat(String(opacity).replace(',', '.')) || 0)) / 100 * 255);
 let hexOpacity = opacity255.toString(16);
 if (hexOpacity.length < 2) {
 	hexOpacity = "0" + hexOpacity;

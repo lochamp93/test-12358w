@@ -994,5 +994,6 @@ html.apple .setting-item.indent-2 { margin-left: 56px; padding-left: 0; border-l
 html.apple .setting-item.indent-1 + .setting-item.indent-1,
 html.apple .setting-item.indent-2 + .setting-item.indent-2 { border-top-color: var(--ui-separator); }
 
-/* Dans le hub : le thème est piloté par le hub, pas de second bouton clair / sombre */
-html.in-hub #header #schemeToggle { display: none; }
+/* Barre du haut : 84 px, titre et boutons centrés à 42 px du haut (alignés sur le
+   bouton de barre latérale du hub, posé à 20 px du haut) */
+html.apple #header { height: 84px; min-height: 84px; flex-shrink: 0; }

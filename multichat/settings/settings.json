@@ -224,12 +224,11 @@
 		{
 			"id": "opacity",
 			"label": "Opacité du fond",
-			"description": "De 0 à 1",
+			"description": "En %",
 			"type": "number",
-			"defaultValue": "0",
+			"defaultValue": 0,
 			"min": 0,
-			"max": 1,
-			"step": ".01",
+			"max": 100,
 			"group": "Couleurs"
 		},
 		{
@@ -250,12 +249,11 @@
 		{
 			"id": "bubbleOpacity",
 			"label": "Opacité des bulles",
-			"description": "De 0 à 1",
+			"description": "En %",
 			"type": "number",
-			"defaultValue": "0.90",
+			"defaultValue": 90,
 			"min": 0,
-			"max": 1,
-			"step": ".01",
+			"max": 100,
 			"showIf": "useChatBubbles",
 			"group": "Couleurs"
 		},

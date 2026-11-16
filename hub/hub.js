@@ -29,7 +29,10 @@
 		setSidebar(!document.body.classList.contains('sidebar-collapsed'));
 	});
 
+	// État mémorisé appliqué sans animation, puis animations activées
+	document.body.classList.add('no-anim');
 	try { if (localStorage.getItem(SIDEBAR_KEY) === '1') setSidebar(true); } catch (e) { }
+	requestAnimationFrame(() => requestAnimationFrame(() => document.body.classList.remove('no-anim')));
 
 	// ---------- Liste des widgets ----------
 
@@ -71,12 +74,34 @@
 		frame.hidden = false;
 		if (w.id !== currentId) {
 			currentId = w.id;
+			frame.classList.add('loading');
 			frame.src = w.settings;
+			WaitForSettingsReady();
 			document.title = w.name + ' · Widgets';
 		}
 		markCurrent();
 		// Sur un écran étroit, la barre se referme après un choix
 		if (window.matchMedia('(max-width: 700px)').matches) setSidebar(true);
+	}
+
+	// La page de paramétrage est dans un cadre lui-même dans le cadre du hub :
+	// on attend qu'elle ait appliqué son design avant de l'afficher (pas de flash)
+	let readyTimer = null;
+	function WaitForSettingsReady() {
+		clearInterval(readyTimer);
+		const started = Date.now();
+		readyTimer = setInterval(() => {
+			let ready = false;
+			try {
+				const inner = frame.contentWindow.document.getElementById('widgetContainer');
+				const doc = inner && inner.contentWindow && inner.contentWindow.document;
+				ready = !!(doc && doc.documentElement.classList.contains('settings-ready'));
+			} catch (e) { ready = true; }
+			if (ready || Date.now() - started > 4000) {
+				clearInterval(readyTimer);
+				frame.classList.remove('loading');
+			}
+		}, 50);
 	}
 
 	function idFromHash() {

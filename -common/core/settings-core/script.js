@@ -33,8 +33,7 @@ loadUrlBox.placeholder = `${widgetURL}?...`
 
 
 
-// Page affichée dans le hub (index.html à la racine) : le thème clair / sombre est piloté
-// par le hub (même mémoire partagée), le bouton de la page est donc masqué.
+// Page affichée dans le hub (index.html à la racine) : classe « in-hub » sur la page.
 try {
 	if (window.top !== window && window.top.document.documentElement.hasAttribute('data-hub'))
 		document.documentElement.classList.add('in-hub');
@@ -61,6 +60,8 @@ function LoadJSON(settingsJson) {
 
 			// DA Apple (clair/sombre) si settings.json contient "design": "apple"
 			document.documentElement.classList.toggle('apple', data.design === 'apple');
+			// Le design est connu : la page peut s'afficher (évite le flash de l'ancien style)
+			document.documentElement.classList.add('settings-ready');
 			if (window.ColorScheme) window.ColorScheme.initToggles();
 
 			// Réglage "type": "import-string" : champ « Code d’import » (copie du code d’import)

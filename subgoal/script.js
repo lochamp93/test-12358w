@@ -33,7 +33,13 @@ const subCurrentColor   = GetStringParam("subCurrentColor", "");
 const subSeparatorColor = GetStringParam("subSeparatorColor", "");
 const subGoalColor      = GetStringParam("subGoalColor", "");
 const decorLineColor    = GetStringParam("decorLineColor", "");
-const decorLineOpacity  = GetStringParam("decorLineOpacity", "1");
+const decorLineOpacity  = GetStringParam("decorLineOpacity", "100"); // en % (0 à 100)
+
+// Ombre des textes et des icônes (comme le compteur de morts)
+const sgShadow        = GetBooleanParam("shadow", true);
+const sgShadowColor   = GetStringParam("shadowColor", "#000000");
+const sgShadowOpacity = GetStringParam("shadowOpacity", "35");
+const sgShadowBlur    = GetStringParam("shadowBlur", "2");
 
 // Apply couleurs (inchangé)
 if (subTitleColor)     document.documentElement.style.setProperty('--c-title',  subTitleColor);
@@ -41,13 +47,31 @@ if (subCurrentColor)   document.documentElement.style.setProperty('--c-current',
 if (subSeparatorColor) document.documentElement.style.setProperty('--c-sep',    subSeparatorColor);
 if (subGoalColor)      document.documentElement.style.setProperty('--c-target', subGoalColor);
 if (decorLineColor) {
-	// L'input color natif ne gère pas l'opacité : on combine avec decorLineOpacity (0-1)
+	// L'input color natif ne gère pas l'opacité : on combine avec decorLineOpacity (en %)
 	// en 8e/9e caractères hexa (RRGGBBAA), même technique que bubbleColor/bubbleOpacity.
-	const decorAlpha255 = Math.round(parseFloat(decorLineOpacity) * 255);
+	const decorPct = Math.min(100, Math.max(0, parseFloat(String(decorLineOpacity).replace(',', '.')) || 0));
+	const decorAlpha255 = Math.round(decorPct / 100 * 255);
 	let decorHexOpacity = decorAlpha255.toString(16);
 	if (decorHexOpacity.length < 2) decorHexOpacity = "0" + decorHexOpacity;
 	document.documentElement.style.setProperty('--c-line', `${decorLineColor}${decorHexOpacity}`);
 }
+// Ombre : couleur + opacité (%) + flou (px), ou aucune ombre
+(function applySubgoalShadow() {
+	const root = document.documentElement.style;
+	if (!sgShadow) {
+		root.setProperty('--text-shadow', 'none');
+		root.setProperty('--icon-shadow', 'none');
+		return;
+	}
+	const hex = /^#?[0-9a-f]{6}$/i.test(sgShadowColor) ? sgShadowColor.replace('#', '') : '000000';
+	const r = parseInt(hex.slice(0, 2), 16), g = parseInt(hex.slice(2, 4), 16), b = parseInt(hex.slice(4, 6), 16);
+	const a = Math.min(100, Math.max(0, parseFloat(sgShadowOpacity) || 0)) / 100;
+	const blur = Math.max(0, parseFloat(sgShadowBlur) || 0);
+	const color = `rgba(${r}, ${g}, ${b}, ${a})`;
+	root.setProperty('--text-shadow', `0 1px ${blur}px ${color}`);
+	root.setProperty('--icon-shadow', `drop-shadow(0 1px ${blur}px ${color})`);
+})();
+
 // Apply police (NOUVEAU)
 if (sgFont && sgFont.trim() !== '') {
   document.documentElement.style.setProperty('--ui-font', sgFont + ', system-ui, -apple-system, sans-serif');
