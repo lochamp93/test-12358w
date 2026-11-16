@@ -225,3 +225,28 @@ html.apple .hub-search input:focus {
 		z-index: 5;
 	}
 }
+
+/* ---------- Lien vers nutty (bas de la barre latérale) ---------- */
+
+.sidebar-fill { flex: 1 1 auto; }
+
+#hubNutty {
+	flex: none;
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	margin: 0 0 0 0;
+	border-radius: 50%;
+	text-decoration: none;
+}
+
+/* Léger halo derrière le logo (blanc) pour qu'il reste visible sur le bouton clair */
+#hubNutty img {
+	width: 26px;
+	height: 26px;
+	display: block;
+	filter: drop-shadow(0 0 1.5px rgba(0, 0, 0, 0.45)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
