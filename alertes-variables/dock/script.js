@@ -30,6 +30,7 @@ function Toast(text) {
 
 function Render() {
 	const s = ws.values;
+	if (window.DockImport) DockImport.update({ connected, actionFound });
 	$('status').textContent = connected ? 'Connecté' : 'Déconnecté';
 	$('status').className = 'status ' + (connected ? 'on' : 'off');
 	$('panelDisconnected').hidden = connected;
@@ -312,17 +313,7 @@ $('skipButton').addEventListener('click', () => Send({ mode: 'passer' }));
 
 
 
-async function CopyImportCode() {
-	try {
-		const code = (await (await fetch('../streamerbot/import.txt', { cache: 'no-cache' })).text()).trim();
-		await navigator.clipboard.writeText(code);
-		Toast('Code d’import copié ! Collez-le dans Streamer.bot → Import');
-	} catch (e) {
-		Toast('Copie impossible : ouvrez streamerbot/import.txt');
-	}
-}
-$('copyCodeButton').addEventListener('click', CopyImportCode);
-$('copyCodeButton2').addEventListener('click', CopyImportCode);
+DockImport.init({ url: '../streamerbot/import.txt', toast: Toast }); // bouton « Importer l’action » de l’en-tête
 $('recheckButton').addEventListener('click', CheckAction);
 
 ///////////////

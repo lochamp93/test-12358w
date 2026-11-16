@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Compteur de morts • Dock</title>
 	<link rel="icon" href="../../-common/resources/logo.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111540" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111601" />
 	<!-- Dock : thème sombre uniquement ; rechargement automatique si une version plus récente est en ligne -->
-	<script src="../../-common/utils/fresh.js?v=2026111540" data-version="2026111540" data-version-url="../version.txt"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111540" />
+	<script src="../../-common/utils/fresh.js?v=2026111601" data-version="2026111601" data-version-url="../version.txt"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111601" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -36,12 +36,11 @@
 	<div id="panelMissingAction" class="panel warning" hidden>
 		<strong>Action introuvable : « <span id="missingActionName"></span> »</strong>
 		<ol>
-			<li>Cliquez sur <em>Copier le code d’import</em> ci-dessous.</li>
+			<li>Cliquez sur le bouton bleu <em>Importer l’action</em> en haut du dock : le code d’import est copié.</li>
 			<li>Dans Streamer.bot, cliquez sur <em>Import</em> en haut, collez le texte dans <em>Import String</em>, puis <em>Import</em>.</li>
 			<li>Dans l’action importée, ajoutez vos déclencheurs : les commandes <code>!addmort</code>, <code>!supmort</code>, <code>!setmort</code> (et <code>!resetmort</code> si vous voulez), et <em>Twitch → Channel → Stream Update</em>.</li>
 		</ol>
 		<div class="row">
-			<button id="copyCodeButton" type="button">Copier le code d’import</button>
 			<button id="recheckButton" type="button">Vérifier à nouveau</button>
 		</div>
 	</div>
@@ -104,8 +103,9 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111540"></script>
-	<script src="./script.js?v=2026111540"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111601"></script>
+	<script src="../../-common/utils/dock-import.js?v=2026111601"></script>
+	<script src="./script.js?v=2026111601"></script>
 </body>
 
 </html>

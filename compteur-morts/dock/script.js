@@ -76,6 +76,7 @@ function CurrentGame() {
 
 function Render() {
 	const s = ws.values;
+	if (window.DockImport) DockImport.update({ connected, actionFound });
 	const demo = ws.demo && !connected; // aperçu sans Streamer.bot : exemple local
 
 	document.documentElement.style.setProperty('--dock-accent', s.accentColor);
@@ -505,15 +506,7 @@ els.announce.addEventListener('change', () => {
 	els.announce.checked = stored === null ? ws.values.announce : stored === 'true';
 
 	// Copie du code d'import Streamer.bot (action « Compteur de morts | Modifier »)
-	document.getElementById('copyCodeButton').addEventListener('click', async () => {
-		try {
-			const code = (await (await fetch('../streamerbot/import.txt', { cache: 'no-cache' })).text()).trim();
-			await navigator.clipboard.writeText(code);
-			Toast('Code d’import copié ! Collez-le dans Streamer.bot → Import');
-		} catch (e) {
-			Toast('Copie impossible : ouvrez streamerbot/import.txt');
-		}
-	});
+	DockImport.init({ url: '../streamerbot/import.txt', toast: Toast }); // bouton « Importer l’action » de l’en-tête
 	document.getElementById('recheckButton').addEventListener('click', CheckAction);
 
 	if (ws.demo) data = DemoData(); // remplacé par les vraies données dès la connexion

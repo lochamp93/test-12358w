@@ -263,3 +263,41 @@ html.apple[data-scheme="dark"] [data-scheme-toggle] .icon-moon { display: none; 
 html.apple .ui-checker {
 	background: repeating-conic-gradient(var(--ui-checker-a) 0% 25%, var(--ui-checker-b) 0% 50%) 50% / 24px 24px;
 }
+
+/* ---------- Bouton « Importer l’action » des docks (-common/utils/dock-import.js) ---------- */
+
+html.apple button.dock-import {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	height: 28px;
+	padding: 0 11px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+	white-space: nowrap;
+	background: var(--ui-fill);
+	color: var(--ui-text-secondary);
+}
+
+html.apple button.dock-import svg {
+	width: 12px;
+	height: 14px;
+	fill: currentColor;
+	flex-shrink: 0;
+}
+
+/* Action absente : bouton bleu, cliquable */
+html.apple button.dock-import.needed {
+	background: var(--ui-accent);
+	color: #fff;
+}
+
+html.apple button.dock-import.needed:hover { background: color-mix(in srgb, var(--ui-accent) 88%, #000); }
+
+/* Action installée : grisé, inactif */
+html.apple button.dock-import:disabled {
+	opacity: 0.5;
+	cursor: default;
+	pointer-events: none;
+}
