@@ -33,6 +33,13 @@ loadUrlBox.placeholder = `${widgetURL}?...`
 
 
 
+// Page affichée dans le hub (index.html à la racine) : le thème clair / sombre est piloté
+// par le hub (même mémoire partagée), le bouton de la page est donc masqué.
+try {
+	if (window.top !== window && window.top.document.documentElement.hasAttribute('data-hub'))
+		document.documentElement.classList.add('in-hub');
+} catch (e) { /* autre origine : rien à faire */ }
+
 /////////////////////////////
 // CHARGER DE SETTINGS.JSON //
 /////////////////////////////

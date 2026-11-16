@@ -993,3 +993,6 @@ html.apple .setting-item.indent-1 { margin-left: 28px; padding-left: 0; border-l
 html.apple .setting-item.indent-2 { margin-left: 56px; padding-left: 0; border-left: none; }
 html.apple .setting-item.indent-1 + .setting-item.indent-1,
 html.apple .setting-item.indent-2 + .setting-item.indent-2 { border-top-color: var(--ui-separator); }
+
+/* Dans le hub : le thème est piloté par le hub, pas de second bouton clair / sombre */
+html.in-hub #header #schemeToggle { display: none; }

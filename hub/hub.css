@@ -1,0 +1,202 @@
+/*
+ * hub.css : page unique qui rassemble les pages de paramétrage des widgets
+ * (DA Streamertools, jetons de -common/styles/apple.css)
+ */
+
+html, body { height: 100%; }
+
+body {
+	margin: 0;
+	display: flex;
+	overflow: hidden;
+	background: var(--ui-bg);
+	color: var(--ui-text);
+	font-family: var(--ui-font);
+	font-size: 15px;
+	-webkit-font-smoothing: antialiased;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+}
+
+/* ---------- Boutons fixes (barre latérale, clair / sombre) ---------- */
+
+html.apple .hub-round {
+	position: fixed;
+	left: 20px;
+	z-index: 10;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ui-text);
+}
+
+#sidebarToggle { top: 20px; }
+#schemeToggle { bottom: 24px; }
+
+.hub-round svg { width: 22px; height: 22px; }
+#schemeToggle svg { width: 20px; height: 20px; fill: currentColor; }
+
+/* Une seule icône à la fois : la lune en clair, le soleil en sombre */
+#schemeToggle .icon-sun { display: none; }
+html[data-scheme="dark"] #schemeToggle .icon-sun { display: block; }
+html[data-scheme="dark"] #schemeToggle .icon-moon { display: none; }
+
+/* ---------- Barre latérale ---------- */
+
+#sidebar {
+	flex: 0 0 300px;
+	height: 100%;
+	padding: 10px 0 10px 10px;
+	box-sizing: border-box;
+	display: flex;
+}
+
+body.sidebar-collapsed #sidebar { display: none; }
+
+/* Barre repliée : le contenu laisse la place aux deux boutons fixes */
+body.sidebar-collapsed #content { padding-left: 74px; }
+
+.sidebar-panel {
+	flex: 1;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 10px 10px 14px;
+	border-radius: var(--ui-radius-sheet);
+	background: var(--ui-bg-elevated);
+	overflow-y: auto;
+}
+
+.sidebar-spacer { flex: 0 0 44px; }
+
+/* Recherche : toujours dépliée, gélule en verre */
+.hub-search {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	height: 36px;
+	padding: 0 12px;
+	border-radius: 999px;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	color: var(--ui-text-secondary);
+	flex: none;
+}
+
+.hub-search svg { width: 16px; height: 16px; flex: none; }
+
+html.apple .hub-search input {
+	flex: 1;
+	min-width: 0;
+	height: 36px;
+	padding: 0;
+	border: none;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ui-text);
+	font: inherit;
+	font-size: 15px;
+}
+
+html.apple .hub-search input:focus { box-shadow: none; }
+
+#widgetList {
+	list-style: none;
+	margin: 4px 0 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+}
+
+#widgetList a {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	height: 44px;
+	padding: 0 12px;
+	border-radius: 12px;
+	color: var(--ui-text);
+	font-size: 15px;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+#widgetList a:hover { background: var(--ui-fill); }
+
+#widgetList a[aria-current="page"] {
+	background: var(--ui-accent);
+	color: #fff;
+	font-weight: 600;
+}
+
+/* Icône SF Symbols colorée par masque : bleue, blanche sur l'onglet choisi */
+.widget-icon {
+	flex: 0 0 22px;
+	width: 22px;
+	height: 22px;
+	background-color: var(--ui-accent);
+	-webkit-mask: var(--icon) center / contain no-repeat;
+	mask: var(--icon) center / contain no-repeat;
+}
+
+#widgetList a[aria-current="page"] .widget-icon { background-color: #fff; }
+
+#emptySearch {
+	margin: 8px 12px;
+	color: var(--ui-text-secondary);
+	font-size: 13px;
+}
+
+/* ---------- Contenu : la page de paramétrage du widget ---------- */
+
+#content {
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	position: relative;
+	box-sizing: border-box;
+}
+
+#settingsFrame {
+	display: block;
+	width: 100%;
+	height: 100%;
+	border: 0;
+	background: var(--ui-bg);
+}
+
+#hubEmpty {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ui-text-secondary);
+}
+
+#hubEmpty[hidden] { display: none; }
+
+/* ---------- Écrans étroits : la barre latérale passe au-dessus du contenu ---------- */
+
+@media (max-width: 700px) {
+	#sidebar {
+		position: fixed;
+		inset: 0 auto 0 0;
+		z-index: 5;
+		width: min(300px, 86vw);
+	}
+	body:not(.sidebar-collapsed) #content { padding-left: 0; }
+}

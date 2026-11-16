@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr" class="apple" data-hub>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<!-- Page discrète : pas d'indexation par les moteurs de recherche -->
+	<meta name="robots" content="noindex, nofollow">
+	<title>Widgets</title>
+	<link rel="icon" href="-common/resources/logo.png" type="image/png">
+	<link rel="stylesheet" href="-common/styles/apple.css?v=2026111610">
+	<link rel="stylesheet" href="hub/hub.css?v=2026111610">
+	<script src="-common/utils/color-scheme.js?v=2026111610"></script>
+</head>
+
+<body>
+	<!-- Boutons fixes : ils restent au même endroit, barre latérale ouverte ou repliée -->
+	<button id="sidebarToggle" class="hub-round ui-glass-button" type="button"
+		aria-label="Afficher ou masquer la barre latérale" aria-controls="sidebar" aria-expanded="true">
+		<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+			<rect x="2.5" y="4" width="19" height="16" rx="3.5"></rect>
+			<path d="M9.5 4v16"></path>
+			<path d="M5 8h2M5 11h2" stroke-linecap="round"></path>
+		</svg>
+	</button>
+	<button id="schemeToggle" class="hub-round ui-glass-button" type="button" data-scheme-toggle
+		aria-label="Basculer entre le mode clair et le mode sombre"></button>
+
+	<nav id="sidebar" aria-label="Widgets">
+		<div class="sidebar-panel">
+			<div class="sidebar-spacer"></div>
+			<label class="hub-search">
+				<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+					<circle cx="10.5" cy="10.5" r="6.5"></circle>
+					<path d="m15.5 15.5 5 5"></path>
+				</svg>
+				<span class="visually-hidden">Rechercher un widget</span>
+				<input id="hubSearch" type="search" placeholder="Rechercher" autocomplete="off">
+			</label>
+			<ul id="widgetList" role="list"></ul>
+			<p id="emptySearch" hidden>Aucun widget ne correspond à ta recherche.</p>
+		</div>
+	</nav>
+
+	<main id="content">
+		<iframe id="settingsFrame" title="Page de paramétrage du widget" allow="clipboard-read; clipboard-write"></iframe>
+		<div id="hubEmpty" hidden>
+			<p>Choisis un widget dans la liste.</p>
+		</div>
+	</main>
+
+	<script src="hub/hub.js?v=2026111610"></script>
+</body>
+
+</html>
