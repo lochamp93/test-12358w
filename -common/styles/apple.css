@@ -6,6 +6,15 @@
  * sur <html> (voir utils/color-scheme.js).
  */
 
+/* ---------- Polices SF Pro (allégées : caractères latins) ----------
+   La police installée sur l'ordinateur est utilisée en priorité (local()). */
+@font-face { font-family: "SF Pro Text UI"; src: local("SF Pro Text Regular"), local("SFProText-Regular"), url("../resources/fonts/SF-Pro-Text-Regular.woff2") format("woff2"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "SF Pro Text UI"; src: local("SF Pro Text Medium"), local("SFProText-Medium"), url("../resources/fonts/SF-Pro-Text-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: "SF Pro Text UI"; src: local("SF Pro Text Semibold"), local("SFProText-Semibold"), url("../resources/fonts/SF-Pro-Text-Semibold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "SF Pro Text UI"; src: local("SF Pro Text Bold"), local("SFProText-Bold"), url("../resources/fonts/SF-Pro-Text-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "SF Pro Display UI"; src: local("SF Pro Display Semibold"), local("SFProDisplay-Semibold"), url("../resources/fonts/SF-Pro-Display-Semibold.woff2") format("woff2"); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: "SF Pro Display UI"; src: local("SF Pro Display Bold"), local("SFProDisplay-Bold"), url("../resources/fonts/SF-Pro-Display-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; font-display: swap; }
+
 /* ---------- Couleurs système (charte Streamertools, iOS / iPadOS 27) ---------- */
 
 html.apple {
@@ -36,8 +45,8 @@ html.apple {
 	--ui-checker-b: #f8f8fa;
 	--ui-radius: 26px;             /* cases groupées */
 	--ui-radius-sheet: 34px;       /* fiches, pop-ups */
-	--ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-	--ui-font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", Inter, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+	--ui-font: "SF Pro Text UI", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+	--ui-font-display: "SF Pro Display UI", "SF Pro Text UI", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", Inter, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
 }
 
 html.apple[data-scheme="dark"] {

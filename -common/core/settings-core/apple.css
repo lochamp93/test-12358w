@@ -200,7 +200,7 @@ html.apple .setting-item + .setting-item {
 html.apple .setting-item label {
 	line-height: 1.3;
 	font-size: 15px;
-	font-weight: 400;
+	font-weight: 500;
 	color: var(--ui-text);
 }
 
@@ -231,7 +231,7 @@ html.apple .setting-item-content > button {
 	margin: 0;
 }
 
-html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) {
+html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):not(.import-copy-button) {
 	height: auto;
 	min-height: 28px;
 	padding: 0;
@@ -244,9 +244,9 @@ html.apple .setting-item-content > button:not(.copy-info-button):not(.info-actio
 	white-space: normal;
 }
 
-html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):hover { background: none; opacity: 0.7; }
-html.apple .setting-item-content > button.danger:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) { background: none; color: var(--ui-red); }
-html.apple .setting-item-content > button.confirming:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) { background: none !important; color: var(--ui-red) !important; font-weight: 600; }
+html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):not(.import-copy-button):hover { background: none; opacity: 0.7; }
+html.apple .setting-item-content > button.danger:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):not(.import-copy-button) { background: none; color: var(--ui-red); }
+html.apple .setting-item-content > button.confirming:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):not(.import-copy-button) { background: none !important; color: var(--ui-red) !important; font-weight: 600; }
 
 /* ---------- Aperçu ---------- */
 
@@ -589,6 +589,7 @@ html.apple .setting-item-content > button.link-button {
 }
 
 html.apple .setting-item-content > button.link-button::before {
+	display: none !important;
 	/* « + » dessiné (deux traits) : parfaitement centré dans sa pastille */
 	content: "";
 	display: inline-block;
@@ -646,8 +647,10 @@ html.apple .setting-info.setting-info-lines {
 html.apple .setting-info.setting-info-lines { font-size: 15px; font-weight: 400; }
 
 /* Règles : en retrait et en italique, pour montrer qu'elles dépendent de l'alerte au-dessus */
-html.apple .setting-item.setting-item-sub label { font-style: italic; padding-left: 16px; }
-html.apple .setting-item.setting-item-sub .link-button { margin-left: 16px; font-style: italic; }
+/* Règles : en retrait sous leur alerte (le séparateur commence au retrait) */
+html.apple .setting-item.setting-item-sub { margin-left: 28px; }
+html.apple .setting-item.setting-item-sub label { font-style: normal; padding-left: 0; }
+html.apple .setting-item.setting-item-sub .link-button { margin-left: 0; font-style: normal; }
 
 /* Aperçu de l'image ou de la vidéo de l'alerte (fenêtre de paramétrage) */
 .info-media {
@@ -703,7 +706,6 @@ html.apple .setting-item-content:has(> .info-action) { display: flex; align-item
 .setting-actions .icon-button[data-icon="play"] svg { transform: translateX(1.8px); }
 
 /* Valeur à droite des lignes : champs texte et nombres un peu plus étroits pour la gélule de 42 px */
-html.apple .setting-item-content input[type="number"] { width: 120px; text-align: right; }
 
 /* Couleur : champ hexa + pastille, alignés à droite */
 html.apple .setting-item-content:has(> input.color-hex) {
@@ -788,43 +790,6 @@ html.apple .setting-group.collapsed > :not(h2) { display: none !important; }
 /* Déplié : séparateur fin sous le titre */
 html.apple .setting-group.collapsible:not(.collapsed) > h2 { border-bottom: 0.5px solid var(--ui-separator); }
 
-/* ---------- Code d’import : champ masqué, « Copier » au survol, « Importé » ---------- */
-
-html.apple .setting-item-content > button.import-field {
-	position: relative;
-	width: 190px;
-	height: 42px;
-	padding: 0 16px;
-	border-radius: 999px;
-	background: var(--ui-fill);
-	box-shadow: none;
-	color: var(--ui-text-secondary);
-	font-size: 15px;
-	font-weight: 400;
-	text-align: left;
-	overflow: hidden;
-}
-
-html.apple .import-field > span { display: block; }
-html.apple .import-field .import-dots { letter-spacing: 2px; }
-html.apple .import-field .import-copy,
-html.apple .import-field .import-done { display: none; font-weight: 600; text-align: center; }
-
-/* Survol : « Copier » en bleu */
-html.apple .import-field:hover .import-dots,
-html.apple .import-field:focus-visible .import-dots { display: none; }
-html.apple .import-field:hover .import-copy,
-html.apple .import-field:focus-visible .import-copy { display: block; color: var(--ui-accent); }
-
-/* Action présente dans Streamer.bot : « Importé » en vert (le clic copie quand même) */
-html.apple .import-field.installed .import-dots,
-html.apple .import-field.installed .import-copy { display: none; }
-html.apple .import-field.installed .import-done { display: block; color: var(--ui-green); }
-html.apple .import-field.installed:hover .import-done { display: none; }
-html.apple .import-field.installed:hover .import-copy { display: block; }
-
-html.apple .import-field.copied { background: var(--ui-accent-soft); }
-
 /* ---------- Actions d’une ligne : symboles directement dans la ligne (pas de rond) ---------- */
 
 .setting-actions { gap: 4px; }
@@ -844,6 +809,7 @@ html.apple .setting-actions .icon-button.danger {
 html.apple .setting-actions .icon-button.danger { color: var(--ui-red); }
 html.apple .setting-actions .icon-button:hover { background: var(--ui-fill); filter: none; }
 html.apple .setting-actions .icon-button svg { width: 21px; height: 21px; }
+html.apple .setting-actions .icon-button[data-icon="gear"] svg { width: 24px; height: 24px; }
 
 /* Confirmation (deux clics) : symbole rouge sur fond rouge clair */
 html.apple .setting-actions .icon-button.confirming {
@@ -859,3 +825,49 @@ html.apple .setting-item { align-items: center; }
 
 /* « Ajouter une règle » : ligne d'action alignée à gauche, comme dans les Réglages */
 html.apple .setting-item.setting-item-link .setting-item-content { justify-content: flex-start; }
+
+/* ---------- Typo : titres semibold, libellés medium, descriptions regular ---------- */
+
+html.apple .setting-item p { font-weight: 400; }
+html.apple .setting-item-content > button.link-button { font-weight: 400; }
+
+/* Champs d'une ligne alignés à gauche, même largeur (adresse, port…) */
+html.apple .setting-item-content input[type="text"],
+html.apple .setting-item-content input[type="number"],
+html.apple .setting-item-content input[type="password"] { width: 190px; text-align: left; }
+html.apple .setting-item-content > input.color-hex { width: 108px; }
+
+/* ---------- Code d'import : icône Copier bleue + état sous le libellé ---------- */
+
+html.apple .setting-item-content > button.import-copy-button {
+	width: 36px;
+	height: 36px;
+	min-height: 0;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+}
+html.apple .setting-item-content > button.import-copy-button:hover { background: var(--ui-fill); }
+html.apple .setting-item-content > button.import-copy-button svg { width: 21px; height: 21px; fill: currentColor; }
+html.apple .setting-item-content:has(> button.import-copy-button) { display: flex; justify-content: flex-end; }
+
+html.apple .setting-item p.import-status { display: flex; align-items: center; gap: 6px; }
+html.apple .import-status .info-dot { flex: 0 0 8px; width: 8px; height: 8px; }
+
+/* ---------- Centrage vertical du texte ---------- */
+
+html.apple .setting-item label,
+html.apple .setting-item p { display: block; }
+html.apple .setting-item-content { display: flex; align-items: center; justify-content: flex-end; min-height: 36px; }
+html.apple input,
+html.apple button { line-height: normal; }
+
+/* Le style d'origine décale le libellé (marge basse) et retire l'espace sous la dernière ligne */
+html.apple .setting-item label { margin: 0; }
+html.apple .setting-item:last-child { padding-bottom: 12px; }
+html.apple .setting-item p.import-status span { font-size: 13px; font-weight: 400; }

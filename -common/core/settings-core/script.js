@@ -255,8 +255,8 @@ function LoadJSON(settingsJson) {
 							inputElement.addEventListener('focus', LoadLocalFonts);
 							break;
 						case 'import-string':
-							// Code d’import Streamer.bot : masqué (•••), « Copier » au survol, « Importé » si l’action existe
-							inputElement = MakeImportField(setting);
+							// Code d’import Streamer.bot : icône « Copier », état « Code à importer » / « Code importé » sous le libellé
+							inputElement = MakeImportField(setting, labelDescriptionDiv);
 							break;
 						case 'info':
 							// Texte d'information mis à jour par l'aperçu :
@@ -1161,23 +1161,30 @@ LoadJSON(settingsJson);
 //////////////////////////////////////////
 
 // Réglage { "id": "importString", "type": "import-string", "label": "Code d’import" } :
-// champ masqué (•••) ; au survol « Copier », un clic copie le code d’import de l’action.
+// bouton icône « Copier » ; un clic copie le code d’import de l’action.
 // Le fichier vient de "url" sur le réglage, sinon de "importAction" dans settings.json
 // (chemin relatif à settings.json). Si l’action (réglage "actionName", ou "importActionSetting")
-// existe dans Streamer.bot, le champ affiche « Importé ». Aucune valeur dans l’URL.
+// existe dans Streamer.bot, la description passe de « Code à importer » à « Code importé ». Aucune valeur dans l’URL.
 let importFields = [];
 let sbActionNames = null; // null : liste inconnue (Streamer.bot non connecté)
 
-function MakeImportField(setting) {
+function MakeImportField(setting, labelDescriptionDiv) {
+	// Bouton icône « Copier » (bleu) à droite de la ligne
 	const field = document.createElement('button');
 	field.type = 'button';
 	field.id = setting.id;
-	field.className = 'import-field';
+	field.className = 'import-copy-button';
 	field.dataset.url = setting.url || (settingsData && settingsData.importAction) || '';
-	field.innerHTML = '<span class="import-dots" aria-hidden="true">••••••••••</span>'
-		+ '<span class="import-copy">Copier</span>'
-		+ '<span class="import-done">Importé</span>';
+	field.innerHTML = ACTION_ICONS.copy;
 	field.addEventListener('click', () => CopyImportString(field));
+
+	// État sous le libellé : point de couleur + « Code à importer » ou « Code importé »
+	const status = document.createElement('p');
+	status.className = 'import-status';
+	status.innerHTML = '<span class="info-dot" data-status="warn"></span><span class="import-status-text">Code à importer</span>';
+	if (labelDescriptionDiv) labelDescriptionDiv.appendChild(status);
+	field._status = status;
+
 	importFields.push(field);
 	setTimeout(UpdateImportActionButton, 0);
 	return field;
@@ -1197,10 +1204,14 @@ function UpdateImportActionButton() {
 	const installed = Array.isArray(sbActionNames) && name !== '' && sbActionNames.includes(name);
 	importFields.forEach(field => {
 		field.classList.toggle('installed', installed);
-		field.setAttribute('aria-label', installed ? 'Action importée dans Streamer.bot' : 'Copier le code d’import');
+		field.setAttribute('aria-label', 'Copier le code d’import');
 		field.title = installed
 			? 'L’action est déjà dans Streamer.bot (clic : copier le code quand même)'
 			: 'Copier le code d’import, puis dans Streamer.bot : Import, coller dans Import String, Import';
+		if (field._status) {
+			field._status.querySelector('.info-dot').dataset.status = installed ? 'ok' : 'warn';
+			field._status.querySelector('.import-status-text').textContent = installed ? 'Code importé' : 'Code à importer';
+		}
 	});
 }
 
@@ -1210,8 +1221,10 @@ async function CopyImportString(field) {
 		const response = await fetch(url, { cache: 'no-cache' });
 		if (!response.ok) throw new Error('HTTP ' + response.status);
 		await navigator.clipboard.writeText((await response.text()).trim());
+		// Petit retour visuel : coche pendant 1,5 s
+		field.innerHTML = ACTION_ICONS.check;
 		field.classList.add('copied');
-		setTimeout(() => field.classList.remove('copied'), 1500);
+		setTimeout(() => { field.innerHTML = ACTION_ICONS.copy; field.classList.remove('copied'); }, 1500);
 		ShowSettingsToast('Code d’import copié. Dans Streamer.bot : Import, colle le code dans Import String, puis Import.');
 	} catch (e) {
 		ShowSettingsToast('Copie impossible : ouvre le fichier streamerbot/import.txt du widget.');
