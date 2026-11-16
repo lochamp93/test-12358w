@@ -2,6 +2,7 @@
 	"title": "Compteur de morts",
 	"design": "apple",
 	"showLogo": false,
+	"showNuttyLink": false,
 	"checkerPreview": true,
 	"livePreview": true,
 	"demo": true,
