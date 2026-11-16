@@ -313,7 +313,7 @@ $('skipButton').addEventListener('click', () => Send({ mode: 'passer' }));
 
 
 
-DockImport.init({ url: '../streamerbot/import.txt', toast: Toast }); // bouton « Importer l’action » de l’en-tête
+	// Le code d’import est sur la page de paramétrage (section Streamer.bot, réglage « Code d’import »)
 $('recheckButton').addEventListener('click', CheckAction);
 
 ///////////////

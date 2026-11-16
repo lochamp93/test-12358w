@@ -506,7 +506,7 @@ els.announce.addEventListener('change', () => {
 	els.announce.checked = stored === null ? ws.values.announce : stored === 'true';
 
 	// Copie du code d'import Streamer.bot (action « Compteur de morts | Modifier »)
-	DockImport.init({ url: '../streamerbot/import.txt', toast: Toast }); // bouton « Importer l’action » de l’en-tête
+	// Le code d’import est sur la page de paramétrage (section Streamer.bot, réglage « Code d’import »)
 	document.getElementById('recheckButton').addEventListener('click', CheckAction);
 
 	if (ws.demo) data = DemoData(); // remplacé par les vraies données dès la connexion

@@ -56,6 +56,9 @@ function LoadJSON(settingsJson) {
 			document.documentElement.classList.toggle('apple', data.design === 'apple');
 			if (window.ColorScheme) window.ColorScheme.initToggles();
 
+			// Réglage "type": "import-string" : champ « Code d’import » (copie du code d’import)
+			importFields = [];
+
 			// Logo masqué si settings.json contient "showLogo": false
 			// "showNuttyLink": false : pas de lien « Découvrez les widgets de nutty » pour ce widget
 			const nuttyLink = document.getElementById('membershipsButton');
@@ -106,7 +109,11 @@ function LoadJSON(settingsJson) {
 				if (groupedSettings[groupName].every(s => s.bare)) groupDiv.classList.add('setting-group-bare');
 
 				const groupHeader = document.createElement('h2');
-				groupHeader.textContent = groupName;
+				if (document.documentElement.classList.contains('apple') && !groupDiv.classList.contains('setting-group-bare')) {
+					// DA Apple : le titre fait partie de la section et la replie (chevron)
+					MakeCollapsibleGroup(groupDiv, groupHeader, groupName, Object.keys(groupedSettings).indexOf(groupName) === 0);
+				}
+				else groupHeader.textContent = groupName;
 				groupDiv.appendChild(groupHeader);
 
 				groupedSettings[groupName].forEach(setting => {
@@ -138,6 +145,7 @@ function LoadJSON(settingsJson) {
 					let inputElement;
 					let extraElement = null;
 					let extraBeforeElement = null;
+					let colorHexElement = null;
 					switch (setting.type) {
 						case 'actions':
 							// Ligne « libellé + boutons ronds à icône » :
@@ -211,6 +219,9 @@ function LoadJSON(settingsJson) {
 							inputElement.type = 'color';
 							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
+							// DA Apple : champ texte pour saisir le code hexa, synchronisé avec le sélecteur
+							if (document.documentElement.classList.contains('apple'))
+								colorHexElement = MakeColorHexField(inputElement, setting.label);
 							break;
 						case 'number':
 							inputElement = document.createElement('input');
@@ -242,6 +253,10 @@ function LoadJSON(settingsJson) {
 							inputElement.setAttribute('list', 'local-fonts');
 							inputElement.addEventListener('mousedown', LoadLocalFonts);
 							inputElement.addEventListener('focus', LoadLocalFonts);
+							break;
+						case 'import-string':
+							// Code d’import Streamer.bot : masqué (•••), « Copier » au survol, « Importé » si l’action existe
+							inputElement = MakeImportField(setting);
 							break;
 						case 'info':
 							// Texte d'information mis à jour par l'aperçu :
@@ -348,6 +363,7 @@ function LoadJSON(settingsJson) {
 					});
 
 					if (extraBeforeElement) settingItemContent.appendChild(extraBeforeElement);
+					if (colorHexElement) settingItemContent.appendChild(colorHexElement);
 					settingItemContent.appendChild(inputElement);
 					if (extraElement) settingItemContent.appendChild(extraElement);
 					if (setting.type === 'actions') settingItem.classList.add('setting-item-actions');
@@ -531,7 +547,64 @@ function LoadDefaultSettings() {
 	loadDefaultsBox.style.opacity = 0;
 }
 
+// Champ hexa à côté d'un sélecteur de couleur (DA Apple).
+// Il n'a pas d'id de réglage : il ne lit et n'écrit que le sélecteur, qui reste la seule valeur
+// enregistrée et transmise dans l'URL (aucun changement pour les URL existantes).
+function MakeColorHexField(colorInput, label) {
+	const hex = document.createElement('input');
+	hex.type = 'text';
+	hex.className = 'color-hex';
+	hex.maxLength = 7;
+	hex.spellcheck = false;
+	hex.autocomplete = 'off';
+	hex.setAttribute('aria-label', (label ? label + ' : ' : '') + 'code hexadécimal');
+	hex.value = String(colorInput.value || '').toUpperCase();
+	hex._colorInput = colorInput;
+
+	// Accepte « FF5C8A », « #ff5c8a » ou la forme courte « #F5A »
+	const normalize = (raw) => {
+		let v = String(raw || '').trim().replace(/^#?/, '#');
+		if (/^#[0-9a-f]{3}$/i.test(v)) v = '#' + v.slice(1).split('').map(c => c + c).join('');
+		return /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null;
+	};
+
+	hex.addEventListener('input', (event) => {
+		event.stopPropagation();
+		const v = normalize(hex.value);
+		hex.classList.toggle('invalid', v === null && hex.value.trim() !== '');
+		if (v === null || v === colorInput.value) return;
+		colorInput.value = v;
+		colorInput.dispatchEvent(new Event('input', { bubbles: true }));
+	});
+
+	// En quittant le champ : on réaffiche la valeur réelle du sélecteur
+	hex.addEventListener('blur', () => {
+		hex.classList.remove('invalid');
+		hex.value = String(colorInput.value || '').toUpperCase();
+	});
+
+	hex.addEventListener('keydown', (event) => { if (event.key === 'Enter') hex.blur(); });
+
+	colorInput.addEventListener('input', () => {
+		if (document.activeElement !== hex) hex.value = String(colorInput.value || '').toUpperCase();
+	});
+
+	return hex;
+}
+
+// Remet les champs hexa d'accord avec leur sélecteur (après « Par défaut » ou « Charger »)
+function SyncColorHexFields() {
+	document.querySelectorAll('input.color-hex').forEach(hex => {
+		if (hex._colorInput && document.activeElement !== hex) {
+			hex.value = String(hex._colorInput.value || '').toUpperCase();
+			hex.classList.remove('invalid');
+		}
+	});
+}
+
 function RefreshWidgetPreview() {
+	SyncColorHexFields();
+	UpdateImportActionButton();
 	const settings = {};
 	settingsData.settings.forEach(setting => {
 		if (IsValueless(setting)) return; // Ignorer les boutons, infos et lignes d’actions
@@ -651,6 +724,8 @@ let client = new StreamerbotClient({
 
 	onDisconnect: () => {
 		console.error(`Streamer.bot déconnecté de ${sbServerAddress}:${sbServerPort}`)
+		sbActionNames = null;
+		UpdateImportActionButton();
 	}
 });
 
@@ -658,6 +733,10 @@ async function GetSBActions() {
 	const response = await client.getActions();
 
 	console.debug(response);
+
+	// Noms des actions, pour le champ « Code d’import » (« Importé » si l’action existe)
+	sbActionNames = (response && Array.isArray(response.actions)) ? response.actions.map(a => String(a.name || '').trim().toLowerCase()) : [];
+	UpdateImportActionButton();
 
 	const datalistElement = document.createElement('datalist');
 	datalistElement.id = 'streamer-bot-actions';
@@ -978,7 +1057,7 @@ function OpenDock() {
 
 // Réglages sans valeur (jamais dans l’URL) : boutons, infos, lignes d’actions
 function IsValueless(setting) {
-	return setting.type === 'button' || setting.type === 'info' || setting.type === 'actions';
+	return setting.type === 'button' || setting.type === 'info' || setting.type === 'actions' || setting.type === 'import-string';
 }
 
 // Libellé à trous : « Règle 1 : {nomRegle|resumeRegle|sans nom} » : chaque élément entre | est
@@ -1074,3 +1153,130 @@ LoadSettingsFromStorage();
 
 // Charger les paramètres par défaut
 LoadJSON(settingsJson);
+
+
+
+//////////////////////////////////////////
+// CODE D’IMPORT STREAMER.BOT (RÉGLAGE)  //
+//////////////////////////////////////////
+
+// Réglage { "id": "importString", "type": "import-string", "label": "Code d’import" } :
+// champ masqué (•••) ; au survol « Copier », un clic copie le code d’import de l’action.
+// Le fichier vient de "url" sur le réglage, sinon de "importAction" dans settings.json
+// (chemin relatif à settings.json). Si l’action (réglage "actionName", ou "importActionSetting")
+// existe dans Streamer.bot, le champ affiche « Importé ». Aucune valeur dans l’URL.
+let importFields = [];
+let sbActionNames = null; // null : liste inconnue (Streamer.bot non connecté)
+
+function MakeImportField(setting) {
+	const field = document.createElement('button');
+	field.type = 'button';
+	field.id = setting.id;
+	field.className = 'import-field';
+	field.dataset.url = setting.url || (settingsData && settingsData.importAction) || '';
+	field.innerHTML = '<span class="import-dots" aria-hidden="true">••••••••••</span>'
+		+ '<span class="import-copy">Copier</span>'
+		+ '<span class="import-done">Importé</span>';
+	field.addEventListener('click', () => CopyImportString(field));
+	importFields.push(field);
+	setTimeout(UpdateImportActionButton, 0);
+	return field;
+}
+
+function CurrentImportActionName() {
+	const id = (settingsData && settingsData.importActionSetting) || 'actionName';
+	const el = document.getElementById(id);
+	if (el && el.value) return String(el.value).trim();
+	const def = settingsData && settingsData.settings ? settingsData.settings.find(st => st.id === id) : null;
+	return def ? String(def.defaultValue || '').trim() : '';
+}
+
+function UpdateImportActionButton() {
+	if (!importFields.length) return;
+	const name = CurrentImportActionName().toLowerCase();
+	const installed = Array.isArray(sbActionNames) && name !== '' && sbActionNames.includes(name);
+	importFields.forEach(field => {
+		field.classList.toggle('installed', installed);
+		field.setAttribute('aria-label', installed ? 'Action importée dans Streamer.bot' : 'Copier le code d’import');
+		field.title = installed
+			? 'L’action est déjà dans Streamer.bot (clic : copier le code quand même)'
+			: 'Copier le code d’import, puis dans Streamer.bot : Import, coller dans Import String, Import';
+	});
+}
+
+async function CopyImportString(field) {
+	try {
+		const url = new URL(field.dataset.url, new URL(settingsJson, location.href)).href;
+		const response = await fetch(url, { cache: 'no-cache' });
+		if (!response.ok) throw new Error('HTTP ' + response.status);
+		await navigator.clipboard.writeText((await response.text()).trim());
+		field.classList.add('copied');
+		setTimeout(() => field.classList.remove('copied'), 1500);
+		ShowSettingsToast('Code d’import copié. Dans Streamer.bot : Import, colle le code dans Import String, puis Import.');
+	} catch (e) {
+		ShowSettingsToast('Copie impossible : ouvre le fichier streamerbot/import.txt du widget.');
+	}
+}
+
+////////////////////////////
+// SECTIONS REPLIABLES    //
+////////////////////////////
+
+// DA Apple : le titre de la section est un bouton avec chevron. L’état replié est gardé
+// par widget dans le stockage du navigateur (page de paramétrage uniquement).
+// Première visite : la première section est dépliée, les autres repliées.
+function CollapsedGroupsKey() { return `${keyPrefix}-collapsed-groups`; }
+
+function ReadCollapsedGroups() {
+	try {
+		const raw = localStorage.getItem(CollapsedGroupsKey());
+		return raw ? JSON.parse(raw) : null;
+	} catch (e) { return null; }
+}
+
+function WriteCollapsedGroups() {
+	try {
+		const names = Array.from(settingsPanel.querySelectorAll('.setting-group.collapsible'))
+			.map(g => ({ name: g.dataset.groupName, collapsed: g.classList.contains('collapsed') }));
+		localStorage.setItem(CollapsedGroupsKey(), JSON.stringify(names));
+	} catch (e) { /* stockage indisponible */ }
+}
+
+function MakeCollapsibleGroup(groupDiv, header, groupName, isFirst) {
+	groupDiv.classList.add('collapsible');
+	groupDiv.dataset.groupName = groupName;
+	const saved = ReadCollapsedGroups();
+	const entry = Array.isArray(saved) ? saved.find(e => e.name === groupName) : null;
+	const collapsed = entry ? entry.collapsed : !isFirst;
+	groupDiv.classList.toggle('collapsed', collapsed);
+
+	const toggle = document.createElement('button');
+	toggle.type = 'button';
+	toggle.className = 'group-toggle';
+	toggle.setAttribute('aria-expanded', String(!collapsed));
+	toggle.innerHTML = '<span class="group-title"></span>'
+		+ '<svg class="group-chevron" viewBox="0 0 28 16" aria-hidden="true"><path d="M14 15.6c.5 0 .9-.2 1.3-.6L27.4 3.1c.4-.4.6-.8.6-1.3C28 .8 27.2 0 26.2 0c-.5 0-1 .2-1.3.5L14 11.3 3.1.5C2.7.2 2.3 0 1.8 0 .8 0 0 .8 0 1.8c0 .5.2.9.6 1.3L12.7 15c.4.4.8.6 1.3.6z"/></svg>';
+	toggle.querySelector('.group-title').textContent = groupName;
+	toggle.addEventListener('click', () => {
+		const nowCollapsed = !groupDiv.classList.contains('collapsed');
+		groupDiv.classList.toggle('collapsed', nowCollapsed);
+		toggle.setAttribute('aria-expanded', String(!nowCollapsed));
+		WriteCollapsedGroups();
+	});
+	header.appendChild(toggle);
+}
+
+// Petite notification en bas au centre (disparaît seule)
+function ShowSettingsToast(text) {
+	let toast = document.getElementById('settingsToast');
+	if (!toast) {
+		toast = document.createElement('div');
+		toast.id = 'settingsToast';
+		toast.setAttribute('role', 'status');
+		document.body.appendChild(toast);
+	}
+	toast.textContent = text;
+	toast.classList.add('show');
+	clearTimeout(ShowSettingsToast._t);
+	ShowSettingsToast._t = setTimeout(() => toast.classList.remove('show'), 4000);
+}

@@ -6,7 +6,37 @@
 	"livePreview": true,
 	"demo": true,
 	"dock": true,
+	"importAction": "../streamerbot/import.txt",
 	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "importString",
+			"label": "Code d’import",
+			"type": "import-string",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "actionName",
+			"label": "Nom de l’action",
+			"type": "sb-actions",
+			"defaultValue": "Compteur de morts | Modifier",
+			"group": "Streamer.bot"
+		},
 		{
 			"id": "layout",
 			"label": "Style d’affichage",
@@ -785,32 +815,6 @@
 			],
 			"defaultValue": "30",
 			"group": "Commandes"
-		},
-		{
-			"id": "actionName",
-			"label": "Action Streamer.bot",
-			"description": "Action importée depuis le dock",
-			"type": "sb-actions",
-			"defaultValue": "Compteur de morts | Modifier",
-			"group": "Commandes"
-		},
-		{
-			"id": "address",
-			"label": "Adresse Streamer.bot",
-			"description": "Adresse du serveur WebSocket de Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Connexion"
-		},
-		{
-			"id": "port",
-			"label": "Port Streamer.bot",
-			"description": "",
-			"type": "number",
-			"min": 1,
-			"max": 65535,
-			"defaultValue": 8080,
-			"group": "Connexion"
 		}
 	]
 }

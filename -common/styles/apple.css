@@ -1,58 +1,82 @@
 /*
- * apple.css : DA inspirée d'Apple (Réglages Système macOS / widgets iOS), clair et sombre
+ * apple.css : DA Streamertools (calquée sur iOS / iPadOS 27), clair et sombre
  *
  * Activée seulement si <html> porte la classe « apple » (rien ne change pour les pages
  * qui ne l'activent pas). Le thème clair/sombre est porté par data-scheme="light|dark"
  * sur <html> (voir utils/color-scheme.js).
  */
 
-/* ---------- Couleurs système ---------- */
+/* ---------- Couleurs système (charte Streamertools, iOS / iPadOS 27) ---------- */
 
 html.apple {
 	color-scheme: light;
-	--ui-bg: #f5f5f7;
-	--ui-bg-elevated: #ffffff;
-	--ui-control: #ffffff;
-	--ui-fill: rgba(120, 120, 128, 0.12);
-	--ui-fill-strong: rgba(120, 120, 128, 0.2);
-	--ui-text: #1d1d1f;
-	--ui-text-secondary: #6e6e73; /* contraste AA sur blanc */
-	--ui-separator: rgba(60, 60, 67, 0.18);
-	--ui-accent: #007aff;
-	--ui-accent-soft: rgba(0, 122, 255, 0.18);
+	--ui-bg: #f2f2f7;              /* fond des pages */
+	--ui-bg-elevated: #ffffff;     /* fiches, cases groupées sur la page, pop-ups */
+	--ui-cell: #f2f2f7;            /* case groupée posée dans une fiche */
+	--ui-control: #e3e3e8;         /* gélule dans une case */
+	--ui-fill: rgba(120, 120, 128, 0.16);        /* boutons et champs non verre */
+	--ui-fill-strong: rgba(120, 120, 128, 0.24);
+	--ui-text: #000000;
+	--ui-text-secondary: rgba(60, 60, 67, 0.6);
+	--ui-text-tertiary: rgba(60, 60, 67, 0.3);
+	--ui-separator: rgba(60, 60, 67, 0.29);
+	--ui-accent: #0088ff;
+	--ui-accent-soft: rgba(0, 136, 255, 0.16);
 	--ui-green: #34c759;
-	--ui-red: #ff3b30;
+	--ui-red: #ff383c;
+	--ui-orange: #ff8d28;
+	--ui-yellow: #ffcc00;
 	--ui-switch-off: #e9e9ea;
-	--ui-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.16), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
-	--ui-shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.18), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
-	--ui-glass: rgba(246, 246, 248, 0.72);
+	--ui-shadow: none;
+	--ui-shadow-pop: 0 2px 10px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+	--ui-glass: rgba(255, 255, 255, 0.74);
+	--ui-glass-line: rgba(255, 255, 255, 0.6);
+	--ui-glass-shadow: inset 0 0 0 0.5px var(--ui-glass-line), 0 2px 10px rgba(0, 0, 0, 0.08);
 	--ui-checker-a: #e3e3e8;
-	--ui-checker-b: #f2f2f7;
-	--ui-radius: 10px;
-	--ui-font: "SF Pro Text", "SF Pro Display", "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-	--ui-font-display: "SF Pro Display", "SF Pro", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
+	--ui-checker-b: #f8f8fa;
+	--ui-radius: 26px;             /* cases groupées */
+	--ui-radius-sheet: 34px;       /* fiches, pop-ups */
+	--ui-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", Inter, "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+	--ui-font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro", Inter, "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif;
 }
 
 html.apple[data-scheme="dark"] {
 	color-scheme: dark;
-	--ui-bg: #1e1e1e;
-	--ui-bg-elevated: #2c2c2e;
+	--ui-bg: #000000;
+	--ui-bg-elevated: #1c1c1e;
+	--ui-cell: #2c2c2e;
 	--ui-control: #3a3a3c;
-	--ui-fill: rgba(120, 120, 128, 0.24);
-	--ui-fill-strong: rgba(120, 120, 128, 0.36);
-	--ui-text: #f5f5f7;
-	--ui-text-secondary: rgba(235, 235, 245, 0.68);
+	--ui-fill: rgba(120, 120, 128, 0.16);
+	--ui-fill-strong: rgba(120, 120, 128, 0.32);
+	--ui-text: #ffffff;
+	--ui-text-secondary: rgba(235, 235, 245, 0.6);
+	--ui-text-tertiary: rgba(235, 235, 245, 0.3);
 	--ui-separator: rgba(84, 84, 88, 0.6);
-	--ui-accent: #0a84ff;
-	--ui-accent-soft: rgba(10, 132, 255, 0.3);
+	--ui-accent: #0091ff;
+	--ui-accent-soft: rgba(0, 145, 255, 0.28);
 	--ui-green: #30d158;
-	--ui-red: #ff453a;
+	--ui-red: #ff4245;
+	--ui-orange: #ff9230;
+	--ui-yellow: #ffd600;
 	--ui-switch-off: #39393d;
-	--ui-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.5), 0 0 0 0.5px rgba(255, 255, 255, 0.06);
-	--ui-shadow-pop: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 0 0.5px rgba(255, 255, 255, 0.08);
-	--ui-glass: rgba(36, 36, 38, 0.72);
-	--ui-checker-a: #2a2a2c;
-	--ui-checker-b: #1c1c1e;
+	--ui-shadow: none;
+	--ui-shadow-pop: 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 0 0.5px rgba(255, 255, 255, 0.08);
+	--ui-glass: rgba(38, 38, 40, 0.86);
+	--ui-glass-line: rgba(255, 255, 255, 0.16);
+	--ui-checker-a: #1c1c1e;
+	--ui-checker-b: #111112;
+}
+
+/* Contraste renforcé (réglage d'accessibilité du système) */
+@media (prefers-contrast: more) {
+	html.apple { --ui-accent: #1e6ef4; --ui-red: #e9152d; --ui-green: #008932; --ui-orange: #c55300; }
+	html.apple[data-scheme="dark"] { --ui-accent: #5cb8ff; --ui-red: #ff6165; --ui-green: #4ad968; --ui-orange: #ffa056; }
+}
+
+/* Transparence réduite : le verre devient opaque */
+@media (prefers-reduced-transparency: reduce) {
+	html.apple { --ui-glass: #ffffff; }
+	html.apple[data-scheme="dark"] { --ui-glass: #262628; }
 }
 
 /* ---------- Base ---------- */
@@ -85,25 +109,26 @@ html.apple ::-webkit-scrollbar-thumb {
 	background-clip: content-box;
 }
 
-/* ---------- Boutons (push buttons macOS) ---------- */
+/* ---------- Boutons : pilules texte et ronds à icône (44 px) ---------- */
 
 html.apple button {
-	font-size: 13px;
-	font-weight: 500;
-	height: 28px;
-	padding: 0 12px;
+	font-size: 15px;
+	font-weight: 600;
+	height: 44px;
+	padding: 0 18px;
 	border: none;
-	border-radius: 7px;
-	background: var(--ui-control);
+	border-radius: 999px;
+	background: var(--ui-fill);
 	color: var(--ui-text);
-	box-shadow: var(--ui-shadow);
+	box-shadow: none;
 	cursor: pointer;
-	transition: background 0.15s, transform 0.05s;
+	transition: background 0.15s, filter 0.15s;
 	white-space: nowrap;
 }
 
-html.apple button:hover { background: color-mix(in srgb, var(--ui-control) 88%, var(--ui-text)); }
-html.apple button:active { transform: scale(0.98); }
+/* Survol : légère surbrillance, pas de grossissement */
+html.apple button:hover { background: var(--ui-fill-strong); }
+html.apple button:active { filter: brightness(0.94); }
 html.apple button:disabled { opacity: 0.4; cursor: default; }
 
 html.apple button.ui-primary,
@@ -113,43 +138,55 @@ html.apple button.accent {
 }
 
 html.apple button.ui-primary:hover,
-html.apple button.accent:hover { background: color-mix(in srgb, var(--ui-accent) 88%, #000); }
+html.apple button.accent:hover { background: color-mix(in srgb, var(--ui-accent) 90%, #000); }
 
 html.apple button.ui-danger,
 html.apple button.danger {
 	color: var(--ui-red);
 }
 
+/* Bouton en verre (couche de navigation : barres d'outils, en-têtes) */
+html.apple .ui-glass-button {
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+html.apple .ui-glass-button:hover { background: color-mix(in srgb, var(--ui-glass) 88%, var(--ui-text)); }
+
 html.apple button.ui-icon {
-	width: 28px;
+	width: 44px;
 	padding: 0;
+	border-radius: 50%;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }
 
 html.apple button.ui-icon svg {
-	width: 15px;
-	height: 15px;
+	width: 20px;
+	height: 20px;
 	fill: currentColor;
 	stroke: none;
 	flex-shrink: 0;
 }
 
-/* ---------- Champs ---------- */
+/* ---------- Champs : gélules de 42 px ---------- */
 
 html.apple input[type="text"],
 html.apple input[type="number"],
 html.apple input[type="password"],
+html.apple input[type="search"],
 html.apple input:not([type]),
 html.apple select,
 html.apple textarea {
-	font-size: 13px;
-	height: 28px;
+	font-size: 15px;
+	height: 42px;
 	box-sizing: border-box;
-	padding: 0 9px;
+	padding: 0 16px;
 	border: none;
-	border-radius: 7px;
+	border-radius: 999px;
 	background-color: var(--ui-fill);
 	color: var(--ui-text);
 	box-shadow: none;
@@ -160,58 +197,79 @@ html.apple textarea {
 html.apple input[type="text"]:hover,
 html.apple input[type="number"]:hover,
 html.apple input[type="password"]:hover,
-html.apple select:hover,
+html.apple input[type="search"]:hover,
 html.apple textarea:hover {
 	background-color: var(--ui-fill-strong);
 }
 
-html.apple textarea { height: auto; padding: 6px 9px; }
+html.apple textarea { height: auto; padding: 10px 16px; border-radius: 20px; }
 
 html.apple input:focus,
 html.apple select:focus,
 html.apple textarea:focus {
-	box-shadow: 0 0 0 3.5px var(--ui-accent-soft), 0 0 0 1px var(--ui-accent);
+	box-shadow: 0 0 0 3px var(--ui-accent-soft), 0 0 0 1px var(--ui-accent);
 }
 
 html.apple input::placeholder { color: var(--ui-text-secondary); }
 
+/* Liste courte : sélecteur natif transparent, valeur en gris alignée à droite, chevrons ⌃⌄ */
 html.apple select {
 	appearance: none;
-	padding-right: 26px;
+	padding: 0 24px 0 8px;
+	background-color: transparent;
+	color: var(--ui-text-secondary);
+	text-align: right;
+	text-align-last: right;
 	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='13' viewBox='0 0 20 28'%3E%3Cpath d='M9.54 0C9.06 0 8.66 0.189999 8.28 0.549999L0.52 8.01C0.2 8.31 0 8.69 0 9.17C0 10.09 0.72 10.76 1.58 10.76C1.97 10.76 2.38 10.65 2.73 10.29L9.54 3.64L16.33 10.29C16.69 10.64 17.1 10.76 17.48 10.76C18.34 10.76 19.07 10.09 19.07 9.17C19.07 8.69 18.86 8.31 18.56 8.01L10.78 0.549999C10.4 0.189999 10 0 9.54 0ZM9.54 27.4C10 27.4 10.4 27.21 10.78 26.84L18.56 19.39C18.86 19.09 19.07 18.7 19.07 18.22C19.07 17.31 18.34 16.64 17.48 16.64C17.1 16.64 16.69 16.76 16.33 17.1L9.54 23.75L2.73 17.1C2.38 16.75 1.97 16.64 1.58 16.64C0.72 16.64 0 17.31 0 18.22C0 18.7 0.2 19.09 0.52 19.39L8.28 26.84C8.66 27.21 9.06 27.4 9.54 27.4Z' fill='%238e8e93'/%3E%3C/svg%3E");
 	background-repeat: no-repeat;
-	background-position: right 8px center;
+	background-position: right 6px center;
 	cursor: pointer;
 }
+
+html.apple select:hover { background-color: var(--ui-fill); }
+html.apple select:focus { box-shadow: none; background-color: var(--ui-fill); }
 
 html.apple select option {
 	background: var(--ui-bg-elevated);
 	color: var(--ui-text);
 }
 
+/* Sélecteur de couleur : pastille ronde */
 html.apple input[type="color"] {
 	-webkit-appearance: none;
 	appearance: none;
-	width: 44px;
-	height: 24px;
+	width: 32px;
+	height: 32px;
 	padding: 0;
 	border: none;
-	border-radius: 6px;
+	border-radius: 50%;
 	background: none;
-	box-shadow: inset 0 0 0 0.5px var(--ui-separator);
+	box-shadow: none;
 	cursor: pointer;
+	flex-shrink: 0;
 }
 
 html.apple input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-html.apple input[type="color"]::-webkit-color-swatch { border: 0.5px solid var(--ui-separator); border-radius: 6px; }
+html.apple input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--ui-separator); }
+html.apple input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
 
-/* ---------- Interrupteur (switch iOS/macOS) ---------- */
+/* Champ hexadécimal à côté du sélecteur de couleur */
+html.apple input.color-hex {
+	width: 108px;
+	padding: 0 14px;
+	font-variant-numeric: tabular-nums;
+	text-transform: uppercase;
+}
+
+html.apple input.color-hex.invalid { box-shadow: 0 0 0 1px var(--ui-red); }
+
+/* ---------- Interrupteur (iOS, 64 × 28, vert quand actif) ---------- */
 
 html.apple .switch {
 	position: relative;
 	display: inline-block;
-	width: 38px;
-	height: 22px;
+	width: 64px;
+	height: 28px;
 	margin: 0; /* centré sur la ligne (l'ancien style ajoutait une marge basse) */
 	vertical-align: middle;
 	flex-shrink: 0;
@@ -228,31 +286,31 @@ html.apple .switch .slider {
 	inset: 0;
 	cursor: pointer;
 	background: var(--ui-switch-off);
-	border-radius: 22px;
+	border-radius: 999px;
 	transition: background 0.2s;
-	box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+	box-shadow: none;
 }
 
 html.apple .switch .slider:before {
 	content: "";
 	position: absolute;
-	width: 18px;
-	height: 18px;
+	width: 38px;
+	height: 24px;
 	left: 2px;
 	top: 2px;
 	background: #fff;
-	border-radius: 50%;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
-	transition: transform 0.2s cubic-bezier(.3, .7, .4, 1);
+	border-radius: 999px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+	transition: transform 0.25s cubic-bezier(.3, .7, .4, 1);
 }
 
 html.apple .switch input:checked + .slider { background: var(--ui-green); }
-html.apple .switch input:checked + .slider:before { transform: translateX(16px); }
-html.apple .switch input:focus-visible + .slider { box-shadow: 0 0 0 3.5px var(--ui-accent-soft); }
+html.apple .switch input:checked + .slider:before { transform: translateX(22px); }
+html.apple .switch input:focus-visible + .slider { box-shadow: 0 0 0 3px var(--ui-accent-soft); }
 
 /* ---------- Bouton clair / sombre ---------- */
 
-html.apple [data-scheme-toggle] svg { width: 15px; height: 15px; fill: currentColor; stroke: none; }
+html.apple [data-scheme-toggle] svg { width: 20px; height: 20px; fill: currentColor; stroke: none; }
 html.apple [data-scheme-toggle] .icon-moon { display: block; }
 html.apple [data-scheme-toggle] .icon-sun { display: none; }
 html.apple[data-scheme="dark"] [data-scheme-toggle] .icon-sun { display: block; }
@@ -270,10 +328,10 @@ html.apple button.dock-import {
 	display: inline-flex;
 	align-items: center;
 	gap: 6px;
-	height: 28px;
-	padding: 0 11px;
+	height: 36px;
+	padding: 0 14px;
 	border-radius: 999px;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 600;
 	white-space: nowrap;
 	background: var(--ui-fill);
@@ -281,8 +339,8 @@ html.apple button.dock-import {
 }
 
 html.apple button.dock-import svg {
-	width: 12px;
-	height: 14px;
+	width: 14px;
+	height: 16px;
 	fill: currentColor;
 	flex-shrink: 0;
 }
@@ -300,4 +358,10 @@ html.apple button.dock-import:disabled {
 	opacity: 0.5;
 	cursor: default;
 	pointer-events: none;
+}
+
+/* ---------- Mouvement réduit ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+	html.apple *, html.apple *::before, html.apple *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

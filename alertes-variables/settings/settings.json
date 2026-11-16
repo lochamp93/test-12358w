@@ -4,12 +4,46 @@
 	"showLogo": false,
 	"showNuttyLink": false,
 	"dock": true,
+	"importAction": "../streamerbot/import.txt",
 	"subtitle": "{editScenario}",
 	"checkerPreview": true,
 	"livePreview": true,
 	"demo": true,
 	"compactURL": true,
 	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot",
+			"description": ""
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Streamer.bot",
+			"description": ""
+		},
+		{
+			"id": "importString",
+			"label": "Code d’import",
+			"type": "import-string",
+			"group": "Streamer.bot",
+			"description": ""
+		},
+		{
+			"id": "actionName",
+			"label": "Nom de l’action",
+			"description": "Lit le dossier, le son coupé, le titre et la catégorie",
+			"type": "text",
+			"defaultValue": "Alertes variables | Moteur",
+			"group": "Streamer.bot"
+		},
 		{
 			"id": "folderInfo",
 			"label": "Dossier sélectionné",
@@ -24693,32 +24727,6 @@
 			"defaultValue": "🔊 Sons des alertes réactivés par {user}",
 			"group": "Commandes de chat",
 			"showIf": "botReply"
-		},
-		{
-			"id": "address",
-			"label": "Adresse Streamer.bot",
-			"description": "Adresse du serveur WebSocket de Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Connexion"
-		},
-		{
-			"id": "port",
-			"label": "Port Streamer.bot",
-			"type": "number",
-			"min": 1,
-			"max": 65535,
-			"defaultValue": 8080,
-			"group": "Connexion",
-			"description": ""
-		},
-		{
-			"id": "actionName",
-			"label": "Action Streamer.bot",
-			"description": "Nom de l’action importée depuis le dock (lit le dossier, le son coupé, le titre et la catégorie)",
-			"type": "text",
-			"defaultValue": "Alertes variables | Moteur",
-			"group": "Connexion"
 		},
 		{
 			"id": "deleteScenario",

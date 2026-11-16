@@ -1,31 +1,31 @@
 /*
- * Page de paramétrage : DA Apple (Réglages Système macOS)
+ * Page de paramétrage : DA Streamertools (calquée sur iPadOS 27)
  * Actif seulement si settings.json contient "design": "apple" (classe « apple » sur <html>).
  */
 
 html.apple body {
-	font-size: 13px;
+	font-size: 15px;
 }
 
-/* ---------- Barre du haut (verre) ---------- */
+/* ---------- Barre du haut : titre seul + boutons en verre, sans fond ni trait ---------- */
 
 html.apple #header {
-	height: 52px;
-	padding: 0 16px;
-	gap: 8px;
+	height: 72px;
+	padding: 0 20px 0 24px;
+	gap: 10px;
 	flex-wrap: nowrap;
-	background: var(--ui-glass);
-	backdrop-filter: blur(24px) saturate(180%);
-	-webkit-backdrop-filter: blur(24px) saturate(180%);
+	background: var(--ui-bg);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
 	box-shadow: none;
-	border-bottom: 0.5px solid var(--ui-separator);
+	border-bottom: none;
 	z-index: 5;
 	box-sizing: border-box;
 }
 
 html.apple #widgetTitle {
 	font-family: var(--ui-font-display);
-	font-size: 20px;
+	font-size: 30px;
 	font-weight: 700;
 	letter-spacing: -0.01em;
 	margin-right: 6px;
@@ -35,8 +35,8 @@ html.apple #membershipsButton {
 	background: none;
 	box-shadow: none;
 	color: var(--ui-accent);
-	padding: 0 6px;
-	font-weight: 500;
+	padding: 0 10px;
+	font-weight: 600;
 }
 
 html.apple #membershipsButton:hover { background: var(--ui-fill); }
@@ -73,38 +73,63 @@ html.apple #widgetUrlInput:hover { filter: none; }
 html.apple #widgetUrlInputWrapper > span:not(#urlLabel) {
 	background: var(--ui-green) !important;
 	color: #fff !important;
-	border-radius: 7px !important;
-	font-size: 12px !important;
-	padding: 4px 10px !important;
+	border-radius: 999px !important;
+	font-size: 13px !important;
+	font-weight: 600;
+	padding: 6px 14px !important;
 	box-shadow: var(--ui-shadow-pop);
 	white-space: nowrap;
 }
 
 html.apple #header button { width: auto; flex: 0 0 auto; }
-html.apple #copyUrlButton { display: inline-flex; gap: 6px; align-items: center; }
-html.apple #copyUrlButton svg { width: 14px; height: 14px; }
+/* Copier : bouton rond bleu proéminent (icône seule, libellé dans l'infobulle) */
+html.apple #header #copyUrlButton {
+	width: 44px;
+	height: 44px;
+	min-width: 44px;
+	flex: 0 0 44px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0;
+	background: var(--ui-accent);
+	color: #fff;
+	box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.3), 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+html.apple #header #copyUrlButton:hover { background: color-mix(in srgb, var(--ui-accent) 90%, #000); }
+html.apple #header #copyUrlButton svg { width: 20px; height: 20px; }
 
-/* Boutons de la barre en icônes (libellé au survol) */
-/* Boutons icône ronds de 30 px (sélecteurs renforcés : priment sur « #header button ») */
+/* Boutons de la barre : ronds de 44 px en verre (libellé au survol) */
 html.apple #header #loadDefaultsButton,
 html.apple #header #loadSettingsButton,
 html.apple #header #openDockButton,
 html.apple #header #schemeToggle {
-	width: 30px;
-	height: 30px;
-	min-width: 30px;
-	flex: 0 0 30px;
+	width: 44px;
+	height: 44px;
+	min-width: 44px;
+	flex: 0 0 44px;
 	border-radius: 50%;
 	padding: 0;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 0;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
 }
 
+html.apple #header #loadDefaultsButton:hover,
+html.apple #header #loadSettingsButton:hover,
+html.apple #header #openDockButton:hover,
+html.apple #header #schemeToggle:hover { background: color-mix(in srgb, var(--ui-glass) 88%, var(--ui-text)); }
+
 html.apple #header svg {
-	width: 15px;
-	height: 15px;
+	width: 20px;
+	height: 20px;
 	fill: currentColor;
 	stroke: none;
 }
@@ -123,22 +148,27 @@ html.apple #settingsPanel::-webkit-scrollbar-thumb {
 html.apple #settingsPanel::-webkit-scrollbar-thumb:hover { background-color: var(--ui-text-secondary); }
 
 html.apple #settingsPanel {
-	width: 440px;
+	width: 460px;
 	flex-shrink: 0;
-	padding: 4px 20px 40px;
+	padding: 0 20px 40px 24px;
 	background: var(--ui-bg);
 	box-shadow: none;
-	border-right: 0.5px solid var(--ui-separator);
+	border-right: none;
 }
 
-/* Section = carte arrondie, titre au-dessus (comme les Réglages) */
+/* Section = case groupée (rayon 26, sans bordure ni ombre), titre au-dessus */
 html.apple .setting-group {
 	position: relative;
-	margin: 36px 0 0;
-	padding: 0 14px;
+	margin: 52px 0 0;
+	padding: 0 16px;
 	background: var(--ui-bg-elevated);
 	border-radius: var(--ui-radius);
-	box-shadow: var(--ui-shadow);
+	box-shadow: none;
+}
+
+/* Lissage des coins façon Apple quand le navigateur le gère */
+@supports (corner-shape: superellipse(1.5)) {
+	html.apple .setting-group { corner-shape: superellipse(1.5); border-radius: 34px; }
 }
 
 html.apple .setting-group:last-child {
@@ -147,18 +177,18 @@ html.apple .setting-group:last-child {
 
 html.apple .setting-group h2 {
 	position: absolute;
-	top: -24px;
+	top: -32px;
 	left: 4px;
 	margin: 0;
 	font-family: var(--ui-font-display);
-	font-size: 13px;
+	font-size: 17px;
 	font-weight: 600;
 	color: var(--ui-text);
 }
 
 html.apple .setting-item {
-	min-height: 44px;
-	padding: 8px 0;
+	min-height: 52px;
+	padding: 12px 0;
 	gap: 16px;
 	box-sizing: border-box;
 }
@@ -168,15 +198,16 @@ html.apple .setting-item + .setting-item {
 }
 
 html.apple .setting-item label {
-	font-size: 13px;
+	line-height: 1.3;
+	font-size: 15px;
 	font-weight: 400;
 	color: var(--ui-text);
 }
 
 html.apple .setting-item p {
-	margin: 2px 0 0;
-	font-size: 11.5px;
-	line-height: 1.35;
+	margin: 4px 0 0;
+	font-size: 13px;
+	line-height: 1.4;
 	color: var(--ui-text-secondary);
 }
 
@@ -193,16 +224,37 @@ html.apple .setting-item-content select {
 	margin: 0;
 }
 
-/* Boutons de type « button » (ex. tester l'animation) : pleine largeur */
+/* Boutons de type « button » (ex. tester l'animation) : ligne d'action iOS,
+   texte bleu aligné à gauche sur toute la largeur de la case (pas de pilule) */
 html.apple .setting-item-content > button {
 	width: 100%;
 	margin: 0;
 }
 
+html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) {
+	height: auto;
+	min-height: 28px;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+	font-size: 15px;
+	font-weight: 400;
+	text-align: left;
+	white-space: normal;
+}
+
+html.apple .setting-item-content > button:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field):hover { background: none; opacity: 0.7; }
+html.apple .setting-item-content > button.danger:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) { background: none; color: var(--ui-red); }
+html.apple .setting-item-content > button.confirming:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-field) { background: none !important; color: var(--ui-red) !important; font-weight: 600; }
+
 /* ---------- Aperçu ---------- */
 
+/* Aperçu : colonne à part, coins de fiche (34) */
 html.apple #widget-preview-wrapper {
 	background: var(--ui-bg);
+	margin: 0 10px 10px 0;
+	border-radius: var(--ui-radius-sheet);
 }
 
 /* L'aperçu garde un fond transparent quel que soit le thème de la page
@@ -228,9 +280,9 @@ html.apple #loadDefaultsWrapper {
 html.apple #loadSettingsContainer,
 html.apple #loadDefaultsContainer {
 	max-width: 440px;
-	padding: 20px;
+	padding: 24px;
 	border: none;
-	border-radius: 14px;
+	border-radius: var(--ui-radius-sheet);
 	background: var(--ui-bg-elevated);
 	box-shadow: var(--ui-shadow-pop);
 	backdrop-filter: none;
@@ -240,7 +292,7 @@ html.apple #loadSettingsContainer h2,
 html.apple #loadDefaultsContainer h2 {
 	margin: 0 0 8px;
 	font-family: var(--ui-font-display);
-	font-size: 15px;
+	font-size: 17px;
 	font-weight: 600;
 	color: var(--ui-text);
 }
@@ -275,7 +327,7 @@ html.apple #loadDefaultsContainer button[style] {
 
 /* Réglage de type "info" */
 html.apple .setting-info {
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 600;
 	color: var(--ui-text);
 	text-align: right;
@@ -283,7 +335,7 @@ html.apple .setting-info {
 }
 
 html.apple .setting-info[data-status="ok"] { color: var(--ui-green); }
-html.apple .setting-info[data-status="warn"] { color: #ff9f0a; }
+html.apple .setting-info[data-status="warn"] { color: var(--ui-orange); }
 
 /* Boutons sensibles (ex. supprimer) et confirmation */
 html.apple .setting-item-content > button.danger {
@@ -335,9 +387,9 @@ html.apple .setting-item.setting-item-actions { align-items: center; }
 }
 
 .setting-actions .icon-button {
-	width: 30px;
-	height: 30px;
-	min-width: 30px;
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
 	padding: 0;
 	margin: 0;
 	border: none;
@@ -348,12 +400,12 @@ html.apple .setting-item.setting-item-actions { align-items: center; }
 	cursor: pointer;
 	background: var(--ui-fill-strong, #3a3a3a);
 	color: var(--ui-text, #fff);
-	transition: transform .12s ease, filter .12s ease, background .15s ease;
+	transition: filter .12s ease, background .15s ease;
 }
 
 .setting-actions .icon-button:hover { filter: brightness(1.08); }
-.setting-actions .icon-button:active { transform: scale(.92); }
-.setting-actions .icon-button svg { width: 14px; height: 14px; fill: currentColor; }
+.setting-actions .icon-button:active { filter: brightness(.94); }
+.setting-actions .icon-button svg { width: 18px; height: 18px; fill: currentColor; }
 .setting-actions .icon-button.accent { background: var(--ui-accent, #0a84ff); color: #fff; }
 /* Supprimer : fond rouge, icône blanche ; confirmation : rouge plus sombre qui pulse */
 .setting-actions .icon-button.danger { background: var(--ui-red, #ff3b30); color: #fff; }
@@ -368,9 +420,9 @@ html.apple .setting-item.setting-item-actions { align-items: center; }
 dialog.settings-popup {
 	width: min(460px, calc(100vw - 40px));
 	max-height: calc(100vh - 80px);
-	padding: 20px 20px 16px;
+	padding: 24px 24px 20px;
 	border: none;
-	border-radius: 18px;
+	border-radius: var(--ui-radius-sheet, 34px);
 	background: var(--ui-bg-elevated, #2b2b2b);
 	color: var(--ui-text, #fff);
 	box-shadow: var(--ui-shadow-pop, 0 20px 60px rgba(0, 0, 0, .35));
@@ -394,7 +446,8 @@ dialog.settings-popup[open] { animation: popupIn .18s ease-out; }
 .settings-popup-title {
 	margin: 0 0 12px;
 	font-size: 17px;
-	font-weight: 700;
+	font-weight: 600;
+	text-align: center;
 }
 
 .settings-popup-body .setting-item {
@@ -403,7 +456,7 @@ dialog.settings-popup[open] { animation: popupIn .18s ease-out; }
 	align-items: center;
 	gap: 12px;
 	padding: 10px 0;
-	border-bottom: 1px solid var(--ui-separator, rgba(255, 255, 255, .1));
+	border-bottom: 0.5px solid var(--ui-separator, rgba(255, 255, 255, .1));
 }
 
 .settings-popup-body .setting-item:last-child { border-bottom: none; }
@@ -473,20 +526,20 @@ html.apple .setting-item.setting-item-copy {
 html.apple .setting-item-copy input.setting-info.copyable {
 	flex: 1;
 	min-width: 0;
-	height: 34px;
-	padding: 0 12px;
+	height: 42px;
+	padding: 0 16px;
 	border: none;
-	border-radius: 10px;
+	border-radius: 999px;
 	background: var(--ui-fill);
 	color: var(--ui-text);
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 600;
 }
 
 html.apple .setting-item-content > button.copy-info-button {
-	flex: 0 0 34px;
-	width: 34px;
-	height: 34px;
+	flex: 0 0 42px;
+	width: 42px;
+	height: 42px;
 	padding: 0;
 	border-radius: 50%;
 	display: inline-flex;
@@ -497,13 +550,13 @@ html.apple .setting-item-content > button.copy-info-button {
 	box-shadow: none;
 }
 
-.copy-info-button svg { width: 15px; height: 15px; fill: currentColor; }
+.copy-info-button svg { width: 18px; height: 18px; fill: currentColor; }
 html.apple .setting-item-content > button.copy-info-button.copied { background: var(--ui-green); }
 
 html.apple .settings-popup-footer > button.settings-popup-close {
 	width: auto;
-	height: 34px;
-	padding: 0 16px;
+	height: 44px;
+	padding: 0 20px;
 	border-radius: 999px;
 	background: var(--ui-accent);
 	color: #fff;
@@ -530,7 +583,7 @@ html.apple .setting-item-content > button.link-button {
 	background: none !important;
 	box-shadow: none;
 	color: var(--ui-accent);
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 600;
 	text-align: left;
 }
@@ -581,7 +634,7 @@ html.apple .setting-info.setting-info-lines {
 }
 
 .info-dot[data-status="ok"] { background: var(--ui-green, #34c759); }
-.info-dot[data-status="warn"] { background: #ff9f0a; }
+.info-dot[data-status="warn"] { background: var(--ui-orange, #ff8d28); }
 .info-dot[data-status="error"] { background: var(--ui-red, #ff3b30); }
 .info-label { color: var(--ui-text-secondary, #8e8e93); flex: 0 0 auto; }
 .info-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
@@ -590,7 +643,7 @@ html.apple .setting-info.setting-info-lines {
    l'interrupteur, pour que tester / paramétrer restent alignés d'une ligne à l'autre */
 .setting-item-actions .setting-actions .icon-button:last-child { margin: 0 4px 0 8px; }
 
-html.apple .setting-info.setting-info-lines { font-size: 13px; font-weight: 400; }
+html.apple .setting-info.setting-info-lines { font-size: 15px; font-weight: 400; }
 
 /* Règles : en retrait et en italique, pour montrer qu'elles dépendent de l'alerte au-dessus */
 html.apple .setting-item.setting-item-sub label { font-style: italic; padding-left: 16px; }
@@ -602,25 +655,25 @@ html.apple .setting-item.setting-item-sub .link-button { margin-left: 16px; font
 	max-width: 100%;
 	max-height: 150px;
 	margin-top: 10px;
-	border-radius: 10px;
+	border-radius: 20px;
 	object-fit: contain;
 	background: repeating-conic-gradient(var(--ui-checker-a, #e5e5ea) 0% 25%, var(--ui-checker-b, #f5f5f7) 0% 50%) 0 0 / 16px 16px;
 }
 
 /* Les lignes « Image / Son » gardent la taille et les couleurs de l'info (l'ancien style
    donne 16 px aux span des réglages) */
-html.apple .setting-info-lines .info-line span { font-size: 13px; font-weight: 400; }
+html.apple .setting-info-lines .info-line span { font-size: 15px; font-weight: 400; }
 html.apple .setting-info-lines .info-line .info-label { color: var(--ui-text-secondary); }
 html.apple .setting-info-lines .info-line .info-text { color: var(--ui-text); }
 
 /* Sous-titre à côté du nom du widget (ex. scénario affiché) : pastille discrète */
 html.apple #widgetSubtitle {
 	margin-left: 12px;
-	padding: 4px 11px;
+	padding: 6px 14px;
 	border-radius: 999px;
 	background: var(--ui-fill);
 	color: var(--ui-text-secondary);
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 600;
 	white-space: nowrap;
 	max-width: 260px;
@@ -638,7 +691,7 @@ html.apple .setting-item-content > button.info-action {
 	background: none !important;
 	box-shadow: none;
 	color: var(--ui-accent);
-	font-size: 13px;
+	font-size: 15px;
 	font-weight: 600;
 }
 html.apple .setting-item-content > button.info-action:hover { text-decoration: underline; }
@@ -647,4 +700,162 @@ html.apple .setting-item-content:has(> .info-action) { display: flex; align-item
 
 /* Centrage optique du triangle « lecture » dans son rond (comme le logo YouTube) :
    le centre géométrique paraît trop à gauche, on le décale d'environ 10 % de sa largeur */
-.setting-actions .icon-button[data-icon="play"] svg { transform: translateX(1.5px); }
+.setting-actions .icon-button[data-icon="play"] svg { transform: translateX(1.8px); }
+
+/* Valeur à droite des lignes : champs texte et nombres un peu plus étroits pour la gélule de 42 px */
+html.apple .setting-item-content input[type="number"] { width: 120px; text-align: right; }
+
+/* Couleur : champ hexa + pastille, alignés à droite */
+html.apple .setting-item-content:has(> input.color-hex) {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 8px;
+}
+html.apple .setting-item-content > input.color-hex { width: 108px; }
+
+/* Le libellé et sa description prennent la place disponible, la valeur reste à droite */
+html.apple .setting-item > div:first-child { flex: 1 1 auto; min-width: 0; }
+
+/* ---------- Notification (pastille en bas au centre) ---------- */
+
+#settingsToast {
+	position: fixed;
+	left: 50%;
+	bottom: 24px;
+	z-index: 50;
+	max-width: min(560px, calc(100vw - 40px));
+	padding: 12px 20px;
+	border-radius: 999px;
+	background: var(--ui-bg-elevated, #1c1c1e);
+	color: var(--ui-text, #fff);
+	box-shadow: var(--ui-shadow-pop, 0 2px 10px rgba(0, 0, 0, .3));
+	font-size: 15px;
+	font-weight: 600;
+	text-align: center;
+	opacity: 0;
+	transform: translateX(-50%) translateY(8px);
+	transition: opacity .2s, transform .2s;
+	pointer-events: none;
+}
+
+#settingsToast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- Sections repliables (titre dans la case, chevron) ---------- */
+
+html.apple .setting-group.collapsible { margin-top: 16px; }
+html.apple .setting-group.collapsible:first-child { margin-top: 4px; }
+
+html.apple .setting-group.collapsible > h2 {
+	position: static;
+	margin: 0;
+	padding: 0;
+}
+
+html.apple .setting-group.collapsible > h2 > button.group-toggle {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	width: 100%;
+	height: 58px;
+	padding: 0;
+	border-radius: 0;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-text);
+	font-family: var(--ui-font-display);
+	font-size: 17px;
+	font-weight: 600;
+	text-align: left;
+}
+
+html.apple .setting-group.collapsible > h2 > button.group-toggle:hover { background: none; }
+html.apple .setting-group.collapsible > h2 > button.group-toggle:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 2px; border-radius: 8px; }
+
+html.apple .group-chevron {
+	width: 14px;
+	height: 8px;
+	flex-shrink: 0;
+	fill: currentColor;
+	transition: transform 0.25s ease;
+}
+
+/* Replié : chevron vers la droite, contenu masqué */
+html.apple .setting-group.collapsed .group-chevron { transform: rotate(-90deg); }
+html.apple .setting-group.collapsed > :not(h2) { display: none !important; }
+
+/* Déplié : séparateur fin sous le titre */
+html.apple .setting-group.collapsible:not(.collapsed) > h2 { border-bottom: 0.5px solid var(--ui-separator); }
+
+/* ---------- Code d’import : champ masqué, « Copier » au survol, « Importé » ---------- */
+
+html.apple .setting-item-content > button.import-field {
+	position: relative;
+	width: 190px;
+	height: 42px;
+	padding: 0 16px;
+	border-radius: 999px;
+	background: var(--ui-fill);
+	box-shadow: none;
+	color: var(--ui-text-secondary);
+	font-size: 15px;
+	font-weight: 400;
+	text-align: left;
+	overflow: hidden;
+}
+
+html.apple .import-field > span { display: block; }
+html.apple .import-field .import-dots { letter-spacing: 2px; }
+html.apple .import-field .import-copy,
+html.apple .import-field .import-done { display: none; font-weight: 600; text-align: center; }
+
+/* Survol : « Copier » en bleu */
+html.apple .import-field:hover .import-dots,
+html.apple .import-field:focus-visible .import-dots { display: none; }
+html.apple .import-field:hover .import-copy,
+html.apple .import-field:focus-visible .import-copy { display: block; color: var(--ui-accent); }
+
+/* Action présente dans Streamer.bot : « Importé » en vert (le clic copie quand même) */
+html.apple .import-field.installed .import-dots,
+html.apple .import-field.installed .import-copy { display: none; }
+html.apple .import-field.installed .import-done { display: block; color: var(--ui-green); }
+html.apple .import-field.installed:hover .import-done { display: none; }
+html.apple .import-field.installed:hover .import-copy { display: block; }
+
+html.apple .import-field.copied { background: var(--ui-accent-soft); }
+
+/* ---------- Actions d’une ligne : symboles directement dans la ligne (pas de rond) ---------- */
+
+.setting-actions { gap: 4px; }
+
+html.apple .setting-actions .icon-button,
+html.apple .setting-actions .icon-button.accent,
+html.apple .setting-actions .icon-button.danger {
+	width: 36px;
+	height: 36px;
+	min-width: 36px;
+	border-radius: 50%;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+}
+
+html.apple .setting-actions .icon-button.danger { color: var(--ui-red); }
+html.apple .setting-actions .icon-button:hover { background: var(--ui-fill); filter: none; }
+html.apple .setting-actions .icon-button svg { width: 21px; height: 21px; }
+
+/* Confirmation (deux clics) : symbole rouge sur fond rouge clair */
+html.apple .setting-actions .icon-button.confirming {
+	background: color-mix(in srgb, var(--ui-red) 16%, transparent);
+	color: var(--ui-red);
+	animation: none;
+}
+
+html.apple .setting-item-actions .setting-actions .icon-button:last-child { margin: 0; }
+
+/* Libellé et valeur centrés verticalement sur la ligne */
+html.apple .setting-item { align-items: center; }
+
+/* « Ajouter une règle » : ligne d'action alignée à gauche, comme dans les Réglages */
+html.apple .setting-item.setting-item-link .setting-item-content { justify-content: flex-start; }

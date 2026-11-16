@@ -1,4 +1,4 @@
-/* Compteur de morts : dock OBS, DA Apple (s'appuie sur -common/styles/apple.css) */
+/* Compteur de morts : dock OBS, DA Streamertools (s'appuie sur -common/styles/apple.css) */
 
 html.apple {
 	--dock-accent: var(--ui-accent);
@@ -65,7 +65,7 @@ body {
 }
 
 .status.on::before { background: var(--ui-green); }
-.status.warn::before { background: #ff9f0a; }
+.status.warn::before { background: var(--ui-orange, #ff8d28); }
 
 /* Bouton lien vers la page de paramétrage (en-tête) */
 html.apple a.ui-icon.icon-link {
@@ -110,7 +110,7 @@ html.apple a.ui-icon.icon-link svg { width: 14px; height: 14px; fill: currentCol
 	height: 8px;
 	margin-right: 6px;
 	border-radius: 50%;
-	background: #ff9f0a;
+	background: var(--ui-orange, #ff8d28);
 	vertical-align: 1px;
 }
 
@@ -418,3 +418,97 @@ input[type="number"] {
 [hidden] {
 	display: none !important;
 }
+
+/* ---------- Charte Streamertools (calquée sur iOS / iPadOS 27) ---------- */
+
+body { font-size: 15px; }
+
+/* En-tête : sans trait de séparation, boutons en verre */
+#header {
+	padding: 12px;
+	background: var(--ui-bg);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	border-bottom: none;
+}
+
+.dock-title { font-size: 15px; }
+.status { font-size: 12px; }
+
+/* En-tête étroit (dock) : bouton d'import compact */
+html.apple #header button.dock-import { height: 32px; padding: 0 12px; }
+.status.warn::before { background: var(--ui-orange); }
+
+html.apple a.ui-icon.icon-link {
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+}
+html.apple a.ui-icon.icon-link svg { width: 16px; height: 16px; }
+html.apple a.ui-icon.icon-link:active { transform: none; filter: brightness(.94); }
+
+/* Cases groupées : rayon 26, ni bordure ni ombre */
+.card,
+.panel { border-radius: var(--ui-radius); box-shadow: none; }
+.panel { padding: 14px 16px; font-size: 13px; }
+.panel.warning strong { font-size: 15px; }
+.panel.warning strong::before { background: var(--ui-orange); }
+
+code { font-size: 12px; border-radius: 6px; }
+.section h3 { margin: 0 0 8px 4px; font-size: 17px; }
+.muted { font-size: 13px; }
+.badge { font-size: 12px; font-weight: 600; padding: 3px 9px; }
+
+html.apple .row.big button { height: 52px; border-radius: 999px; font-weight: 600; }
+
+/* Liste déroulante posée seule (pas dans une ligne) : gélule remplie, texte à gauche */
+html.apple select {
+	background-color: var(--ui-fill);
+	color: var(--ui-text);
+	text-align: left;
+	text-align-last: left;
+	padding: 0 34px 0 16px;
+	background-position: right 14px center;
+}
+
+#toast { padding: 10px 16px; font-size: 13px; font-weight: 600; }
+
+/* Compteur de morts */
+#gameList { border-radius: var(--ui-radius); box-shadow: none; }
+#hero { padding: 14px; }
+#heroCover { border-radius: 12px; box-shadow: none; }
+#gameName { font-size: 17px; }
+.toggle-line { padding: 12px 16px; }
+.game-item { padding: 10px 14px; }
+.thumb { border-radius: 6px; }
+html.apple .game-item button { width: 36px; height: 36px; }
+html.apple .game-item button svg { width: 17px; height: 17px; }
+.cover-editor { padding: 4px 14px 12px 55px; }
+
+/* Bouton-lien (ex. « Ouvrir la page de paramétrage ») : même gélule que les boutons */
+html.apple a.button-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 999px;
+	background: var(--ui-fill);
+	color: var(--ui-text);
+	font-size: 15px;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+html.apple a.button-link.accent { background: var(--ui-accent); color: #fff; }
+html.apple a.button-link:hover { text-decoration: none; filter: brightness(1.08); }
+
+/* Le texte ne dépasse jamais d'un bouton */
+html.apple .row > button { overflow: hidden; text-overflow: ellipsis; }
+
+/* Connexion WebSocket : adresse et port se partagent la largeur, « Se connecter » dessous */
+.ws-fields > input { flex: 1 1 0; }

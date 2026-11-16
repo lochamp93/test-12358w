@@ -42,13 +42,14 @@ def add(**kw):
     S.append(kw)
 
 
-# ---------- Connexion ----------
-add(id="address", label="Adresse Streamer.bot", description="Adresse du serveur WebSocket de Streamer.bot",
-    type="text", defaultValue="127.0.0.1", group="Connexion")
-add(id="port", label="Port Streamer.bot", type="number", min=1, max=65535, defaultValue=8080, group="Connexion")
-add(id="actionName", label="Action Streamer.bot",
-    description="Nom de l’action importée depuis le dock (lit le dossier, le son coupé, le titre et la catégorie)",
-    type="text", defaultValue="Alertes variables | Moteur", group="Connexion")
+# ---------- Streamer.bot (toujours la première section) ----------
+add(id="address", label="Adresse Streamer.bot", type="text", defaultValue="127.0.0.1", group="Streamer.bot")
+add(id="port", label="Port Streamer.bot", type="number", min=1, max=65535, defaultValue=8080, group="Streamer.bot")
+# Code d'import de l'action (copié au clic, « Importé » quand l'action existe dans Streamer.bot)
+add(id="importString", label="Code d’import", type="import-string", group="Streamer.bot")
+add(id="actionName", label="Nom de l’action",
+    description="Lit le dossier, le son coupé, le titre et la catégorie",
+    type="text", defaultValue="Alertes variables | Moteur", group="Streamer.bot")
 
 # ---------- Dossier source ----------
 add(id="folderInfo", label="Dossier sélectionné", type="info", defaultValue="Connexion à Streamer.bot…",
@@ -336,9 +337,9 @@ add(id="msgMute", label="Message au mute", description="{user} : qui a coupé le
 add(id="msgUnmute", label="Message à l’unmute", description="{user} : qui a réactivé le son (pas de pseudo si c’est le streameur ou le dock)", type="text",
     defaultValue="🔊 Sons des alertes réactivés par {user}", group="Commandes de chat", showIf="botReply")
 
-# Ordre des sections : les commandes de chat avant les scénarios
-ORDRE = ["Dossier source", "Scénarios", "Déclenchement", "Visuel et son", "Style",
-         "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Synthèse vocale", "Commandes de chat", "Connexion",
+# Ordre des sections : Streamer.bot en premier, les commandes de chat avant la gestion du scénario
+ORDRE = ["Streamer.bot", "Dossier source", "Scénarios", "Déclenchement", "Visuel et son", "Style",
+         "Twitch", "Kick", "YouTube", "TikTok", "Réglages des alertes", "Synthèse vocale", "Commandes de chat",
          "Gérer le scénario"]
 S.sort(key=lambda s: ORDRE.index(s["group"]) if s["group"] in ORDRE else len(ORDRE))
 
@@ -348,6 +349,7 @@ out = {
     "showLogo": False,
     "showNuttyLink": False,
     "dock": True,
+    "importAction": "../streamerbot/import.txt",
     "subtitle": "{editScenario}",
     "checkerPreview": True,
     "livePreview": True,
