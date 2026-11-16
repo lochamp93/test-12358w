@@ -62,7 +62,9 @@ function LoadJSON(settingsJson) {
 			// Logo masqué si settings.json contient "showLogo": false
 			// "showNuttyLink": false : pas de lien « Découvrez les widgets de nutty » pour ce widget
 			const nuttyLink = document.getElementById('membershipsButton');
-			if (nuttyLink) nuttyLink.style.display = data.showNuttyLink === false ? 'none' : '';
+			if (nuttyLink) nuttyLink.style.display = (data.showNuttyLink === false || data.nuttyLink === 'icon') ? 'none' : '';
+			// "nuttyLink": "icon" : lien discret vers nutty, bouton rond avec son logo
+			SetupNuttyIconLink(data.nuttyLink === 'icon');
 
 			// "subtitle" : texte à côté du titre, qui peut reprendre un réglage (ex. "{editScenario}")
 			let subtitle = document.getElementById('widgetSubtitle');
@@ -344,6 +346,9 @@ function LoadJSON(settingsJson) {
 							inputElement.id = setting.id; // Added setting ID
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 					}
+
+					// "placeholder" : texte gris affiché quand le champ est vide
+					if (setting.placeholder && inputElement && inputElement.tagName === 'INPUT') inputElement.placeholder = setting.placeholder;
 
 					// Enregistrer la valeur par défaut
 					if (!settingsMap.has(setting.id))
@@ -1292,4 +1297,20 @@ function ShowSettingsToast(text) {
 	toast.classList.add('show');
 	clearTimeout(ShowSettingsToast._t);
 	ShowSettingsToast._t = setTimeout(() => toast.classList.remove('show'), 4000);
+}
+
+// Bouton rond avec le logo de nutty (settings.json : "nuttyLink": "icon")
+function SetupNuttyIconLink(enabled) {
+	let link = document.getElementById('nuttyIconLink');
+	if (!enabled) { if (link) link.remove(); return; }
+	if (link || !widgetUrlInputWrapper) return;
+	link = document.createElement('a');
+	link.id = 'nuttyIconLink';
+	link.href = 'https://nutty.gg';
+	link.target = '_blank';
+	link.rel = 'noopener';
+	link.title = 'Découvrez les widgets de nutty';
+	link.setAttribute('aria-label', 'Découvrez les widgets de nutty');
+	link.innerHTML = '<img src="../../resources/nutty-logo.png" alt="" />';
+	widgetUrlInputWrapper.insertBefore(link, widgetUrlInputWrapper.firstChild);
 }
