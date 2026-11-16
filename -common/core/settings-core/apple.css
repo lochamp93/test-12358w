@@ -871,3 +871,61 @@ html.apple button { line-height: normal; }
 html.apple .setting-item label { margin: 0; }
 html.apple .setting-item:last-child { padding-bottom: 12px; }
 html.apple .setting-item p.import-status span { font-size: 13px; font-weight: 400; }
+
+/* ---------- Ajustements (retours en conditions réelles) ---------- */
+
+/* Descriptions et liens : le style d'origine ajoutait une opacité de 0,6 (texte trop pâle,
+   lien bleu illisible). Gris secondaire de la charte, lien dans le bleu habituel. */
+html.apple .setting-item p { opacity: 1; color: var(--ui-text-secondary); }
+html.apple .setting-item p a,
+html.apple .setting-item a { opacity: 1; color: var(--ui-accent); font-weight: 400 !important; font-size: inherit; }
+
+/* Listes déroulantes : texte aligné à gauche (la liste qui s'ouvre aussi), la liste
+   prend la largeur de sa valeur et reste collée à droite ; pas de gélule au survol */
+html.apple .setting-item-content select {
+	width: auto;
+	max-width: 240px;
+	field-sizing: content;
+	text-align: left;
+	text-align-last: left;
+}
+html.apple select option { text-align: left; }
+html.apple select:hover,
+html.apple select:focus { background-color: transparent; box-shadow: none; }
+html.apple select:focus-visible { outline: 2px solid var(--ui-accent); outline-offset: 2px; }
+
+/* Gélules sur la même ligne qu'un libellé : valeur alignée à droite, comme chez Apple */
+html.apple .setting-item-content input[type="text"],
+html.apple .setting-item-content input[type="number"],
+html.apple .setting-item-content input[type="password"],
+html.apple .setting-item-content > input.color-hex { text-align: right; }
+
+/* Roue crantée : grise (bleu réservé à l'action « tester ») */
+html.apple .setting-actions .icon-button[data-icon="gear"] { color: var(--ui-text-secondary); }
+
+/* Bouton destructif seul en bas (ex. « Supprimer ce scénario ») : centré, verre, texte rouge */
+html.apple .setting-group-bare .setting-item { justify-content: center; }
+html.apple .setting-group-bare .setting-item-content { justify-content: center; }
+html.apple .setting-group-bare .setting-item-content > button.danger:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-copy-button) {
+	width: auto;
+	min-height: 0;
+	height: 50px;
+	padding: 0 36px;
+	margin: 0 auto;
+	border-radius: 999px;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	color: var(--ui-red);
+	font-size: 17px;
+	font-weight: 400;
+	text-align: center;
+	white-space: nowrap;
+}
+html.apple .setting-group-bare .setting-item-content > button.danger:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-copy-button):hover { opacity: 1; background: color-mix(in srgb, var(--ui-glass) 88%, var(--ui-text)); }
+html.apple .setting-group-bare .setting-item-content > button.confirming:not(.copy-info-button):not(.info-action):not(.link-button):not(.import-copy-button) {
+	background: var(--ui-red) !important;
+	color: #fff !important;
+	font-weight: 600;
+}
