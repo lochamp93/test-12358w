@@ -37,7 +37,6 @@ function DefaultState() {
 			followUnit: 'days', platforms: GIVEAWAY_PLATFORMS.slice(), kickChannel: '', confirmSeconds: 60, excluded: '',
 			msgOpen: 'GIVEAWAY ouvert ! Écrivez « {mot} » dans le chat pour participer. Lot : {lot}',
 			msgDraw: '{pseudo} tu as été tiré·e au sort ! Écris un message dans le chat dans les {secondes} secondes pour confirmer que tu veux le lot.',
-			msgDrawMany: '{pseudos} vous avez été tiré·es au sort ! Écrivez un message dans le chat dans les {secondes} secondes pour confirmer que vous voulez le lot.',
 			msgConfirm: 'Félicitations {pseudo} qui remporte {lot} ! Un modo te contacte très vite.'
 		}
 	};
@@ -266,10 +265,7 @@ function RenderDraw(cfg) {
 	const waiting = draw && st === 'pending' ? draw.winners.filter(w => !w.confirmed) : [];
 	const late = waiting.filter(w => Date.now() > Deadline(w, draw));
 	$('noshowButton').hidden = !waiting.length;
-	const replace = late.length || waiting.length;
-	$('noshowButton').textContent = replace > 1
-		? `Pas de réponse : tirer ${replace} autres gagnant·es`
-		: 'Pas de réponse : tirer un autre gagnant·e';
+	$('noshowButton').textContent = 'Pas de réponse : tirer un autre gagnant·e';
 
 	clearInterval(countdownTimer);
 	$('countdown').hidden = true;
@@ -356,13 +352,6 @@ function UpdateCountdown() {
 		el.textContent = w.confirmed ? 'confirmé' : (l > 0 ? `en attente · ${Remaining(l)}` : 'temps écoulé');
 		el.classList.toggle('late', !w.confirmed && l <= 0);
 	});
-	// Bouton « Pas de réponse » : nombre de personnes à remplacer
-	const waiting = draw.winners.filter(w => !w.confirmed);
-	const late = waiting.filter(w => now > Deadline(w, draw)).length;
-	const replace = late || waiting.length;
-	$('noshowButton').textContent = replace > 1
-		? `Pas de réponse : tirer ${replace} autres gagnant·es`
-		: 'Pas de réponse : tirer un autre gagnant·e';
 }
 
 function RenderParticipants() {
@@ -543,10 +532,10 @@ function LocalApply(a) {
 				if (size <= 0) { state.lastError = 'Personne n’est en lice'; break; }
 				state.draw = { round: ((state.draw && state.draw.round) || 0) + 1, size, winners: [] };
 			} else if (a.mode === 'noshow') {
-				const late = state.draw.winners.filter(w => !w.confirmed && now > w.deadline);
-				const gone = late.length ? late : state.draw.winners.filter(w => !w.confirmed);
-				state.draw.winners = state.draw.winners.filter(w => !gone.includes(w));
-				count = gone.length;
+				const waiting = state.draw.winners.filter(w => !w.confirmed);
+				const gone = waiting.find(w => now > w.deadline) || waiting[waiting.length - 1];
+				if (!gone) break;
+				state.draw.winners = state.draw.winners.filter(w => w !== gone);
 			}
 			const names = [];
 			for (let i = 0; i < count; i++) { const w = pickOne(); if (!w) break; state.draw.winners.push(w); names.push(w.name); }
@@ -555,7 +544,7 @@ function LocalApply(a) {
 			state.drawId = (Number(state.drawId) || 0) + 1;
 			state.draw.id = state.drawId;
 			LocalStatus();
-			if (names.length) Toast('Chat : ' + Message(names.length > 1 ? 'msgDrawMany' : 'msgDraw', names));
+			if (names.length) Toast('Chat : ' + Message('msgDraw', names));
 			// Démo : chaque gagnant·e confirme au bout de 5 s
 			const keys = state.draw.winners.filter(w => !w.confirmed).map(w => w.key);
 			setTimeout(() => keys.forEach(k => LocalApply({ mode: 'chat', confirmKey: k, text: 'oui merci !!' })), 5000);
@@ -606,7 +595,6 @@ function Message(key, names) {
 	const defaults = {
 		msgOpen: 'GIVEAWAY ouvert ! Écrivez « {mot} » dans le chat pour participer. Lot : {lot}',
 		msgDraw: '{pseudo} tu as été tiré·e au sort !',
-		msgDrawMany: '{pseudos} vous avez été tiré·es au sort !',
 		msgConfirm: 'Félicitations {pseudo} qui remporte {lot} !'
 	};
 	const mentions = names.map(n => '@' + n).join(' ');
@@ -785,7 +773,6 @@ function Bind() {
 		state = GiveawayDemoState();
 		state.config.msgOpen = 'GIVEAWAY ouvert ! Écrivez « {mot} » dans le chat pour participer. Lot : {lot}';
 		state.config.msgDraw = '{pseudo} tu as été tiré·e au sort ! Écris un message dans le chat dans les {secondes} secondes pour confirmer que tu veux le lot.';
-		state.config.msgDrawMany = '{pseudos} vous avez été tiré·es au sort ! Écrivez un message dans le chat dans les {secondes} secondes pour confirmer que vous voulez le lot.';
 		state.config.msgConfirm = 'Félicitations {pseudo} qui remporte {lot} ! Un modo te contacte très vite.';
 		Render();
 		return;

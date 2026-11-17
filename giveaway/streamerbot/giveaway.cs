@@ -5,6 +5,7 @@
 //  lue par l'overlay et le dock.
 //
 //  Arguments acceptés (envoyés par le dock ou l'overlay) :
+//    (les gagnant·es sont toujours tirés un par un, à chaque clic)
 //    mode : config | photo | open | close | end | draw | next | noshow | chat | remove | add | reset | clearHistory
 //    config  : JSON partiel des réglages (mode config)
 //    photo   : image du lot en data URL ou URL, vide pour retirer (mode photo)
@@ -361,14 +362,15 @@ public class CPHInline
 		else
 		{
 			if (statut != "pending" || tirage == null) return false;
-			// Personnes dont le délai est écoulé (à défaut : toutes celles qui n'ont pas confirmé)
-			List<JToken> retires = new List<JToken>();
+			// Une personne à la fois : la première dont le délai est écoulé, sinon la dernière tirée sans confirmation
+			JToken retire = null;
 			foreach (JObject g in gagnants)
-				if (!g.Value<bool>("confirmed") && Maintenant() > g.Value<long>("deadline")) retires.Add(g);
-			if (retires.Count == 0)
-				foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) retires.Add(g);
-			foreach (JToken g in retires) gagnants.Remove(g);
-			aTirer = retires.Count;
+				if (retire == null && !g.Value<bool>("confirmed") && Maintenant() > g.Value<long>("deadline")) retire = g;
+			if (retire == null)
+				foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) retire = g;
+			if (retire == null) return false;
+			gagnants.Remove(retire);
+			aTirer = 1;
 		}
 
 		List<string> nouveaux = new List<string>();
@@ -394,7 +396,7 @@ public class CPHInline
 		tirage["latest"] = new JArray(nouveaux.ToArray());
 		MettreAJourStatut(data);
 		Sauver(data, "draw");
-		if (noms.Count > 0) Annoncer(cfg, Modele(cfg, noms.Count > 1 ? "msgDrawMany" : "msgDraw", noms));
+		if (noms.Count > 0) Annoncer(cfg, Modele(cfg, "msgDraw", noms));
 		return true;
 	}
 
@@ -608,7 +610,6 @@ public class CPHInline
 			["excluded"] = "",
 			["msgOpen"] = "GIVEAWAY ouvert ! Écrivez « {mot} » dans le chat pour participer. Lot : {lot}",
 			["msgDraw"] = "{pseudo} tu as été tiré·e au sort ! Écris un message dans le chat dans les {secondes} secondes pour confirmer que tu veux le lot.",
-			["msgDrawMany"] = "{pseudos} vous avez été tiré·es au sort ! Écrivez un message dans le chat dans les {secondes} secondes pour confirmer que vous voulez le lot.",
 			["msgConfirm"] = "Félicitations {pseudo} qui remporte {lot} ! Un modo te contacte très vite."
 		};
 	}

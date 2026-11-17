@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Giveaway • Dock</title>
 	<link rel="icon" href="../../-common/resources/favicon.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111704" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111705" />
 	<!-- Dock : thème sombre uniquement ; rechargement automatique si une version plus récente est en ligne -->
-	<script src="../../-common/utils/fresh.js?v=2026111704" data-version="2026111704" data-version-url="../version.txt"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111704" />
+	<script src="../../-common/utils/fresh.js?v=2026111705" data-version="2026111705" data-version-url="../version.txt"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111705" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -119,7 +119,7 @@
 					<input id="cfgLots" class="num" type="number" min="1" max="999" data-key="lots" />
 				</label>
 				<label class="line">
-					<span class="line-label">Gagnant·es par tirage<small>Plafonné par les lots restants et les personnes en lice</small></span>
+					<span class="line-label">Gagnant·es par tirage<small>Tirés un par un (bouton Suivant). Plafonné par les lots restants</small></span>
 					<input id="cfgPerDraw" class="num" type="number" min="1" max="99" data-key="perDraw" />
 				</label>
 			</div>
@@ -192,8 +192,7 @@
 			<p class="muted">{mot}, {lot}, {pseudo} et {secondes} sont remplacés. Vide : pas de message.</p>
 			<div class="group messages">
 				<label class="line column"><span class="line-label">Ouverture</span><textarea id="msgOpen" rows="2" data-key="msgOpen"></textarea></label>
-				<label class="line column"><span class="line-label">Tirage (1 gagnant·e)</span><textarea id="msgDraw" rows="3" data-key="msgDraw"></textarea></label>
-				<label class="line column"><span class="line-label">Tirage (plusieurs)</span><textarea id="msgDrawMany" rows="3" data-key="msgDrawMany"></textarea></label>
+				<label class="line column"><span class="line-label">Tirage</span><textarea id="msgDraw" rows="3" data-key="msgDraw"></textarea></label>
 				<label class="line column"><span class="line-label">Confirmation</span><textarea id="msgConfirm" rows="2" data-key="msgConfirm"></textarea></label>
 			</div>
 		</details>
@@ -226,9 +225,9 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111704"></script>
-	<script src="../helpers.js?v=2026111704"></script>
-	<script src="./script.js?v=2026111704"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111705"></script>
+	<script src="../helpers.js?v=2026111705"></script>
+	<script src="./script.js?v=2026111705"></script>
 </body>
 
 </html>

@@ -149,9 +149,10 @@ function SetView(view) {
 // TIRAGE : ANIMATION //
 ////////////////////////
 
-// Noms du défilement : personnes en lice (jamais les exclu·es) et le ou la gagnant·e
+// Noms du défilement : personnes en lice (jamais les exclu·es ni les gagnant·es déjà sortis) et le ou la gagnant·e
 function Names(state, winnerName) {
-	const names = GiveawayPool(state).map(p => p.name);
+	const already = new Set(shownDraw ? shownDraw.winners.filter(w => shownKeys.has(w.key)).map(w => w.key) : []);
+	const names = GiveawayPool(state).filter(p => !already.has(p.key)).map(p => p.name);
 	if (!names.includes(winnerName)) names.push(winnerName);
 	return names;
 }
@@ -440,7 +441,9 @@ function RenderWinners(list, opts = {}) {
 		const status = document.createElement('span');
 		status.className = 'status';
 
-		el.append(wrap, label, name);
+		// Carte : avatar au-dessus du libellé ; Minimaliste et Bandeau : « Gagnant·e » puis avatar et nom
+		if (s.layout === 'card') el.append(wrap, label, name);
+		else el.append(label, wrap, name);
 
 		// Carte : rappel du lot et barre du compte à rebours (toujours présents : cartes de même taille)
 		if (s.layout === 'card') {
