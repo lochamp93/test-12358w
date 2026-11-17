@@ -79,6 +79,7 @@ function ApplySettings() {
 	if (s.layout === 'light' && !s.decorLine) widgetEl.classList.add('no-line');
 	widgetEl.classList.toggle('hide-avatar', !s.showAvatar);
 	widgetEl.classList.toggle('hide-platform', !s.showPlatform);
+	widgetEl.classList.toggle('no-countdown', !s.showCountdown);
 
 	RenderBefore();
 	if (shownDraw && !animating) RenderWinners(shownDraw.winners.filter(w => shownKeys.has(w.key)), {});

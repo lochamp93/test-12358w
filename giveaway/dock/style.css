@@ -328,7 +328,7 @@ html.apple .line input.value,
 html.apple .line select.value {
 	flex: 1;
 	min-width: 0;
-	background: transparent;
+	background-color: transparent;
 	box-shadow: none;
 	padding: 0;
 	height: 32px;
@@ -343,6 +343,9 @@ html.apple .line select.value {
 	padding-right: 18px;
 	background-position: right 0 center;
 }
+/* Listes : double chevron d'apple.css, sans gélule au survol */
+html.apple .line select.value:hover,
+html.apple .line select.value:focus { background-color: transparent; }
 html.apple .line input.value:focus { color: var(--ui-text); }
 html.apple .line input.value:disabled,
 html.apple .line select.value:disabled { opacity: .5; }

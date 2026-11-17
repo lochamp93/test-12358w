@@ -272,13 +272,14 @@ body {
 	flex-direction: column;
 	gap: 0.25em;
 	/* Toutes les cartes ont la même taille, pendant et après le défilement */
-	width: 7.5em;
+	width: 10em;
 	box-sizing: border-box;
 	text-align: center;
 }
 
 .layout-card .winner .name {
 	display: block;
+	font-size: 0.85em;
 	width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -432,3 +433,9 @@ body {
 .hide-platform.layout-card .winner .avatar-wrap.no-avatar .platform { display: none; }
 .hide-avatar.layout-card .winner .avatar-wrap.no-avatar { width: 1.1em; height: 1.1em; }
 .hide-avatar.layout-card .winner .avatar-wrap.no-avatar .platform { position: static; width: 100%; height: 100%; }
+
+/* Sans compte à rebours : pas d'espace réservé en bas des cartes (elles gardent la même hauteur entre elles) */
+.layout-card #winners { align-items: stretch; }
+.no-countdown.layout-card .winner .timer { display: none; }
+.no-countdown.layout-card .winner .status { min-height: 0; }
+.no-countdown.layout-card .winner .status:empty { display: none; }

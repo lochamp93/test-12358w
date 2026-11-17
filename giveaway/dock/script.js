@@ -148,7 +148,8 @@ function RenderConfig(cfg) {
 		const v = cfg[el.dataset.key];
 		el.value = v === undefined || v === null ? '' : String(v);
 	});
-	const locked = state.status !== 'setup';
+	// Mot et règle de correspondance figés pendant un giveaway (modifiables avant et après)
+	const locked = state.status !== 'setup' && state.status !== 'ended';
 	$('cfgWord').disabled = locked;
 	$('cfgMatch').disabled = locked;
 
