@@ -280,6 +280,8 @@ body {
 .layout-card .winner .name {
 	display: block;
 	font-size: 0.85em;
+	height: 1.3em;
+	line-height: 1.3em;
 	width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -439,3 +441,29 @@ body {
 .no-countdown.layout-card .winner .timer { display: none; }
 .no-countdown.layout-card .winner .status { min-height: 0; }
 .no-countdown.layout-card .winner .status:empty { display: none; }
+
+/* ---------- Stabilité de la mise en page (Minimaliste et Bandeau) ----------
+   L'emplacement de l'avatar, du nom et du compte à rebours est réservé dès le défilement :
+   rien ne bouge quand le nom s'arrête, quand l'avatar se charge ou quand le chrono apparaît */
+#widget:not(.layout-card) .winner .avatar-wrap,
+#widget:not(.layout-card) .winner .avatar-wrap.no-avatar,
+#widget:not(.layout-card) .winner .avatar-wrap.ghost {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.4em;
+	height: 1.4em;
+}
+#widget:not(.layout-card) .winner .avatar-wrap.ghost { visibility: hidden; }
+#widget:not(.layout-card) .winner .avatar-wrap.no-avatar .platform { width: 0.9em; height: 0.9em; }
+#widget:not(.layout-card).hide-avatar .winner .avatar-wrap { width: 0.9em; }
+#widget:not(.layout-card).hide-avatar.hide-platform .winner .avatar-wrap { display: none; }
+#widget:not(.layout-card) .winner .status { display: inline-block; min-width: 2.8em; }
+#widget:not(.layout-card).no-countdown .winner .status { min-width: 0; }
+#widget:not(.layout-card) .winner .name { display: inline-block; }
+
+/* ---------- Carte : apparition et disparition gérées par les animations de la carte ----------
+   (pas de glissement vertical de la vue, qui faisait « remonter » la carte) */
+.layout-card .view,
+.layout-card #stage[data-view="none"] { transform: none !important; }
+.layout-card #stage[data-view="winners"] #winners { transition-delay: 0s; transition-duration: 0s; }

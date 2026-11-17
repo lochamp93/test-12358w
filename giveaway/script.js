@@ -30,7 +30,8 @@ let animating = false;
 let winnerTimer = null;
 let countdownTimer = null;
 let realSeen = false;
-let shownKeys = new Set();  // gagnant·es déjà affichés du tirage en cours      // vraies valeurs déjà affichées (remplacent l'exemple)
+let shownKeys = new Set();
+const rollWidths = new Map(); // largeur de la fente pour chaque gagnant·e (le nom garde la même place)  // gagnant·es déjà affichés du tirage en cours      // vraies valeurs déjà affichées (remplacent l'exemple)
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -201,12 +202,7 @@ function Roll(names, winnerName, durationMs, token) {
 		stripEl.appendChild(frag);
 		stripEl.style.transform = 'translateY(0)';
 
-		// Largeur fixe : celle du nom le plus long (pas de saut de mise en page)
-		slotEl.style.width = '';
-		if (!widgetEl.classList.contains('layout-card')) {
-			const widest = Math.max(...Array.from(stripEl.children).map(c => c.scrollWidth));
-			slotEl.style.width = `${widest + 4}px`;
-		}
+
 
 		const tick = PrepareSound(ws.values.rollSound);
 		const start = performance.now();
@@ -329,9 +325,11 @@ async function PlayDraw(draw) {
 				if (done) await wait(700);
 			} else {
 				RenderWinners(revealed(), { rolling: true });
+				SizeSlot(names);
 				SetView('winners');
 				await wait(250);
 				done = await Roll(names, w.name, duration, token);
+				if (s.layout !== 'card') rollWidths.set(w.key, slotEl.offsetWidth);
 			}
 			if (!done || token !== playToken) return;
 		}
@@ -384,6 +382,17 @@ function CheckWinnerEnd() {
 
 const Deadline = (w) => Number(w.deadline || (shownDraw && shownDraw.deadline) || 0);
 
+// Largeur fixe de la fente : celle du nom le plus long, posée avant l'apparition (rien ne bouge ensuite)
+function SizeSlot(names) {
+	slotEl.style.width = '';
+	if (widgetEl.classList.contains('layout-card')) return;
+	stripEl.innerHTML = '';
+	names.forEach(n => { const d = document.createElement('div'); d.textContent = n; stripEl.appendChild(d); });
+	const widest = Math.max(...Array.from(stripEl.children).map(c => c.scrollWidth));
+	slotEl.style.width = `${widest + 4}px`;
+	stripEl.innerHTML = '<div>\u00a0</div>';
+}
+
 // Le défilement est rangé dans #roll quand il ne sert pas (il ne doit pas être détruit)
 function ParkSlot() {
 	const roll = document.getElementById('roll');
@@ -431,6 +440,7 @@ function RenderWinners(list, opts = {}) {
 
 		const name = document.createElement('span');
 		name.className = 'name';
+		if (w && rollWidths.has(w.key) && s.layout !== 'card') name.style.minWidth = `${rollWidths.get(w.key)}px`;
 		if (w) name.textContent = w.name;
 		else {
 			// Fente vide jusqu'au départ du défilement
