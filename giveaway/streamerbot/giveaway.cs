@@ -38,7 +38,17 @@ public class CPHInline
 	static readonly List<string> ordreMessages = new List<string>(); // (Queue<T> demande System.dll)
 	// Ancienneté de follow déjà vérifiée (clé : id Twitch, valeur : date de follow ou MinValue)
 	static readonly Dictionary<string, DateTime> follows = new Dictionary<string, DateTime>();
-	static readonly Random hasard = new Random();
+	// Générateur cryptographique (imprévisible, sans graine liée à l'heure)
+	static readonly System.Security.Cryptography.RandomNumberGenerator hasard = System.Security.Cryptography.RandomNumberGenerator.Create();
+
+	// Nombre uniforme dans [0, 1) sur 53 bits
+	static double Aleatoire()
+	{
+		byte[] b = new byte[8];
+		lock (hasard) hasard.GetBytes(b);
+		ulong v = BitConverter.ToUInt64(b, 0) >> 11;
+		return v / 9007199254740992.0;
+	}
 
 	public bool Execute()
 	{
@@ -456,7 +466,7 @@ public class CPHInline
 		double coef = Math.Max(1, cfg.Value<double>("subLuck"));
 		double total = 0;
 		foreach (KeyValuePair<string, JObject> e in lice) total += e.Value.Value<bool>("sub") ? coef : 1;
-		double r = hasard.NextDouble() * total;
+		double r = Aleatoire() * total;
 		KeyValuePair<string, JObject> tire = lice[lice.Count - 1];
 		foreach (KeyValuePair<string, JObject> e in lice)
 		{

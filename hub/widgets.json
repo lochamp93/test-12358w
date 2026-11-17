@@ -3,6 +3,7 @@
 	"widgets": [
 		{ "id": "alertes-variables", "name": "Alertes variables", "icon": "bell.badge", "settings": "alertes-variables/settings/" },
 		{ "id": "compteur-morts", "name": "Compteur de morts", "icon": "skull", "settings": "compteur-morts/settings/" },
+		{ "id": "giveaway", "name": "Giveaway", "icon": "gift", "settings": "giveaway/settings/" },
 		{ "id": "multichat", "name": "Multichat", "icon": "bubble.left.and.bubble.right", "settings": "multichat/settings/" },
 		{ "id": "subgoal", "name": "Subgoal", "icon": "star.circle", "settings": "subgoal/settings/" }
 	]
