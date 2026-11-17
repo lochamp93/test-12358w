@@ -1,0 +1,713 @@
+{
+	"title": "Giveaway",
+	"design": "apple",
+	"showLogo": false,
+	"showNuttyLink": false,
+	"checkerPreview": true,
+	"livePreview": true,
+	"demo": true,
+	"dock": true,
+	"importAction": "../streamerbot/import.txt",
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"description": "",
+			"type": "number",
+			"defaultValue": 8080,
+			"min": 1,
+			"max": 65535,
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "importString",
+			"label": "Code d’import",
+			"description": "",
+			"type": "import-string",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "actionName",
+			"label": "Nom de l’action",
+			"description": "",
+			"type": "sb-actions",
+			"defaultValue": "Giveaway | Gérer",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "previewDraw",
+			"label": "Tester le tirage",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewDraw",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewBefore",
+			"label": "Revenir avant le tirage",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewBefore",
+			"link": true,
+			"group": "Aperçu"
+		},
+		{
+			"id": "layout",
+			"label": "Style d’affichage",
+			"description": "Light : texte seul, comme le subgoal. Carte : la carte du gagnant apparaît. Bandeau : bande sur toute la largeur de la source",
+			"type": "select",
+			"defaultValue": "light",
+			"options": [
+				{
+					"value": "light",
+					"label": "Light"
+				},
+				{
+					"value": "card",
+					"label": "Carte"
+				},
+				{
+					"value": "banner",
+					"label": "Bandeau"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "font",
+			"label": "Police",
+			"description": "",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Texte"
+		},
+		{
+			"id": "fontSize",
+			"label": "Taille du texte",
+			"description": "En pixels",
+			"type": "number",
+			"defaultValue": 36,
+			"min": 10,
+			"max": 200,
+			"group": "Texte"
+		},
+		{
+			"id": "textColor",
+			"label": "Couleur du texte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Texte"
+		},
+		{
+			"id": "secondaryColor",
+			"label": "Couleur du texte secondaire",
+			"description": "Titre, compteur, libellé « Gagnant·e »",
+			"type": "color",
+			"defaultValue": "#B3B3B3",
+			"group": "Texte"
+		},
+		{
+			"id": "align",
+			"label": "Alignement",
+			"description": "",
+			"type": "select",
+			"defaultValue": "center",
+			"options": [
+				{
+					"value": "left",
+					"label": "À gauche"
+				},
+				{
+					"value": "center",
+					"label": "Centré"
+				},
+				{
+					"value": "right",
+					"label": "À droite"
+				}
+			],
+			"group": "Texte",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"light",
+					"banner"
+				]
+			}
+		},
+		{
+			"id": "shadow",
+			"label": "Ombre portée",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Texte"
+		},
+		{
+			"id": "shadowColor",
+			"label": "Couleur de l’ombre",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Texte",
+			"showIf": "shadow"
+		},
+		{
+			"id": "shadowOpacity",
+			"label": "Opacité de l’ombre",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 35,
+			"min": 0,
+			"max": 100,
+			"group": "Texte",
+			"showIf": "shadow"
+		},
+		{
+			"id": "beforeDraw",
+			"label": "Afficher avant le tirage",
+			"description": "Pendant les inscriptions",
+			"type": "select",
+			"defaultValue": "count",
+			"options": [
+				{
+					"value": "none",
+					"label": "Rien"
+				},
+				{
+					"value": "count",
+					"label": "Compteur de participants"
+				},
+				{
+					"value": "prize",
+					"label": "Lot (photo et nom)"
+				},
+				{
+					"value": "both",
+					"label": "Compteur et lot"
+				}
+			],
+			"group": "Avant le tirage",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"light",
+					"banner"
+				]
+			}
+		},
+		{
+			"id": "cardBeforeDraw",
+			"label": "Afficher avant le tirage",
+			"description": "Pendant les inscriptions",
+			"type": "select",
+			"defaultValue": "none",
+			"options": [
+				{
+					"value": "none",
+					"label": "Rien"
+				},
+				{
+					"value": "count",
+					"label": "Compteur de participants"
+				},
+				{
+					"value": "prize",
+					"label": "Lot (photo et nom)"
+				},
+				{
+					"value": "both",
+					"label": "Compteur et lot"
+				}
+			],
+			"group": "Avant le tirage",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "titleText",
+			"label": "Titre",
+			"description": "Vide : pas de titre",
+			"type": "text",
+			"defaultValue": "GIVEAWAY",
+			"group": "Avant le tirage",
+			"showIf": {
+				"any": [
+					{
+						"id": "beforeDraw",
+						"notValue": "none"
+					},
+					{
+						"id": "cardBeforeDraw",
+						"notValue": "none"
+					}
+				]
+			}
+		},
+		{
+			"id": "countText",
+			"label": "Texte du compteur",
+			"description": "{count} : nombre de personnes en lice",
+			"type": "text",
+			"defaultValue": "{count} participants",
+			"group": "Avant le tirage",
+			"showIf": {
+				"any": [
+					{
+						"id": "beforeDraw",
+						"value": [
+							"count",
+							"both"
+						]
+					},
+					{
+						"id": "cardBeforeDraw",
+						"value": [
+							"count",
+							"both"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "showWord",
+			"label": "Afficher le mot à écrire",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Avant le tirage",
+			"showIf": {
+				"any": [
+					{
+						"id": "beforeDraw",
+						"notValue": "none"
+					},
+					{
+						"id": "cardBeforeDraw",
+						"notValue": "none"
+					}
+				]
+			}
+		},
+		{
+			"id": "wordText",
+			"label": "Texte",
+			"description": "{mot} : mot du giveaway",
+			"type": "text",
+			"defaultValue": "Écrivez {mot} pour participer",
+			"group": "Avant le tirage",
+			"showIf": "showWord"
+		},
+		{
+			"id": "showPrizePhoto",
+			"label": "Afficher la photo du lot",
+			"description": "Choisie dans le dock, avec le lot",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Lot"
+		},
+		{
+			"id": "showPrizeName",
+			"label": "Afficher le nom du lot",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Lot"
+		},
+		{
+			"id": "photoSize",
+			"label": "Taille de la photo",
+			"description": "En pixels",
+			"type": "number",
+			"defaultValue": 96,
+			"min": 24,
+			"max": 600,
+			"group": "Lot",
+			"showIf": "showPrizePhoto"
+		},
+		{
+			"id": "cardRoll",
+			"label": "Défilement avant la carte",
+			"description": "Les noms défilent avant l’apparition de la carte",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Défilement des noms",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "rollDuration",
+			"label": "Durée du défilement",
+			"description": "En secondes : départ très rapide puis ralentissement jusqu’au gagnant",
+			"type": "number",
+			"defaultValue": 6,
+			"min": 2,
+			"max": 30,
+			"group": "Défilement des noms",
+			"showIf": {
+				"any": [
+					{
+						"id": "layout",
+						"value": [
+							"light",
+							"banner"
+						]
+					},
+					{
+						"id": "cardRoll"
+					}
+				]
+			}
+		},
+		{
+			"id": "rollSound",
+			"label": "Son pendant le défilement",
+			"description": "URL d’un son court (un « tic » à chaque nom). Vide : pas de son",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Défilement des noms",
+			"showIf": {
+				"any": [
+					{
+						"id": "layout",
+						"value": [
+							"light",
+							"banner"
+						]
+					},
+					{
+						"id": "cardRoll"
+					}
+				]
+			}
+		},
+		{
+			"id": "winSound",
+			"label": "Son du gagnant",
+			"description": "URL d’un son. Vide : pas de son",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Défilement des noms"
+		},
+		{
+			"id": "soundVolume",
+			"label": "Volume",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 80,
+			"min": 0,
+			"max": 100,
+			"group": "Défilement des noms"
+		},
+		{
+			"id": "winnerLabel",
+			"label": "Texte au-dessus du nom",
+			"description": "Vide : pas de texte",
+			"type": "text",
+			"defaultValue": "Gagnant·e",
+			"group": "Gagnant·e"
+		},
+		{
+			"id": "showAvatar",
+			"label": "Afficher l’avatar",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Gagnant·e"
+		},
+		{
+			"id": "showPlatform",
+			"label": "Afficher l’icône de la plateforme",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Gagnant·e"
+		},
+		{
+			"id": "confetti",
+			"label": "Confettis",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Gagnant·e"
+		},
+		{
+			"id": "winnerDuration",
+			"label": "Durée d’affichage",
+			"description": "En secondes. 0 : reste affiché jusqu’au prochain tirage",
+			"type": "number",
+			"defaultValue": 15,
+			"min": 0,
+			"max": 3600,
+			"group": "Gagnant·e"
+		},
+		{
+			"id": "afterWinner",
+			"label": "Ensuite",
+			"description": "",
+			"type": "select",
+			"defaultValue": "before",
+			"options": [
+				{
+					"value": "before",
+					"label": "Revenir à l’affichage d’avant"
+				},
+				{
+					"value": "hide",
+					"label": "Masquer"
+				}
+			],
+			"group": "Gagnant·e",
+			"showIf": {
+				"all": [
+					{
+						"id": "layout",
+						"value": [
+							"light",
+							"banner"
+						]
+					},
+					{
+						"id": "winnerDuration",
+						"notValue": "0"
+					}
+				]
+			}
+		},
+		{
+			"id": "showCountdown",
+			"label": "Afficher le compte à rebours",
+			"description": "Temps laissé au gagnant·e pour écrire dans le chat",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Confirmation"
+		},
+		{
+			"id": "confirmedText",
+			"label": "Texte une fois confirmé",
+			"description": "Vide : pas de texte",
+			"type": "text",
+			"defaultValue": "Félicitations !",
+			"group": "Confirmation"
+		},
+		{
+			"id": "cardBg",
+			"label": "Fond de la carte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardBgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 90,
+			"min": 0,
+			"max": 100,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur d’accent",
+			"description": "Contour de l’avatar, compte à rebours",
+			"type": "color",
+			"defaultValue": "#0091FF",
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardIn",
+			"label": "Animation d’entrée",
+			"description": "",
+			"type": "select",
+			"defaultValue": "zoom",
+			"options": [
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slide",
+					"label": "Glissement"
+				},
+				{
+					"value": "bounce",
+					"label": "Rebond"
+				}
+			],
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardInDuration",
+			"label": "Durée d’entrée",
+			"description": "En millisecondes",
+			"type": "number",
+			"defaultValue": 600,
+			"min": 100,
+			"max": 5000,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardOut",
+			"label": "Animation de sortie",
+			"description": "",
+			"type": "select",
+			"defaultValue": "fade",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "slide",
+					"label": "Glissement"
+				}
+			],
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "cardOutDuration",
+			"label": "Durée de sortie",
+			"description": "En millisecondes",
+			"type": "number",
+			"defaultValue": 600,
+			"min": 100,
+			"max": 5000,
+			"group": "Carte",
+			"showIf": {
+				"id": "layout",
+				"value": "card"
+			}
+		},
+		{
+			"id": "bannerBg",
+			"label": "Couleur du bandeau",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Bandeau",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerOpacity",
+			"label": "Opacité du bandeau",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 90,
+			"min": 0,
+			"max": 100,
+			"group": "Bandeau",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerHeight",
+			"label": "Hauteur",
+			"description": "En pixels. Le bandeau prend toute la largeur de la source : placez-la en bas de la scène dans OBS",
+			"type": "number",
+			"defaultValue": 80,
+			"min": 30,
+			"max": 400,
+			"group": "Bandeau",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerAnim",
+			"label": "Entrée et sortie",
+			"description": "",
+			"type": "select",
+			"defaultValue": "slide",
+			"options": [
+				{
+					"value": "slide",
+					"label": "Glissement depuis le bas"
+				},
+				{
+					"value": "fade",
+					"label": "Fondu"
+				}
+			],
+			"group": "Bandeau",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "decorLine",
+			"label": "Ligne décorative",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Light",
+			"showIf": {
+				"id": "layout",
+				"value": "light"
+			}
+		},
+		{
+			"id": "lineColor",
+			"label": "Couleur de la ligne",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Light",
+			"showIf": "decorLine"
+		}
+	]
+}

@@ -1,0 +1,343 @@
+/* Giveaway : overlay OBS (fond transparent)
+   Trois styles : .layout-light (texte seul, comme le subgoal), .layout-card (carte du gagnant)
+   et .layout-banner (bandeau sur toute la largeur de la source) */
+
+/* SF Pro fourni avec les widgets (utilisé si la police choisie n'est pas installée) */
+@font-face { font-family: "SF Pro Overlay"; src: local("SF Pro Text Regular"), local("SFProText-Regular"), url("../-common/resources/fonts/SF-Pro-Text-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "SF Pro Overlay"; src: local("SF Pro Text Medium"), local("SFProText-Medium"), url("../-common/resources/fonts/SF-Pro-Text-Medium.woff2") format("woff2"); font-weight: 500; font-display: swap; }
+@font-face { font-family: "SF Pro Overlay"; src: local("SF Pro Display Semibold"), local("SFProDisplay-Semibold"), url("../-common/resources/fonts/SF-Pro-Display-Semibold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "SF Pro Overlay"; src: local("SF Pro Display Bold"), local("SFProDisplay-Bold"), url("../-common/resources/fonts/SF-Pro-Display-Bold.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background: transparent;
+	overflow: hidden;
+}
+
+#widget {
+	--font: "SF Pro Display";
+	--font-size: 36px;
+	--text-color: #ffffff;
+	--secondary-color: #b3b3b3;
+	--text-shadow: none;
+	--photo-size: 96px;
+	--accent: #0091ff;
+	--card-bg: rgba(28, 28, 30, 0.9);
+	--banner-bg: rgba(0, 0, 0, 0.9);
+	--banner-height: 80px;
+	--line-color: #ffffff;
+	--in-ms: 600ms;
+	--out-ms: 600ms;
+	--ease: cubic-bezier(.22, .61, .36, 1);
+
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	height: 100vh;
+	box-sizing: border-box;
+	padding: 10px;
+	font-family: var(--font), "SF Pro Overlay", -apple-system, "Segoe UI", sans-serif;
+	font-size: var(--font-size);
+	line-height: 1.15;
+	color: var(--text-color);
+}
+
+#widget.align-left { justify-content: flex-start; }
+#widget.align-right { justify-content: flex-end; }
+
+.secondary { color: var(--secondary-color); }
+.strong { font-weight: 700; }
+.texts > span:empty { display: none; }
+
+/* ---------- Scène et vues ---------- */
+
+#stage {
+	position: relative;
+	display: grid;
+	place-items: center;
+	transition: opacity 320ms var(--ease), transform 420ms var(--ease);
+}
+
+.view {
+	grid-area: 1 / 1;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(-12px);
+	transition: opacity 320ms var(--ease), transform 420ms var(--ease), visibility 0s linear 420ms;
+}
+
+#stage[data-view="before"] #before,
+#stage[data-view="roll"] #roll,
+#stage[data-view="winners"] #winners {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition-delay: 200ms, 200ms, 0s;
+}
+
+#widget:not(.layout-banner) #stage[data-view="none"] { opacity: 0; transform: translateY(-12px); }
+
+.prize-photo {
+	display: block;
+	width: var(--photo-size);
+	height: var(--photo-size);
+	object-fit: cover;
+	border-radius: calc(var(--photo-size) * 0.18);
+	flex-shrink: 0;
+}
+
+.prize-photo.off { display: none; }
+
+#before,
+#roll {
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+	white-space: nowrap;
+}
+
+#before .texts {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: baseline;
+	column-gap: 0.7em;
+	row-gap: 0.15em;
+}
+
+#before { max-width: 100%; }
+#before .texts { min-width: 0; }
+.align-left #before .texts { justify-content: flex-start; }
+.align-right #before .texts { justify-content: flex-end; }
+
+/* Fente du défilement : un seul nom visible à la fois */
+#slot {
+	position: relative;
+	height: 1.3em;
+	overflow: hidden;
+	min-width: 4em;
+	font-weight: 700;
+}
+
+#strip {
+	will-change: transform, filter;
+}
+
+#rollLabel { line-height: 1.3em; }
+
+#strip > div {
+	height: 1.3em;
+	line-height: 1.3em;
+	text-align: left;
+	white-space: nowrap;
+}
+
+/* ---------- Gagnant·es (commun) ---------- */
+
+#winners {
+	display: flex;
+	align-items: center;
+	gap: 0.6em;
+}
+
+.winner {
+	display: flex;
+	align-items: center;
+	gap: 0.45em;
+	white-space: nowrap;
+}
+
+.winner .avatar-wrap {
+	position: relative;
+	flex-shrink: 0;
+	width: 1.4em;
+	height: 1.4em;
+}
+
+.winner .avatar {
+	width: 100%;
+	height: 100%;
+	border-radius: 50%;
+	object-fit: cover;
+	background: rgba(255, 255, 255, 0.15);
+}
+
+.winner .avatar.empty { visibility: hidden; }
+
+.winner .platform {
+	position: absolute;
+	right: -8%;
+	bottom: -8%;
+	width: 45%;
+	height: 45%;
+	border-radius: 24%;
+	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35);
+}
+
+.winner .avatar-wrap.no-avatar {
+	width: 0.9em;
+	height: 0.9em;
+}
+
+.winner .avatar-wrap.no-avatar .avatar { display: none; }
+
+.winner .avatar-wrap.no-avatar .platform {
+	position: static;
+	width: 100%;
+	height: 100%;
+}
+
+.winner .label { font-size: 0.6em; }
+.winner .name { font-weight: 700; }
+.winner .status { font-size: 0.55em; font-variant-numeric: tabular-nums; }
+.winner .status:empty { display: none; }
+.winner .status.done { color: var(--text-color); }
+.winner .prize { display: none; }
+
+.hide-avatar .winner .avatar,
+.hide-avatar .winner .avatar-wrap:not(.no-avatar) { display: none; }
+.hide-platform .winner .platform { display: none; }
+.hide-avatar.hide-platform .winner .avatar-wrap { display: none; }
+
+/* ---------- Style Light (comme le subgoal) ---------- */
+
+.layout-light #stage { text-shadow: var(--text-shadow); padding-top: 0.5em; }
+.layout-light #before .texts > #title { font-weight: 300; }
+#before #count { color: var(--text-color); font-weight: 600; }
+.layout-light #before .texts > #word { font-weight: 400; }
+.layout-light #rollLabel,
+.layout-light .winner .label { font-weight: 300; font-size: 1em; }
+.layout-light .winner .label::after { content: " :"; }
+.layout-light .winner .label:empty { display: none; }
+.layout-light .winner + .winner::before { content: "·"; color: var(--secondary-color); margin-right: 0.15em; }
+.layout-light .prize-photo { width: 1.6em; height: 1.6em; border-radius: 0.3em; }
+.layout-light .winner .status { font-size: 0.6em; color: var(--secondary-color); }
+
+.layout-light #line {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 1px;
+	background: linear-gradient(90deg, transparent, var(--line-color));
+	transition: opacity 320ms var(--ease);
+}
+
+.layout-light.align-center #line { background: linear-gradient(90deg, transparent, var(--line-color), transparent); }
+.layout-light.align-left #line { background: linear-gradient(90deg, var(--line-color), transparent); }
+#widget:not(.layout-light) #line,
+.layout-light.no-line #line,
+.layout-light #stage[data-view="none"] #line { opacity: 0; }
+
+/* ---------- Style Carte ---------- */
+
+.layout-card .card,
+.layout-card #before,
+.layout-card #roll {
+	background: var(--card-bg);
+	border-radius: 28px;
+	padding: 0.7em 0.9em;
+	box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+	text-shadow: var(--text-shadow);
+}
+
+.layout-card #before { flex-direction: column; text-align: center; gap: 0.4em; padding: 0.8em 1em; }
+.layout-card #before .texts { flex-direction: column; align-items: center; gap: 0.15em; }
+.layout-card #before #title,
+.layout-card #rollLabel { font-size: 0.5em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+.layout-card #before #count,
+.layout-card #before #word { font-size: 0.6em; }
+.layout-card #roll { flex-direction: column; gap: 0.3em; min-width: 6em; }
+.layout-card #strip > div { text-align: center; }
+
+.layout-card #winners {
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5em;
+	white-space: normal;
+}
+
+.layout-card .winner {
+	flex-direction: column;
+	gap: 0.25em;
+	min-width: 5em;
+	text-align: center;
+}
+
+.layout-card .winner .avatar-wrap { width: 2.6em; height: 2.6em; margin-bottom: 0.15em; }
+.layout-card .winner .avatar { box-shadow: 0 0 0 0.08em var(--accent); }
+.layout-card .winner .avatar-wrap.no-avatar { width: 1.1em; height: 1.1em; }
+.layout-card .winner .label { font-size: 0.5em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--secondary-color); }
+.layout-card .winner .prize { display: flex; align-items: center; gap: 0.3em; font-size: 0.5em; color: var(--secondary-color); margin-top: 0.2em; }
+.layout-card .winner .prize img { width: 1.6em; height: 1.6em; border-radius: 0.3em; object-fit: cover; }
+.layout-card .winner .prize:empty { display: none; }
+.layout-card .winner .timer { width: 100%; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); overflow: hidden; margin-top: 0.3em; }
+.layout-card .winner .timer > i { display: block; height: 100%; background: var(--accent); transform-origin: left; }
+.layout-card .winner .timer.off { display: none; }
+.layout-card .winner .status { color: var(--secondary-color); }
+
+/* Animations d'entrée et de sortie des cartes */
+.layout-card .winner.in-zoom { animation: card-in-zoom var(--in-ms) cubic-bezier(.2, .9, .25, 1.15) both; }
+.layout-card .winner.in-fade { animation: card-fade var(--in-ms) ease both; }
+.layout-card .winner.in-slide { animation: card-in-slide var(--in-ms) var(--ease) both; }
+.layout-card .winner.in-bounce { animation: card-in-bounce var(--in-ms) both; }
+.layout-card .winner.out-fade { animation: card-fade var(--out-ms) ease reverse both; }
+.layout-card .winner.out-zoom { animation: card-out-zoom var(--out-ms) var(--ease) both; }
+.layout-card .winner.out-slide { animation: card-out-slide var(--out-ms) var(--ease) both; }
+
+@keyframes card-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes card-in-zoom { from { opacity: 0; transform: scale(0.2); } to { opacity: 1; transform: none; } }
+@keyframes card-in-slide { from { opacity: 0; transform: translateY(60%); } to { opacity: 1; transform: none; } }
+@keyframes card-in-bounce {
+	0% { opacity: 0; transform: scale(0.3); }
+	50% { opacity: 1; transform: scale(1.08); }
+	70% { transform: scale(0.95); }
+	100% { opacity: 1; transform: none; }
+}
+@keyframes card-out-zoom { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.4); } }
+@keyframes card-out-slide { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(60%); } }
+
+/* ---------- Style Bandeau ---------- */
+
+#widget.layout-banner {
+	align-items: flex-end;
+	padding: 0;
+}
+
+.layout-banner #before .texts { flex-wrap: nowrap; justify-content: flex-start; }
+.layout-banner #before,
+.layout-banner #roll,
+.layout-banner #winners { max-width: 100%; overflow: hidden; }
+.layout-banner .winner .label,
+.layout-banner #rollLabel { font-size: 0.8em; }
+
+.layout-banner #stage {
+	width: 100%;
+	height: var(--banner-height);
+	background: var(--banner-bg);
+	padding: 0 1em;
+	box-sizing: border-box;
+	text-shadow: var(--text-shadow);
+	justify-items: center;
+}
+
+.layout-banner.align-left #stage { justify-items: start; }
+.layout-banner.align-right #stage { justify-items: end; }
+.layout-banner.anim-slide #stage[data-view="none"] { transform: translateY(100%); opacity: 1; transition: transform 420ms var(--ease); }
+.layout-banner.anim-fade #stage[data-view="none"] { opacity: 0; }
+.layout-banner .prize-photo { width: calc(var(--banner-height) - 16px); height: calc(var(--banner-height) - 16px); border-radius: 10px; }
+.layout-banner #before #title { font-weight: 700; letter-spacing: 0.04em; }
+
+/* ---------- Confettis ---------- */
+
+#confetti {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+}

@@ -1,0 +1,473 @@
+/* Giveaway : dock OBS, DA Streamertools (s'appuie sur -common/styles/apple.css), thème sombre */
+
+html,
+body {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	padding: 0 12px 20px;
+	box-sizing: border-box;
+	font-size: 15px;
+}
+
+[hidden] { display: none !important; }
+
+.card,
+.group,
+.panel {
+	background: var(--ui-bg-elevated);
+	border-radius: var(--ui-radius);
+}
+
+.secondary,
+.muted { color: var(--ui-text-secondary); }
+.muted { font-size: 13px; margin: 6px 4px; }
+
+/* ---------- En-tête ---------- */
+
+#header {
+	position: sticky;
+	top: 0;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 -12px 12px;
+	padding: 12px;
+	background: var(--ui-bg);
+}
+
+.dock-title {
+	flex: 1;
+	font-family: var(--ui-font-display);
+	font-size: 17px;
+	font-weight: 600;
+}
+
+/* Pastille d'état du giveaway */
+.phase {
+	font-size: 12px;
+	font-weight: 600;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: var(--ui-fill-strong);
+	color: var(--ui-text-secondary);
+	white-space: nowrap;
+}
+.phase.green { background: color-mix(in srgb, var(--ui-green) 22%, transparent); color: var(--ui-green); }
+.phase.blue { background: var(--ui-accent-soft); color: var(--ui-accent); }
+
+/* Connexion Streamer.bot : simple point */
+.status {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--ui-red);
+	flex-shrink: 0;
+}
+.status.on { background: var(--ui-green); }
+
+html.apple a.ui-icon.icon-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	color: var(--ui-text-secondary);
+	text-decoration: none;
+}
+html.apple a.ui-icon.icon-link svg { width: 18px; height: 18px; fill: currentColor; }
+html.apple a.ui-icon.icon-link:active { filter: brightness(.94); }
+
+/* ---------- Bandeaux ---------- */
+
+.panel {
+	padding: 14px 16px;
+	margin-bottom: 12px;
+	font-size: 13px;
+	line-height: 1.45;
+}
+.panel.warning strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.panel.warning strong::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-right: 6px;
+	border-radius: 50%;
+	background: var(--ui-orange);
+	vertical-align: 1px;
+}
+.panel p, .panel ol { margin: 6px 0; color: var(--ui-text-secondary); }
+.panel ol { padding-left: 18px; }
+.panel .row { margin-top: 10px; }
+
+code {
+	font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+	font-size: 12px;
+	background: var(--ui-fill);
+	padding: 1px 5px;
+	border-radius: 6px;
+}
+
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; min-width: 0; }
+.ws-fields > input { flex: 1 1 0; }
+
+html.apple a.button-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 999px;
+	background: var(--ui-accent);
+	color: #fff;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#main.disabled { opacity: 0.4; pointer-events: none; }
+
+/* ---------- Carte Tirage ---------- */
+
+#drawCard { padding: 16px; }
+
+.progress-text {
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	font-size: 13px;
+	margin-bottom: 6px;
+}
+
+.bar {
+	height: 6px;
+	border-radius: 3px;
+	background: var(--ui-fill-strong);
+	overflow: hidden;
+}
+
+.bar > i {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: var(--ui-accent);
+	transform-origin: left;
+	transform: scaleX(0);
+	transition: transform .3s ease;
+}
+
+#countdownBar { transition: transform .25s linear; }
+#countdown.late #countdownBar { background: var(--ui-red); }
+
+#winnerBlock { margin-top: 16px; }
+
+.caption {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--ui-text-secondary);
+	margin: 12px 0 6px;
+}
+
+.winner-main {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.avatar {
+	position: relative;
+	flex-shrink: 0;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background: var(--ui-fill-strong);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 14px;
+	color: var(--ui-text-secondary);
+}
+.avatar img.photo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+.avatar img.platform {
+	position: absolute;
+	right: -3px;
+	bottom: -3px;
+	width: 16px;
+	height: 16px;
+	border-radius: 4px;
+	box-shadow: 0 0 0 2px var(--ui-bg-elevated);
+}
+.avatar.big { width: 64px; height: 64px; font-size: 24px; }
+.avatar.big img.platform { width: 24px; height: 24px; border-radius: 6px; }
+
+.winner-name {
+	font-family: var(--ui-font-display);
+	font-size: 22px;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.winner-sub { font-size: 13px; color: var(--ui-text-secondary); }
+.winner-sub .ok { color: var(--ui-green); }
+
+#alsoList { display: flex; flex-direction: column; gap: 8px; }
+.also-item { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+.also-item .state { margin-left: auto; font-size: 13px; color: var(--ui-text-secondary); }
+.also-item .state.ok { color: var(--ui-green); }
+
+/* Ligne de chat façon Twitch */
+.chat-line {
+	background: var(--ui-cell);
+	border-radius: 14px;
+	padding: 10px 12px;
+	font-size: 14px;
+	line-height: 1.4;
+	word-break: break-word;
+}
+.chat-line .time { color: var(--ui-text-secondary); font-size: 12px; margin-right: 6px; font-variant-numeric: tabular-nums; }
+.chat-line .badge { display: inline-block; width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; border-radius: 3px; }
+.chat-line .badge.sub { background: #9146ff; }
+.chat-line .who { font-weight: 600; margin-right: 4px; }
+
+.countdown-row { display: flex; justify-content: space-between; align-items: baseline; }
+#countdownText { font-family: var(--ui-font-display); font-weight: 600; font-variant-numeric: tabular-nums; }
+#countdown.late #countdownText { color: var(--ui-red); }
+
+#drawHint:empty { display: none; }
+
+.actions {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-top: 16px;
+}
+
+html.apple .actions button {
+	height: 50px;
+	border-radius: 999px;
+	font-size: 16px;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* ---------- Sections repliables ---------- */
+
+.section { margin-top: 18px; }
+
+.section > summary {
+	list-style: none;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	cursor: pointer;
+	padding: 4px 4px 8px;
+	font-family: var(--ui-font-display);
+	font-size: 17px;
+	font-weight: 600;
+}
+.section > summary::-webkit-details-marker { display: none; }
+
+.chevron {
+	width: 8px;
+	height: 8px;
+	border-right: 2px solid var(--ui-text-secondary);
+	border-bottom: 2px solid var(--ui-text-secondary);
+	transform: rotate(-45deg);
+	transition: transform .2s ease;
+	margin-right: 6px;
+}
+.section[open] > summary .chevron { transform: rotate(45deg); }
+
+.group { overflow: hidden; margin-bottom: 10px; }
+
+/* Lignes façon iOS : libellé à gauche, valeur à droite */
+.line {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	min-height: 48px;
+	padding: 6px 16px;
+	box-sizing: border-box;
+}
+.line + .line { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+.line.column { flex-direction: column; align-items: stretch; padding: 10px 16px; gap: 6px; }
+
+.line-label {
+	flex: 1;
+	min-width: 0;
+	font-weight: 500;
+	display: flex;
+	flex-direction: column;
+}
+.line-label small { font-size: 12px; font-weight: 400; color: var(--ui-text-secondary); margin-top: 2px; }
+
+.line-end { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* Valeurs éditables : texte gris aligné à droite, sans gélule */
+html.apple .line input.value,
+html.apple .line select.value {
+	flex: 1;
+	min-width: 0;
+	background: transparent;
+	box-shadow: none;
+	padding: 0;
+	height: 32px;
+	text-align: right;
+	color: var(--ui-text-secondary);
+	font-weight: 400;
+}
+html.apple .line select.value {
+	flex: 0 1 auto;
+	text-align: left;
+	text-align-last: left;
+	padding-right: 18px;
+	background-position: right 0 center;
+}
+html.apple .line input.value:focus { color: var(--ui-text); }
+html.apple .line input.value:disabled,
+html.apple .line select.value:disabled { opacity: .5; }
+
+/* Champs nombre : petites cases de 56 px, sans flèches */
+html.apple input.num {
+	width: 56px;
+	height: 32px;
+	padding: 0 6px;
+	text-align: center;
+	border-radius: 10px;
+	background: var(--ui-fill);
+	flex-shrink: 0;
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+.sub-line { min-height: 40px; }
+html.apple .sub-line input.value { text-align: left; font-size: 13px; }
+
+html.apple textarea {
+	width: 100%;
+	box-sizing: border-box;
+	background: var(--ui-cell);
+	resize: vertical;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.photo-thumb { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+
+/* Boutons texte en bleu (actions de ligne) */
+html.apple button.text-button {
+	background: none;
+	box-shadow: none;
+	padding: 0;
+	height: auto;
+	color: var(--ui-accent);
+	font-weight: 500;
+	white-space: nowrap;
+}
+html.apple .group > button.text-button { display: block; width: 100%; padding: 14px 16px; text-align: left; }
+html.apple button.text-button.danger-text { color: var(--ui-red); text-align: center !important; }
+html.apple button.text-button.confirming { font-weight: 700; }
+html.apple .section > button.text-button { margin: 4px; }
+
+/* Icônes de ligne */
+html.apple button.row-icon {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+html.apple button.row-icon svg { width: 17px; height: 19px; fill: currentColor; }
+html.apple button.row-icon.trash { color: var(--ui-red); }
+html.apple button.row-icon.confirming { background: var(--ui-red); color: #fff; border-radius: 50%; }
+
+/* Plateformes : icônes à activer ou désactiver */
+html.apple .platform-toggle {
+	min-width: 0;
+	box-shadow: none;
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	border-radius: 8px;
+	transition: opacity .15s ease, filter .15s ease;
+}
+html.apple .platform-toggle:hover { background: none; }
+#platformToggles { gap: 6px; }
+.platform-toggle img { width: 30px; height: 30px; border-radius: 8px; display: block; }
+.platform-toggle.off { opacity: .3; filter: grayscale(1); }
+
+/* ---------- Participant·es ---------- */
+
+html.apple #search { width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+
+.person {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 12px 8px 16px;
+	min-height: 52px;
+	box-sizing: border-box;
+}
+.person + .person { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+.person .info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.person .pseudo { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.person .meta { font-size: 12px; color: var(--ui-text-secondary); }
+.person .chance { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ui-text-secondary); white-space: nowrap; }
+.person .chance.red { color: var(--ui-red); font-weight: 500; }
+.person.excluded { opacity: .55; }
+.person.excluded .pseudo { text-decoration: line-through; }
+.person.current { background: var(--ui-accent-soft); }
+
+#addForm { gap: 8px; }
+html.apple #addForm input.value { text-align: left; }
+
+.history-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; }
+.history-item + .history-item { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+.history-item .info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.history-item .meta { font-size: 12px; color: var(--ui-text-secondary); }
+
+/* ---------- Notification ---------- */
+
+#toast {
+	position: fixed;
+	left: 50%;
+	bottom: 14px;
+	transform: translateX(-50%) translateY(8px);
+	background: var(--ui-bg-elevated);
+	color: var(--ui-text);
+	box-shadow: var(--ui-shadow-pop);
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 13px;
+	font-weight: 600;
+	opacity: 0;
+	transition: opacity .2s, transform .2s;
+	pointer-events: none;
+	max-width: 90vw;
+	text-align: center;
+	z-index: 10;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
