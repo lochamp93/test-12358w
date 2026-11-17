@@ -44,20 +44,61 @@
 		},
 		{
 			"id": "previewDraw",
-			"label": "Tester le tirage",
+			"label": "Tester le tirage (1 gagnant·e)",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewDraw",
 			"group": "Aperçu"
 		},
 		{
+			"id": "previewDrawMany",
+			"label": "Tester le tirage (3 gagnant·es)",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewDrawMany",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewWinner",
+			"label": "Afficher un gagnant·e sans défilement",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewWinner",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewConfirm",
+			"label": "Simuler la confirmation dans le chat",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewConfirm",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewTimeout",
+			"label": "Simuler la fin du délai",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewTimeout",
+			"group": "Aperçu"
+		},
+		{
 			"id": "previewBefore",
-			"label": "Revenir avant le tirage",
+			"label": "Afficher l’écran d’avant le tirage",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewBefore",
-			"link": true,
-			"group": "Aperçu"
+			"group": "Aperçu",
+			"link": true
+		},
+		{
+			"id": "previewHide",
+			"label": "Masquer l’overlay",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewHide",
+			"group": "Aperçu",
+			"link": true
 		},
 		{
 			"id": "layout",

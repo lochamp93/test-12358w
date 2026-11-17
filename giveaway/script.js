@@ -522,20 +522,43 @@ function ConnectStreamerBot() {
 ////////////////////////////////////////
 
 // Visuel seulement : rien n'est envoyé à Streamer.bot
-window.PreviewDraw = function () {
+function PreviewPlay(count) {
 	const state = CurrentState();
 	if (!state) return;
-	const count = Math.max(1, Math.min(Number(state.config.perDraw) || 1, 3));
 	const winners = GiveawayDemoDraw(state, count);
 	if (!winners.length) return;
 	const now = Date.now();
-	const draw = { id: -now, at: now, deadline: now + (Number(state.config.confirmSeconds) || 60) * 1000, winners };
-	PlayDraw(draw).then(() => {
-		// Démo : le premier gagnant confirme au bout de quelques secondes
-		setTimeout(() => {
-			if (shownDraw === draw) { draw.winners[0].confirmed = true; UpdateConfirmations(); }
-		}, 4000);
-	});
+	PlayDraw({ id: -now, at: now, deadline: now + (Number(state.config.confirmSeconds) || 60) * 1000, winners });
+}
+
+window.PreviewDraw = () => PreviewPlay(1);
+window.PreviewDrawMany = () => PreviewPlay(3);
+
+// Gagnant·e affiché sans défilement (pour régler la carte ou le texte)
+window.PreviewWinner = function () {
+	const state = CurrentState();
+	if (!state) return;
+	const winners = GiveawayDemoDraw(state, 1);
+	if (!winners.length) return;
+	const now = Date.now();
+	playToken++;
+	animating = false;
+	shownDraw = { id: -now, at: now, deadline: now + (Number(state.config.confirmSeconds) || 60) * 1000, winners };
+	RenderWinners(shownDraw, true);
+	SetView('winners');
+	ScheduleWinnerEnd(playToken);
+};
+
+window.PreviewConfirm = function () {
+	if (!shownDraw) return;
+	shownDraw.winners.forEach(w => { w.confirmed = true; });
+	UpdateConfirmations();
+};
+
+window.PreviewTimeout = function () {
+	if (!shownDraw) return;
+	shownDraw.deadline = Date.now();
+	UpdateConfirmations();
 };
 
 window.PreviewBefore = function () {
@@ -545,6 +568,14 @@ window.PreviewBefore = function () {
 	clearTimeout(winnerTimer);
 	RenderBefore();
 	SetView(ViewFor());
+};
+
+window.PreviewHide = function () {
+	playToken++;
+	animating = false;
+	shownDraw = null;
+	clearTimeout(winnerTimer);
+	SetView('none');
 };
 
 ///////////////

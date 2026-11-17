@@ -33,7 +33,7 @@ public class CPHInline
 
 	static readonly object verrou = new object();
 	static readonly Dictionary<string, bool> messagesTraites = new Dictionary<string, bool>();
-	static readonly Queue<string> ordreMessages = new Queue<string>();
+	static readonly List<string> ordreMessages = new List<string>(); // (Queue<T> demande System.dll)
 	// Ancienneté de follow déjà vérifiée (clé : id Twitch, valeur : date de follow ou MinValue)
 	static readonly Dictionary<string, DateTime> follows = new Dictionary<string, DateTime>();
 	static readonly Random hasard = new Random();
@@ -48,8 +48,8 @@ public class CPHInline
 			{
 				if (messagesTraites.ContainsKey(cleMsg)) return true; // doublon ignoré
 				messagesTraites[cleMsg] = true;
-				ordreMessages.Enqueue(cleMsg);
-				while (ordreMessages.Count > 500) messagesTraites.Remove(ordreMessages.Dequeue());
+				ordreMessages.Add(cleMsg);
+				while (ordreMessages.Count > 500) { messagesTraites.Remove(ordreMessages[0]); ordreMessages.RemoveAt(0); }
 			}
 		}
 		lock (verrou)
