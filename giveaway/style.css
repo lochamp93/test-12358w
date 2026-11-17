@@ -467,3 +467,123 @@ body {
 .layout-card .view,
 .layout-card #stage[data-view="none"] { transform: none !important; }
 .layout-card #stage[data-view="winners"] #winners { transition-delay: 0s; transition-duration: 0s; }
+
+/* ---------- Plein écran ---------- */
+
+#field,
+#column { display: none; }
+
+.style-fullscreen #field {
+	display: block;
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+	pointer-events: none;
+	transition: opacity 400ms ease;
+}
+
+.style-fullscreen #field.off,
+.style-fullscreen #field.hidden { opacity: 0; }
+
+.fs-name {
+	position: absolute;
+	white-space: nowrap;
+	font-weight: 700;
+	line-height: 1;
+	color: var(--text-color);
+	text-shadow: var(--text-shadow);
+	opacity: 0.85;
+	/* Décalage proportionnel à la position : le pseudo reste toujours dans la source */
+	transform: translate(var(--tx), var(--ty)) scale(var(--sc, 1));
+	animation: fs-in 600ms ease both;
+	transition: opacity 180ms ease, color 180ms ease, text-shadow 180ms ease, transform 500ms cubic-bezier(.2, .9, .25, 1.3);
+}
+
+@keyframes fs-in { from { opacity: 0; } }
+
+/* Gagnant·e d'un tirage précédent : couleur d'accent, éteinte */
+.fs-name.past { color: var(--accent); filter: brightness(0.45); opacity: 0.9; }
+
+/* Tirage : tout s'éteint, un seul pseudo allumé à la fois */
+#field.drawing .fs-name { opacity: var(--fs-dim); }
+#field.drawing .fs-name.past { opacity: calc(var(--fs-dim) * 0.8); }
+#field .fs-name.lit {
+	opacity: 1;
+	color: var(--accent);
+	filter: none;
+	text-shadow: 0 0 12px var(--accent), 0 0 28px var(--accent);
+	transition-duration: 0ms;
+	z-index: 2;
+}
+#field .fs-name.winner { --sc: 1.35; z-index: 3; }
+#field.revealed .fs-name:not(.winner) { opacity: 0; transition-duration: 600ms; }
+
+/* Textes au centre, au-dessus des pseudos, sur un fond discret pour rester lisibles */
+.style-fullscreen #stage { z-index: 4; }
+.style-fullscreen #before,
+.style-fullscreen #winners {
+	padding: 0.35em 0.8em;
+	border-radius: 0.6em;
+	background: rgba(0, 0, 0, 0.45);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+}
+
+/* ---------- Juste prix ---------- */
+
+.style-price #column {
+	display: block;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: var(--col-width);
+	overflow: hidden;
+	transition: opacity 400ms ease;
+	-webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+	mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+}
+
+.style-price.side-left #column { left: 0; }
+.style-price.side-right #column { right: 0; }
+.style-price #column.off { opacity: 0; }
+
+#colTrack {
+	will-change: transform, filter;
+	text-shadow: var(--text-shadow);
+}
+
+#colTrack > div {
+	height: 1.6em;
+	line-height: 1.6em;
+	padding: 0 1.4em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--secondary-color);
+	font-weight: 500;
+	transition: color 120ms ease;
+}
+
+.side-left #colTrack > div { text-align: right; }
+.side-right #colTrack > div { text-align: left; }
+#colTrack > div.center { color: var(--text-color); font-weight: 700; }
+#colTrack > div.lit { color: var(--accent); text-shadow: 0 0 14px var(--accent); }
+
+/* Curseur triangulaire, centré en hauteur, pointé vers les pseudos */
+#cursor {
+	position: absolute;
+	top: 50%;
+	width: 0;
+	height: 0;
+	margin-top: -0.45em;
+	border-top: 0.45em solid transparent;
+	border-bottom: 0.45em solid transparent;
+}
+.side-left #cursor { right: 0.2em; border-right: 0.7em solid var(--accent); }
+.side-right #cursor { left: 0.2em; border-left: 0.7em solid var(--accent); }
+
+/* Textes à côté du curseur */
+#widget.style-price.side-left { justify-content: flex-start; padding-left: calc(var(--col-width) + 0.6em); }
+#widget.style-price.side-right { justify-content: flex-end; padding-right: calc(var(--col-width) + 0.6em); }
+.style-price #before .texts { justify-content: flex-start; }
+.style-price.side-right #before .texts { justify-content: flex-end; }

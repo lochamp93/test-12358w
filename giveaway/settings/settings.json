@@ -103,7 +103,7 @@
 		{
 			"id": "layout",
 			"label": "Style d’affichage",
-			"description": "Minimaliste : texte seul, comme le subgoal. Carte : la carte du gagnant·e apparaît. Bandeau : bande sur toute la largeur de la source",
+			"description": "Minimaliste : texte seul. Carte : la carte du gagnant·e apparaît. Bandeau : bande en bas de la source. Plein écran : pseudos dispersés qui s’allument un à un. Juste prix : colonne de pseudos et curseur",
 			"type": "select",
 			"defaultValue": "light",
 			"options": [
@@ -118,6 +118,14 @@
 				{
 					"value": "banner",
 					"label": "Bandeau"
+				},
+				{
+					"value": "fullscreen",
+					"label": "Plein écran"
+				},
+				{
+					"value": "price",
+					"label": "Juste prix"
 				}
 			],
 			"group": "Style"
@@ -125,7 +133,7 @@
 		{
 			"id": "accentColor",
 			"label": "Couleur d’accent",
-			"description": "Carte : contour de l’avatar et compte à rebours. Bandeau : repère et nom gagnant",
+			"description": "Carte : contour de l’avatar. Bandeau et Juste prix : repère et nom gagnant. Plein écran : pseudos allumés",
 			"type": "color",
 			"defaultValue": "#0091FF",
 			"group": "Style",
@@ -133,7 +141,9 @@
 				"id": "layout",
 				"value": [
 					"card",
-					"banner"
+					"banner",
+					"fullscreen",
+					"price"
 				]
 			}
 		},
@@ -257,7 +267,9 @@
 				"id": "layout",
 				"value": [
 					"light",
-					"banner"
+					"banner",
+					"fullscreen",
+					"price"
 				]
 			}
 		},
@@ -417,7 +429,7 @@
 		{
 			"id": "rollDuration",
 			"label": "Durée du défilement",
-			"description": "En secondes : départ très rapide puis ralentissement jusqu’au gagnant",
+			"description": "En secondes : départ très rapide puis ralentissement jusqu’au gagnant·e",
 			"type": "number",
 			"defaultValue": 6,
 			"min": 2,
@@ -429,7 +441,9 @@
 						"id": "layout",
 						"value": [
 							"light",
-							"banner"
+							"banner",
+							"fullscreen",
+							"price"
 						]
 					},
 					{
@@ -451,7 +465,9 @@
 						"id": "layout",
 						"value": [
 							"light",
-							"banner"
+							"banner",
+							"fullscreen",
+							"price"
 						]
 					},
 					{
@@ -543,7 +559,9 @@
 						"id": "layout",
 						"value": [
 							"light",
-							"banner"
+							"banner",
+							"fullscreen",
+							"price"
 						]
 					},
 					{
@@ -739,6 +757,98 @@
 			"showIf": {
 				"id": "layout",
 				"value": "banner"
+			}
+		},
+		{
+			"id": "fsMinSize",
+			"label": "Taille mini des pseudos",
+			"description": "En pixels (taille au hasard entre la mini et la maxi)",
+			"type": "number",
+			"defaultValue": 18,
+			"min": 8,
+			"max": 200,
+			"group": "Plein écran",
+			"showIf": {
+				"id": "layout",
+				"value": "fullscreen"
+			}
+		},
+		{
+			"id": "fsMaxSize",
+			"label": "Taille maxi des pseudos",
+			"description": "En pixels",
+			"type": "number",
+			"defaultValue": 48,
+			"min": 8,
+			"max": 300,
+			"group": "Plein écran",
+			"showIf": {
+				"id": "layout",
+				"value": "fullscreen"
+			}
+		},
+		{
+			"id": "fsMax",
+			"label": "Pseudos affichés au maximum",
+			"description": "Au-delà, une sélection au hasard (le gagnant·e est toujours inclus)",
+			"type": "number",
+			"defaultValue": 60,
+			"min": 5,
+			"max": 300,
+			"group": "Plein écran",
+			"showIf": {
+				"id": "layout",
+				"value": "fullscreen"
+			}
+		},
+		{
+			"id": "fsDimOpacity",
+			"label": "Opacité des pseudos éteints",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 25,
+			"min": 0,
+			"max": 100,
+			"group": "Plein écran",
+			"showIf": {
+				"id": "layout",
+				"value": "fullscreen"
+			}
+		},
+		{
+			"id": "priceSide",
+			"label": "Côté de la colonne",
+			"description": "",
+			"type": "select",
+			"defaultValue": "left",
+			"options": [
+				{
+					"value": "left",
+					"label": "À gauche"
+				},
+				{
+					"value": "right",
+					"label": "À droite"
+				}
+			],
+			"group": "Juste prix",
+			"showIf": {
+				"id": "layout",
+				"value": "price"
+			}
+		},
+		{
+			"id": "priceWidth",
+			"label": "Largeur de la colonne",
+			"description": "En pixels",
+			"type": "number",
+			"defaultValue": 400,
+			"min": 100,
+			"max": 1500,
+			"group": "Juste prix",
+			"showIf": {
+				"id": "layout",
+				"value": "price"
 			}
 		},
 		{

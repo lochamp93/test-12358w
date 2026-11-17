@@ -16,6 +16,9 @@ const slotEl = document.getElementById('slot');
 const stripEl = document.getElementById('strip');
 const winnersEl = document.getElementById('winners');
 const confettiEl = document.getElementById('confetti');
+const fieldEl = document.getElementById('field');
+const columnEl = document.getElementById('column');
+const colTrackEl = document.getElementById('colTrack');
 
 let ws = null;              // réglages (module commun WidgetSettings)
 let sbClient = null, sbHost = null, sbPort = null;
@@ -74,7 +77,11 @@ function ApplySettings() {
 	SetVar('--in-ms', `${s.cardInDuration}ms`);
 	SetVar('--out-ms', `${s.cardOutDuration}ms`);
 
-	widgetEl.className = `layout-${s.layout}`;
+	// Plein écran et Juste prix reprennent le rendu du Minimaliste pour les textes
+	widgetEl.className = ['fullscreen', 'price'].includes(s.layout) ? `layout-light style-${s.layout} no-line` : `layout-${s.layout}`;
+	if (s.layout === 'price') widgetEl.classList.add(`side-${s.priceSide}`);
+	SetVar('--col-width', `${s.priceWidth}px`);
+	SetVar('--fs-dim', String(s.fsDimOpacity / 100));
 	if (on('align')) widgetEl.classList.add(`align-${s.align}`);
 	if (s.layout === 'banner') widgetEl.classList.add(`anim-${s.bannerAnim}`);
 	if (s.layout === 'light' && !s.decorLine) widgetEl.classList.add('no-line');
@@ -85,6 +92,9 @@ function ApplySettings() {
 	RenderBefore();
 	if (shownDraw && !animating) RenderWinners(shownDraw.winners.filter(w => shownKeys.has(w.key)), {});
 	if (!animating) SetView(ViewFor());
+	if (fieldEl.dataset.sizes !== `${s.fsMinSize}-${s.fsMaxSize}`) { fieldEl.innerHTML = ''; fieldEl.dataset.sizes = `${s.fsMinSize}-${s.fsMaxSize}`; }
+	colSig = '';
+	SyncScenery();
 }
 
 // Réglage « Afficher avant le tirage » du style en cours
@@ -323,6 +333,16 @@ async function PlayDraw(draw) {
 				await wait(250);
 				done = await RollReel(names, w.name, duration, token);
 				if (done) await wait(700);
+			} else if (s.layout === 'fullscreen') {
+				SetView('none');
+				fieldEl.classList.remove('hidden', 'revealed');
+				await wait(300);
+				done = await FieldDraw(w, duration, token);
+				if (done) { await wait(1400); fieldEl.classList.add('hidden'); await wait(300); }
+			} else if (s.layout === 'price') {
+				SetView('none');
+				done = await ColumnRoll(names, w.name, duration, token);
+				if (done) await wait(400);
 			} else {
 				RenderWinners(revealed(), { rolling: true });
 				SizeSlot(names);
@@ -375,6 +395,7 @@ function CheckWinnerEnd() {
 		shownDraw = null;
 		shownKeys = new Set();
 		winnerTimer = null;
+		ResetScenery();
 		RenderBefore();
 		SetView(s.layout !== 'card' && s.afterWinner === 'hide' ? 'none' : ViewFor());
 	}, s.winnerDuration * 1000);
@@ -512,6 +533,233 @@ function UpdateConfirmations() {
 	CheckWinnerEnd();
 }
 
+//////////////////////////////////////////////
+// PLEIN ÉCRAN ET JUSTE PRIX : LE DÉCOR      //
+//////////////////////////////////////////////
+
+// Nombre pseudo-aléatoire stable pour un pseudo (même place à chaque mise à jour)
+function Seeded(text) {
+	let h = 2166136261;
+	for (let i = 0; i < text.length; i++) { h ^= text.charCodeAt(i); h = Math.imul(h, 16777619); }
+	return () => {
+		h += 0x6D2B79F5;
+		let t = h;
+		t = Math.imul(t ^ (t >>> 15), t | 1);
+		t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+		return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+	};
+}
+
+const IsActive = (state) => state && state.status !== 'setup' && state.status !== 'ended';
+
+function SyncScenery() {
+	if (!ws) return;
+	FieldSync();
+	ColumnSync();
+}
+
+function ResetScenery() {
+	fieldEl.classList.remove('drawing', 'revealed', 'hidden');
+	fieldEl.querySelectorAll('.fs-name').forEach(el => el.classList.remove('lit', 'winner'));
+	colMode = 'idle';
+	colSig = '';
+}
+
+// ---------- Plein écran ----------
+
+function FieldName(key, name) {
+	const s = ws.values;
+	const rnd = Seeded(key);
+	const el = document.createElement('span');
+	el.className = 'fs-name';
+	el.dataset.key = key;
+	el.textContent = name;
+	const x = rnd() * 100, y = rnd() * 100;
+	el.style.left = `${x}%`;
+	el.style.top = `${y}%`;
+	el.style.setProperty('--tx', `${-x}%`);
+	el.style.setProperty('--ty', `${-y}%`);
+	el.style.fontSize = `${Math.round(s.fsMinSize + rnd() * Math.max(0, s.fsMaxSize - s.fsMinSize))}px`;
+	fieldEl.appendChild(el);
+	return el;
+}
+
+// Pseudos en lice (et gagnant·es précédent·es, couleur d'accent éteinte)
+function FieldSync(extraKey, extraName) {
+	const s = ws.values;
+	if (s.layout !== 'fullscreen') { if (fieldEl.childElementCount) fieldEl.innerHTML = ''; fieldEl.classList.add('off'); return; }
+	const state = CurrentState();
+	fieldEl.classList.toggle('off', !IsActive(state));
+	if (!state) return;
+
+	const past = new Map();
+	Object.entries(state.participants).forEach(([key, p]) => { if (p.drawn && !GiveawayIsBanned(state, p)) past.set(key, p.name); });
+	if (shownDraw) shownDraw.winners.forEach(w => { if (shownKeys.has(w.key)) past.set(w.key, w.name); });
+	if (animating && shownDraw) shownDraw.winners.forEach(w => { if (!shownKeys.has(w.key)) past.delete(w.key); });
+
+	// Sélection stable si trop de monde
+	let pool = GiveawayPool(state).filter(p => !past.has(p.key));
+	if (pool.length > s.fsMax) pool = pool.map(p => ({ p, r: Seeded(p.key)() })).sort((a, b) => a.r - b.r).slice(0, s.fsMax).map(x => x.p);
+	const wanted = new Map(pool.map(p => [p.key, p.name]));
+	if (extraKey) wanted.set(extraKey, extraName);
+
+	const existing = new Map(Array.from(fieldEl.children).map(el => [el.dataset.key, el]));
+	existing.forEach((el, key) => { if (!wanted.has(key) && !past.has(key)) el.remove(); });
+	[...wanted, ...past].forEach(([key, name]) => {
+		const el = existing.get(key) || FieldName(key, name);
+		el.classList.toggle('past', past.has(key) && key !== extraKey);
+	});
+}
+
+// Tout s'éteint, puis les pseudos s'allument un par un, de plus en plus lentement, jusqu'au gagnant·e
+function FieldDraw(winner, durationMs, token) {
+	return new Promise((resolve) => {
+		FieldSync(winner.key, winner.name);
+		const winnerEl = fieldEl.querySelector(`.fs-name[data-key="${CSS.escape(winner.key)}"]`);
+		const others = Array.from(fieldEl.querySelectorAll('.fs-name:not(.past)')).filter(el => el !== winnerEl);
+		fieldEl.querySelectorAll('.fs-name').forEach(el => el.classList.remove('lit', 'winner'));
+		fieldEl.classList.add('drawing');
+
+		const schedule = StepSchedule(durationMs);
+		const order = [];
+		let previous = null;
+		for (let i = 0; i < schedule.length - 1; i++) {
+			let el = others.length ? others[Math.floor(Math.random() * others.length)] : winnerEl;
+			if (others.length > 1 && el === previous) el = others[(others.indexOf(el) + 1) % others.length];
+			order.push(el);
+			previous = el;
+		}
+		order.push(winnerEl);
+		const starts = [];
+		schedule.reduce((t, d, i) => { starts[i] = t; return t + d; }, 0);
+		const tick = PrepareSound(ws.values.rollSound);
+		const start = performance.now() + 400; // laisse le temps de s'éteindre
+		let step = -1;
+
+		function frame(now) {
+			if (token !== playToken) return resolve(false);
+			const t = now - start;
+			let i = step;
+			while (i < order.length - 1 && t >= starts[i + 1 < 0 ? 0 : i + 1]) i++;
+			if (t >= 0 && i !== step && i >= 0) {
+				if (step >= 0 && order[step] !== order[i]) order[step].classList.remove('lit');
+				order[i].classList.add('lit');
+				step = i;
+				tick();
+			}
+			if (step === order.length - 1 && t >= starts[step] + 250) {
+				winnerEl.classList.add('winner');
+				fieldEl.classList.add('revealed');
+				return resolve(true);
+			}
+			requestAnimationFrame(frame);
+		}
+		requestAnimationFrame(frame);
+	});
+}
+
+// ---------- Juste prix ----------
+
+let colMode = 'idle';      // idle : défilement lent ; roll : tirage ; stopped : arrêté sur le gagnant·e
+let colSig = '';
+let colOffset = 0;
+let colCycle = 0;
+let colLast = 0;
+let colRaf = null;
+let colCenter = -1;
+
+const ItemH = () => ws.values.fontSize * 1.6;
+
+function ColumnSync() {
+	const s = ws.values;
+	if (s.layout !== 'price') { columnEl.classList.add('off'); colTrackEl.innerHTML = ''; colSig = ''; return; }
+	const state = CurrentState();
+	columnEl.classList.toggle('off', !IsActive(state));
+	if (!state || colMode !== 'idle') return;
+	const names = GiveawayPool(state).map(p => p.name);
+	const sig = names.join('\u0001');
+	if (sig !== colSig) {
+		colSig = sig;
+		colTrackEl.innerHTML = '';
+		colCenter = -1;
+		if (names.length) {
+			const visible = Math.ceil(columnEl.clientHeight / ItemH()) + 2;
+			const repeat = Math.max(2, Math.ceil(visible / names.length) + 1);
+			for (let r = 0; r < repeat; r++) names.forEach(n => { const d = document.createElement('div'); d.textContent = n; colTrackEl.appendChild(d); });
+			colCycle = names.length * ItemH();
+			colOffset = colOffset % colCycle;
+		}
+	}
+	if (!colRaf) { colLast = performance.now(); colRaf = requestAnimationFrame(ColumnFrame); }
+}
+
+function HighlightCenter(index) {
+	if (index === colCenter) return;
+	const items = colTrackEl.children;
+	if (items[colCenter]) items[colCenter].classList.remove('center');
+	if (items[index]) items[index].classList.add('center');
+	colCenter = index;
+}
+
+// Défilement lent et continu avant le tirage
+function ColumnFrame(now) {
+	if (ws.values.layout !== 'price') { colRaf = null; return; }
+	const dt = Math.min(100, now - colLast);
+	colLast = now;
+	if (colMode === 'idle' && colCycle > 0) {
+		colOffset = (colOffset + dt * 0.03) % colCycle;
+		const h = ItemH();
+		const half = columnEl.clientHeight / 2 - h / 2;
+		colTrackEl.style.transform = `translateY(${half - colOffset - colCycle}px)`;
+		HighlightCenter(Math.round((colOffset + colCycle) / h));
+	}
+	colRaf = requestAnimationFrame(ColumnFrame);
+}
+
+// Tirage : défilement cran par cran, le nom en face du curseur gagne
+function ColumnRoll(names, winnerName, durationMs, token) {
+	return new Promise((resolve) => {
+		colMode = 'roll';
+		const h = ItemH();
+		const visible = Math.ceil(columnEl.clientHeight / h) + 2;
+		const pre = Math.ceil(visible / 2) + 1;
+		const schedule = StepSchedule(durationMs);
+		const steps = schedule.length;
+		const items = RollItems(names, pre + steps + 1 + visible, winnerName, pre + steps);
+		const starts = [];
+		schedule.reduce((t, d, i) => { starts[i] = t; return t + d; }, 0);
+
+		colTrackEl.innerHTML = '';
+		items.forEach(n => { const d = document.createElement('div'); d.textContent = n; colTrackEl.appendChild(d); });
+		colCenter = -1;
+		const half = columnEl.clientHeight / 2 - h / 2;
+		const tick = PrepareSound(ws.values.rollSound);
+		const start = performance.now();
+		let lastStep = -1;
+
+		function frame(now) {
+			if (token !== playToken) { colMode = 'idle'; colSig = ''; return resolve(false); }
+			const t = now - start;
+			let i = lastStep < 0 ? 0 : lastStep;
+			while (i < steps - 1 && t >= starts[i + 1]) i++;
+			const local = Math.min(1, (t - starts[i]) / schedule[i]);
+			const pos = i + (i >= steps - 3 ? EaseOutBack : EaseOutCubic)(local);
+			colTrackEl.style.transform = `translateY(${half - (pre + pos) * h}px)`;
+			colTrackEl.style.filter = schedule[i] < 70 && local < 0.8 ? 'blur(1.5px)' : 'none';
+			HighlightCenter(Math.round(pre + pos));
+			if (i !== lastStep) { lastStep = i; tick(); }
+			if (i < steps - 1 || local < 1) return requestAnimationFrame(frame);
+			colTrackEl.style.transform = `translateY(${half - (pre + steps) * h}px)`;
+			colTrackEl.style.filter = 'none';
+			HighlightCenter(pre + steps);
+			colTrackEl.children[pre + steps].classList.add('lit');
+			colMode = 'stopped';
+			resolve(true);
+		}
+		requestAnimationFrame(frame);
+	});
+}
+
 //////////////////
 // CONFETTIS    //
 //////////////////
@@ -559,6 +807,7 @@ function OnState(state) {
 		shownDraw = null;
 		shownKeys = new Set();
 		ClearWinnerEnd();
+		ResetScenery();
 	}
 
 	// Nouveau gagnant·e : on joue le défilement
@@ -584,6 +833,7 @@ function OnState(state) {
 
 	RenderBefore();
 	if (!animating) SetView(ViewFor());
+	SyncScenery();
 }
 
 async function SetRealState(raw, event) {
@@ -725,6 +975,7 @@ function PreviewStop() {
 	shownKeys = new Set();
 	ClearWinnerEnd();
 	ParkSlot();
+	ResetScenery();
 }
 
 window.PreviewBefore = function () {
