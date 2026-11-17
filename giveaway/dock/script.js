@@ -235,41 +235,62 @@ function RenderDraw(cfg) {
 	// Fermer le giveaway : l'overlay disparaît
 	$('endButton').disabled = st === 'setup' || st === 'ended';
 
-	// Tirage
-	primary.hidden = !['open', 'closed', 'confirmed', 'finished'].includes(st);
+	// Tirage. Plusieurs gagnant·es : tirés l'un après l'autre avec « Suivant »
+	const size = draw ? (Number(draw.size) || draw.winners.length) : 0;
+	const roundOpen = st === 'pending' && draw && draw.winners.length < size;
+	primary.hidden = !(['open', 'closed', 'confirmed', 'finished'].includes(st) || roundOpen);
 	primary.disabled = false;
-	$('noshowButton').hidden = st !== 'pending';
+	primary.dataset.mode = 'draw';
+	const firstMany = Math.max(1, Math.min(Number(cfg.perDraw) || 1, left, pool.length || 1));
+	const ofMany = firstMany > 1 ? ` (1/${firstMany})` : '';
 	if (st === 'open' || st === 'closed') {
-		primary.textContent = 'Tirer au sort' + many;
+		primary.textContent = 'Tirer au sort' + ofMany;
 		if (!pool.length) { primary.disabled = true; hint = 'Personne n’est encore en lice.'; }
 		else if (st === 'open') hint = 'Le tirage ferme d’abord les inscriptions.';
+	} else if (roundOpen) {
+		primary.dataset.mode = 'next';
+		primary.textContent = `Suivant (${draw.winners.length + 1}/${size})`;
+		if (!pool.length) { primary.textContent = 'Terminer ce tirage'; hint = 'Plus personne n’est en lice.'; }
 	} else if (st === 'confirmed') {
-		primary.textContent = 'Tirer le lot suivant' + many;
+		primary.textContent = 'Tirer le lot suivant' + ofMany;
 		if (!pool.length) { primary.disabled = true; hint = 'Plus personne n’est en lice.'; }
 	} else if (st === 'finished') {
 		primary.textContent = 'Tous les lots ont été gagnés';
 		primary.disabled = true;
 		hint = 'Fermez le giveaway pour faire disparaître l’overlay.';
 	}
-	if (state.lastError && ['closed', 'confirmed'].includes(state.status)) hint = state.lastError;
+	if (state.lastError && ['closed', 'confirmed'].includes(st)) hint = state.lastError;
 	$('drawHint').textContent = hint;
 
-	if (state.status === 'pending' && draw) {
-		const missing = draw.winners.filter(w => !w.confirmed).length;
-		$('noshowButton').textContent = missing > 1
-			? `Pas de réponse : tirer ${missing} autres gagnant·es`
-			: 'Pas de réponse : tirer un autre gagnant·e';
-	}
+	// Pas de réponse : remplace les personnes dont le délai est écoulé
+	const waiting = draw && st === 'pending' ? draw.winners.filter(w => !w.confirmed) : [];
+	const late = waiting.filter(w => Date.now() > Deadline(w, draw));
+	$('noshowButton').hidden = !waiting.length;
+	const replace = late.length || waiting.length;
+	$('noshowButton').textContent = replace > 1
+		? `Pas de réponse : tirer ${replace} autres gagnant·es`
+		: 'Pas de réponse : tirer un autre gagnant·e';
 
 	clearInterval(countdownTimer);
+	$('countdown').hidden = true;
 	if (state.status === 'pending') {
 		countdownTimer = setInterval(UpdateCountdown, 250);
 		UpdateCountdown();
 	}
 }
 
+const Deadline = (w, draw) => Number(w.deadline || (draw && draw.deadline) || 0);
+
+function Remaining(ms) {
+	const sec = Math.ceil(ms / 1000);
+	return `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
+}
+
+// Le ou la dernier·e tiré·e en grand, les précédent·es en dessous
 function RenderWinner(draw, poolCount) {
-	const [first, ...others] = draw.winners;
+	const winners = draw.winners;
+	const first = winners[winners.length - 1];
+	const others = winners.slice(0, -1).reverse();
 	const main = $('winnerMain');
 	main.innerHTML = '';
 	const row = document.createElement('div');
@@ -282,7 +303,9 @@ function RenderWinner(draw, poolCount) {
 	name.textContent = first.name;
 	const sub = document.createElement('div');
 	sub.className = 'winner-sub';
+	const size = Number(draw.size) || winners.length;
 	const parts = [GIVEAWAY_PLATFORM_NAMES[first.platform], first.sub ? 'abonné·e' : 'non abonné·e', `${poolCount} encore en lice`];
+	if (size > 1) parts.unshift(`${winners.length}/${size}`);
 	sub.textContent = parts.join(' · ');
 	if (first.confirmed) { const ok = document.createElement('span'); ok.className = 'ok'; ok.textContent = ' · confirmé'; sub.appendChild(ok); }
 	info.append(name, sub);
@@ -297,7 +320,10 @@ function RenderWinner(draw, poolCount) {
 		it.className = 'also-item';
 		it.appendChild(Avatar(w));
 		const n = document.createElement('span'); n.textContent = w.name;
-		const st = document.createElement('span'); st.className = 'state' + (w.confirmed ? ' ok' : ''); st.textContent = w.confirmed ? 'confirmé' : 'en attente';
+		const st = document.createElement('span');
+		st.className = 'state' + (w.confirmed ? ' ok' : '');
+		st.dataset.key = w.key;
+		st.textContent = w.confirmed ? 'confirmé' : 'en attente';
 		it.append(n, st);
 		list.appendChild(it);
 	});
@@ -310,20 +336,38 @@ function RenderWinner(draw, poolCount) {
 	if (first.confirmed) ChatLine($('confirmMessageLine'), first.name, first.sub, first.confirmText, first.confirmTime);
 }
 
+// Comptes à rebours : celui du dernier·e tiré·e en grand, ceux des autres dans la liste
 function UpdateCountdown() {
 	const draw = state && state.draw;
-	if (!draw || state.status !== 'pending') { $('countdown').hidden = true; return; }
-	const total = Math.max(1, draw.deadline - draw.at);
-	const left = Math.max(0, draw.deadline - Date.now());
-	const sec = Math.ceil(left / 1000);
-	$('countdown').hidden = false;
+	if (!draw || state.status !== 'pending' || !draw.winners.length) { $('countdown').hidden = true; return; }
+	const now = Date.now();
+	const first = draw.winners[draw.winners.length - 1];
+	const deadline = Deadline(first, draw);
+	const total = Math.max(1, deadline - (Number(first.at) || Number(draw.at) || deadline - 60000));
+	const left = Math.max(0, deadline - now);
+	$('countdown').hidden = !!first.confirmed;
 	$('countdown').classList.toggle('late', left <= 0);
-	$('countdownText').textContent = left > 0 ? `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}` : 'Temps écoulé';
+	$('countdownText').textContent = left > 0 ? Remaining(left) : 'Temps écoulé';
 	$('countdownBar').style.transform = `scaleX(${left / total})`;
+	document.querySelectorAll('#alsoList .state').forEach(el => {
+		const w = draw.winners.find(x => x.key === el.dataset.key);
+		if (!w) return;
+		const l = Deadline(w, draw) - now;
+		el.textContent = w.confirmed ? 'confirmé' : (l > 0 ? `en attente · ${Remaining(l)}` : 'temps écoulé');
+		el.classList.toggle('late', !w.confirmed && l <= 0);
+	});
+	// Bouton « Pas de réponse » : nombre de personnes à remplacer
+	const waiting = draw.winners.filter(w => !w.confirmed);
+	const late = waiting.filter(w => now > Deadline(w, draw)).length;
+	const replace = late || waiting.length;
+	$('noshowButton').textContent = replace > 1
+		? `Pas de réponse : tirer ${replace} autres gagnant·es`
+		: 'Pas de réponse : tirer un autre gagnant·e';
 }
 
 function RenderParticipants() {
-	const all = Object.entries(state.participants).map(([key, p]) => ({ key, ...p }));
+	// Exclu·es d'office : ni affiché·es, ni compté·es
+	const all = Object.entries(state.participants).map(([key, p]) => ({ key, ...p })).filter(p => !GiveawayIsBanned(state, p));
 	const pool = GiveawayPool(state);
 	const chances = new Map(pool.map(p => [p.key, p.chance]));
 	const luck = Number(state.config.subLuck) || 1;
@@ -334,7 +378,7 @@ function RenderParticipants() {
 		? `${pool.length} en lice · ${subs} abonné·e${subs > 1 ? 's' : ''} · ${excluded} exclu${excluded > 1 ? 's' : ''}`
 		: '';
 
-	const current = new Set(state.draw && state.status === 'pending' ? state.draw.winners.map(w => w.key) : []);
+	const current = new Set(state.draw && state.status === 'pending' ? state.draw.winners.filter(w => !w.confirmed).map(w => w.key) : []);
 	const q = $('search').value.trim().toLowerCase();
 	const list = all
 		.filter(p => !q || String(p.name).toLowerCase().includes(q) || String(p.login).toLowerCase().includes(q))
@@ -483,33 +527,48 @@ function LocalApply(a) {
 		case 'close': state.status = 'closed'; break;
 		case 'end': state.status = 'ended'; break;
 		case 'draw':
+		case 'next':
 		case 'noshow': {
-			const replacing = a.mode === 'noshow';
-			if (!replacing && state.status === 'open') state.status = 'closed';
-			let count = replacing ? state.draw.winners.filter(w => !w.confirmed).length : Number(cfg.perDraw) || 1;
-			count = Math.min(count, cfg.lots - state.won, pool().length);
-			if (count <= 0) { state.lastError = 'Personne n’est en lice'; break; }
+			const pickOne = () => {
+				const [w] = GiveawayDemoDraw(state, 1);
+				if (!w) return null;
+				state.participants[w.key].drawn = true;
+				w.at = now; w.deadline = now + cfg.confirmSeconds * 1000;
+				return w;
+			};
+			let count = 1;
+			if (a.mode === 'draw') {
+				if (state.status === 'open') state.status = 'closed';
+				const size = Math.min(Number(cfg.perDraw) || 1, cfg.lots - state.won, pool().length);
+				if (size <= 0) { state.lastError = 'Personne n’est en lice'; break; }
+				state.draw = { round: ((state.draw && state.draw.round) || 0) + 1, size, winners: [] };
+			} else if (a.mode === 'noshow') {
+				const late = state.draw.winners.filter(w => !w.confirmed && now > w.deadline);
+				const gone = late.length ? late : state.draw.winners.filter(w => !w.confirmed);
+				state.draw.winners = state.draw.winners.filter(w => !gone.includes(w));
+				count = gone.length;
+			}
+			const names = [];
+			for (let i = 0; i < count; i++) { const w = pickOne(); if (!w) break; state.draw.winners.push(w); names.push(w.name); }
+			if (names.length < count || !pool().length && a.mode === 'next' && !names.length) state.draw.size = state.draw.winners.length;
 			delete state.lastError;
-			let winners = GiveawayDemoDraw(state, count);
-			winners.forEach(w => { state.participants[w.key].drawn = true; });
-			if (replacing) winners = state.draw.winners.filter(w => w.confirmed).concat(winners);
 			state.drawId = (Number(state.drawId) || 0) + 1;
-			state.draw = { id: state.drawId, at: now, deadline: now + cfg.confirmSeconds * 1000, winners, replacement: replacing };
-			state.status = 'pending';
-			const names = winners.filter(w => !w.confirmed).map(w => w.name);
-			Toast('Chat : ' + Message(names.length > 1 ? 'msgDrawMany' : 'msgDraw', names));
+			state.draw.id = state.drawId;
+			LocalStatus();
+			if (names.length) Toast('Chat : ' + Message(names.length > 1 ? 'msgDrawMany' : 'msgDraw', names));
 			// Démo : chaque gagnant·e confirme au bout de 5 s
-			setTimeout(() => winners.forEach(w => { if (!w.confirmed) LocalApply({ mode: 'chat', confirmKey: w.key, text: 'oui merci !!' }); }), 5000);
+			const keys = state.draw.winners.filter(w => !w.confirmed).map(w => w.key);
+			setTimeout(() => keys.forEach(k => LocalApply({ mode: 'chat', confirmKey: k, text: 'oui merci !!' })), 5000);
 			break;
 		}
 		case 'chat': {
 			if (state.status !== 'pending' || !state.draw) return;
 			const w = state.draw.winners.find(x => x.key === a.confirmKey && !x.confirmed);
-			if (!w || now > state.draw.deadline) return;
+			if (!w || now > w.deadline) return;
 			w.confirmed = true; w.confirmText = a.text; w.confirmTime = now;
 			state.won++;
 			state.history.unshift({ lot: cfg.lot, name: w.name, platform: w.platform, at: now });
-			if (state.draw.winners.every(x => x.confirmed)) state.status = state.won >= cfg.lots ? 'finished' : 'confirmed';
+			LocalStatus();
 			Toast('Chat : ' + Message('msgConfirm', [w.name]));
 			break;
 		}
@@ -532,6 +591,14 @@ function LocalApply(a) {
 		case 'clearHistory': state.history = []; break;
 	}
 	save();
+}
+
+// Même règle que l'action : pending tant que le tirage n'est pas complet et confirmé
+function LocalStatus() {
+	const d = state.draw;
+	if (!d) { if (state.status === 'pending') state.status = 'closed'; return; }
+	const done = d.winners.length >= d.size && d.winners.every(w => w.confirmed);
+	state.status = !done ? 'pending' : (state.won >= state.config.lots ? 'finished' : 'confirmed');
 }
 
 function Message(key, names) {
@@ -647,7 +714,7 @@ function Bind() {
 		if (state.status === 'setup' || state.status === 'ended') Send('open');
 		else if (state.status === 'open') Send('close');
 	});
-	$('primaryButton').addEventListener('click', () => Send('draw'));
+	$('primaryButton').addEventListener('click', () => Send($('primaryButton').dataset.mode || 'draw'));
 	WithConfirmation($('endButton'), 'Confirmer ?', () => Send('end'));
 	$('noshowButton').addEventListener('click', () => Send('noshow'));
 	WithConfirmation($('resetButton'), 'Confirmer la réinitialisation ?', () => Send('reset'));

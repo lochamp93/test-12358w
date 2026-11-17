@@ -20,11 +20,18 @@ function ParseGiveaway(raw) {
 	return data;
 }
 
+// Exclu·e d'office (liste « Exclus d'office » du dock, même ajoutée après l'inscription)
+function GiveawayIsBanned(state, p) {
+	const list = String(state.config.excluded || '').split(',').map(x => x.trim().replace(/^@/, '').toLowerCase()).filter(Boolean);
+	if (!list.length) return false;
+	return list.includes(String(p.login || '').toLowerCase()) || list.includes(String(p.name || '').toLowerCase());
+}
+
 // Personnes en lice (ni exclues, ni déjà tirées) et leur chance de gagner au prochain tirage
 function GiveawayPool(state) {
 	const luck = Math.max(1, Number(state.config.subLuck) || 1);
 	const pool = Object.entries(state.participants)
-		.filter(([, p]) => !p.excluded && !p.drawn)
+		.filter(([, p]) => !p.excluded && !p.drawn && !GiveawayIsBanned(state, p))
 		.map(([key, p]) => ({ key, ...p, weight: p.sub ? luck : 1 }));
 	const total = pool.reduce((t, p) => t + p.weight, 0);
 	pool.forEach(p => { p.chance = total ? p.weight / total : 0; });

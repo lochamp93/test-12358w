@@ -193,7 +193,12 @@ body {
 	height: 100%;
 }
 
-.winner .label { font-size: 0.6em; }
+.winner .label { font-size: 0.6em; color: var(--secondary-color); }
+.winner .label:empty { display: none; }
+
+/* Emplacement du défilement */
+.winner .avatar-wrap.ghost { display: none; }
+.winner.rolling .name { display: inline-flex; }
 .winner .name { font-weight: 700; }
 .winner .status { font-size: 0.55em; font-variant-numeric: tabular-nums; }
 .winner .status:empty { display: none; }
@@ -213,8 +218,6 @@ body {
 .layout-light #before .texts > #word { font-weight: 400; }
 .layout-light #rollLabel,
 .layout-light .winner .label { font-weight: 300; font-size: 1em; }
-.layout-light .winner .label::after { content: " :"; }
-.layout-light .winner .label:empty { display: none; }
 .layout-light .winner + .winner::before { content: "·"; color: var(--secondary-color); margin-right: 0.15em; }
 .layout-light .prize-photo { width: 1.6em; height: 1.6em; border-radius: 0.3em; }
 .layout-light .winner .status { font-size: 0.6em; color: var(--secondary-color); }
@@ -267,9 +270,27 @@ body {
 .layout-card .winner {
 	flex-direction: column;
 	gap: 0.25em;
-	min-width: 5em;
+	/* Toutes les cartes ont la même taille, pendant et après le défilement */
+	width: 7.5em;
+	box-sizing: border-box;
 	text-align: center;
 }
+
+.layout-card .winner .name {
+	display: block;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.layout-card .winner.rolling .name { display: flex; justify-content: center; }
+.layout-card .winner #slot { width: 100% !important; min-width: 0; }
+.layout-card #strip > div { overflow: hidden; text-overflow: ellipsis; }
+.layout-card .winner .avatar-wrap.ghost { display: block; }
+.layout-card .winner .avatar-wrap.ghost .avatar { visibility: visible; box-shadow: 0 0 0 0.08em var(--accent); }
+.layout-card .winner .status { display: block; min-height: 1.3em; }
+.layout-card .winner .status:empty { display: block; }
 
 .layout-card .winner .avatar-wrap { width: 2.6em; height: 2.6em; margin-bottom: 0.15em; }
 .layout-card .winner .avatar { box-shadow: 0 0 0 0.08em var(--accent); }
@@ -280,7 +301,7 @@ body {
 .layout-card .winner .prize:empty { display: none; }
 .layout-card .winner .timer { width: 100%; height: 4px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); overflow: hidden; margin-top: 0.3em; }
 .layout-card .winner .timer > i { display: block; height: 100%; background: var(--accent); transform-origin: left; }
-.layout-card .winner .timer.off { display: none; }
+.layout-card .winner .timer.off { visibility: hidden; }
 .layout-card .winner .status { color: var(--secondary-color); }
 
 /* Animations d'entrée et de sortie des cartes */
@@ -402,3 +423,11 @@ body {
 }
 
 #reel.won .reel-marker { opacity: 0; transition: opacity 250ms ease; }
+
+/* Carte sans avatar (YouTube, TikTok…) : cercle vide + icône, pour garder la même taille de carte */
+.layout-card .winner .avatar-wrap.no-avatar { width: 2.6em; height: 2.6em; }
+.layout-card .winner .avatar-wrap.no-avatar .avatar { display: block; visibility: visible; }
+.layout-card .winner .avatar-wrap.no-avatar .platform { position: absolute; width: 45%; height: 45%; }
+.hide-platform.layout-card .winner .avatar-wrap.no-avatar .platform { display: none; }
+.hide-avatar.layout-card .winner .avatar-wrap.no-avatar { width: 1.1em; height: 1.1em; }
+.hide-avatar.layout-card .winner .avatar-wrap.no-avatar .platform { position: static; width: 100%; height: 100%; }

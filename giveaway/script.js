@@ -29,7 +29,8 @@ let playToken = 0;          // annule une animation en cours
 let animating = false;
 let winnerTimer = null;
 let countdownTimer = null;
-let realSeen = false;      // vraies valeurs déjà affichées (remplacent l'exemple)
+let realSeen = false;
+let shownKeys = new Set();  // gagnant·es déjà affichés du tirage en cours      // vraies valeurs déjà affichées (remplacent l'exemple)
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
@@ -80,7 +81,7 @@ function ApplySettings() {
 	widgetEl.classList.toggle('hide-platform', !s.showPlatform);
 
 	RenderBefore();
-	if (shownDraw && !animating) RenderWinners(shownDraw, false);
+	if (shownDraw && !animating) RenderWinners(shownDraw.winners.filter(w => shownKeys.has(w.key)), {});
 	if (!animating) SetView(ViewFor());
 }
 
@@ -148,9 +149,11 @@ function SetView(view) {
 // TIRAGE : ANIMATION //
 ////////////////////////
 
-function Names(state) {
-	const names = Object.values(state.participants).filter(p => !p.excluded).map(p => p.name);
-	return names.length ? names : ['…'];
+// Noms du défilement : personnes en lice (jamais les exclu·es) et le ou la gagnant·e
+function Names(state, winnerName) {
+	const names = GiveawayPool(state).map(p => p.name);
+	if (!names.includes(winnerName)) names.push(winnerName);
+	return names;
 }
 
 // Suite de noms tirés au hasard (jamais deux fois le même nom de suite), gagnant·e en position « at »
@@ -198,8 +201,10 @@ function Roll(names, winnerName, durationMs, token) {
 
 		// Largeur fixe : celle du nom le plus long (pas de saut de mise en page)
 		slotEl.style.width = '';
-		const widest = Math.max(...Array.from(stripEl.children).map(c => c.scrollWidth));
-		slotEl.style.width = `${widest + 4}px`;
+		if (!widgetEl.classList.contains('layout-card')) {
+			const widest = Math.max(...Array.from(stripEl.children).map(c => c.scrollWidth));
+			slotEl.style.width = `${widest + 4}px`;
+		}
 
 		const tick = PrepareSound(ws.values.rollSound);
 		const start = performance.now();
@@ -291,105 +296,153 @@ function PlaySound(url) {
 	a.play().catch(() => { });
 }
 
+// Joue les gagnant·es pas encore affichés du tirage, l'un après l'autre.
+// Un tirage à plusieurs gagnant·es se fait en plusieurs fois (bouton « Suivant » du dock) :
+// les gagnant·es déjà affichés restent à l'écran.
 async function PlayDraw(draw) {
 	const token = ++playToken;
 	const s = ws.values;
 	const state = CurrentState();
-	clearTimeout(winnerTimer);
+	ClearWinnerEnd();
 	animating = true;
 
-	const winners = draw.winners.filter(w => !w.confirmed || !draw.replacement);
-	const useRoll = s.layout !== 'card' || s.cardRoll;
-
-	if (useRoll && winners.length) {
-		const names = Names(state);
-		rollLabelEl.textContent = s.winnerLabel;
-		SetView('roll');
-		await wait(250);
-		for (let i = 0; i < winners.length; i++) {
-			const duration = (i === 0 ? s.rollDuration : Math.max(2, s.rollDuration * 0.6)) * 1000;
-			const done = s.layout === 'banner'
-				? await RollReel(names, winners[i].name, duration, token)
-				: await Roll(names, winners[i].name, duration, token);
-			if (!done) return;
-			PlaySound(s.winSound);
-			await wait(i < winners.length - 1 ? 1200 : 700);
-			if (token !== playToken) return;
-		}
-	}
-
+	const sameRound = shownDraw && draw.round !== undefined && shownDraw.round === draw.round;
+	if (!sameRound) shownKeys = new Set();
+	shownKeys = new Set([...shownKeys].filter(k => draw.winners.some(w => w.key === k))); // personnes remplacées
+	const fresh = draw.winners.filter(w => !shownKeys.has(w.key));
 	shownDraw = draw;
-	RenderWinners(draw, true);
-	SetView('winners');
-	if (!useRoll) PlaySound(s.winSound);
-	if (s.confetti) Confetti();
+	const useRoll = s.layout !== 'card' || s.cardRoll;
+	const revealed = () => shownDraw.winners.filter(w => shownKeys.has(w.key));
+
+	for (let i = 0; i < fresh.length; i++) {
+		const w = fresh[i];
+		if (useRoll) {
+			const names = Names(state, w.name);
+			const duration = (i === 0 ? s.rollDuration : Math.max(2, s.rollDuration * 0.6)) * 1000;
+			let done;
+			if (s.layout === 'banner') {
+				SetView('roll');
+				await wait(250);
+				done = await RollReel(names, w.name, duration, token);
+				if (done) await wait(700);
+			} else {
+				RenderWinners(revealed(), { rolling: true });
+				SetView('winners');
+				await wait(250);
+				done = await Roll(names, w.name, duration, token);
+			}
+			if (!done || token !== playToken) return;
+		}
+		shownKeys.add(w.key);
+		RenderWinners(revealed(), { animateKey: w.key });
+		SetView('winners');
+		PlaySound(s.winSound);
+		if (s.confetti) Confetti();
+		if (i < fresh.length - 1) { await wait(1500); if (token !== playToken) return; }
+	}
+	if (!fresh.length) { RenderWinners(revealed(), {}); SetView('winners'); }
 	animating = false;
-	ScheduleWinnerEnd(token);
+	UpdateConfirmations();
 }
 
-// Fin de l'affichage du gagnant après la durée choisie (0 : reste affiché)
-function ScheduleWinnerEnd(token) {
+// Fin de l'affichage : quand le tirage est complet et que chacun·e a confirmé (ou que le délai
+// est écoulé), on attend « Durée d'affichage » puis on revient à l'écran d'avant (0 : reste affiché)
+function ClearWinnerEnd() {
 	clearTimeout(winnerTimer);
+	winnerTimer = null;
+}
+
+function CheckWinnerEnd() {
 	const s = ws.values;
-	if (!s.winnerDuration) return;
+	if (!shownDraw || animating || !s.winnerDuration) { if (!shownDraw) ClearWinnerEnd(); return; }
+	const size = Number(shownDraw.size) || shownDraw.winners.length;
+	const now = Date.now();
+	const done = shownDraw.winners.length >= size && shownDraw.winners.every(w => w.confirmed || now > Deadline(w));
+	if (!done) { ClearWinnerEnd(); return; }
+	if (winnerTimer) return;
+	const token = playToken;
 	winnerTimer = setTimeout(async () => {
 		if (token !== playToken) return;
 		if (s.layout === 'card') {
 			winnersEl.querySelectorAll('.winner').forEach(el => {
 				el.classList.remove('in-zoom', 'in-fade', 'in-slide', 'in-bounce');
+				el.style.animationDelay = '';
 				el.classList.add(`out-${s.cardOut}`);
 			});
 			await wait(s.cardOutDuration);
 			if (token !== playToken) return;
 		}
 		shownDraw = null;
+		shownKeys = new Set();
+		winnerTimer = null;
 		RenderBefore();
-		const next = ViewFor();
-		SetView(s.layout !== 'card' && s.afterWinner === 'hide' ? 'none' : next);
+		SetView(s.layout !== 'card' && s.afterWinner === 'hide' ? 'none' : ViewFor());
 	}, s.winnerDuration * 1000);
 }
 
-function RenderWinners(draw, animate) {
+const Deadline = (w) => Number(w.deadline || (shownDraw && shownDraw.deadline) || 0);
+
+// Le défilement est rangé dans #roll quand il ne sert pas (il ne doit pas être détruit)
+function ParkSlot() {
+	const roll = document.getElementById('roll');
+	if (slotEl.parentElement !== roll) roll.insertBefore(slotEl, roll.querySelector('#reel'));
+}
+
+function RenderWinners(list, opts = {}) {
 	const s = ws.values;
 	const state = CurrentState();
+	ParkSlot();
 	winnersEl.innerHTML = '';
-	draw.winners.forEach((w, i) => {
+	const items = list.slice();
+	if (opts.rolling) items.push(null); // emplacement du défilement
+
+	items.forEach((w, i) => {
 		const el = document.createElement('div');
-		el.className = 'winner' + (s.layout === 'card' ? ' card' : '');
-		el.dataset.key = w.key;
+		el.className = 'winner' + (s.layout === 'card' ? ' card' : '') + (w ? '' : ' rolling');
+		if (w) el.dataset.key = w.key;
 
 		const wrap = document.createElement('span');
-		wrap.className = 'avatar-wrap';
+		wrap.className = 'avatar-wrap no-avatar'; // « no-avatar » retiré dès que l'avatar est chargé
 		const avatar = document.createElement('img');
 		avatar.className = 'avatar empty';
 		avatar.alt = '';
 		wrap.appendChild(avatar);
-		wrap.classList.add('no-avatar'); // retiré dès que l'avatar est chargé
-		const icon = document.createElement('img');
-		icon.className = 'platform';
-		icon.alt = GIVEAWAY_PLATFORM_NAMES[w.platform] || '';
-		icon.src = `icons/${w.platform}.png`;
-		wrap.appendChild(icon);
-		if (s.showAvatar) GiveawayAvatar(w).then(url => {
-			if (!url) return;
-			avatar.onload = () => { avatar.classList.remove('empty'); wrap.classList.remove('no-avatar'); };
-			avatar.src = url;
-		});
+		if (w) {
+			const icon = document.createElement('img');
+			icon.className = 'platform';
+			icon.alt = GIVEAWAY_PLATFORM_NAMES[w.platform] || '';
+			icon.src = `icons/${w.platform}.png`;
+			wrap.appendChild(icon);
+			if (s.showAvatar) GiveawayAvatar(w).then(url => {
+				if (!url) return;
+				avatar.onload = () => { avatar.classList.remove('empty'); wrap.classList.remove('no-avatar'); };
+				avatar.src = url;
+			});
+		} else {
+			wrap.classList.remove('no-avatar');
+			wrap.classList.add('ghost');
+		}
 
 		const label = document.createElement('span');
 		label.className = 'label';
-		label.textContent = s.layout === 'light' && i > 0 ? '' : s.winnerLabel;
+		label.textContent = s.layout === 'card' || i === 0 ? s.winnerLabel : '';
 
 		const name = document.createElement('span');
 		name.className = 'name';
-		name.textContent = w.name;
+		if (w) name.textContent = w.name;
+		else {
+			// Fente vide jusqu'au départ du défilement
+			stripEl.innerHTML = '<div>\u00a0</div>';
+			stripEl.style.transform = 'translateY(0)';
+			name.appendChild(slotEl);
+		}
 
 		const status = document.createElement('span');
 		status.className = 'status';
 
 		el.append(wrap, label, name);
 
-		// Carte : rappel du lot
+		// Carte : rappel du lot et barre du compte à rebours (toujours présents : cartes de même taille)
 		if (s.layout === 'card') {
 			const prize = document.createElement('span');
 			prize.className = 'prize';
@@ -398,15 +451,15 @@ function RenderWinners(draw, animate) {
 			if (s.showPrizeName && state && state.config.lot) prize.append(state.config.lot);
 			el.appendChild(prize);
 			const timer = document.createElement('span');
-			timer.className = 'timer';
+			timer.className = 'timer off';
 			timer.appendChild(document.createElement('i'));
 			el.appendChild(timer);
 		}
 		el.appendChild(status);
 
-		if (animate && s.layout === 'card') {
-			el.classList.add(`in-${s.cardIn}`);
-			el.style.animationDelay = `${i * 180}ms`;
+		if (s.layout === 'card' && (!w ? !opts.keepGhost : w.key === opts.animateKey)) {
+			// La carte apparaît avec l'animation d'entrée (au début du défilement, ou directement sans défilement)
+			if (!w || !s.cardRoll) el.classList.add(`in-${s.cardIn}`);
 		}
 		winnersEl.appendChild(el);
 	});
@@ -415,17 +468,19 @@ function RenderWinners(draw, animate) {
 	countdownTimer = setInterval(UpdateConfirmations, 250);
 }
 
-// Compte à rebours et confirmations (mis à jour à chaque événement et toutes les 250 ms)
+// Compte à rebours et confirmations (à chaque événement et toutes les 250 ms)
 function UpdateConfirmations() {
 	if (!shownDraw) { clearInterval(countdownTimer); return; }
 	const s = ws.values;
-	const total = Math.max(1, (shownDraw.deadline - shownDraw.at) || 60000);
-	const left = Math.max(0, shownDraw.deadline - Date.now());
+	const now = Date.now();
 	winnersEl.querySelectorAll('.winner').forEach(el => {
 		const w = shownDraw.winners.find(x => x.key === el.dataset.key);
 		if (!w) return;
 		const status = el.querySelector('.status');
 		const timer = el.querySelector('.timer');
+		const deadline = Deadline(w);
+		const total = Math.max(1, deadline - (Number(w.at) || Number(shownDraw.at) || deadline - 60000));
+		const left = Math.max(0, deadline - now);
 		if (w.confirmed) {
 			status.textContent = s.confirmedText;
 			status.classList.add('done');
@@ -440,6 +495,7 @@ function UpdateConfirmations() {
 			if (timer) timer.classList.add('off');
 		}
 	});
+	CheckWinnerEnd();
 }
 
 //////////////////
@@ -482,33 +538,34 @@ function OnState(state) {
 	const first = lastDrawId === null;
 	if (first) lastDrawId = Number(state.drawId) || 0;
 
-	// Remise à zéro : on arrête tout
+	// Remise à zéro ou giveaway fermé : on arrête tout
 	if ((state.status === 'setup' || state.status === 'ended') && !state.demo) {
 		playToken++;
 		animating = false;
 		shownDraw = null;
-		clearTimeout(winnerTimer);
+		shownKeys = new Set();
+		ClearWinnerEnd();
 	}
 
-	// Nouveau tirage : on joue le défilement
-	if (state.draw && Number(state.draw.id) > lastDrawId && state.status === 'pending') {
+	// Nouveau gagnant·e : on joue le défilement
+	if (state.draw && Number(state.draw.id) > lastDrawId && state.status !== 'setup' && state.status !== 'ended') {
 		lastDrawId = Number(state.draw.id);
 		RenderBefore();
 		PlayDraw(state.draw);
 		return;
 	}
 
-	// Première lecture pendant l'attente de confirmation : gagnant affiché sans animation
+	// Première lecture pendant un tirage : gagnant·es affichés sans animation
 	if (first && state.status === 'pending' && state.draw) {
 		shownDraw = state.draw;
-		RenderWinners(shownDraw, false);
-		ScheduleWinnerEnd(playToken);
+		shownKeys = new Set(state.draw.winners.map(w => w.key));
+		RenderWinners(state.draw.winners, {});
 	}
 
 	// Confirmation reçue : mise à jour du tirage affiché
-	if (shownDraw && state.draw && state.draw.id === shownDraw.id) {
+	if (shownDraw && state.draw && state.draw.round === shownDraw.round) {
 		shownDraw = state.draw;
-		UpdateConfirmations();
+		if (!animating) UpdateConfirmations();
 	}
 
 	RenderBefore();
@@ -603,13 +660,20 @@ function ConnectStreamerBot() {
 ////////////////////////////////////////
 
 // Visuel seulement : rien n'est envoyé à Streamer.bot
-function PreviewPlay(count) {
+function PreviewDrawObject(count) {
 	const state = CurrentState();
-	if (!state) return;
+	if (!state) return null;
 	const winners = GiveawayDemoDraw(state, count);
-	if (!winners.length) return;
+	if (!winners.length) return null;
 	const now = Date.now();
-	PlayDraw({ id: -now, at: now, deadline: now + (Number(state.config.confirmSeconds) || 60) * 1000, winners });
+	const delay = (Number(state.config.confirmSeconds) || 60) * 1000;
+	winners.forEach(w => { w.at = now; w.deadline = now + delay; });
+	return { id: -now, round: -now, size: winners.length, at: now, winners };
+}
+
+function PreviewPlay(count) {
+	const draw = PreviewDrawObject(count);
+	if (draw) PlayDraw(draw);
 }
 
 window.PreviewDraw = () => PreviewPlay(1);
@@ -617,17 +681,15 @@ window.PreviewDrawMany = () => PreviewPlay(3);
 
 // Gagnant·e affiché sans défilement (pour régler la carte ou le texte)
 window.PreviewWinner = function () {
-	const state = CurrentState();
-	if (!state) return;
-	const winners = GiveawayDemoDraw(state, 1);
-	if (!winners.length) return;
-	const now = Date.now();
+	const draw = PreviewDrawObject(1);
+	if (!draw) return;
 	playToken++;
 	animating = false;
-	shownDraw = { id: -now, at: now, deadline: now + (Number(state.config.confirmSeconds) || 60) * 1000, winners };
-	RenderWinners(shownDraw, true);
+	ClearWinnerEnd();
+	shownDraw = draw;
+	shownKeys = new Set(draw.winners.map(w => w.key));
+	RenderWinners(draw.winners, { animateKey: draw.winners[0].key });
 	SetView('winners');
-	ScheduleWinnerEnd(playToken);
 };
 
 window.PreviewConfirm = function () {
@@ -638,24 +700,27 @@ window.PreviewConfirm = function () {
 
 window.PreviewTimeout = function () {
 	if (!shownDraw) return;
-	shownDraw.deadline = Date.now();
+	shownDraw.winners.forEach(w => { if (!w.confirmed) w.deadline = Date.now(); });
 	UpdateConfirmations();
 };
 
-window.PreviewBefore = function () {
+function PreviewStop() {
 	playToken++;
 	animating = false;
 	shownDraw = null;
-	clearTimeout(winnerTimer);
+	shownKeys = new Set();
+	ClearWinnerEnd();
+	ParkSlot();
+}
+
+window.PreviewBefore = function () {
+	PreviewStop();
 	RenderBefore();
 	SetView(ViewFor());
 };
 
 window.PreviewHide = function () {
-	playToken++;
-	animating = false;
-	shownDraw = null;
-	clearTimeout(winnerTimer);
+	PreviewStop();
 	SetView('none');
 };
 

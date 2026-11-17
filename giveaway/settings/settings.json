@@ -52,7 +52,7 @@
 		},
 		{
 			"id": "previewDrawMany",
-			"label": "Tester le tirage (3 gagnant·es)",
+			"label": "Tester 3 gagnant·es à la suite",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewDrawMany",
@@ -513,7 +513,7 @@
 		{
 			"id": "winnerDuration",
 			"label": "Durée d’affichage",
-			"description": "En secondes. 0 : reste affiché jusqu’au prochain tirage",
+			"description": "En secondes, une fois que tout le monde a confirmé (ou que le délai est écoulé). 0 : reste affiché jusqu’au prochain tirage",
 			"type": "number",
 			"defaultValue": 15,
 			"min": 0,

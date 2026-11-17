@@ -5,7 +5,7 @@
 //  lue par l'overlay et le dock.
 //
 //  Arguments acceptés (envoyés par le dock ou l'overlay) :
-//    mode : config | photo | open | close | end | draw | noshow | chat | remove | add | reset | clearHistory
+//    mode : config | photo | open | close | end | draw | next | noshow | chat | remove | add | reset | clearHistory
 //    config  : JSON partiel des réglages (mode config)
 //    photo   : image du lot en data URL ou URL, vide pour retirer (mode photo)
 //    platform, userId, login, name, text, msgId, sub, avatar : message du chat (mode chat)
@@ -130,9 +130,11 @@ public class CPHInline
 				return true;
 			}
 			case "draw":
-				return Tirer(data, false);
+				return Tirer(data, "draw");
+			case "next":
+				return Tirer(data, "next");
 			case "noshow":
-				return Tirer(data, true);
+				return Tirer(data, "noshow");
 			case "chat":
 				return MessageChat(data);
 			case "remove":
@@ -203,11 +205,11 @@ public class CPHInline
 		{
 			JObject tirage = data["draw"] as JObject;
 			if (tirage == null) return true;
-			long limite = tirage.Value<long>("deadline");
 			foreach (JObject g in (JArray)tirage["winners"])
 			{
 				if (g.Value<string>("key") != cle || g.Value<bool>("confirmed")) continue;
-				if (Maintenant() > limite) return true; // trop tard
+				if (Maintenant() > g.Value<long>("deadline")) return true; // trop tard
+				if (EstAnnonceDuBot(texte)) return true;
 				g["confirmed"] = true;
 				g["confirmText"] = texte;
 				g["confirmTime"] = Maintenant();
@@ -221,9 +223,7 @@ public class CPHInline
 				});
 				while (historique.Count > 50) historique.RemoveAt(historique.Count - 1);
 
-				bool tous = true;
-				foreach (JObject autre in (JArray)tirage["winners"]) if (!autre.Value<bool>("confirmed")) tous = false;
-				if (tous) data["status"] = data.Value<int>("won") >= cfg.Value<int>("lots") ? "finished" : "confirmed";
+				MettreAJourStatut(data);
 				Sauver(data, "confirm");
 				Annoncer(cfg, Modele(cfg, "msgConfirm", new List<string> { g.Value<string>("name") }));
 				return true;
@@ -243,6 +243,10 @@ public class CPHInline
 		string t = (texte ?? "").Trim().ToLowerInvariant();
 		bool exact = cfg.Value<string>("match") == "exact";
 		if (mot == "" || (exact ? t != mot : !t.Contains(mot))) return true;
+
+		// Le compte bot et les annonces du giveaway (envoyées par le bot ou, à défaut, par le compte diffuseur) ne participent pas
+		if (plateforme == "twitch" && login != "" && login == LoginBot()) return true;
+		if (EstAnnonceDuBot(texte)) return true;
 
 		// Exclus d'office (bots, modos…)
 		foreach (string ex in (cfg.Value<string>("excluded") ?? "").Split(','))
@@ -323,101 +327,186 @@ public class CPHInline
 
 	// ---------- Tirage ----------
 
-	bool Tirer(JObject data, bool remplacement)
+	// draw : nouveau tirage (1er gagnant·e) ; next : gagnant·e suivant·e du même tirage ;
+	// noshow : remplace les personnes qui n'ont pas confirmé à temps (elles restent exclues)
+	bool Tirer(JObject data, string mode)
 	{
 		JObject cfg = (JObject)data["config"];
 		string statut = data.Value<string>("status");
 		JObject parts = (JObject)data["participants"];
-		JObject ancien = data["draw"] as JObject;
+		JObject tirage = data["draw"] as JObject;
+		JArray gagnants = tirage != null ? tirage["winners"] as JArray : null;
 		int aTirer;
 
-		if (remplacement)
-		{
-			// Pas de réponse : on remplace les personnes qui n'ont pas confirmé (elles restent exclues)
-			if (statut != "pending" || ancien == null) return false;
-			aTirer = 0;
-			foreach (JObject g in (JArray)ancien["winners"]) if (!g.Value<bool>("confirmed")) aTirer++;
-		}
-		else
+		if (mode == "draw")
 		{
 			if (statut == "open") { data["status"] = "closed"; statut = "closed"; } // le tirage ferme les inscriptions
 			if (statut != "closed" && statut != "confirmed") return false;
-			aTirer = cfg.Value<int>("perDraw");
+			int restants = cfg.Value<int>("lots") - data.Value<int>("won");
+			int taille = Math.Min(cfg.Value<int>("perDraw"), Math.Min(restants, Lice(data, cfg).Count));
+			if (taille <= 0) return Erreur(data, restants <= 0 ? "Tous les lots ont été gagnés" : "Personne n’est en lice");
+			long tour = (tirage != null ? tirage.Value<long>("round") : 0) + 1;
+			gagnants = new JArray();
+			tirage = new JObject { ["round"] = tour, ["size"] = taille, ["winners"] = gagnants };
+			data["draw"] = tirage;
+			aTirer = 1;
+		}
+		else if (mode == "next")
+		{
+			if (statut != "pending" || tirage == null) return false;
+			aTirer = tirage.Value<int>("size") - gagnants.Count;
+			if (aTirer <= 0) return false;
+			aTirer = 1;
+		}
+		else
+		{
+			if (statut != "pending" || tirage == null) return false;
+			// Personnes dont le délai est écoulé (à défaut : toutes celles qui n'ont pas confirmé)
+			List<JToken> retires = new List<JToken>();
+			foreach (JObject g in gagnants)
+				if (!g.Value<bool>("confirmed") && Maintenant() > g.Value<long>("deadline")) retires.Add(g);
+			if (retires.Count == 0)
+				foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) retires.Add(g);
+			foreach (JToken g in retires) gagnants.Remove(g);
+			aTirer = retires.Count;
 		}
 
-		int restants = cfg.Value<int>("lots") - data.Value<int>("won");
-		aTirer = Math.Min(aTirer, restants);
+		List<string> nouveaux = new List<string>();
+		List<string> noms = new List<string>();
+		for (int i = 0; i < aTirer; i++)
+		{
+			JObject g = TirerUn(data, cfg);
+			if (g == null) break;
+			gagnants.Add(g);
+			nouveaux.Add(g.Value<string>("key"));
+			noms.Add(g.Value<string>("name"));
+		}
 
-		// Personnes en lice et poids (abonné·es : coefficient choisi)
-		List<JObject> lice = new List<JObject>();
-		List<string> cles = new List<string>();
-		double coef = Math.Max(1, cfg.Value<double>("subLuck"));
-		foreach (JProperty p in parts.Properties())
+		// Plus personne en lice : le tirage s'arrête au nombre de gagnant·es déjà sortis
+		if (nouveaux.Count < aTirer && tirage.Value<int>("size") > gagnants.Count) tirage["size"] = gagnants.Count;
+		if (gagnants.Count == 0) { data["draw"] = null; MettreAJourStatut(data); return Erreur(data, "Personne n’est en lice"); }
+
+		data.Remove("lastError");
+		long id = data.Value<long>("drawId") + 1;
+		data["drawId"] = id;
+		tirage["id"] = id;
+		tirage["at"] = Maintenant();
+		tirage["latest"] = new JArray(nouveaux.ToArray());
+		MettreAJourStatut(data);
+		Sauver(data, "draw");
+		if (noms.Count > 0) Annoncer(cfg, Modele(cfg, noms.Count > 1 ? "msgDrawMany" : "msgDraw", noms));
+		return true;
+	}
+
+	// Personnes en lice : ni exclues, ni déjà tirées, ni dans la liste des exclus d'office
+	List<KeyValuePair<string, JObject>> Lice(JObject data, JObject cfg)
+	{
+		HashSetTexte exclus = new HashSetTexte(cfg.Value<string>("excluded"));
+		string bot = LoginBot();
+		List<KeyValuePair<string, JObject>> lice = new List<KeyValuePair<string, JObject>>();
+		foreach (JProperty p in ((JObject)data["participants"]).Properties())
 		{
 			JObject part = (JObject)p.Value;
 			if (part.Value<bool>("excluded") || part.Value<bool>("drawn")) continue;
-			lice.Add(part);
-			cles.Add(p.Name);
+			string login = (part.Value<string>("login") ?? "").ToLowerInvariant();
+			if (exclus.Contient(login) || exclus.Contient((part.Value<string>("name") ?? "").ToLowerInvariant())) continue;
+			if (bot != "" && login == bot && part.Value<string>("platform") == "twitch") continue;
+			lice.Add(new KeyValuePair<string, JObject>(p.Name, part));
 		}
-		aTirer = Math.Min(aTirer, lice.Count);
-		if (aTirer <= 0)
-		{
-			data["lastError"] = lice.Count == 0 ? "Personne n’est en lice" : "Tous les lots ont été gagnés";
-			Sauver(data, "update");
-			return false;
-		}
-		data.Remove("lastError");
+		return lice;
+	}
 
-		JArray gagnants = new JArray();
-		for (int i = 0; i < aTirer; i++)
+	// Tirage pondéré d'une personne (abonné·es : coefficient choisi)
+	JObject TirerUn(JObject data, JObject cfg)
+	{
+		List<KeyValuePair<string, JObject>> lice = Lice(data, cfg);
+		if (lice.Count == 0) return null;
+		double coef = Math.Max(1, cfg.Value<double>("subLuck"));
+		double total = 0;
+		foreach (KeyValuePair<string, JObject> e in lice) total += e.Value.Value<bool>("sub") ? coef : 1;
+		double r = hasard.NextDouble() * total;
+		KeyValuePair<string, JObject> tire = lice[lice.Count - 1];
+		foreach (KeyValuePair<string, JObject> e in lice)
 		{
-			double total = 0;
-			foreach (JObject part in lice) total += part.Value<bool>("sub") ? coef : 1;
-			double r = hasard.NextDouble() * total;
-			int choix = lice.Count - 1;
-			for (int j = 0; j < lice.Count; j++)
-			{
-				r -= lice[j].Value<bool>("sub") ? coef : 1;
-				if (r < 0) { choix = j; break; }
-			}
-			JObject g = lice[choix];
-			g["drawn"] = true;
-			if (string.IsNullOrEmpty(g.Value<string>("avatar")) && g.Value<string>("platform") == "twitch")
-				g["avatar"] = AvatarTwitch(g.Value<string>("id"), g.Value<string>("login"));
-			gagnants.Add(new JObject
-			{
-				["key"] = cles[choix], ["name"] = g.Value<string>("name"), ["login"] = g.Value<string>("login"),
-				["platform"] = g.Value<string>("platform"), ["avatar"] = g.Value<string>("avatar") ?? "",
-				["sub"] = g.Value<bool>("sub"), ["msg"] = g["msg"] ?? new JObject(), ["confirmed"] = false
-			});
-			lice.RemoveAt(choix);
-			cles.RemoveAt(choix);
+			r -= e.Value.Value<bool>("sub") ? coef : 1;
+			if (r < 0) { tire = e; break; }
 		}
-
-		// Remplacement : on garde les personnes déjà confirmées dans ce tirage
-		if (remplacement)
+		string cle = tire.Key;
+		JObject choix = tire.Value;
+		choix["drawn"] = true;
+		if (string.IsNullOrEmpty(choix.Value<string>("avatar")) && choix.Value<string>("platform") == "twitch")
+			choix["avatar"] = AvatarTwitch(choix.Value<string>("id"), choix.Value<string>("login"));
+		long maintenant = Maintenant();
+		return new JObject
 		{
-			JArray gardes = new JArray();
-			foreach (JObject g in (JArray)ancien["winners"]) if (g.Value<bool>("confirmed")) gardes.Add(g);
-			foreach (JToken g in gagnants) gardes.Add(g);
-			gagnants = gardes;
-		}
-
-		long id = data.Value<long>("drawId") + 1;
-		data["drawId"] = id;
-		data["draw"] = new JObject
-		{
-			["id"] = id, ["at"] = Maintenant(),
-			["deadline"] = Maintenant() + 1000L * cfg.Value<int>("confirmSeconds"),
-			["winners"] = gagnants, ["replacement"] = remplacement
+			["key"] = cle, ["name"] = choix.Value<string>("name"), ["login"] = choix.Value<string>("login"),
+			["platform"] = choix.Value<string>("platform"), ["avatar"] = choix.Value<string>("avatar") ?? "",
+			["sub"] = choix.Value<bool>("sub"), ["msg"] = choix["msg"] ?? new JObject(), ["confirmed"] = false,
+			["at"] = maintenant, ["deadline"] = maintenant + 1000L * cfg.Value<int>("confirmSeconds")
 		};
-		data["status"] = "pending";
-		Sauver(data, "draw");
+	}
 
-		List<string> noms = new List<string>();
-		foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) noms.Add(g.Value<string>("name"));
-		Annoncer(cfg, Modele(cfg, noms.Count > 1 ? "msgDrawMany" : "msgDraw", noms));
-		return true;
+	// pending tant que le tirage en cours n'est pas complet et confirmé
+	void MettreAJourStatut(JObject data)
+	{
+		JObject cfg = (JObject)data["config"];
+		JObject tirage = data["draw"] as JObject;
+		if (tirage == null) { if (data.Value<string>("status") == "pending") data["status"] = "closed"; return; }
+		JArray gagnants = (JArray)tirage["winners"];
+		bool complet = gagnants.Count >= tirage.Value<int>("size");
+		foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) complet = false;
+		if (!complet) data["status"] = "pending";
+		else data["status"] = data.Value<int>("won") >= cfg.Value<int>("lots") ? "finished" : "confirmed";
+	}
+
+	bool Erreur(JObject data, string message)
+	{
+		data["lastError"] = message;
+		Sauver(data, "update");
+		return false;
+	}
+
+	// ---------- Compte bot et annonces ----------
+
+	static string loginBot = null;
+	string LoginBot()
+	{
+		if (loginBot != null) return loginBot;
+		loginBot = "";
+		try
+		{
+			MethodInfo m = CPH.GetType().GetMethod("TwitchGetBot", Type.EmptyTypes);
+			object bot = m?.Invoke(CPH, null);
+			loginBot = (Texte(Membre(bot, "UserLogin")) ?? "").ToLowerInvariant();
+			if (loginBot == "") loginBot = Texte(Membre(bot, "UserName")).ToLowerInvariant();
+		}
+		catch (Exception) { }
+		return loginBot;
+	}
+
+	static readonly List<string> annonces = new List<string>();
+	static string Normer(string t) => (t ?? "").Trim().ToLowerInvariant();
+	static bool EstAnnonceDuBot(string texte)
+	{
+		string t = Normer(texte);
+		if (t == "") return false;
+		lock (annonces) foreach (string a in annonces) if (a == t) return true;
+		return false;
+	}
+
+	// Petit ensemble de pseudos (HashSet<T> demande System.Core)
+	class HashSetTexte
+	{
+		readonly Dictionary<string, bool> d = new Dictionary<string, bool>();
+		public HashSetTexte(string liste)
+		{
+			foreach (string ex in (liste ?? "").Split(','))
+			{
+				string e = ex.Trim().TrimStart('@').ToLowerInvariant();
+				if (e != "") d[e] = true;
+			}
+		}
+		public bool Contient(string s) => s != "" && d.ContainsKey(s);
 	}
 
 	string AvatarTwitch(string id, string login)
@@ -457,6 +546,11 @@ public class CPHInline
 	void Annoncer(JObject cfg, string message)
 	{
 		if (string.IsNullOrWhiteSpace(message)) return;
+		lock (annonces)
+		{
+			annonces.Add(Normer(message));
+			while (annonces.Count > 20) annonces.RemoveAt(0);
+		}
 		bool twitch = false, youtube = false, kick = false;
 		foreach (JToken p in (JArray)cfg["platforms"])
 		{

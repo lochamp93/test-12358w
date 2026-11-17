@@ -476,3 +476,9 @@ html.apple #addForm input.value { text-align: left; }
 	z-index: 10;
 }
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Fermer le giveaway : texte rouge ; en attente de confirmation : bouton rouge, texte blanc */
+html.apple .actions #endButton { color: var(--ui-red); }
+html.apple .actions #endButton.confirming { background: var(--ui-red); color: #fff; }
+html.apple .actions #endButton:disabled { color: var(--ui-text-secondary); }
+.also-item .state.late { color: var(--ui-red); }
