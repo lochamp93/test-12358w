@@ -587,3 +587,17 @@ body {
 #widget.style-price.side-right { justify-content: flex-end; padding-right: calc(var(--col-width) + 0.6em); }
 .style-price #before .texts { justify-content: flex-start; }
 .style-price.side-right #before .texts { justify-content: flex-end; }
+
+/* ---------- Fond général ---------- */
+#backdrop {
+	position: absolute;
+	inset: 0;
+	background: var(--backdrop, transparent);
+	opacity: 0;
+	transition: opacity 400ms ease;
+	pointer-events: none;
+}
+#widget.backdrop-on #backdrop { opacity: 1; }
+.scenery-hidden #field,
+.scenery-hidden #column { opacity: 0 !important; }
+#stage { z-index: 1; }

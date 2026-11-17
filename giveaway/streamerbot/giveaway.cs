@@ -5,8 +5,9 @@
 //  lue par l'overlay et le dock.
 //
 //  Arguments acceptés (envoyés par le dock ou l'overlay) :
-//    (les gagnant·es sont toujours tirés un par un, à chaque clic)
-//    mode : config | photo | open | close | end | draw | next | noshow | chat | remove | add | reset | clearHistory
+//    (les gagnant·es sont toujours tirés un par un, à chaque clic ; le nom n'est annoncé dans le chat
+//     qu'à la fin de l'animation : l'overlay envoie « reveal », le dock le fait au bout de 40 s s'il n'y a pas d'overlay)
+//    mode : config | photo | open | close | end | draw | next | reveal | noshow | chat | remove | add | reset | clearHistory
 //    config  : JSON partiel des réglages (mode config)
 //    photo   : image du lot en data URL ou URL, vide pour retirer (mode photo)
 //    platform, userId, login, name, text, msgId, sub, avatar : message du chat (mode chat)
@@ -134,6 +135,8 @@ public class CPHInline
 				return Tirer(data, "draw");
 			case "next":
 				return Tirer(data, "next");
+			case "reveal":
+				return Reveler(data);
 			case "noshow":
 				return Tirer(data, "noshow");
 			case "chat":
@@ -209,6 +212,7 @@ public class CPHInline
 			foreach (JObject g in (JArray)tirage["winners"])
 			{
 				if (g.Value<string>("key") != cle || g.Value<bool>("confirmed")) continue;
+				if (g["revealed"] != null && !g.Value<bool>("revealed")) return true; // pas encore annoncé
 				if (Maintenant() > g.Value<long>("deadline")) return true; // trop tard
 				if (EstAnnonceDuBot(texte)) return true;
 				g["confirmed"] = true;
@@ -355,6 +359,7 @@ public class CPHInline
 		else if (mode == "next")
 		{
 			if (statut != "pending" || tirage == null) return false;
+			foreach (JObject g in gagnants) if (g["revealed"] != null && !g.Value<bool>("revealed")) return false; // animation en cours
 			aTirer = tirage.Value<int>("size") - gagnants.Count;
 			if (aTirer <= 0) return false;
 			aTirer = 1;
@@ -365,9 +370,9 @@ public class CPHInline
 			// Une personne à la fois : la première dont le délai est écoulé, sinon la dernière tirée sans confirmation
 			JToken retire = null;
 			foreach (JObject g in gagnants)
-				if (retire == null && !g.Value<bool>("confirmed") && Maintenant() > g.Value<long>("deadline")) retire = g;
+				if (retire == null && !g.Value<bool>("confirmed") && g.Value<long>("deadline") > 0 && Maintenant() > g.Value<long>("deadline")) retire = g;
 			if (retire == null)
-				foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed")) retire = g;
+				foreach (JObject g in gagnants) if (!g.Value<bool>("confirmed") && g.Value<long>("deadline") > 0) retire = g;
 			if (retire == null) return false;
 			gagnants.Remove(retire);
 			aTirer = 1;
@@ -396,7 +401,32 @@ public class CPHInline
 		tirage["latest"] = new JArray(nouveaux.ToArray());
 		MettreAJourStatut(data);
 		Sauver(data, "draw");
-		if (noms.Count > 0) Annoncer(cfg, Modele(cfg, "msgDraw", noms));
+		// Le nom est annoncé dans le chat seulement à la fin de l'animation (mode reveal)
+		return true;
+	}
+
+	// Fin de l'animation : annonce dans le chat et départ du délai de confirmation
+	bool Reveler(JObject data)
+	{
+		if (data.Value<string>("status") != "pending") return false;
+		JObject tirage = data["draw"] as JObject;
+		if (tirage == null) return false;
+		string id = Arg("drawId").Trim();
+		if (id != "" && id != tirage.Value<long>("id").ToString()) return false; // ancien tirage
+		JObject cfg = (JObject)data["config"];
+		List<string> noms = new List<string>();
+		long maintenant = Maintenant();
+		foreach (JObject g in (JArray)tirage["winners"])
+		{
+			if (g.Value<bool>("revealed") || g.Value<bool>("confirmed")) continue;
+			g["revealed"] = true;
+			g["at"] = maintenant;
+			g["deadline"] = maintenant + 1000L * cfg.Value<int>("confirmSeconds");
+			noms.Add(g.Value<string>("name"));
+		}
+		if (noms.Count == 0) return true; // déjà annoncé (plusieurs overlays)
+		Sauver(data, "update");
+		Annoncer(cfg, Modele(cfg, "msgDraw", noms));
 		return true;
 	}
 
@@ -444,7 +474,7 @@ public class CPHInline
 			["key"] = cle, ["name"] = choix.Value<string>("name"), ["login"] = choix.Value<string>("login"),
 			["platform"] = choix.Value<string>("platform"), ["avatar"] = choix.Value<string>("avatar") ?? "",
 			["sub"] = choix.Value<bool>("sub"), ["msg"] = choix["msg"] ?? new JObject(), ["confirmed"] = false,
-			["at"] = maintenant, ["deadline"] = maintenant + 1000L * cfg.Value<int>("confirmSeconds")
+			["at"] = maintenant, ["deadline"] = 0, ["revealed"] = false
 		};
 	}
 

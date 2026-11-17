@@ -74,6 +74,7 @@ function ApplySettings() {
 	SetVar('--banner-height', `${s.bannerHeight}px`);
 	SetVar('--line-color', s.lineColor);
 	SetVar('--word-color', s.wordColor);
+	SetVar('--backdrop', HexToRgba(s.bgColor, s.bgOpacity));
 	SetVar('--in-ms', `${s.cardInDuration}ms`);
 	SetVar('--out-ms', `${s.cardOutDuration}ms`);
 
@@ -149,12 +150,23 @@ function ViewFor() {
 	const state = CurrentState();
 	// L'overlay apparaît à l'ouverture des inscriptions et disparaît à la fermeture du giveaway
 	if (!state || state.status === 'setup' || state.status === 'ended') return 'none';
-	if (shownDraw) return 'winners';
+	if (shownDraw) return ws.values.layout === 'price' ? 'none' : 'winners';
 	return BeforeMode() === 'none' ? 'none' : 'before';
 }
 
 function SetView(view) {
 	stageEl.dataset.view = view;
+	SyncBackdrop();
+}
+
+// Fond général : visible seulement quand quelque chose est affiché
+let sceneryHidden = false; // « Masquer l'overlay » de l'aperçu
+function SyncBackdrop() {
+	if (!ws) return;
+	const s = ws.values;
+	const scenery = ['fullscreen', 'price'].includes(s.layout) && IsActive(CurrentState()) && !sceneryHidden;
+	widgetEl.classList.toggle('backdrop-on', stageEl.dataset.view !== 'none' || scenery || animating);
+	widgetEl.classList.toggle('scenery-hidden', sceneryHidden);
 }
 
 ////////////////////////
@@ -355,14 +367,23 @@ async function PlayDraw(draw) {
 		}
 		shownKeys.add(w.key);
 		RenderWinners(revealed(), { animateKey: w.key });
-		SetView('winners');
+		SetView(s.layout === 'price' ? 'none' : 'winners'); // Juste prix : le nom allumé dans la colonne suffit
+		SendReveal(draw);
 		PlaySound(s.winSound);
 		if (s.confetti) Confetti();
 		if (i < fresh.length - 1) { await wait(1500); if (token !== playToken) return; }
 	}
-	if (!fresh.length) { RenderWinners(revealed(), {}); SetView('winners'); }
+	if (!fresh.length) { RenderWinners(revealed(), {}); SetView(s.layout === 'price' ? 'none' : 'winners'); }
 	animating = false;
 	UpdateConfirmations();
+}
+
+// Fin de l'animation : l'action annonce le nom dans le chat et lance le délai de confirmation
+// (jamais depuis l'aperçu de la page de paramétrage)
+function SendReveal(draw) {
+	if (ws.demo || !sbClient || !realState || !realState.draw || realState.draw.id !== draw.id) return;
+	sbClient.doAction({ name: ws.values.actionName }, { mode: 'reveal', drawId: String(draw.id) })
+		.catch(e => console.error('[Giveaway] Annonce impossible :', e));
 }
 
 // Fin de l'affichage : quand le tirage est complet et que chacun·e a confirmé (ou que le délai
@@ -377,7 +398,7 @@ function CheckWinnerEnd() {
 	if (!shownDraw || animating || !s.winnerDuration) { if (!shownDraw) ClearWinnerEnd(); return; }
 	const size = Number(shownDraw.size) || shownDraw.winners.length;
 	const now = Date.now();
-	const done = shownDraw.winners.length >= size && shownDraw.winners.every(w => w.confirmed || now > Deadline(w));
+	const done = shownDraw.winners.length >= size && shownDraw.winners.every(w => w.confirmed || (Deadline(w) > 0 && now > Deadline(w)));
 	if (!done) { ClearWinnerEnd(); return; }
 	if (winnerTimer) return;
 	const token = playToken;
@@ -513,9 +534,10 @@ function UpdateConfirmations() {
 		if (!w) return;
 		const status = el.querySelector('.status');
 		const timer = el.querySelector('.timer');
+		const full = (Number(CurrentState() && CurrentState().config.confirmSeconds) || 60) * 1000;
 		const deadline = Deadline(w);
-		const total = Math.max(1, deadline - (Number(w.at) || Number(shownDraw.at) || deadline - 60000));
-		const left = Math.max(0, deadline - now);
+		const total = deadline ? Math.max(1, deadline - (Number(w.at) || Number(shownDraw.at) || deadline - full)) : full;
+		const left = deadline ? Math.max(0, deadline - now) : full; // délai lancé à l'annonce dans le chat
 		if (w.confirmed) {
 			status.textContent = s.confirmedText;
 			status.classList.add('done');
@@ -556,6 +578,7 @@ function SyncScenery() {
 	if (!ws) return;
 	FieldSync();
 	ColumnSync();
+	SyncBackdrop();
 }
 
 function ResetScenery() {
@@ -818,6 +841,13 @@ function OnState(state) {
 		return;
 	}
 
+	// Première lecture pendant une animation pas encore terminée : on la joue
+	if (first && state.status === 'pending' && state.draw && state.draw.winners.some(w => w.revealed === false)) {
+		RenderBefore();
+		PlayDraw(state.draw);
+		return;
+	}
+
 	// Première lecture pendant un tirage : gagnant·es affichés sans animation
 	if (first && state.status === 'pending' && state.draw) {
 		shownDraw = state.draw;
@@ -936,6 +966,7 @@ function PreviewDrawObject(count) {
 }
 
 function PreviewPlay(count) {
+	sceneryHidden = false;
 	const draw = PreviewDrawObject(count);
 	if (draw) PlayDraw(draw);
 }
@@ -969,6 +1000,7 @@ window.PreviewTimeout = function () {
 };
 
 function PreviewStop() {
+	sceneryHidden = false;
 	playToken++;
 	animating = false;
 	shownDraw = null;
@@ -986,6 +1018,7 @@ window.PreviewBefore = function () {
 
 window.PreviewHide = function () {
 	PreviewStop();
+	sceneryHidden = true;
 	SetView('none');
 };
 

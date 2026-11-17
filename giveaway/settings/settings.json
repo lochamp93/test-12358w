@@ -148,6 +148,24 @@
 			}
 		},
 		{
+			"id": "bgColor",
+			"label": "Couleur de fond",
+			"description": "Derrière tout l’overlay, visible seulement quand il s’affiche",
+			"type": "color",
+			"defaultValue": "#000000",
+			"group": "Style"
+		},
+		{
+			"id": "bgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %. 0 : pas de fond",
+			"type": "number",
+			"defaultValue": 0,
+			"min": 0,
+			"max": 100,
+			"group": "Style"
+		},
+		{
 			"id": "font",
 			"label": "Police",
 			"description": "",

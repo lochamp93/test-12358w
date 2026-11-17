@@ -13,7 +13,8 @@ let photoURL = '';
 let photoVersion = null;
 let demo = false;            // ?demo=true : fonctionnement local, sans Streamer.bot
 let countdownTimer = null;
-let createSent = false;      // création de la variable déjà demandée
+let createSent = false;
+let revealSent = null;        // annonce de secours déjà envoyée pour ce tirage      // création de la variable déjà demandée
 
 const CONNECTION_KEY = 'giveaway-dock-connection';
 const TRASH = '<svg viewBox="0 0 27 31" aria-hidden="true"><path d="M7.21 30.85H19.77C21.86 30.85 23.22 29.58 23.31 27.48L24.24 7.77H25.75C26.43 7.77 26.96 7.26 26.96 6.57C26.96 5.9 26.43 5.38 25.75 5.38H19.66V3.33C19.66 1.24 18.34 0 16.07 0H10.87C8.62 0 7.28 1.24 7.28 3.33V5.38H1.2C0.55 5.38 0 5.9 0 6.57C0 7.26 0.55 7.77 1.2 7.77H2.72L3.65 27.49C3.75 29.6 5.09 30.85 7.21 30.85ZM9.79 3.45C9.79 2.74 10.28 2.29 11.05 2.29H15.89C16.65 2.29 17.15 2.74 17.15 3.45V5.38H9.79V3.45ZM7.47 28.43C6.71 28.43 6.17 27.89 6.13 27.08L5.2 7.77H21.71L20.82 27.08C20.8 27.89 20.25 28.43 19.47 28.43H7.47ZM9.45 26.23C10.02 26.23 10.39 25.86 10.38 25.33L9.97 11C9.95 10.45 9.57 10.1 9.03 10.1C8.45 10.1 8.08 10.47 8.1 11L8.51 25.33C8.52 25.88 8.9 26.23 9.45 26.23ZM13.48 26.23C14.06 26.23 14.44 25.86 14.44 25.33V11C14.44 10.47 14.06 10.1 13.48 10.1C12.91 10.1 12.53 10.47 12.53 11V25.33C12.53 25.86 12.91 26.23 13.48 26.23ZM17.52 26.23C18.06 26.23 18.43 25.88 18.45 25.33L18.87 11C18.88 10.47 18.5 10.1 17.94 10.1C17.39 10.1 17.01 10.45 17 11L16.57 25.33C16.56 25.86 16.94 26.23 17.52 26.23Z"/></svg>';
@@ -250,6 +251,7 @@ function RenderDraw(cfg) {
 	} else if (roundOpen) {
 		primary.dataset.mode = 'next';
 		primary.textContent = `Suivant (${draw.winners.length + 1}/${size})`;
+		if (draw.winners.some(w => w.revealed === false)) { primary.disabled = true; hint = 'Animation en cours sur l’overlay…'; }
 		if (!pool.length) { primary.textContent = 'Terminer ce tirage'; hint = 'Plus personne n’est en lice.'; }
 	} else if (st === 'confirmed') {
 		primary.textContent = 'Tirer le lot suivant' + ofMany;
@@ -263,7 +265,7 @@ function RenderDraw(cfg) {
 	$('drawHint').textContent = hint;
 
 	// Pas de réponse : remplace les personnes dont le délai est écoulé
-	const waiting = draw && st === 'pending' ? draw.winners.filter(w => !w.confirmed) : [];
+	const waiting = draw && st === 'pending' ? draw.winners.filter(w => !w.confirmed && w.revealed !== false) : [];
 	const late = waiting.filter(w => Date.now() > Deadline(w, draw));
 	$('noshowButton').hidden = !waiting.length;
 	$('noshowButton').textContent = 'Pas de réponse : tirer un autre gagnant·e';
@@ -290,6 +292,28 @@ function RenderWinner(draw, poolCount) {
 	const others = winners.slice(0, -1).reverse();
 	const main = $('winnerMain');
 	main.innerHTML = '';
+	// Animation en cours sur l'overlay : le nom reste caché jusqu'à l'annonce dans le chat
+	if (first.revealed === false) {
+		const row = document.createElement('div');
+		row.className = 'winner-main';
+		const av = document.createElement('span');
+		av.className = 'avatar big rolling-dot';
+		av.textContent = '?';
+		const info = document.createElement('div');
+		const name = document.createElement('div');
+		name.className = 'winner-name';
+		name.textContent = 'Tirage en cours…';
+		const sub = document.createElement('div');
+		sub.className = 'winner-sub';
+		sub.textContent = 'Le nom s’affiche à la fin de l’animation';
+		info.append(name, sub);
+		row.append(av, info);
+		main.appendChild(row);
+		$('winMessage').hidden = true;
+		$('confirmMessage').hidden = true;
+		RenderAlso(others);
+		return;
+	}
 	const row = document.createElement('div');
 	row.className = 'winner-main';
 	row.appendChild(Avatar(first, true));
@@ -309,6 +333,17 @@ function RenderWinner(draw, poolCount) {
 	row.appendChild(info);
 	main.appendChild(row);
 
+	RenderAlso(others);
+
+	const msg = first.msg || {};
+	$('winMessage').hidden = !msg.text;
+	if (msg.text) ChatLine($('winMessageLine'), first.name, first.sub, msg.text, msg.time);
+
+	$('confirmMessage').hidden = !first.confirmed;
+	if (first.confirmed) ChatLine($('confirmMessageLine'), first.name, first.sub, first.confirmText, first.confirmTime);
+}
+
+function RenderAlso(others) {
 	$('alsoDrawn').hidden = !others.length;
 	const list = $('alsoList');
 	list.innerHTML = '';
@@ -325,24 +360,23 @@ function RenderWinner(draw, poolCount) {
 		list.appendChild(it);
 	});
 
-	const msg = first.msg || {};
-	$('winMessage').hidden = !msg.text;
-	if (msg.text) ChatLine($('winMessageLine'), first.name, first.sub, msg.text, msg.time);
-
-	$('confirmMessage').hidden = !first.confirmed;
-	if (first.confirmed) ChatLine($('confirmMessageLine'), first.name, first.sub, first.confirmText, first.confirmTime);
 }
 
 // Comptes à rebours : celui du dernier·e tiré·e en grand, ceux des autres dans la liste
 function UpdateCountdown() {
 	const draw = state && state.draw;
 	if (!draw || state.status !== 'pending' || !draw.winners.length) { $('countdown').hidden = true; return; }
+	// Pas d'overlay pour jouer l'animation : le dock annonce le nom au bout de 40 s
+	if (!demo && draw.winners.some(w => w.revealed === false) && Date.now() - (Number(draw.at) || 0) > 40000 && revealSent !== draw.id) {
+		revealSent = draw.id;
+		Send('reveal', { drawId: String(draw.id) });
+	}
 	const now = Date.now();
 	const first = draw.winners[draw.winners.length - 1];
 	const deadline = Deadline(first, draw);
 	const total = Math.max(1, deadline - (Number(first.at) || Number(draw.at) || deadline - 60000));
 	const left = Math.max(0, deadline - now);
-	$('countdown').hidden = !!first.confirmed;
+	$('countdown').hidden = !!first.confirmed || first.revealed === false;
 	$('countdown').classList.toggle('late', left <= 0);
 	$('countdownText').textContent = left > 0 ? Remaining(left) : 'Temps écoulé';
 	$('countdownBar').style.transform = `scaleX(${left / total})`;
@@ -523,7 +557,7 @@ function LocalApply(a) {
 				const [w] = GiveawayDemoDraw(state, 1);
 				if (!w) return null;
 				state.participants[w.key].drawn = true;
-				w.at = now; w.deadline = now + cfg.confirmSeconds * 1000;
+				w.at = now; w.deadline = now + cfg.confirmSeconds * 1000; w.revealed = true;
 				return w;
 			};
 			let count = 1;
