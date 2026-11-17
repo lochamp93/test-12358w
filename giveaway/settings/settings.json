@@ -103,13 +103,13 @@
 		{
 			"id": "layout",
 			"label": "Style d’affichage",
-			"description": "Light : texte seul, comme le subgoal. Carte : la carte du gagnant apparaît. Bandeau : bande sur toute la largeur de la source",
+			"description": "Minimaliste : texte seul, comme le subgoal. Carte : la carte du gagnant·e apparaît. Bandeau : bande sur toute la largeur de la source",
 			"type": "select",
 			"defaultValue": "light",
 			"options": [
 				{
 					"value": "light",
-					"label": "Light"
+					"label": "Minimaliste"
 				},
 				{
 					"value": "card",
@@ -121,6 +121,21 @@
 				}
 			],
 			"group": "Style"
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur d’accent",
+			"description": "Carte : contour de l’avatar et compte à rebours. Bandeau : repère et nom gagnant",
+			"type": "color",
+			"defaultValue": "#0091FF",
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"card",
+					"banner"
+				]
+			}
 		},
 		{
 			"id": "font",
@@ -352,6 +367,15 @@
 			"showIf": "showWord"
 		},
 		{
+			"id": "wordColor",
+			"label": "Couleur du mot",
+			"description": "Pour repérer le mot à écrire",
+			"type": "color",
+			"defaultValue": "#FFD60A",
+			"group": "Avant le tirage",
+			"showIf": "showWord"
+		},
+		{
 			"id": "showPrizePhoto",
 			"label": "Afficher la photo du lot",
 			"description": "Choisie dans le dock, avec le lot",
@@ -572,18 +596,6 @@
 			}
 		},
 		{
-			"id": "accentColor",
-			"label": "Couleur d’accent",
-			"description": "Contour de l’avatar, compte à rebours",
-			"type": "color",
-			"defaultValue": "#0091FF",
-			"group": "Carte",
-			"showIf": {
-				"id": "layout",
-				"value": "card"
-			}
-		},
-		{
 			"id": "cardIn",
 			"label": "Animation d’entrée",
 			"description": "",
@@ -735,7 +747,7 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Light",
+			"group": "Minimaliste",
 			"showIf": {
 				"id": "layout",
 				"value": "light"
@@ -747,7 +759,7 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#FFFFFF",
-			"group": "Light",
+			"group": "Minimaliste",
 			"showIf": "decorLine"
 		}
 	]

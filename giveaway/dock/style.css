@@ -248,6 +248,11 @@ html.apple a.button-link {
 
 #drawHint:empty { display: none; }
 
+.actions-row { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Côte à côte si la place le permet, sinon l'un sous l'autre (le texte ne dépasse jamais) */
+.actions-row > button { flex: 1 1 230px; min-width: 0; }
+html.apple .actions-row button { font-size: 15px; padding: 0 12px; }
+
 .actions {
 	display: flex;
 	flex-direction: column;

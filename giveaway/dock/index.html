@@ -6,10 +6,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Giveaway • Dock</title>
 	<link rel="icon" href="../../-common/resources/favicon.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111702" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111703" />
 	<!-- Dock : thème sombre uniquement ; rechargement automatique si une version plus récente est en ligne -->
-	<script src="../../-common/utils/fresh.js?v=2026111702" data-version="2026111702" data-version-url="../version.txt"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111702" />
+	<script src="../../-common/utils/fresh.js?v=2026111703" data-version="2026111703" data-version-url="../version.txt"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111703" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -85,9 +85,12 @@
 			<p id="drawHint" class="muted"></p>
 
 			<div class="actions">
-				<button id="primaryButton" type="button" class="accent">Ouvrir les inscriptions</button>
+				<div class="actions-row">
+					<button id="registrationButton" type="button" class="accent">Ouvrir les inscriptions</button>
+					<button id="endButton" type="button">Fermer le giveaway</button>
+				</div>
+				<button id="primaryButton" type="button" class="accent">Tirer au sort</button>
 				<button id="noshowButton" type="button" hidden>Pas de réponse : tirer un autre gagnant·e</button>
-				<button id="closeButton" type="button" hidden>Fermer les inscriptions</button>
 			</div>
 		</div>
 
@@ -223,9 +226,9 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111702"></script>
-	<script src="../helpers.js?v=2026111702"></script>
-	<script src="./script.js?v=2026111702"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111703"></script>
+	<script src="../helpers.js?v=2026111703"></script>
+	<script src="./script.js?v=2026111703"></script>
 </body>
 
 </html>

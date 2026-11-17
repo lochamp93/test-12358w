@@ -13,6 +13,7 @@ let photoURL = '';
 let photoVersion = null;
 let demo = false;            // ?demo=true : fonctionnement local, sans Streamer.bot
 let countdownTimer = null;
+let createSent = false;      // création de la variable déjà demandée
 
 const CONNECTION_KEY = 'giveaway-dock-connection';
 const TRASH = '<svg viewBox="0 0 27 31" aria-hidden="true"><path d="M7.21 30.85H19.77C21.86 30.85 23.22 29.58 23.31 27.48L24.24 7.77H25.75C26.43 7.77 26.96 7.26 26.96 6.57C26.96 5.9 26.43 5.38 25.75 5.38H19.66V3.33C19.66 1.24 18.34 0 16.07 0H10.87C8.62 0 7.28 1.24 7.28 3.33V5.38H1.2C0.55 5.38 0 5.9 0 6.57C0 7.26 0.55 7.77 1.2 7.77H2.72L3.65 27.49C3.75 29.6 5.09 30.85 7.21 30.85ZM9.79 3.45C9.79 2.74 10.28 2.29 11.05 2.29H15.89C16.65 2.29 17.15 2.74 17.15 3.45V5.38H9.79V3.45ZM7.47 28.43C6.71 28.43 6.17 27.89 6.13 27.08L5.2 7.77H21.71L20.82 27.08C20.8 27.89 20.25 28.43 19.47 28.43H7.47ZM9.45 26.23C10.02 26.23 10.39 25.86 10.38 25.33L9.97 11C9.95 10.45 9.57 10.1 9.03 10.1C8.45 10.1 8.08 10.47 8.1 11L8.51 25.33C8.52 25.88 8.9 26.23 9.45 26.23ZM13.48 26.23C14.06 26.23 14.44 25.86 14.44 25.33V11C14.44 10.47 14.06 10.1 13.48 10.1C12.91 10.1 12.53 10.47 12.53 11V25.33C12.53 25.86 12.91 26.23 13.48 26.23ZM17.52 26.23C18.06 26.23 18.43 25.88 18.45 25.33L18.87 11C18.88 10.47 18.5 10.1 17.94 10.1C17.39 10.1 17.01 10.45 17 11L16.57 25.33C16.56 25.86 16.94 26.23 17.52 26.23Z"/></svg>';
@@ -23,8 +24,24 @@ const PHASES = {
 	closed: ['Inscriptions closes', 'blue'],
 	pending: ['Gagnant·e tiré · en attente', 'blue'],
 	confirmed: ['Gagnant·e confirmé', 'green'],
-	finished: ['Tous les lots gagnés', 'green']
+	finished: ['Tous les lots gagnés', 'green'],
+	ended: ['Giveaway terminé', '']
 };
+
+// État affiché tant que la variable Streamer.bot n'existe pas encore (créée au premier envoi)
+function DefaultState() {
+	return {
+		version: 1, status: 'setup', drawId: 0, won: 0, photoV: 0, hasPhoto: false, history: [], participants: {}, draw: null,
+		config: {
+			lot: '', lots: 1, perDraw: 1, word: '', match: 'contains', maxEntries: 1, subLuck: 1, followMin: 0,
+			followUnit: 'days', platforms: GIVEAWAY_PLATFORMS.slice(), kickChannel: '', confirmSeconds: 60, excluded: '',
+			msgOpen: 'GIVEAWAY ouvert ! Écrivez « {mot} » dans le chat pour participer. Lot : {lot}',
+			msgDraw: '{pseudo} tu as été tiré·e au sort ! Écris un message dans le chat dans les {secondes} secondes pour confirmer que tu veux le lot.',
+			msgDrawMany: '{pseudos} vous avez été tiré·es au sort ! Écrivez un message dans le chat dans les {secondes} secondes pour confirmer que vous voulez le lot.',
+			msgConfirm: 'Félicitations {pseudo} qui remporte {lot} ! Un modo te contacte très vite.'
+		}
+	};
+}
 
 ///////////////
 // OUTILS UI //
@@ -194,37 +211,45 @@ function RenderDraw(cfg) {
 	if (draw) RenderWinner(draw, pool.length);
 
 	// Boutons
+	const st = state.status;
+	const reg = $('registrationButton');
 	const primary = $('primaryButton');
 	const perDraw = Math.max(1, Math.min(Number(cfg.perDraw) || 1, left, pool.length || 1));
 	const many = perDraw > 1 ? ` · ${perDraw} gagnant·es` : '';
 	let hint = '';
-	primary.hidden = false;
-	primary.disabled = false;
-	$('closeButton').hidden = state.status !== 'open';
-	$('noshowButton').hidden = state.status !== 'pending';
 
-	switch (state.status) {
-		case 'setup':
-			primary.textContent = 'Ouvrir les inscriptions';
-			if (!String(cfg.word || '').trim()) { primary.disabled = true; hint = 'Choisissez le mot à écrire dans le chat pour ouvrir les inscriptions.'; }
-			break;
-		case 'open':
-		case 'closed':
-			primary.textContent = 'Tirer au sort' + many;
-			if (!pool.length) { primary.disabled = true; hint = 'Personne n’est encore en lice.'; }
-			else if (state.status === 'open') hint = 'Le tirage ferme d’abord les inscriptions.';
-			break;
-		case 'pending':
-			primary.hidden = true;
-			break;
-		case 'confirmed':
-			primary.textContent = 'Tirer le lot suivant' + many;
-			if (!pool.length) { primary.disabled = true; hint = 'Plus personne n’est en lice.'; }
-			break;
-		case 'finished':
-			primary.textContent = 'Tous les lots ont été gagnés';
-			primary.disabled = true;
-			break;
+	// Inscriptions : Ouvrir → Fermer → Inscriptions closes
+	reg.disabled = false;
+	reg.classList.toggle('accent', st === 'setup' || st === 'ended');
+	if (st === 'setup' || st === 'ended') {
+		reg.textContent = 'Ouvrir les inscriptions';
+		if (!String(cfg.word || '').trim()) { reg.disabled = true; hint = 'Choisissez le mot à écrire dans le chat pour ouvrir les inscriptions.'; }
+		else if (st === 'ended') hint = 'Rouvrir les inscriptions lance un nouveau giveaway : la liste des participant·es repart de zéro.';
+	} else if (st === 'open') {
+		reg.textContent = 'Fermer les inscriptions';
+	} else {
+		reg.textContent = 'Inscriptions closes';
+		reg.disabled = true;
+	}
+
+	// Fermer le giveaway : l'overlay disparaît
+	$('endButton').disabled = st === 'setup' || st === 'ended';
+
+	// Tirage
+	primary.hidden = !['open', 'closed', 'confirmed', 'finished'].includes(st);
+	primary.disabled = false;
+	$('noshowButton').hidden = st !== 'pending';
+	if (st === 'open' || st === 'closed') {
+		primary.textContent = 'Tirer au sort' + many;
+		if (!pool.length) { primary.disabled = true; hint = 'Personne n’est encore en lice.'; }
+		else if (st === 'open') hint = 'Le tirage ferme d’abord les inscriptions.';
+	} else if (st === 'confirmed') {
+		primary.textContent = 'Tirer le lot suivant' + many;
+		if (!pool.length) { primary.disabled = true; hint = 'Plus personne n’est en lice.'; }
+	} else if (st === 'finished') {
+		primary.textContent = 'Tous les lots ont été gagnés';
+		primary.disabled = true;
+		hint = 'Fermez le giveaway pour faire disparaître l’overlay.';
 	}
 	if (state.lastError && ['closed', 'confirmed'].includes(state.status)) hint = state.lastError;
 	$('drawHint').textContent = hint;
@@ -451,10 +476,12 @@ function LocalApply(a) {
 		case 'photo': photoURL = a.photo; state.hasPhoto = !!a.photo; break;
 		case 'open':
 			if (!String(cfg.word || '').trim()) return;
+			if (state.status === 'ended') { state.participants = {}; state.draw = null; state.won = 0; }
 			state.status = 'open';
 			Toast('Chat : ' + Message('msgOpen', []));
 			break;
 		case 'close': state.status = 'closed'; break;
+		case 'end': state.status = 'ended'; break;
 		case 'draw':
 		case 'noshow': {
 			const replacing = a.mode === 'noshow';
@@ -548,11 +575,13 @@ async function RefreshData() {
 	if (!sbClient || !connected) return;
 	try {
 		const response = await sbClient.getGlobal(GIVEAWAY_VARIABLE, true);
-		if (response && response.status === 'ok' && response.variable) SetState(response.variable.value);
-		else if (actionFound && !state) Send('config', { config: '{}' }); // crée la variable
+		if (response && response.status === 'ok' && response.variable && response.variable.value) { SetState(response.variable.value); return; }
 	} catch (e) {
-		console.error('[Giveaway] Lecture de la variable impossible :', e);
+		// Variable absente : Streamer.bot répond par une erreur
 	}
+	// Pas encore de giveaway : état par défaut, la variable est créée par l'action
+	if (!state) { state = DefaultState(); Render(); }
+	if (actionFound && !createSent) { createSent = true; Send('config', { config: '{}' }); }
 }
 
 async function CheckAction() {
@@ -614,11 +643,12 @@ function Bind() {
 		if (!immediate) el.addEventListener('change', () => QueueConfig(el, true));
 	});
 
-	$('primaryButton').addEventListener('click', () => {
-		if (state.status === 'setup') Send('open');
-		else Send('draw');
+	$('registrationButton').addEventListener('click', () => {
+		if (state.status === 'setup' || state.status === 'ended') Send('open');
+		else if (state.status === 'open') Send('close');
 	});
-	$('closeButton').addEventListener('click', () => Send('close'));
+	$('primaryButton').addEventListener('click', () => Send('draw'));
+	WithConfirmation($('endButton'), 'Confirmer ?', () => Send('end'));
 	$('noshowButton').addEventListener('click', () => Send('noshow'));
 	WithConfirmation($('resetButton'), 'Confirmer la réinitialisation ?', () => Send('reset'));
 

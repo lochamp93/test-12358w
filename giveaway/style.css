@@ -28,6 +28,7 @@ body {
 	--banner-bg: rgba(0, 0, 0, 0.9);
 	--banner-height: 80px;
 	--line-color: #ffffff;
+	--word-color: #ffd60a;
 	--in-ms: 600ms;
 	--out-ms: 600ms;
 	--ease: cubic-bezier(.22, .61, .36, 1);
@@ -50,6 +51,7 @@ body {
 #widget.align-right { justify-content: flex-end; }
 
 .secondary { color: var(--secondary-color); }
+#word .word { color: var(--word-color); font-weight: 600; }
 .strong { font-weight: 700; }
 .texts > span:empty { display: none; }
 
@@ -229,6 +231,7 @@ body {
 
 .layout-light.align-center #line { background: linear-gradient(90deg, transparent, var(--line-color), transparent); }
 .layout-light.align-left #line { background: linear-gradient(90deg, var(--line-color), transparent); }
+#widget:not(.layout-light) #line { display: none; }
 #widget:not(.layout-light) #line,
 .layout-light.no-line #line,
 .layout-light #stage[data-view="none"] #line { opacity: 0; }
@@ -341,3 +344,61 @@ body {
 	height: 100%;
 	pointer-events: none;
 }
+
+/* ---------- Bobine du bandeau ---------- */
+
+#reel { display: none; }
+
+.layout-banner #roll { width: 100%; }
+.layout-banner #roll #slot,
+.layout-banner #roll #rollLabel { display: none; }
+
+.layout-banner #reel {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: var(--banner-height);
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+	mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
+}
+
+#reelTrack {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
+	will-change: transform, filter;
+}
+
+#reelTrack .pill {
+	margin: 0 0.25em;
+	padding: 0.12em 0.6em;
+	border-radius: 999px;
+	background: rgba(255, 255, 255, 0.08);
+	font-weight: 600;
+	transition: background 250ms ease, color 250ms ease, transform 350ms cubic-bezier(.2, .9, .25, 1.3);
+}
+
+#reelTrack .pill.win {
+	background: var(--accent);
+	color: #fff;
+	transform: scale(1.12);
+}
+
+.reel-marker {
+	position: absolute;
+	top: 8%;
+	bottom: 8%;
+	left: 50%;
+	width: 2px;
+	margin-left: -1px;
+	border-radius: 1px;
+	background: var(--accent);
+	box-shadow: 0 0 10px var(--accent);
+}
+
+#reel.won .reel-marker { opacity: 0; transition: opacity 250ms ease; }

@@ -5,7 +5,7 @@
 //  lue par l'overlay et le dock.
 //
 //  Arguments acceptés (envoyés par le dock ou l'overlay) :
-//    mode : config | photo | open | close | draw | noshow | chat | remove | add | reset | clearHistory
+//    mode : config | photo | open | close | end | draw | noshow | chat | remove | add | reset | clearHistory
 //    config  : JSON partiel des réglages (mode config)
 //    photo   : image du lot en data URL ou URL, vide pour retirer (mode photo)
 //    platform, userId, login, name, text, msgId, sub, avatar : message du chat (mode chat)
@@ -94,11 +94,19 @@ public class CPHInline
 			}
 			case "open":
 			{
-				if (statut != "setup") return false;
+				if (statut != "setup" && statut != "ended") return false;
 				if ((cfg.Value<string>("word") ?? "").Trim() == "")
 				{
 					CPH.LogWarn("[Giveaway] Impossible d'ouvrir : aucun mot à écrire dans le chat.");
 					return false;
+				}
+				if (statut == "ended")
+				{
+					// Nouveau giveaway : on garde les réglages, la photo et l'historique
+					data["participants"] = new JObject();
+					data["draw"] = null;
+					data["won"] = 0;
+					data.Remove("lastError");
 				}
 				data["status"] = "open";
 				data["openedAt"] = Maintenant();
@@ -110,6 +118,14 @@ public class CPHInline
 			{
 				if (statut != "open") return false;
 				data["status"] = "closed";
+				Sauver(data, "update");
+				return true;
+			}
+			case "end":
+			{
+				// Fermer le giveaway : l'overlay disparaît
+				if (statut == "setup" || statut == "ended") return false;
+				data["status"] = "ended";
 				Sauver(data, "update");
 				return true;
 			}

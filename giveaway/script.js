@@ -48,7 +48,7 @@ function SetVar(name, value) { widgetEl.style.setProperty(name, value); }
 
 // État affiché : le vrai, sauf dans l'aperçu quand aucun giveaway n'est en cours
 function CurrentState() {
-	if (ws && ws.demo && (!realState || realState.status === 'setup')) return demoState;
+	if (ws && ws.demo && (!realState || realState.status === 'setup' || realState.status === 'ended')) return demoState;
 	return realState;
 }
 
@@ -68,6 +68,7 @@ function ApplySettings() {
 	SetVar('--banner-bg', HexToRgba(s.bannerBg, s.bannerOpacity));
 	SetVar('--banner-height', `${s.bannerHeight}px`);
 	SetVar('--line-color', s.lineColor);
+	SetVar('--word-color', s.wordColor);
 	SetVar('--in-ms', `${s.cardInDuration}ms`);
 	SetVar('--out-ms', `${s.cardOutDuration}ms`);
 
@@ -100,7 +101,20 @@ function RenderBefore() {
 	titleEl.textContent = ws.isActive('titleText') ? s.titleText : '';
 	countEl.textContent = showCount ? GiveawayText(s.countText, state, GiveawayPool(state).length) : '';
 	prizeNameEl.textContent = showPrize && s.showPrizeName ? (state.config.lot || '') : '';
-	wordEl.textContent = ws.isActive('wordText') && state.status === 'open' ? GiveawayText(s.wordText, state, 0) : '';
+	// Instructions : le mot à écrire est mis en couleur
+	wordEl.textContent = '';
+	if (ws.isActive('wordText') && state.status === 'open') {
+		const parts = String(s.wordText || '').split('{mot}');
+		parts.forEach((part, i) => {
+			if (i > 0) {
+				const w = document.createElement('span');
+				w.className = 'word';
+				w.textContent = state.config.word || '…';
+				wordEl.appendChild(w);
+			}
+			wordEl.append(GiveawayText(part, state, 0));
+		});
+	}
 	SetPhoto(photoEl, showPrize && s.showPrizePhoto ? CurrentPhoto() : '');
 }
 
@@ -120,9 +134,9 @@ function CurrentPhoto() {
 // Vue à afficher hors animation
 function ViewFor() {
 	const state = CurrentState();
-	if (!state || state.status === 'setup') return 'none';
+	// L'overlay apparaît à l'ouverture des inscriptions et disparaît à la fermeture du giveaway
+	if (!state || state.status === 'setup' || state.status === 'ended') return 'none';
 	if (shownDraw) return 'winners';
-	if (state.status === 'finished') return 'none';
 	return BeforeMode() === 'none' ? 'none' : 'before';
 }
 
@@ -139,19 +153,42 @@ function Names(state) {
 	return names.length ? names : ['…'];
 }
 
-// Défilement vertical : départ très rapide, ralentissement progressif, arrêt sur le gagnant
+// Suite de noms tirés au hasard (jamais deux fois le même nom de suite), gagnant·e en position « at »
+function RollItems(names, count, winnerName, at) {
+	const items = [];
+	let previous = '';
+	for (let i = 0; i < count; i++) {
+		let n = names[Math.floor(Math.random() * names.length)];
+		if (names.length > 1 && n === previous) n = names[(names.indexOf(n) + 1) % names.length];
+		items.push(n);
+		previous = n;
+	}
+	items[at] = winnerName;
+	if (at > 0 && names.length > 1 && items[at - 1] === winnerName) items[at - 1] = names.find(n => n !== winnerName);
+	return items;
+}
+
+// Durées des crans : très courtes au début, de plus en plus longues (ralentissement)
+function StepSchedule(durationMs) {
+	const steps = Math.max(14, Math.round(durationMs / 1000 * 7) + 8);
+	const ratio = Math.pow(22, 1 / (steps - 1));
+	const weights = Array.from({ length: steps }, (_, i) => Math.pow(ratio, i));
+	const total = weights.reduce((t, w) => t + w, 0);
+	return weights.map(w => w / total * durationMs);
+}
+
+const EaseOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+// Léger dépassement puis retour : le nom « s'emboîte » dans la fente
+const EaseOutBack = (t) => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+
+// Minimaliste et Carte : défilement vertical cran par cran, comme une machine à sous
 function Roll(names, winnerName, durationMs, token) {
 	return new Promise((resolve) => {
-		const count = Math.max(12, Math.round(durationMs / 1000 * 10) + 10);
-		const items = [];
-		let previous = '';
-		for (let i = 0; i < count - 1; i++) {
-			let n = names[Math.floor(Math.random() * names.length)];
-			if (names.length > 1 && n === previous) n = names[(names.indexOf(n) + 1) % names.length];
-			items.push(n);
-			previous = n;
-		}
-		items.push(winnerName);
+		const schedule = StepSchedule(durationMs);
+		const steps = schedule.length;
+		const items = RollItems(names, steps + 1, winnerName, steps);
+		const starts = [];
+		schedule.reduce((t, d, i) => { starts[i] = t; return t + d; }, 0);
 
 		stripEl.innerHTML = '';
 		const frag = document.createDocumentFragment();
@@ -164,25 +201,67 @@ function Roll(names, winnerName, durationMs, token) {
 		const widest = Math.max(...Array.from(stripEl.children).map(c => c.scrollWidth));
 		slotEl.style.width = `${widest + 4}px`;
 
-		const itemH = stripEl.firstChild.offsetHeight || 40;
-		const distance = (items.length - 1) * itemH;
-		const start = performance.now();
-		let lastIndex = 0;
 		const tick = PrepareSound(ws.values.rollSound);
+		const start = performance.now();
+		let lastStep = -1;
+
+		function frame(now) {
+			if (token !== playToken) return resolve(false);
+			const t = now - start;
+			let i = lastStep < 0 ? 0 : lastStep;
+			while (i < steps - 1 && t >= starts[i + 1]) i++;
+			const local = Math.min(1, (t - starts[i]) / schedule[i]);
+			const ease = i >= steps - 3 ? EaseOutBack : EaseOutCubic;
+			const pos = i + ease(local);
+			// Position en em : chaque nom tombe exactement dans la fente
+			stripEl.style.transform = `translateY(${-pos * 1.3}em)`;
+			stripEl.style.filter = schedule[i] < 70 && local < 0.8 ? 'blur(1.5px)' : 'none';
+			if (i !== lastStep) { lastStep = i; tick(); }
+			if (i < steps - 1 || local < 1) requestAnimationFrame(frame);
+			else { stripEl.style.transform = `translateY(${-steps * 1.3}em)`; stripEl.style.filter = 'none'; resolve(true); }
+		}
+		requestAnimationFrame(frame);
+	});
+}
+
+// Bandeau : les noms défilent de droite à gauche sous un repère central et ralentissent
+// jusqu'à s'arrêter sur le gagnant·e, qui s'allume
+function RollReel(names, winnerName, durationMs, token) {
+	return new Promise((resolve) => {
+		const reel = document.getElementById('reel');
+		const track = document.getElementById('reelTrack');
+		const count = Math.max(30, Math.round(durationMs / 1000 * 9) + 24);
+		const at = count - 8;
+		const items = RollItems(names, count, winnerName, at);
+
+		reel.classList.remove('won');
+		track.innerHTML = '';
+		items.forEach(n => { const d = document.createElement('span'); d.className = 'pill'; d.textContent = n; track.appendChild(d); });
+		track.style.transform = 'translateX(0)';
+		const pills = Array.from(track.children);
+		const centers = pills.map(p => p.offsetLeft + p.offsetWidth / 2);
+		const middle = reel.clientWidth / 2;
+		const from = middle - centers[2];
+		const to = middle - centers[at];
+		const tick = PrepareSound(ws.values.rollSound);
+		const start = performance.now();
+		let under = 2;
 
 		function frame(now) {
 			if (token !== playToken) return resolve(false);
 			const t = Math.min(1, (now - start) / durationMs);
-			const eased = 1 - Math.pow(1 - t, 4);
-			const y = eased * distance;
-			// Flou de vitesse au début, net à l'arrivée
-			const speed = 4 * Math.pow(1 - t, 3) * distance / durationMs * 16; // pixels par image
-			stripEl.style.transform = `translateY(${-y}px)`;
-			stripEl.style.filter = speed > itemH * 0.6 ? `blur(${Math.min(3, speed / itemH)}px)` : 'none';
-			const index = Math.floor(y / itemH + 0.5);
-			if (index !== lastIndex) { lastIndex = index; tick(); }
+			const x = from + (to - from) * (1 - Math.pow(1 - t, 4));
+			track.style.transform = `translateX(${x}px)`;
+			const speed = 4 * Math.pow(1 - t, 3) * Math.abs(to - from) / durationMs * 16;
+			track.style.filter = speed > 25 ? `blur(${Math.min(2.5, speed / 30)}px)` : 'none';
+			while (under < at && middle - x > (centers[under] + centers[under + 1]) / 2) { under++; tick(); }
 			if (t < 1) requestAnimationFrame(frame);
-			else { stripEl.style.filter = 'none'; resolve(true); }
+			else {
+				track.style.filter = 'none';
+				pills[at].classList.add('win');
+				reel.classList.add('won');
+				resolve(true);
+			}
 		}
 		requestAnimationFrame(frame);
 	});
@@ -229,7 +308,9 @@ async function PlayDraw(draw) {
 		await wait(250);
 		for (let i = 0; i < winners.length; i++) {
 			const duration = (i === 0 ? s.rollDuration : Math.max(2, s.rollDuration * 0.6)) * 1000;
-			const done = await Roll(names, winners[i].name, duration, token);
+			const done = s.layout === 'banner'
+				? await RollReel(names, winners[i].name, duration, token)
+				: await Roll(names, winners[i].name, duration, token);
 			if (!done) return;
 			PlaySound(s.winSound);
 			await wait(i < winners.length - 1 ? 1200 : 700);
@@ -402,7 +483,7 @@ function OnState(state) {
 	if (first) lastDrawId = Number(state.drawId) || 0;
 
 	// Remise à zéro : on arrête tout
-	if (state.status === 'setup' && !state.demo) {
+	if ((state.status === 'setup' || state.status === 'ended') && !state.demo) {
 		playToken++;
 		animating = false;
 		shownDraw = null;
@@ -446,7 +527,7 @@ async function SetRealState(raw, event) {
 		photoURL = parsed.hasPhoto ? await ReadPhoto() : '';
 	}
 	GiveawayChat.refresh();
-	if (ws.demo && parsed.status === 'setup') { OnState(demoState); return; }
+	if (ws.demo && (parsed.status === 'setup' || parsed.status === 'ended')) { OnState(demoState); return; }
 	// Premières vraies valeurs dans l'aperçu : elles remplacent l'exemple sans animation
 	if (!realSeen) {
 		realSeen = true;
