@@ -1013,12 +1013,12 @@ html.in-hub.hub-no-anim #widgetTitle { transition: none; }
 @media (prefers-reduced-motion: reduce) { html.in-hub #widgetTitle { transition: none; } }
 
 /* Réglage « image » : miniature, lien « Choisir une image », corbeille rouge */
-html.apple .image-field { display: inline-flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+html.apple .image-field { display: inline-grid; grid-template-columns: auto auto auto; align-items: center; justify-items: end; justify-content: end; column-gap: 10px; row-gap: 4px; flex: 0 0 auto; }
 html.apple .image-field .image-thumb { width: 64px; height: 32px; object-fit: cover; border-radius: 6px; box-shadow: 0 0 0 0.5px var(--ui-separator); }
 html.apple .image-field .image-choose { width: auto; height: auto; padding: 0; background: none; box-shadow: none; color: var(--ui-accent); font-size: 15px; font-weight: 400; }
 html.apple .image-field .image-choose:hover { background: none; opacity: .7; }
 html.apple .image-field .image-remove { width: 28px; height: 28px; padding: 0; display: inline-flex; align-items: center; justify-content: center; background: none; box-shadow: none; color: var(--ui-red); }
 html.apple .image-field .image-remove svg { width: 16px; height: 18px; fill: currentColor; }
-html.apple .image-field .image-note { width: 100%; text-align: right; font-size: 12px; color: var(--ui-text-secondary); }
+html.apple .image-field .image-note { grid-column: 1 / -1; white-space: nowrap; text-align: right; font-size: 12px; color: var(--ui-text-secondary); }
 html.apple .image-field .image-note[data-status="warn"] { color: var(--ui-orange); }
 html.apple .image-field .image-note[data-status="ok"] { color: var(--ui-green); }

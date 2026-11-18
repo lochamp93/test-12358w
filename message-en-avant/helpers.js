@@ -73,15 +73,19 @@ const meaAvatarCache = new Map();
 async function MeaAvatar(login) {
 	login = String(login || '').toLowerCase().trim();
 	if (!login) return '';
+	// Une seule requête par pseudo, même quand plusieurs éléments la demandent en même temps
 	if (meaAvatarCache.has(login)) return meaAvatarCache.get(login);
-	let url = '';
-	try {
-		const r = await fetch('https://decapi.me/twitch/avatar/' + encodeURIComponent(login));
-		const t = (await r.text()).trim();
-		if (/^https:\/\//.test(t)) url = t;
-	} catch (e) { }
-	meaAvatarCache.set(login, url);
-	return url;
+	const p = (async () => {
+		try {
+			const r = await fetch('https://decapi.me/twitch/avatar/' + encodeURIComponent(login));
+			const t = (await r.text()).trim();
+			if (/^https:\/\//.test(t)) return t;
+		} catch (e) { }
+		meaAvatarCache.delete(login); // échec (limite de requêtes, réseau) : on réessaiera plus tard
+		return '';
+	})();
+	meaAvatarCache.set(login, p);
+	return p;
 }
 
 // Couleur d'avatar de secours (initiale) : dérivée du pseudo
@@ -189,18 +193,6 @@ const MeaCollector = (function () {
 		};
 	}
 
-	// Texte d'une réponse sans le « @pseudo » du début (le fil montre déjà à qui elle répond)
-	function withoutMention(msg, parentLogin, parentName) {
-		const parts = (msg.parts || []).map(p => Object.assign({}, p));
-		if (parts.length && parts[0].t === 'text') {
-			const names = [parentLogin, parentName].filter(Boolean).map(n => '@' + String(n).toLowerCase());
-			const v = parts[0].v;
-			const hit = names.find(n => v.toLowerCase().startsWith(n));
-			if (hit) parts[0].v = v.slice(hit.length).replace(/^[\s,:]+/, '');
-		}
-		return parts;
-	}
-
 	// Message sans infos de réponse mais qui commence par « @pseudo » : réponse au dernier message
 	// de cette personne vu dans les 10 minutes précédentes (fils écrits à la main)
 	function mentionParent(msg) {
@@ -246,7 +238,7 @@ const MeaCollector = (function () {
 			out.push({
 				name: m.name || m.login, login: m.login, color: m.color, badges: m.badges || [],
 				avatar: await MeaAvatar(m.login),
-				parts: i > 0 && parent ? withoutMention(m, parent.login, parent.name) : (m.parts || []),
+				parts: m.parts || [], // le @pseudo de la réponse est gardé
 				text: m.text, at: m.at || 0,
 				gap: gap && i === 1
 			});
@@ -410,8 +402,8 @@ function MeaDemoThread() {
 	const now = Date.now();
 	const thread = [
 		{ name: 'Biscotte', login: 'biscotte', color: '#FF7F50', badges: [MEA_DEMO_BADGES.vip], avatar: '', parts: [{ t: 'text', v: 'qui a mangé la dernière part de pizza ?' }], at: now - 240000 },
-		{ name: 'Nougatine', login: 'nougatine', color: '#64D2FF', badges: [MEA_DEMO_BADGES.sub], avatar: '', parts: [{ t: 'text', v: 'c’est le chat, je le jure' }], at: now - 120000, gap: true },
-		{ name: 'PixelPanda', login: 'pixelpanda', color: '#9B8CFF', badges: [MEA_DEMO_BADGES.mod], avatar: '', parts: [{ t: 'text', v: 'le chat a des miettes sur les moustaches ' }, { t: 'emote', v: 'LUL', u: MEA_DEMO_EMOTES.LUL }], at: now - 60000 }
+		{ name: 'Nougatine', login: 'nougatine', color: '#64D2FF', badges: [MEA_DEMO_BADGES.sub], avatar: '', parts: [{ t: 'text', v: '@Biscotte c’est le chat, je le jure' }], at: now - 120000, gap: true },
+		{ name: 'PixelPanda', login: 'pixelpanda', color: '#9B8CFF', badges: [MEA_DEMO_BADGES.mod], avatar: '', parts: [{ t: 'text', v: '@Nougatine le chat a des miettes sur les moustaches ' }, { t: 'emote', v: 'LUL', u: MEA_DEMO_EMOTES.LUL }], at: now - 60000 }
 	];
 	return Object.assign({ id: 'demo:thread', kind: 'perle', thread }, thread[thread.length - 1]);
 }

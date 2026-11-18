@@ -80,9 +80,7 @@ body {
 #capture .perle-frame .thread-reply > .mea { width: 100%; max-width: none; box-sizing: border-box; }
 /* Fond image : l'image fait la carte, les messages sont posés dessus sans fond */
 #capture .perle-frame.with-image { border-radius: 36px; padding: 48px 56px; }
-#capture .perle-frame.with-image .mea,
-#capture .perle-frame.with-image .mea .bubble,
-#capture .perle-frame.with-image .mea .bubble::before {
+#capture .perle-frame.with-image .mea {
 	background: transparent !important;
 	box-shadow: none !important;
 	-webkit-backdrop-filter: none !important;
@@ -110,9 +108,9 @@ body {
 	position: absolute;
 	inset: 0;
 	z-index: 0;
-	border-radius: inherit;
 	overflow: hidden;
 	pointer-events: none;
+	background: var(--tail-color, #1c1c1e);
 }
 .mea .bg-avatar > i {
 	position: absolute;
@@ -128,9 +126,16 @@ body {
 	inset: 0;
 	background: linear-gradient(90deg, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.45));
 }
+.mea.bg-light .bg-avatar::after { background: linear-gradient(90deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.45)); }
 .mea .avatar, .mea .head, .mea .bubble > .text, .mea .quote-mark { position: relative; z-index: 1; }
 .layout-card .mea.with-bg-avatar { overflow: hidden; isolation: isolate; }
-.layout-bubble .mea.with-bg-avatar .bubble { isolation: isolate; }
+/* Fond flouté : la carte n'a plus de fond à elle, sinon il dépasse en liseré clair dans les coins */
+.layout-card .mea.with-bg-avatar {
+	background: transparent;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+	box-shadow: 0 0.4em 1.4em rgba(0, 0, 0, 0.3);
+}
 
 /* Filigrane de l'image Discord */
 #capture .watermark {
@@ -279,8 +284,7 @@ body {
 
 /* Opacité du fond à 0 : ni verre, ni contour, ni ombre (le style garde sa mise en page) */
 .no-bg .mea,
-.no-bg .mea .bubble,
-.no-bg .mea .bubble::before {
+.no-bg .mea .bubble {
 	background: transparent !important;
 	-webkit-backdrop-filter: none !important;
 	backdrop-filter: none !important;
@@ -320,9 +324,12 @@ body {
 	bottom: 0;
 	width: 0.26em;
 	background: var(--name-color);
-	border-radius: 0.45em 0 0 0.45em;
 	z-index: 2;
 }
+/* Le fond de la carte commence après le liseré : pas de liseré clair dans les coins */
+.layout-ticket .mea { background: linear-gradient(90deg, transparent 0.26em, var(--bg) 0.26em); box-shadow: 0 0.4em 1.4em rgba(0, 0, 0, 0.3); }
+.layout-ticket .mea.with-bg-avatar { background: transparent; }
+.layout-ticket .mea .bg-avatar { left: 0.26em; }
 /* Ticket : le liseré prend la couleur du pseudo, le pseudo celle du texte */
 .layout-ticket .mea .head .name { color: var(--text-color); }
 #capture.layout-ticket .perle-frame.with-image .mea { padding-left: 1.1em; }
@@ -342,36 +349,6 @@ body {
 }
 .layout-ticket .mea .head .label { margin-left: 0.8em; }
 .layout-ticket .mea .head .date { display: none; }
-
-/* ---------- Polaroid : photo de l'avatar sur papier blanc, légèrement incliné ---------- */
-
-.layout-polaroid .mea {
-	flex-direction: column;
-	align-items: center;
-	gap: 0.35em;
-	width: min(100%, 13em);
-	padding: 0.5em 0.5em 0.9em;
-	border-radius: 0.18em;
-	background: #fbfaf7;
-	color: #1c1c1e;
-	--text-color: #1c1c1e;
-	transform: rotate(-2deg);
-	box-shadow: 0 0.5em 1.4em rgba(0, 0, 0, 0.35), 0 0.05em 0.15em rgba(0, 0, 0, 0.25);
-}
-.layout-polaroid .mea > .avatar {
-	width: 100%;
-	height: auto;
-	aspect-ratio: 1;
-	border-radius: 0.08em;
-	font-size: calc(var(--font-size) * 3);
-}
-.layout-polaroid .mea .body { width: 100%; gap: 0.2em; align-items: center; }
-.layout-polaroid .mea .head { order: 2; justify-content: center; }
-.layout-polaroid .mea .bubble { order: 1; }
-.layout-polaroid .mea .text { text-align: center; font-size: calc(var(--font-size) * var(--text-scale) * 0.85); }
-.layout-polaroid .mea .head .date { color: #1c1c1e; }
-.hide-avatar.layout-polaroid .mea { padding-top: 0.9em; }
-.layout-polaroid .mea .badges { display: none; }
 
 /* ---------- Écran d'appel : avatar au centre avec un halo, message en sous-titre ---------- */
 
@@ -394,10 +371,6 @@ body {
 .layout-call .mea .head .label { text-shadow: none; }
 .layout-call .mea .text { text-align: center; opacity: 0.85; font-size: calc(var(--font-size) * var(--text-scale) * 0.85); }
 
-/* ---------- Bannière de jeu : la Carte, avec la jaquette floutée en fond ---------- */
-
-.layout-game .mea .bg-avatar > i { filter: blur(1.1em) saturate(1.4); inset: -35%; }
-
 /* ---------- Bulle ---------- */
 
 .layout-bubble .mea {
@@ -409,23 +382,42 @@ body {
 .layout-bubble .mea .bubble {
 	position: relative;
 	padding: 0.45em 0.75em 0.5em;
+}
+/* Fond de la bulle et sa queue : peints en couleur pleine, la transparence s'applique à l'ensemble
+   (pas de double transparence là où la queue touche la bulle) */
+.mea .bubble-bg { display: none; }
+.layout-bubble .mea .bubble-bg {
+	display: block;
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	opacity: var(--bg-alpha, 0.85);
+	filter: drop-shadow(0 0.3em 0.8em rgba(0, 0, 0, 0.22));
+	pointer-events: none;
+}
+.layout-bubble .mea .bubble-shape {
+	position: absolute;
+	inset: 0;
 	border-radius: 0.95em;
-	background: var(--bg);
-	box-shadow: 0 0.3em 1.2em rgba(0, 0, 0, 0.25);
+	overflow: hidden;
+	background: var(--bg-solid, #1c1c1e);
 }
 /* Queue de la bulle, côté avatar */
-.layout-bubble .mea .bubble::before {
+.layout-bubble .mea .bubble-bg::after {
 	content: "";
 	position: absolute;
 	left: -0.32em;
 	bottom: 0;
 	width: 0.9em;
 	height: 0.9em;
-	background: var(--bg);
+	background: var(--tail-color, var(--bg-solid, #1c1c1e));
 	border-bottom-right-radius: 0.8em;
 	clip-path: polygon(0 100%, 100% 0, 100% 100%);
 }
-.hide-avatar.layout-bubble .mea .bubble::before { left: -0.25em; }
+.hide-avatar.layout-bubble .mea .bubble-bg::after { left: -0.25em; }
+/* Avatar flouté : l'image est pleine, la queue prend la teinte de son bord */
+.layout-bubble .mea.with-bg-avatar .bubble-bg { opacity: 1; }
+.no-bg .mea .bubble-bg { display: none !important; }
 .align-center.layout-bubble .mea .head { justify-content: center; }
 .align-right.layout-bubble .mea .head { justify-content: flex-end; }
 
@@ -590,7 +582,9 @@ body {
 #previewToast[data-status="ok"] { color: #30d158; }
 #previewToast[data-status="error"] { color: #ff6961; }
 
-/* Bulle sur une image : sans fond, la bulle et le pseudo ne gardent pas leur retrait */
-#capture .perle-frame.with-image .layout-bubble-fix,
-#capture.layout-bubble .perle-frame.with-image .mea .bubble { padding-left: 0; padding-right: 0; }
-#capture.layout-bubble .perle-frame.with-image .mea .head { padding-left: 0; }
+/* Bulle sur une image : la bulle garde sa forme, dans une teinte de l'image, en transparence */
+#capture.layout-bubble .perle-frame.with-image .mea .bubble-bg { opacity: var(--image-bubble-alpha, 0.55); }
+#capture.layout-bubble .perle-frame.with-image .mea { text-shadow: none; }
+
+/* Image Discord en Bulle : toutes les bulles ont la même largeur (hauteur variable) */
+#capture.layout-bubble .perle-frame .mea .body { flex: 1 1 auto; }

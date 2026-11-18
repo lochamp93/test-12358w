@@ -45,6 +45,8 @@ function ApplySettings() {
 	SetVar('--text-color', s.textColor);
 	SetVar('--accent', s.accentColor);
 	SetVar('--bg', HexToRgba(s.bgColor, s.bgOpacity));
+	SetVar('--bg-solid', s.bgColor);
+	SetVar('--bg-alpha', String(Math.max(0, Math.min(100, Number(s.bgOpacity))) / 100));
 	SetVar('--in-ms', `${s.animInDuration}ms`);
 	SetVar('--out-ms', `${s.animOutDuration}ms`);
 	// Glissement : sens choisi (entrée : d'où arrive la carte ; sortie : où elle part)
@@ -83,10 +85,6 @@ function Readable(fg, bg, min) {
 function FixedColors(mode, item, custom, layout) {
 	const twitch = /^#[0-9a-f]{6}$/i.test(String(item.color || '')) ? item.color : '#BF94FF';
 	if (mode === 'custom') return { bg: custom.bg, opacity: custom.opacity, name: custom.name, text: custom.text, accent: custom.accent };
-	if (layout === 'polaroid') {
-		const n = Readable(twitch, '#FBFAF7', 3);
-		return { bg: '#FBFAF7', opacity: 100, text: '#1C1C1E', name: n, accent: n };
-	}
 	if (mode === 'fixedLight') {
 		const n = Readable(twitch, '#FFFFFF', 3);
 		return { bg: '#FFFFFF', opacity: 92, text: '#1C1C1E', name: n, accent: n };
@@ -98,17 +96,17 @@ function FixedColors(mode, item, custom, layout) {
 // Classes de mise en page d'un style (overlay, ou image Discord avec son propre style)
 function LayoutClasses(layout) {
 	const s = ws.values;
-	// Polaroid et Écran d'appel sont toujours centrés
-	const align = ['polaroid', 'call'].includes(layout) ? 'center' : s.align;
+	// L'Écran d'appel est toujours centré
+	const align = layout === 'call' ? 'center' : s.align;
 	return [
 		`layout-${layout}`,
-		['minimal', 'ticket', 'game'].includes(layout) ? 'layout-card' : '',
+		['minimal', 'ticket'].includes(layout) ? 'layout-card' : '',
 		`align-${align}`,
 		`in-${s.animIn}`,
 		`out-${s.animOut}`,
 		s.showAvatar ? '' : 'hide-avatar',
 		s.showBadges ? '' : 'hide-badges',
-		['card', 'bubble', 'ticket', 'game'].includes(layout) && s.colorMode === 'custom' && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
+		['card', 'bubble', 'ticket'].includes(layout) && s.colorMode === 'custom' && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
 	].filter(Boolean).join(' ');
 }
 
@@ -132,28 +130,25 @@ function TextScale(item) {
 	return len <= 80 ? 1 : Math.max(0.55, Math.sqrt(80 / len));
 }
 
+// el._ready : promesse tenue quand la photo est affichée (ou abandonnée), pour la capture
 function AvatarEl(item, className) {
 	const el = document.createElement('div');
 	el.className = className;
 	el.style.setProperty('--initial-bg', MeaInitialColor(item.name));
-	if (item.avatar && /^https:\/\//.test(item.avatar)) {
+	const load = (url) => new Promise(resolve => {
 		const img = document.createElement('img');
 		img.crossOrigin = 'anonymous';
 		img.alt = '';
-		img.src = item.avatar;
-		img.onerror = () => { img.remove(); el.textContent = MeaInitial(item.name); };
-		el.appendChild(img);
+		img.onload = () => { el.textContent = ''; el.appendChild(img); resolve(); };
+		img.onerror = () => { el.textContent = MeaInitial(item.name); resolve(); };
+		img.src = url;
+	});
+	if (item.avatar && /^https:\/\//.test(item.avatar)) {
+		el._ready = load(item.avatar);
 	} else {
 		el.textContent = MeaInitial(item.name);
 		// Avatar inconnu (déclencheur Streamer.bot) : récupéré par le pseudo
-		if (item.login) MeaAvatar(item.login).then(url => {
-			if (!url) return;
-			const img = document.createElement('img');
-			img.crossOrigin = 'anonymous';
-			img.alt = '';
-			img.onload = () => { el.textContent = ''; el.appendChild(img); };
-			img.src = url;
-		});
+		el._ready = item.login ? MeaAvatar(item.login).then(url => (url ? load(url) : null)) : Promise.resolve();
 	}
 	return el;
 }
@@ -171,36 +166,37 @@ function BuildCard(item, opts = {}) {
 	const custom = opts.custom || { name: s.nameColor, text: s.textColor, bg: s.bgColor, accent: s.accentColor, opacity: s.bgOpacity };
 	const apply = (c) => {
 		card.style.setProperty('--bg', HexToRgba(c.bg, c.opacity));
+		card.style.setProperty('--bg-solid', c.bg);
+		card.style.setProperty('--bg-alpha', String(Math.max(0, Math.min(100, Number(c.opacity))) / 100));
 		card.style.setProperty('--name-color', c.name);
 		card.style.setProperty('--text-color', c.text);
 		card.style.setProperty('--accent', c.accent);
+		// Texte foncé (modes clairs) : l'avatar flouté est éclairci au lieu d'être assombri
+		card.classList.toggle('bg-light', MeaContrast(c.text, '#FFFFFF') > MeaContrast(c.text, '#000000'));
 	};
 	if (!IsAvatarMode(mode)) apply(FixedColors(mode, item, custom, layout));
 
-	// Fond : avatar du viewer flouté et assombri (Carte, Bulle, Ticket), ou jaquette du jeu (Bannière de jeu)
+	// Fond : avatar du viewer flouté et assombri (Carte, Bulle, Ticket)
 	let bgAvatar = null;
-	const gameCover = layout === 'game' ? GameCover() : '';
-	if ((['card', 'bubble', 'ticket'].includes(layout) && s.bgMode === 'avatar') || layout === 'game') {
+	if (['card', 'bubble', 'ticket'].includes(layout) && s.bgMode === 'avatar') {
 		bgAvatar = document.createElement('div');
 		bgAvatar.className = 'bg-avatar';
 		bgAvatar.appendChild(document.createElement('i'));
 		card.classList.add('with-bg-avatar');
-		if (gameCover) bgAvatar.firstChild.style.backgroundImage = `url("${gameCover}")`;
 	}
 
 	// Couleurs tirées de l'avatar (palette calculée une fois par avatar)
 	card._ready = (async () => {
 		const url = item.avatar || (item.login ? await MeaAvatar(item.login) : '');
-		if (bgAvatar && url && layout !== 'game') bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
-		if (!IsAvatarMode(mode)) return;
+		if (bgAvatar && url) bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		if (!bgAvatar && !IsAvatarMode(mode)) return;
 		const pal = await MeaPalette(url, item.color);
-		if (layout === 'polaroid') {
-			// Papier blanc : pseudo dans une teinte foncée de l'avatar, texte noir
-			apply({ bg: '#FBFAF7', opacity: 100, text: '#1C1C1E', name: Readable(pal.darkVibrant, '#FBFAF7', 3), accent: pal.vibrant });
-			return;
+		if (IsAvatarMode(mode)) {
+			const c = MeaPaletteColors(pal, mode);
+			apply({ bg: c.bg, opacity: 85, name: c.name, text: c.text, accent: c.accent });
 		}
-		const c = MeaPaletteColors(pal, mode);
-		apply({ bg: c.bg, opacity: 85, name: c.name, text: c.text, accent: c.accent });
+		// Avatar flouté : la queue de la bulle (et la base sous le flou) prend la teinte du bord de l'image
+		if (bgAvatar) card.style.setProperty('--tail-color', MeaMix(pal.average || pal.muted, card.classList.contains('bg-light') ? '#FFFFFF' : '#000000', 0.72));
 	})().catch(() => { });
 
 	card.appendChild(AvatarEl(item, 'avatar'));
@@ -254,6 +250,13 @@ function BuildCard(item, opts = {}) {
 
 	const bubble = document.createElement('div');
 	bubble.className = 'bubble';
+	// Fond de la bulle (style Bulle) : forme arrondie + queue, transparence appliquée à l'ensemble
+	const bubbleBg = document.createElement('span');
+	bubbleBg.className = 'bubble-bg';
+	const bubbleShape = document.createElement('span');
+	bubbleShape.className = 'bubble-shape';
+	bubbleBg.appendChild(bubbleShape);
+	bubble.appendChild(bubbleBg);
 	const text = document.createElement('div');
 	text.className = 'text';
 	text.innerHTML = MeaPartsHTML(item);
@@ -265,7 +268,7 @@ function BuildCard(item, opts = {}) {
 	card.appendChild(body);
 	if (bgAvatar) {
 		// Carte : fond de toute la carte ; Bulle : fond de la bulle
-		if (layout === 'bubble') bubble.insertBefore(bgAvatar, bubble.firstChild);
+		if (layout === 'bubble') bubbleShape.appendChild(bgAvatar);
 		else card.insertBefore(bgAvatar, card.firstChild);
 	}
 	return card;
@@ -495,8 +498,16 @@ function WaitImages(root) {
 	return Promise.all(imgs.map(img => (img.complete ? Promise.resolve() : new Promise(r => { img.onload = r; img.onerror = r; setTimeout(r, 4000); }))));
 }
 
-// Image du message avec le style de l'overlay
-async function Capture(item) {
+// Une seule capture à la fois (elles partagent #capture) : les demandes attendent leur tour
+let captureQueue = Promise.resolve();
+function Capture(item) {
+	const run = captureQueue.then(() => CaptureNow(item));
+	captureQueue = run.catch(() => { });
+	return run;
+}
+
+// Image du message avec le style choisi pour Discord
+async function CaptureNow(item) {
 	if (!window.htmlToImage) throw new Error('Module de capture non chargé');
 	const perleLayout = PerleLayout();
 	captureEl.className = LayoutClasses(perleLayout);
@@ -541,15 +552,27 @@ async function Capture(item) {
 	}
 	// Couleurs tirées des avatars : calculées avant la capture
 	const cards = card.classList.contains('mea') ? [card] : Array.from(card.querySelectorAll('.mea'));
-	await Promise.race([Promise.all(cards.map(c => c._ready)), new Promise(r => setTimeout(r, 6000))]);
+	const avatars = Array.from(card.querySelectorAll('.avatar')).map(a => a._ready);
+	await Promise.race([Promise.all(cards.map(c => c._ready).concat(avatars)), new Promise(r => setTimeout(r, 6000))]);
 	// Couleurs issues de l'image de fond (lisibilité jugée sur sa teinte moyenne)
 	if (bgImage && v.perleColors === 'image') {
 		const pal = await MeaPalette(bgImage, '#FFFFFF');
 		const under = pal.average || pal.muted;
-		const c = { name: Readable(pal.lightVibrant, under, 3), text: Readable(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), under, 4.5), accent: pal.darkVibrant };
+		// Bulle : teinte sombre de l'image, en transparence ; le texte est jugé sur le mélange obtenu
+		const bubble = MeaMix(pal.darkMuted || under, '#000000', 0.25);
+		const onBubble = MeaMix(under, bubble, 0.55);
+		const bg = perleLayout === 'bubble' ? onBubble : under;
+		const c = { name: Readable(pal.lightVibrant, bg, 3), text: Readable(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), bg, 4.5), accent: pal.darkVibrant };
 		frame.style.setProperty('--text-color', c.text);
 		frame.style.setProperty('--perle-shadow', MeaContrast(c.text, '#000000') < 4.5 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)');
-		cards.forEach(x => { x.style.setProperty('--name-color', c.name); x.style.setProperty('--text-color', c.text); x.style.setProperty('--accent', c.accent); });
+		cards.forEach(x => {
+			x.style.setProperty('--name-color', c.name); x.style.setProperty('--text-color', c.text); x.style.setProperty('--accent', c.accent);
+			x.style.setProperty('--bg-solid', bubble); x.style.removeProperty('--tail-color');
+		});
+	} else if (bgImage) {
+		// Bulle sur une image, autres couleurs : la bulle garde la couleur de carte du mode, en transparence
+		cards.forEach(x => x.style.removeProperty('--tail-color'));
+		if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	} else if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	frame.appendChild(card);
 	// Filigrane : logo Twitch et nom de la chaîne, en bas à droite
@@ -614,16 +637,6 @@ window.addEventListener('message', async (event) => {
 	perleImageCache = { v: null, data: '' };
 	SendImageState(msg.data, msg.data ? 'Enregistrée dans Streamer.bot' : '', 'ok');
 });
-
-// Jaquette du jeu en cours (Bannière de jeu) : donnée par l'action Streamer.bot
-function GameCover() {
-	const g = realState && realState.game;
-	let url = g && g.boxArt ? String(g.boxArt) : '';
-	if (url) return url.replace('{width}', '600').replace('{height}', '800').replace(/-\d+x\d+(\.\w+)$/, '-600x800$1');
-	if (!ws.demo) return '';
-	const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b4d5c"/><stop offset=".55" stop-color="#7a2e52"/><stop offset="1" stop-color="#e0a458"/></linearGradient></defs><rect width="300" height="400" fill="url(#g)"/><circle cx="210" cy="120" r="70" fill="#ffd27a" opacity=".7"/><path d="M0 300 L90 210 L160 280 L230 200 L300 270 V400 H0Z" fill="#0d1b24" opacity=".8"/></svg>`;
-	return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
-}
 
 // Nom de la chaîne (lu dans Streamer.bot) pour le filigrane
 let channelName = '';
