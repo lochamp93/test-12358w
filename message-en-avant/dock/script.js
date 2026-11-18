@@ -78,7 +78,16 @@ function Avatar(item) {
 		img.src = item.avatar;
 		img.onerror = () => { img.remove(); el.textContent = MeaInitial(item.name); };
 		el.appendChild(img);
-	} else el.textContent = MeaInitial(item.name);
+	} else {
+		el.textContent = MeaInitial(item.name);
+		if (item.login) MeaAvatar(item.login).then(url => {
+			if (!url) return;
+			const img = document.createElement('img');
+			img.alt = '';
+			img.onload = () => { el.textContent = ''; el.appendChild(img); };
+			img.src = url;
+		});
+	}
 	return el;
 }
 
@@ -179,6 +188,7 @@ function RenderNow() {
 	$('hideButton').disabled = !cur;
 
 	$('perleButton').hidden = !state.config.perles && !demo;
+	$('perleOff').hidden = !!state.config.perles || demo;
 	$('perleButton').disabled = !cur || PerleBusy();
 
 	UpdateTimer();

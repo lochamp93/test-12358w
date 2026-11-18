@@ -91,7 +91,18 @@ function AvatarEl(item, className) {
 		img.src = item.avatar;
 		img.onerror = () => { img.remove(); el.textContent = MeaInitial(item.name); };
 		el.appendChild(img);
-	} else el.textContent = MeaInitial(item.name);
+	} else {
+		el.textContent = MeaInitial(item.name);
+		// Avatar inconnu (déclencheur Streamer.bot) : récupéré par le pseudo
+		if (item.login) MeaAvatar(item.login).then(url => {
+			if (!url) return;
+			const img = document.createElement('img');
+			img.crossOrigin = 'anonymous';
+			img.alt = '';
+			img.onload = () => { el.textContent = ''; el.appendChild(img); };
+			img.src = url;
+		});
+	}
 	return el;
 }
 

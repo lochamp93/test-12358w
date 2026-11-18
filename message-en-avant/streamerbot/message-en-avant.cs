@@ -5,8 +5,10 @@
 //  L'état est gardé dans une variable globale persistante (JSON), lue par
 //  l'overlay et le dock.
 //
-//  Aucun déclencheur à ajouter : l'overlay et le dock écoutent eux-mêmes les rachats
+//  Aucun déclencheur obligatoire : l'overlay et le dock écoutent eux-mêmes les rachats
 //  de points de chaîne et les messages du chat, puis appellent cette action.
+//  Facultatif : un déclencheur Twitch > Channel Reward > Reward Redemption (récompense Q&A)
+//  sur cette action ajoute aussi la question (les doublons sont ignorés).
 //  Plusieurs pages peuvent envoyer le même événement : les doublons sont ignorés (msgId).
 //
 //  Arguments acceptés :
@@ -38,6 +40,13 @@ public class CPHInline
 
 	public bool Execute()
 	{
+		// Lancée par un déclencheur « Reward Redemption » (facultatif) : traitée comme une question Q&A
+		if (Arg("mode") == "" && Arg("rewardName") != "" && Arg("redemptionId") != "")
+		{
+			args["mode"] = "qa";
+			args["msgId"] = "qa:" + Arg("redemptionId");
+			args["fromTrigger"] = "true";
+		}
 		string msgId = Arg("msgId").Trim();
 		lock (verrou)
 		{
@@ -78,8 +87,9 @@ public class CPHInline
 			case "qa":
 			{
 				if (!cfg.Value<bool>("qa")) return true;
-				JObject item = LireMessage("qa");
+				JObject item = Arg("fromTrigger") == "true" ? QuestionDuDeclencheur() : LireMessage("qa");
 				if (item == null) return false;
+				if (DejaRecue((JArray)data["qa"], item)) return true;
 				Ajouter((JArray)data["qa"], item, MAX_QUESTIONS);
 				Sauver(data, "qa");
 				return true;
@@ -286,6 +296,41 @@ public class CPHInline
 		JArray morceaux = item["parts"] as JArray;
 		if (morceaux != null) while (morceaux.Count > 200) morceaux.RemoveAt(morceaux.Count - 1);
 		return item;
+	}
+
+	// Question construite à partir des arguments du déclencheur Streamer.bot
+	JObject QuestionDuDeclencheur()
+	{
+		string texte = (Arg("rawInput") != "" ? Arg("rawInput") : Arg("userInput")).Trim();
+		if (texte == "") return null;
+		string login = (Arg("userName") != "" ? Arg("userName") : Arg("user")).ToLowerInvariant();
+		string nom = Arg("user") != "" ? Arg("user") : login;
+		if (texte.Length > 600) texte = texte.Substring(0, 600);
+		return new JObject
+		{
+			["id"] = "qa:" + Arg("redemptionId"), ["kind"] = "qa", ["name"] = nom, ["login"] = login,
+			["userId"] = Arg("userId"), ["color"] = "", ["badges"] = new JArray(), ["avatar"] = "",
+			["parts"] = new JArray { new JObject { ["t"] = "text", ["v"] = texte } }, ["text"] = texte,
+			["at"] = Maintenant(), ["shown"] = false
+		};
+	}
+
+	// Même question déjà reçue (même identifiant, ou même personne et même texte il y a moins de 20 s)
+	bool DejaRecue(JArray liste, JObject item)
+	{
+		string id = item.Value<string>("id");
+		string login = (item.Value<string>("login") ?? "").ToLowerInvariant();
+		string texte = (item.Value<string>("text") ?? "").Trim();
+		long at = item.Value<long?>("at") ?? Maintenant();
+		foreach (JToken t in liste)
+		{
+			JObject x = t as JObject;
+			if (x == null) continue;
+			if (x.Value<string>("id") == id) return true;
+			if ((x.Value<string>("login") ?? "").ToLowerInvariant() == login && (x.Value<string>("text") ?? "").Trim() == texte
+				&& Math.Abs(at - (x.Value<long?>("at") ?? 0)) < 20000) return true;
+		}
+		return false;
 	}
 
 	void Ajouter(JArray liste, JObject item, int max)

@@ -225,26 +225,29 @@ const MeaCollector = (function () {
 		}
 	}
 
+	// Rachat de points de chaîne : plusieurs formes possibles selon la version de Streamer.bot
 	async function onReward(d) {
 		if (!d) return;
+		const u = d.user && typeof d.user === 'object' ? d.user : {};
+		const reward = d.reward && typeof d.reward === 'object' ? d.reward : {};
+		const title = String(reward.title || reward.name || d.rewardName || d.rewardTitle || d.title || '').trim();
+		const input = String(d.user_input || d.userInput || d.rawInput || d.input || d.message || '').trim();
+		console.log(`[Message en avant] Rachat reçu : « ${title} »${input ? ' avec texte' : ' sans texte'}`, d);
 		const cfg = opts && opts.getConfig();
 		if (!cfg || !cfg.qa) return;
-		const reward = d.reward || {};
-		const title = String(reward.title || d.rewardTitle || d.title || '').trim().toLowerCase();
 		const wanted = String(cfg.rewardName || '').trim().toLowerCase();
-		if (!wanted || title !== wanted) return;
-		const input = String(d.user_input || d.userInput || d.input || '').trim();
+		if (!wanted || title.toLowerCase() !== wanted) return;
 		if (!input) return;
-		const login = String(d.user_login || d.userLogin || (d.user && d.user.login) || '').toLowerCase();
-		const name = String(d.user_name || d.userName || d.displayName || (d.user && d.user.name) || login);
+		const login = String(d.user_login || d.userLogin || u.login || d.userName || '').toLowerCase();
+		const name = String(d.user_name || d.displayName || u.name || u.display_name || d.user_display_name || (typeof d.user === 'string' ? d.user : '') || login);
 		const known = users.get(login) || {};
-		const rid = String(d.id || d.redemptionId || d.rewardRedemptionId || `${login}:${Date.now()}`);
+		const rid = String(d.id || d.redemptionId || d.redemption_id || d.rewardRedemptionId || `${login}:${input}`);
 		const item = {
 			id: 'qa:' + rid,
 			kind: 'qa',
 			name,
 			login,
-			userId: String(d.user_id || d.userId || (d.user && d.user.id) || known.userId || ''),
+			userId: String(d.user_id || d.userId || u.id || known.userId || ''),
 			color: known.color || '',
 			badges: known.badges || [],
 			avatar: await MeaAvatar(login),
