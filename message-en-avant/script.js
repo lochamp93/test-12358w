@@ -50,6 +50,7 @@ function ApplySettings() {
 
 	widgetEl.className = [
 		`layout-${s.layout}`,
+		['minimal', 'ticket', 'game'].includes(s.layout) ? 'layout-card' : '',
 		`align-${s.align}`,
 		`in-${s.animIn}`,
 		`out-${s.animOut}`,
@@ -116,21 +117,32 @@ function BuildCard(item, opts = {}) {
 	card.style.setProperty('--text-scale', String(TextScale(item)));
 	card.style.setProperty('--name-color', s.nameColorMode === 'fixed' ? s.nameColor : (item.color || s.textColor));
 
-	// Fond : avatar du viewer flouté et assombri (Carte et Bulle)
+	// Fond : avatar du viewer flouté et assombri (Carte, Bulle, Ticket), ou jaquette du jeu (Bannière de jeu)
 	let bgAvatar = null;
-	if (ws.isActive('bgMode') && s.bgMode === 'avatar') {
+	const gameCover = s.layout === 'game' ? GameCover() : '';
+	if ((ws.isActive('bgMode') && s.bgMode === 'avatar') || s.layout === 'game') {
 		bgAvatar = document.createElement('div');
 		bgAvatar.className = 'bg-avatar';
 		bgAvatar.appendChild(document.createElement('i'));
 		card.classList.add('with-bg-avatar');
+		if (gameCover) bgAvatar.firstChild.style.backgroundImage = `url("${gameCover}")`;
 	}
 
 	// Couleurs tirées de l'avatar (palette calculée une fois par avatar)
 	card._ready = (async () => {
 		const url = item.avatar || (item.login ? await MeaAvatar(item.login) : '');
-		if (bgAvatar && url) bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		if (bgAvatar && url && s.layout !== 'game') bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		const pal = await MeaPalette(url, item.color);
+		if (s.layout === 'polaroid') {
+			// Papier blanc : pseudo dans une teinte foncée de l'avatar (lisible), texte noir
+			const paper = '#FBFAF7';
+			const nm = s.colorMode === 'fixed' && s.nameColorMode === 'fixed' ? s.nameColor : (s.colorMode === 'fixed' ? (item.color || pal.darkVibrant) : pal.darkVibrant);
+			card.style.setProperty('--name-color', MeaContrast(nm, paper) >= 3 ? nm : MeaMix(nm, '#000000', 0.5));
+			card.style.setProperty('--accent', s.colorMode === 'fixed' ? s.accentColor : pal.vibrant);
+			return;
+		}
 		if (s.colorMode === 'fixed') return;
-		const c = MeaPaletteColors(await MeaPalette(url, item.color), s.colorMode);
+		const c = MeaPaletteColors(pal, s.colorMode);
 		card.style.setProperty('--bg', HexToRgba(c.bg, s.bgOpacity));
 		card.style.setProperty('--name-color', c.name);
 		card.style.setProperty('--text-color', c.text);
@@ -173,6 +185,11 @@ function BuildCard(item, opts = {}) {
 		date.textContent = `${d.toLocaleDateString('fr-FR')} à ${d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
 		head.appendChild(date);
 	}
+	// Ticket : heure du message à droite
+	const time = document.createElement('span');
+	time.className = 'time';
+	time.textContent = new Date(Number(item.at) || Date.now()).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+	head.appendChild(time);
 	const labelText = LabelFor(item);
 	if (labelText) {
 		const label = document.createElement('span');
@@ -550,6 +567,16 @@ window.addEventListener('message', async (event) => {
 	perleImageCache = { v: null, data: '' };
 	SendImageState(msg.data, msg.data ? 'Enregistrée dans Streamer.bot' : '', 'ok');
 });
+
+// Jaquette du jeu en cours (Bannière de jeu) : donnée par l'action Streamer.bot
+function GameCover() {
+	const g = realState && realState.game;
+	let url = g && g.boxArt ? String(g.boxArt) : '';
+	if (url) return url.replace('{width}', '600').replace('{height}', '800').replace(/-\d+x\d+(\.\w+)$/, '-600x800$1');
+	if (!ws.demo) return '';
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b4d5c"/><stop offset=".55" stop-color="#7a2e52"/><stop offset="1" stop-color="#e0a458"/></linearGradient></defs><rect width="300" height="400" fill="url(#g)"/><circle cx="210" cy="120" r="70" fill="#ffd27a" opacity=".7"/><path d="M0 300 L90 210 L160 280 L230 200 L300 270 V400 H0Z" fill="#0d1b24" opacity=".8"/></svg>`;
+	return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+}
 
 // Nom de la chaîne (lu dans Streamer.bot) pour le filigrane
 let channelName = '';

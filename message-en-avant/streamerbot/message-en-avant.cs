@@ -425,8 +425,28 @@ public class CPHInline
 		return data;
 	}
 
+	// Jeu en cours (Bannière de jeu) : variables du diffuseur que Streamer.bot ajoute aux arguments
+	void LireJeu(JObject data)
+	{
+		string nom = "", jaquette = "";
+		foreach (KeyValuePair<string, object> a in args)
+		{
+			if (a.Value == null) continue;
+			string k = a.Key, v = a.Value.ToString().Trim();
+			if (v == "") continue;
+			if (jaquette == "" && (k == "gameBoxArt" || k.EndsWith(".gameBoxArt") || k == "targetUserGameBoxArt")) jaquette = v;
+			if (nom == "" && (k == "game" || k == "gameName" || k.EndsWith(".gameName"))) nom = v;
+		}
+		if (jaquette == "" && nom == "") return;
+		JObject jeu = data["game"] as JObject ?? new JObject();
+		if (nom != "") jeu["name"] = nom;
+		if (jaquette != "") jeu["boxArt"] = jaquette;
+		data["game"] = jeu;
+	}
+
 	void Sauver(JObject data, string evenement)
 	{
+		LireJeu(data);
 		data["updated"] = Maintenant();
 		CPH.SetGlobalVar(VARIABLE, data.ToString(Formatting.None), true);
 		// Prévient l'overlay et le dock (en plus de l'événement « Global Variable Updated »)

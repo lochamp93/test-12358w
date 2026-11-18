@@ -198,7 +198,7 @@
 		{
 			"id": "layout",
 			"label": "Style",
-			"description": "Carte : carte arrondie à effet verre. Bulle : bulle de message. Citation : sans fond, grand guillemet et signature",
+			"description": "Carte : verre arrondi. Bulle : message façon iMessage. Citation : grand guillemet. Minimaliste : sans cadre. Ticket : liseré coloré et heure. Polaroid : photo de l’avatar sur papier blanc. Écran d’appel : avatar au centre avec un halo. Bannière de jeu : jaquette du jeu en cours floutée en fond",
 			"type": "select",
 			"defaultValue": "card",
 			"options": [
@@ -213,6 +213,26 @@
 				{
 					"value": "quote",
 					"label": "Citation"
+				},
+				{
+					"value": "minimal",
+					"label": "Minimaliste"
+				},
+				{
+					"value": "ticket",
+					"label": "Ticket"
+				},
+				{
+					"value": "polaroid",
+					"label": "Polaroid"
+				},
+				{
+					"value": "call",
+					"label": "Écran d’appel"
+				},
+				{
+					"value": "game",
+					"label": "Bannière de jeu"
 				}
 			],
 			"group": "Style"
@@ -264,7 +284,8 @@
 				"id": "layout",
 				"value": [
 					"card",
-					"bubble"
+					"bubble",
+					"ticket"
 				]
 			}
 		},
@@ -451,7 +472,9 @@
 						"id": "layout",
 						"value": [
 							"card",
-							"bubble"
+							"bubble",
+							"ticket",
+							"game"
 						]
 					}
 				]
@@ -470,7 +493,9 @@
 				"id": "layout",
 				"value": [
 					"card",
-					"bubble"
+					"bubble",
+					"ticket",
+					"game"
 				]
 			}
 		},

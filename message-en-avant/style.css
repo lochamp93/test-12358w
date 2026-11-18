@@ -281,6 +281,101 @@ body {
 	box-shadow: none !important;
 }
 
+/* Heure : seulement pour le Ticket */
+.mea .head .time { display: none; }
+
+/* ---------- Minimaliste : la mise en page de la Carte, sans cadre ---------- */
+
+.layout-minimal .mea {
+	background: transparent;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+	box-shadow: none;
+	padding: 0.3em 0.2em;
+	text-shadow: 0 0.04em 0.45em rgba(0, 0, 0, 0.5), 0 0.02em 0.06em rgba(0, 0, 0, 0.4);
+}
+.layout-minimal .mea .label { text-shadow: none; }
+
+/* ---------- Ticket : liseré d'accent, pseudo en petites capitales, heure à droite ---------- */
+
+.layout-ticket .mea {
+	border-radius: 0.45em;
+	padding: 0.6em 0.9em 0.7em 1em;
+	border-left: 0.28em solid var(--accent);
+	row-gap: 0.3em;
+}
+.layout-ticket .mea > .avatar { width: calc(var(--font-size) * 1.1); height: calc(var(--font-size) * 1.1); }
+.layout-ticket .mea .head .name {
+	font-size: 0.62em;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.layout-ticket .mea .head .time {
+	display: inline;
+	margin-left: auto;
+	font-size: 0.55em;
+	font-weight: 500;
+	opacity: 0.6;
+	font-variant-numeric: tabular-nums;
+}
+.layout-ticket .mea .head .label { margin-left: 0.8em; }
+.layout-ticket .mea .head .date { display: none; }
+
+/* ---------- Polaroid : photo de l'avatar sur papier blanc, légèrement incliné ---------- */
+
+.layout-polaroid .mea {
+	flex-direction: column;
+	align-items: center;
+	gap: 0.35em;
+	width: min(100%, 13em);
+	padding: 0.5em 0.5em 0.9em;
+	border-radius: 0.18em;
+	background: #fbfaf7;
+	color: #1c1c1e;
+	--text-color: #1c1c1e;
+	transform: rotate(-2deg);
+	box-shadow: 0 0.5em 1.4em rgba(0, 0, 0, 0.35), 0 0.05em 0.15em rgba(0, 0, 0, 0.25);
+}
+.layout-polaroid .mea > .avatar {
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1;
+	border-radius: 0.08em;
+	font-size: calc(var(--font-size) * 3);
+}
+.layout-polaroid .mea .body { width: 100%; gap: 0.2em; align-items: center; }
+.layout-polaroid .mea .head { order: 2; justify-content: center; }
+.layout-polaroid .mea .bubble { order: 1; }
+.layout-polaroid .mea .text { text-align: center; font-size: calc(var(--font-size) * var(--text-scale) * 0.85); }
+.layout-polaroid .mea .head .date { color: #1c1c1e; }
+.hide-avatar.layout-polaroid .mea { padding-top: 0.9em; }
+.layout-polaroid .mea .badges { display: none; }
+
+/* ---------- Écran d'appel : avatar au centre avec un halo, message en sous-titre ---------- */
+
+.layout-call .mea {
+	flex-direction: column;
+	align-items: center;
+	gap: 0.45em;
+	text-align: center;
+	text-shadow: 0 0.04em 0.45em rgba(0, 0, 0, 0.5);
+}
+.layout-call .mea > .avatar {
+	width: calc(var(--font-size) * 3.2);
+	height: calc(var(--font-size) * 3.2);
+	font-size: calc(var(--font-size) * 1.4);
+	box-shadow: 0 0 0 0.12em var(--accent), 0 0 1.4em color-mix(in srgb, var(--accent) 70%, transparent);
+	margin-bottom: 0.25em;
+}
+.layout-call .mea .body { align-items: center; gap: 0.25em; }
+.layout-call .mea .head { justify-content: center; font-size: calc(var(--font-size) * 1.05); }
+.layout-call .mea .head .label { text-shadow: none; }
+.layout-call .mea .text { text-align: center; opacity: 0.85; font-size: calc(var(--font-size) * var(--text-scale) * 0.85); }
+
+/* ---------- Bannière de jeu : la Carte, avec la jaquette floutée en fond ---------- */
+
+.layout-game .mea .bg-avatar > i { filter: blur(1.1em) saturate(1.4); inset: -35%; }
+
 /* ---------- Bulle ---------- */
 
 .layout-bubble .mea {
