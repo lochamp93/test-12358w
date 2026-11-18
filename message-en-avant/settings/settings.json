@@ -1,0 +1,538 @@
+{
+	"title": "Message en avant",
+	"design": "apple",
+	"showLogo": false,
+	"showNuttyLink": false,
+	"checkerPreview": true,
+	"livePreview": true,
+	"demo": true,
+	"dock": true,
+	"importAction": "../streamerbot/import.txt",
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"description": "",
+			"type": "number",
+			"defaultValue": 8080,
+			"min": 1,
+			"max": 65535,
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "importString",
+			"label": "Code d’import",
+			"description": "",
+			"type": "import-string",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "actionName",
+			"label": "Nom de l’action",
+			"description": "",
+			"type": "sb-actions",
+			"defaultValue": "Message en avant | Gérer",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "previewQuestion",
+			"label": "Exemple : question Q&A",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewQuestion",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewHighlight",
+			"label": "Exemple : highlight",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewHighlight",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewLong",
+			"label": "Exemple : message long",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewLong",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewHide",
+			"label": "Masquer (animation de sortie)",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewHide",
+			"group": "Aperçu",
+			"link": true
+		},
+		{
+			"id": "qa",
+			"label": "Q&A",
+			"description": "Questions posées avec une récompense de points de chaîne (avec texte)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Modes"
+		},
+		{
+			"id": "rewardName",
+			"label": "Nom de la récompense",
+			"description": "Exactement le titre de la récompense sur Twitch",
+			"type": "text",
+			"defaultValue": "Q&A",
+			"group": "Modes",
+			"showIf": "qa"
+		},
+		{
+			"id": "highlight",
+			"label": "Highlight",
+			"description": "Un modo ou la streameuse répond à un message du chat avec la commande",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Modes"
+		},
+		{
+			"id": "command",
+			"label": "Commande",
+			"description": "",
+			"type": "text",
+			"defaultValue": "!highlight",
+			"group": "Modes",
+			"showIf": "highlight"
+		},
+		{
+			"id": "highlightDuration",
+			"label": "Durée d’affichage",
+			"description": "En secondes",
+			"type": "number",
+			"defaultValue": 15,
+			"min": 3,
+			"max": 120,
+			"group": "Modes",
+			"showIf": "highlight"
+		},
+		{
+			"id": "conflict",
+			"label": "Si un highlight arrive pendant une question",
+			"description": "",
+			"type": "select",
+			"defaultValue": "return",
+			"options": [
+				{
+					"value": "return",
+					"label": "Remplacer puis revenir à la question"
+				},
+				{
+					"value": "replace",
+					"label": "Remplacer"
+				},
+				{
+					"value": "wait",
+					"label": "Attendre que la question soit masquée"
+				}
+			],
+			"group": "Modes",
+			"showIf": {
+				"all": [
+					{
+						"id": "qa"
+					},
+					{
+						"id": "highlight"
+					}
+				]
+			}
+		},
+		{
+			"id": "queue",
+			"label": "Plusieurs highlights d’affilée",
+			"description": "",
+			"type": "select",
+			"defaultValue": "queue",
+			"options": [
+				{
+					"value": "queue",
+					"label": "File d’attente"
+				},
+				{
+					"value": "replace",
+					"label": "Le dernier remplace"
+				}
+			],
+			"group": "Modes",
+			"showIf": "highlight"
+		},
+		{
+			"id": "layout",
+			"label": "Style",
+			"description": "Carte : carte arrondie à effet verre. Bulle : bulle de message. Citation : sans fond, grand guillemet et signature",
+			"type": "select",
+			"defaultValue": "card",
+			"options": [
+				{
+					"value": "card",
+					"label": "Carte"
+				},
+				{
+					"value": "bubble",
+					"label": "Bulle"
+				},
+				{
+					"value": "quote",
+					"label": "Citation"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "font",
+			"label": "Police",
+			"description": "",
+			"type": "font",
+			"defaultValue": "SF Pro Display",
+			"group": "Style"
+		},
+		{
+			"id": "fontSize",
+			"label": "Taille du message",
+			"description": "En pixels",
+			"type": "number",
+			"defaultValue": 32,
+			"min": 12,
+			"max": 120,
+			"group": "Style"
+		},
+		{
+			"id": "shrinkLong",
+			"label": "Réduire le texte des longs messages",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Style"
+		},
+		{
+			"id": "align",
+			"label": "Alignement du texte",
+			"description": "",
+			"type": "select",
+			"defaultValue": "left",
+			"options": [
+				{
+					"value": "left",
+					"label": "À gauche"
+				},
+				{
+					"value": "center",
+					"label": "Centré"
+				},
+				{
+					"value": "right",
+					"label": "À droite"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "showAvatar",
+			"label": "Afficher l’avatar",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Style"
+		},
+		{
+			"id": "showBadges",
+			"label": "Afficher les badges",
+			"description": "Badges Twitch du viewer (abonné, modo, VIP…)",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Style"
+		},
+		{
+			"id": "nameColorMode",
+			"label": "Couleur du pseudo",
+			"description": "",
+			"type": "select",
+			"defaultValue": "twitch",
+			"options": [
+				{
+					"value": "twitch",
+					"label": "Couleur Twitch du viewer"
+				},
+				{
+					"value": "fixed",
+					"label": "Couleur fixe"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "nameColor",
+			"label": "Couleur fixe du pseudo",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Style",
+			"showIf": {
+				"id": "nameColorMode",
+				"value": "fixed"
+			}
+		},
+		{
+			"id": "showLabel",
+			"label": "Afficher l’étiquette du mode",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Style"
+		},
+		{
+			"id": "labelQa",
+			"label": "Texte de l’étiquette Q&A",
+			"description": "",
+			"type": "text",
+			"defaultValue": "Question",
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "showLabel"
+					},
+					{
+						"id": "qa"
+					}
+				]
+			}
+		},
+		{
+			"id": "labelHighlight",
+			"label": "Texte de l’étiquette Highlight",
+			"description": "",
+			"type": "text",
+			"defaultValue": "Highlight",
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "showLabel"
+					},
+					{
+						"id": "highlight"
+					}
+				]
+			}
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur d’accent",
+			"description": "Étiquette, guillemet de la Citation",
+			"type": "color",
+			"defaultValue": "#FF4FA3",
+			"group": "Style"
+		},
+		{
+			"id": "textColor",
+			"label": "Couleur du texte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Style"
+		},
+		{
+			"id": "bgColor",
+			"label": "Couleur du fond",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"card",
+					"bubble"
+				]
+			}
+		},
+		{
+			"id": "bgOpacity",
+			"label": "Opacité du fond",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 85,
+			"min": 0,
+			"max": 100,
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"card",
+					"bubble"
+				]
+			}
+		},
+		{
+			"id": "animIn",
+			"label": "Entrée",
+			"description": "",
+			"type": "select",
+			"defaultValue": "slide",
+			"options": [
+				{
+					"value": "slide",
+					"label": "Glissement vers le haut"
+				},
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"group": "Animations"
+		},
+		{
+			"id": "animInDuration",
+			"label": "Durée de l’entrée",
+			"description": "En millisecondes",
+			"type": "number",
+			"defaultValue": 500,
+			"min": 100,
+			"max": 5000,
+			"group": "Animations",
+			"showIf": {
+				"id": "animIn",
+				"notValue": "none"
+			}
+		},
+		{
+			"id": "animOut",
+			"label": "Sortie",
+			"description": "",
+			"type": "select",
+			"defaultValue": "fade",
+			"options": [
+				{
+					"value": "fade",
+					"label": "Fondu"
+				},
+				{
+					"value": "slide",
+					"label": "Glissement vers le bas"
+				},
+				{
+					"value": "zoom",
+					"label": "Zoom arrière"
+				},
+				{
+					"value": "none",
+					"label": "Aucune"
+				}
+			],
+			"group": "Animations"
+		},
+		{
+			"id": "animOutDuration",
+			"label": "Durée de la sortie",
+			"description": "En millisecondes",
+			"type": "number",
+			"defaultValue": 400,
+			"min": 100,
+			"max": 5000,
+			"group": "Animations",
+			"showIf": {
+				"id": "animOut",
+				"notValue": "none"
+			}
+		},
+		{
+			"id": "perles",
+			"label": "Activer les perles",
+			"description": "Bouton Discord du dock : l’overlay fait une image du message et la poste dans le salon",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)"
+		},
+		{
+			"id": "webhook",
+			"label": "URL du webhook",
+			"description": "Discord : Paramètres du salon > Intégrations > Webhooks > Copier l’URL. Ne partagez pas le lien de l’overlay",
+			"type": "password",
+			"defaultValue": "",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "caption",
+			"label": "Ajouter une légende (pseudo, date)",
+			"description": "",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleBg",
+			"label": "Fond de l’image",
+			"description": "",
+			"type": "select",
+			"defaultValue": "transparent",
+			"options": [
+				{
+					"value": "transparent",
+					"label": "Transparent"
+				},
+				{
+					"value": "color",
+					"label": "Couleur unie"
+				}
+			],
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleBgColor",
+			"label": "Couleur du fond de l’image",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleBg",
+				"value": "color"
+			}
+		},
+		{
+			"id": "testPerle",
+			"label": "Envoyer l’aperçu sur Discord (test)",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewPerle",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleInfo",
+			"label": "Dernier envoi",
+			"description": "",
+			"type": "info",
+			"defaultValue": "Aucun envoi depuis l’ouverture de la page",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		}
+	]
+}

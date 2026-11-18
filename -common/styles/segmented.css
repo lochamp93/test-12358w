@@ -1,0 +1,138 @@
+/*
+ * segmented.css : segmented control (DA Streamertools, iOS / iPadOS 27)
+ *
+ * Valeurs reprises du composant Figma « Segmented Control » (iOS and iPadOS 27) :
+ *   rail : marge intérieure 2 px, 4 px entre les segments, arrondi en pilule
+ *          clair rgba(118, 118, 128, 0.12), sombre rgba(118, 118, 128, 0.24)
+ *   pastille : blanche en clair, rgba(255, 255, 255, 0.27) en sombre, ombre 0 2px 10px rgba(0, 0, 0, 0.06)
+ *   texte : SF Pro 13,33 px, interligne 18 px, -0,08 px ; Semibold sur l'option active, Medium sinon
+ *   tailles : Small (32 px, par défaut) et Large (50 px) ; désactivé : opacité 50 %
+ *
+ * Fichier indépendant : rien ne change pour les pages qui ne le chargent pas.
+ * Le thème suit data-scheme="dark" sur <html> (color-scheme.js), ou la classe .dark sur le rail.
+ * Construction et glissement de la pastille : -common/utils/segmented.js
+ */
+
+.segmented {
+	--seg-count: 2;
+	--seg-index: 0;
+	--seg-gap: 4px;
+	--seg-pad: 2px;
+	--seg-track: rgba(118, 118, 128, 0.12);
+	--seg-thumb: #ffffff;
+	--seg-text: #000000;
+	--seg-text-secondary: rgba(60, 60, 67, 0.6);
+	position: relative;
+	display: flex;
+	align-items: stretch;
+	gap: var(--seg-gap);
+	box-sizing: border-box;
+	height: 32px;
+	padding: var(--seg-pad);
+	border-radius: 100px;
+	background: var(--seg-track);
+	overflow: hidden;
+	font-family: var(--ui-font, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro", system-ui, sans-serif);
+	user-select: none;
+	-webkit-user-select: none;
+}
+
+html[data-scheme="dark"] .segmented,
+.segmented.dark {
+	--seg-track: rgba(118, 118, 128, 0.24);
+	--seg-thumb: rgba(255, 255, 255, 0.27);
+	--seg-text: #ffffff;
+	--seg-text-secondary: rgba(235, 235, 245, 0.6);
+}
+
+html[data-scheme="dark"] .segmented.light {
+	--seg-track: rgba(118, 118, 128, 0.12);
+	--seg-thumb: #ffffff;
+	--seg-text: #000000;
+	--seg-text-secondary: rgba(60, 60, 67, 0.6);
+}
+
+.segmented.large { height: 50px; }
+
+.segmented.disabled {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+/* Pastille de l'option active : elle glisse d'un segment à l'autre */
+.segmented > .segmented-thumb {
+	position: absolute;
+	top: var(--seg-pad);
+	bottom: var(--seg-pad);
+	left: var(--seg-pad);
+	width: calc((100% - 2 * var(--seg-pad) - (var(--seg-count) - 1) * var(--seg-gap)) / var(--seg-count));
+	border-radius: 1000px;
+	background: var(--seg-thumb);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+	transform: translateX(calc(var(--seg-index) * (100% + var(--seg-gap))));
+	transition: transform 0.25s cubic-bezier(0.3, 0.7, 0.3, 1);
+	pointer-events: none;
+}
+
+.segmented.no-transition > .segmented-thumb { transition: none; }
+
+/* Segments (la double classe passe devant les styles génériques des boutons, apple.css compris) */
+.segmented > .segment,
+html.apple .segmented > button.segment {
+	position: relative;
+	z-index: 1;
+	flex: 1 1 0;
+	min-width: 0;
+	height: auto;
+	margin: 0;
+	padding: 3px 6px;
+	border: 0;
+	border-radius: 1000px;
+	background: transparent;
+	box-shadow: none;
+	color: var(--seg-text);
+	font-family: inherit;
+	font-size: 13.333px;
+	line-height: 18px;
+	font-weight: 500;
+	letter-spacing: -0.08px;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: none;
+	filter: none;
+}
+
+.segmented > .segment:hover,
+.segmented > .segment:active,
+html.apple .segmented > button.segment:hover,
+html.apple .segmented > button.segment:active {
+	background: transparent;
+	filter: none;
+}
+
+.segmented > .segment.active,
+html.apple .segmented > button.segment.active { font-weight: 600; }
+
+.segmented > .segment:focus-visible {
+	outline: 2px solid var(--ui-accent, #0088ff);
+	outline-offset: -2px;
+}
+
+.segmented.large > .segment,
+html.apple .segmented.large > button.segment { font-size: 15px; line-height: 20px; }
+
+/* Compteur facultatif à côté du libellé */
+.segmented .segment-count {
+	margin-left: 5px;
+	font-weight: 500;
+	color: var(--seg-text-secondary);
+	font-variant-numeric: tabular-nums;
+}
+.segmented .segment-count:empty { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+	.segmented > .segmented-thumb { transition: none; }
+}

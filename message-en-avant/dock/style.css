@@ -1,0 +1,334 @@
+/* Message en avant : dock OBS, DA Streamertools (s'appuie sur -common/styles/apple.css), thème sombre */
+
+html,
+body {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	padding: 0 12px 20px;
+	box-sizing: border-box;
+	font-size: 15px;
+}
+
+[hidden] { display: none !important; }
+
+.card,
+.group,
+.panel {
+	background: var(--ui-bg-elevated);
+	border-radius: var(--ui-radius);
+}
+
+.secondary,
+.muted { color: var(--ui-text-secondary); }
+.muted { font-size: 13px; margin: 6px 4px; }
+
+/* ---------- En-tête ---------- */
+
+#header {
+	position: sticky;
+	top: 0;
+	z-index: 5;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin: 0 -12px 12px;
+	padding: 12px;
+	background: var(--ui-bg);
+}
+
+.dock-title {
+	flex: 1;
+	font-family: var(--ui-font-display);
+	font-size: 17px;
+	font-weight: 600;
+}
+
+/* Pastille d'état du giveaway */
+.phase {
+	font-size: 12px;
+	font-weight: 600;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: var(--ui-fill-strong);
+	color: var(--ui-text-secondary);
+	white-space: nowrap;
+}
+.phase.green { background: color-mix(in srgb, var(--ui-green) 22%, transparent); color: var(--ui-green); }
+.phase.blue { background: var(--ui-accent-soft); color: var(--ui-accent); }
+
+/* Connexion Streamer.bot : simple point */
+.status {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--ui-red);
+	flex-shrink: 0;
+}
+.status.on { background: var(--ui-green); }
+
+html.apple a.ui-icon.icon-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	background: var(--ui-glass);
+	box-shadow: var(--ui-glass-shadow);
+	color: var(--ui-text-secondary);
+	text-decoration: none;
+}
+html.apple a.ui-icon.icon-link svg { width: 18px; height: 18px; fill: currentColor; }
+html.apple a.ui-icon.icon-link:active { filter: brightness(.94); }
+
+/* ---------- Bandeaux ---------- */
+
+.panel {
+	padding: 14px 16px;
+	margin-bottom: 12px;
+	font-size: 13px;
+	line-height: 1.45;
+}
+.panel.warning strong { display: block; font-size: 15px; margin-bottom: 4px; }
+.panel.warning strong::before {
+	content: "";
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-right: 6px;
+	border-radius: 50%;
+	background: var(--ui-orange);
+	vertical-align: 1px;
+}
+.panel p, .panel ol { margin: 6px 0; color: var(--ui-text-secondary); }
+.panel ol { padding-left: 18px; }
+.panel .row { margin-top: 10px; }
+
+code {
+	font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+	font-size: 12px;
+	background: var(--ui-fill);
+	padding: 1px 5px;
+	border-radius: 6px;
+}
+
+.row { display: flex; gap: 8px; }
+.row > * { flex: 1; min-width: 0; }
+.ws-fields > input { flex: 1 1 0; }
+
+html.apple a.button-link {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	padding: 0 18px;
+	border-radius: 999px;
+	background: var(--ui-accent);
+	color: #fff;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#main.disabled { opacity: 0.4; pointer-events: none; }
+
+/* ---------- Message à l'écran ---------- */
+
+#nowCard { padding: 16px; margin-bottom: 16px; }
+
+.caption-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.caption { font-size: 12px; font-weight: 600; color: var(--ui-text-secondary); }
+
+#nowItem .msg { padding: 0; }
+#nowItem .msg .text { -webkit-line-clamp: 6; font-size: 15px; }
+#nowItem .empty { color: var(--ui-text-secondary); font-size: 15px; padding: 6px 0; }
+#nowItem.on .msg { padding: 10px 12px; border-radius: 16px; background: var(--ui-accent-soft); }
+
+.bar {
+	height: 4px;
+	margin-top: 10px;
+	border-radius: 2px;
+	background: var(--ui-fill-strong);
+	overflow: hidden;
+}
+.bar > i {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background: var(--ui-accent);
+	transform-origin: left;
+	transform: scaleX(1);
+	transition: transform .25s linear;
+}
+
+#nowHint:empty { display: none; }
+
+.actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.actions-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.actions-row > button { flex: 1 1 120px; min-width: 0; }
+html.apple .actions button {
+	height: 50px;
+	border-radius: 999px;
+	font-size: 16px;
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Perler sur Discord : bouton couleur Discord */
+html.apple .actions button.perle-button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	background: #5865f2;
+	color: #fff;
+}
+html.apple .actions button.perle-button:hover { background: #4752c4; }
+html.apple .actions button.perle-button:disabled { background: var(--ui-fill); color: var(--ui-text-secondary); }
+.perle-button img { width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; }
+html.apple .actions button.perle-button:disabled img { filter: grayscale(1); opacity: .5; }
+
+/* ---------- Listes ---------- */
+
+#tabs { margin: 0 0 10px; }
+
+.group { overflow: hidden; margin-bottom: 10px; }
+.group:empty { display: none; }
+
+.msg {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	padding: 10px 10px 10px 14px;
+	box-sizing: border-box;
+	cursor: pointer;
+	position: relative;
+}
+.list .msg + .msg { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
+.list .msg.shown { opacity: .5; }
+.list .msg.selected { background: var(--ui-fill); }
+.list .msg.selected::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 8px;
+	bottom: 8px;
+	width: 3px;
+	border-radius: 0 2px 2px 0;
+	background: var(--ui-accent);
+}
+.list .msg.current { background: var(--ui-accent-soft); opacity: 1; }
+
+.avatar {
+	flex-shrink: 0;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	overflow: hidden;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 600;
+	font-size: 14px;
+	color: #fff;
+}
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.msg .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.msg .top { display: flex; align-items: baseline; gap: 6px; min-width: 0; }
+.msg .badges { display: inline-flex; gap: 3px; align-self: center; }
+.msg .badges img { width: 14px; height: 14px; border-radius: 3px; display: block; }
+.msg .who { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg .meta { font-size: 12px; color: var(--ui-text-secondary); white-space: nowrap; margin-left: auto; font-variant-numeric: tabular-nums; }
+.msg .tag {
+	font-size: 11px;
+	font-weight: 600;
+	padding: 1px 7px;
+	border-radius: 999px;
+	background: var(--ui-accent);
+	color: #fff;
+	white-space: nowrap;
+	align-self: center;
+}
+.msg .text {
+	font-size: 14px;
+	line-height: 1.38;
+	color: var(--ui-text);
+	overflow-wrap: anywhere;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+}
+.msg .text .emote { height: 1.3em; vertical-align: -0.3em; }
+.msg .by { font-size: 12px; color: var(--ui-text-secondary); }
+
+.msg .row-actions { display: inline-flex; gap: 2px; align-self: center; }
+
+/* Boutons texte en bleu (actions de ligne) */
+html.apple button.text-button {
+	background: none;
+	box-shadow: none;
+	padding: 0;
+	height: auto;
+	color: var(--ui-accent);
+	font-weight: 500;
+	white-space: nowrap;
+}
+html.apple .group > button.text-button { display: block; width: 100%; padding: 14px 16px; text-align: left; }
+html.apple button.text-button.danger-text { color: var(--ui-red); text-align: center !important; }
+html.apple button.text-button.confirming { font-weight: 700; }
+html.apple .section > button.text-button { margin: 4px; }
+
+/* Icônes de ligne */
+html.apple button.row-icon {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+html.apple button.row-icon svg { width: 17px; height: 19px; fill: currentColor; }
+html.apple button.row-icon.trash { color: var(--ui-red); }
+html.apple button.row-icon.confirming { background: var(--ui-red); color: #fff; border-radius: 50%; }
+
+html.apple button.row-icon.discord img { width: 18px; height: 18px; border-radius: 4px; display: block; }
+html.apple button.row-icon:hover { background: var(--ui-fill); border-radius: 50%; }
+html.apple button.row-icon.trash.confirming:hover { background: var(--ui-red); }
+html.apple #clearButton { display: block; margin: 4px auto 0; }
+
+/* ---------- Notification ---------- */
+
+#toast {
+	position: fixed;
+	left: 50%;
+	bottom: 14px;
+	transform: translateX(-50%) translateY(8px);
+	background: var(--ui-bg-elevated);
+	color: var(--ui-text);
+	box-shadow: var(--ui-shadow-pop);
+	padding: 10px 16px;
+	border-radius: 999px;
+	font-size: 13px;
+	font-weight: 600;
+	opacity: 0;
+	transition: opacity .2s, transform .2s;
+	pointer-events: none;
+	max-width: 90vw;
+	text-align: center;
+	z-index: 10;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+

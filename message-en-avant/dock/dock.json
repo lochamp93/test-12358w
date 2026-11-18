@@ -1,0 +1,31 @@
+{
+	"settings": [
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"description": "Adresse du serveur WebSocket de Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion"
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"description": "",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion"
+		},
+		{
+			"id": "actionName",
+			"label": "Action Streamer.bot",
+			"description": "Nom de l’action qui contient le code C#",
+			"type": "text",
+			"defaultValue": "Message en avant | Gérer",
+			"group": "Streamer.bot"
+		}
+	],
+	"description": "Réglages du dock : valeurs par défaut, modifiables par paramètres d'URL (?port=8081…). Pas de page de paramétrage : le dock est un lien unique."
+}
