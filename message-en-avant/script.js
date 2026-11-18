@@ -48,16 +48,7 @@ function ApplySettings() {
 	SetVar('--in-ms', `${s.animInDuration}ms`);
 	SetVar('--out-ms', `${s.animOutDuration}ms`);
 
-	widgetEl.className = [
-		`layout-${s.layout}`,
-		['minimal', 'ticket', 'game'].includes(s.layout) ? 'layout-card' : '',
-		`align-${s.align}`,
-		`in-${s.animIn}`,
-		`out-${s.animOut}`,
-		s.showAvatar ? '' : 'hide-avatar',
-		s.showBadges ? '' : 'hide-badges',
-		ws.isActive('bgOpacity') && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
-	].filter(Boolean).join(' ');
+	widgetEl.className = LayoutClasses(s.layout);
 
 	// Le message affiché suit les nouveaux réglages, sans animation
 	if (shown && shownEl) {
@@ -66,6 +57,29 @@ function ApplySettings() {
 		shownEl = el;
 	}
 	QueueConfig();
+}
+
+// Classes de mise en page d'un style (overlay, ou image Discord avec son propre style)
+function LayoutClasses(layout) {
+	const s = ws.values;
+	// Polaroid et Écran d'appel sont toujours centrés
+	const align = ['polaroid', 'call'].includes(layout) ? 'center' : s.align;
+	return [
+		`layout-${layout}`,
+		['minimal', 'ticket', 'game'].includes(layout) ? 'layout-card' : '',
+		`align-${align}`,
+		`in-${s.animIn}`,
+		`out-${s.animOut}`,
+		s.showAvatar ? '' : 'hide-avatar',
+		s.showBadges ? '' : 'hide-badges',
+		['card', 'bubble', 'ticket', 'game'].includes(layout) && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
+	].filter(Boolean).join(' ');
+}
+
+// Style de l'image Discord : le sien, ou celui de l'overlay
+function PerleLayout() {
+	const v = ws.values.perleLayout;
+	return v && v !== 'same' ? v : ws.values.layout;
 }
 
 // Étiquette du mode (vide : pas d'étiquette)
@@ -111,6 +125,7 @@ function AvatarEl(item, className) {
 // Carte du message (même structure pour les trois styles, mise en forme par le CSS)
 function BuildCard(item, opts = {}) {
 	const s = ws.values;
+	const layout = opts.layout || s.layout;
 	const card = document.createElement('div');
 	card.className = `mea kind-${item.kind}`;
 	card.dataset.id = item.id;
@@ -119,8 +134,8 @@ function BuildCard(item, opts = {}) {
 
 	// Fond : avatar du viewer flouté et assombri (Carte, Bulle, Ticket), ou jaquette du jeu (Bannière de jeu)
 	let bgAvatar = null;
-	const gameCover = s.layout === 'game' ? GameCover() : '';
-	if ((ws.isActive('bgMode') && s.bgMode === 'avatar') || s.layout === 'game') {
+	const gameCover = layout === 'game' ? GameCover() : '';
+	if ((['card', 'bubble', 'ticket'].includes(layout) && s.bgMode === 'avatar') || layout === 'game') {
 		bgAvatar = document.createElement('div');
 		bgAvatar.className = 'bg-avatar';
 		bgAvatar.appendChild(document.createElement('i'));
@@ -131,9 +146,9 @@ function BuildCard(item, opts = {}) {
 	// Couleurs tirées de l'avatar (palette calculée une fois par avatar)
 	card._ready = (async () => {
 		const url = item.avatar || (item.login ? await MeaAvatar(item.login) : '');
-		if (bgAvatar && url && s.layout !== 'game') bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		if (bgAvatar && url && layout !== 'game') bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
 		const pal = await MeaPalette(url, item.color);
-		if (s.layout === 'polaroid') {
+		if (layout === 'polaroid') {
 			// Papier blanc : pseudo dans une teinte foncée de l'avatar (lisible), texte noir
 			const paper = '#FBFAF7';
 			const nm = s.colorMode === 'fixed' && s.nameColorMode === 'fixed' ? s.nameColor : (s.colorMode === 'fixed' ? (item.color || pal.darkVibrant) : pal.darkVibrant);
@@ -211,7 +226,7 @@ function BuildCard(item, opts = {}) {
 	card.appendChild(body);
 	if (bgAvatar) {
 		// Carte : fond de toute la carte ; Bulle : fond de la bulle
-		if (s.layout === 'bubble') bubble.insertBefore(bgAvatar, bubble.firstChild);
+		if (layout === 'bubble') bubble.insertBefore(bgAvatar, bubble.firstChild);
 		else card.insertBefore(bgAvatar, card.firstChild);
 	}
 	return card;
@@ -444,7 +459,8 @@ function WaitImages(root) {
 // Image du message avec le style de l'overlay
 async function Capture(item) {
 	if (!window.htmlToImage) throw new Error('Module de capture non chargé');
-	captureEl.className = widgetEl.className;
+	const perleLayout = PerleLayout();
+	captureEl.className = LayoutClasses(perleLayout);
 	captureEl.style.cssText = widgetEl.style.cssText;
 	captureEl.innerHTML = '';
 	const frame = document.createElement('div');
@@ -468,7 +484,7 @@ async function Capture(item) {
 		const scale = 1; // image : taille de police fixe, la hauteur s'adapte
 		item.thread.forEach((m, i) => {
 			const one = Object.assign({ id: `${item.id}:${i}`, kind: 'perle' }, m);
-			const c = BuildCard(one, { date: withDate ? (m.at || item.at || Date.now()) : 0 });
+			const c = BuildCard(one, { layout: perleLayout, date: withDate ? (m.at || item.at || Date.now()) : 0 });
 			c.style.setProperty('--text-scale', String(scale));
 			if (i > 0) {
 				const row = document.createElement('div');
@@ -478,7 +494,7 @@ async function Capture(item) {
 			} else card.appendChild(c);
 		});
 	} else {
-		card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
+		card = BuildCard(item, { layout: perleLayout, date: withDate ? (item.at || Date.now()) : 0 });
 		card.style.setProperty('--text-scale', '1');
 	}
 	// Couleurs tirées des avatars : calculées avant la capture

@@ -129,6 +129,7 @@ body {
 #capture .watermark {
 	display: flex;
 	align-items: center;
+	justify-content: flex-end;
 	gap: 0.4em;
 	margin-top: 0.6em;
 	font-size: calc(var(--font-size) * 0.45);
@@ -137,8 +138,6 @@ body {
 	opacity: 0.6;
 }
 #capture .watermark img { width: 1.25em; height: 1.25em; border-radius: 0.2em; }
-#capture.align-center .watermark { justify-content: center; }
-#capture.align-right .watermark { justify-content: flex-end; }
 
 .mea .avatar {
 	flex-shrink: 0;
@@ -300,10 +299,24 @@ body {
 
 .layout-ticket .mea {
 	border-radius: 0.45em;
-	padding: 0.6em 0.9em 0.7em 1em;
-	border-left: 0.28em solid var(--accent);
+	padding: 0.6em 0.9em 0.7em 1.1em;
 	row-gap: 0.3em;
+	overflow: hidden;
 }
+/* Liseré façon annonce Twitch : collé au bord, coins arrondis à l'extérieur, droits à l'intérieur,
+   avec une marge avant le texte */
+.layout-ticket .mea::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 0.26em;
+	background: var(--accent);
+	border-radius: 0.45em 0 0 0.45em;
+	z-index: 2;
+}
+#capture.layout-ticket .perle-frame.with-image .mea { padding-left: 1.1em; }
 .layout-ticket .mea > .avatar { width: calc(var(--font-size) * 1.1); height: calc(var(--font-size) * 1.1); }
 .layout-ticket .mea .head .name {
 	font-size: 0.62em;

@@ -335,7 +335,14 @@
 					"label": "À droite"
 				}
 			],
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"notValue": [
+					"polaroid",
+					"call"
+				]
+			}
 		},
 		{
 			"id": "showAvatar",
@@ -351,7 +358,11 @@
 			"description": "Badges Twitch du viewer (abonné, modo, VIP…)",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"notValue": "polaroid"
+			}
 		},
 		{
 			"id": "nameColorMode",
@@ -451,8 +462,16 @@
 			"defaultValue": "#FFFFFF",
 			"group": "Style",
 			"showIf": {
-				"id": "colorMode",
-				"value": "fixed"
+				"all": [
+					{
+						"id": "colorMode",
+						"value": "fixed"
+					},
+					{
+						"id": "layout",
+						"notValue": "polaroid"
+					}
+				]
 			}
 		},
 		{
@@ -684,6 +703,53 @@
 			"description": "Affichées à côté du pseudo, sur l’image envoyée dans Discord",
 			"type": "checkbox",
 			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleLayout",
+			"label": "Style de l’image",
+			"description": "Peut être différent de l’overlay (ex. Carte à l’écran, Citation sur Discord)",
+			"type": "select",
+			"defaultValue": "same",
+			"options": [
+				{
+					"value": "same",
+					"label": "Comme l’overlay"
+				},
+				{
+					"value": "card",
+					"label": "Carte"
+				},
+				{
+					"value": "bubble",
+					"label": "Bulle"
+				},
+				{
+					"value": "quote",
+					"label": "Citation"
+				},
+				{
+					"value": "minimal",
+					"label": "Minimaliste"
+				},
+				{
+					"value": "ticket",
+					"label": "Ticket"
+				},
+				{
+					"value": "polaroid",
+					"label": "Polaroid"
+				},
+				{
+					"value": "call",
+					"label": "Écran d’appel"
+				},
+				{
+					"value": "game",
+					"label": "Bannière de jeu"
+				}
+			],
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perles"
 		},
