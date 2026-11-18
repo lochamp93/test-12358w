@@ -172,6 +172,9 @@ html.apple button.round {
 }
 html.apple button.round svg { width: 18px; height: 18px; fill: currentColor; }
 html.apple button.round[data-icon^="chevron"] svg { width: 9px; height: 15px; }
+/* Centrage optique : la pointe du chevron pèse plus que ses branches */
+html.apple #prevButton svg { transform: translateX(-1.5px); }
+html.apple #nextButton svg { transform: translateX(1.5px); }
 html.apple button.round:hover { filter: brightness(1.15); }
 html.apple button.round:disabled { opacity: .35; filter: none; cursor: default; }
 /* Œil : en couleur quand le message est à l'écran */
@@ -207,7 +210,23 @@ html.apple #perleButton:not(:disabled) { background: #5865f2; color: #fff; }
 
 /* ---------- Listes ---------- */
 
-#tabs { margin: 0 0 10px; }
+/* Onglets et « Effacer » sur la même ligne */
+.tabs-row { display: flex; align-items: center; gap: 12px; margin: 0 0 10px; }
+.tabs-row > #tabs { flex: 1; min-width: 0; }
+html.apple button.text-link {
+	width: auto;
+	height: auto;
+	padding: 0 2px;
+	background: none;
+	box-shadow: none;
+	color: var(--ui-accent);
+	font-size: 15px;
+	font-weight: 500;
+	flex-shrink: 0;
+	cursor: pointer;
+}
+html.apple button.text-link:hover { background: none; text-decoration: underline; }
+html.apple button.text-link.confirming { color: var(--ui-red); font-weight: 600; }
 
 .group { overflow: hidden; margin-bottom: 10px; }
 .group:empty { display: none; }
@@ -224,16 +243,6 @@ html.apple #perleButton:not(:disabled) { background: #5865f2; color: #fff; }
 .list .msg + .msg { box-shadow: inset 0 0.5px 0 var(--ui-separator); }
 .list .msg.shown { opacity: .5; }
 .list .msg.selected { background: var(--ui-fill); }
-.list .msg.selected::before {
-	content: "";
-	position: absolute;
-	left: 0;
-	top: 8px;
-	bottom: 8px;
-	width: 3px;
-	border-radius: 0 2px 2px 0;
-	background: var(--ui-accent);
-}
 .list .msg.current { background: var(--ui-accent-soft); opacity: 1; }
 
 .avatar {
@@ -316,7 +325,6 @@ html.apple button.row-icon.confirming { background: var(--ui-red); color: #fff; 
 html.apple button.row-icon.discord img { width: 18px; height: 18px; border-radius: 4px; display: block; }
 html.apple button.row-icon:hover { background: var(--ui-fill); border-radius: 50%; }
 html.apple button.row-icon.trash.confirming:hover { background: var(--ui-red); }
-html.apple #clearButton { display: block; margin: 4px auto 0; }
 
 /* ---------- Notification ---------- */
 

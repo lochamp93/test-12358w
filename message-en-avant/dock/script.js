@@ -520,7 +520,22 @@ function Bind() {
 		else Send('show', { id: focus.id });
 	});
 	$('perleButton').addEventListener('click', () => { const f = FocusItem(); if (f) RequestPerle(f.id); });
-	WithConfirmation($('clearButton'), 'Confirmer : vider la liste', () => { selectedId = null; Send('clear', { list: tab }); });
+	// « Effacer » : vide la liste de l'onglet (deux clics)
+	$('clearButton').addEventListener('click', () => {
+		const btn = $('clearButton');
+		if (!btn.classList.contains('confirming')) {
+			btn.classList.add('confirming');
+			btn.textContent = 'Confirmer';
+			clearTimeout(btn._t);
+			btn._t = setTimeout(() => { btn.classList.remove('confirming'); btn.textContent = 'Effacer'; }, 3000);
+			return;
+		}
+		clearTimeout(btn._t);
+		btn.classList.remove('confirming');
+		btn.textContent = 'Effacer';
+		selectedId = null;
+		Send('clear', { list: tab });
+	});
 	$('recheckButton').addEventListener('click', CheckAction);
 }
 
