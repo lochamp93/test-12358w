@@ -6,11 +6,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Message en avant • Dock</title>
 	<link rel="icon" href="../../-common/resources/favicon.png" type="image/png">
-	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111814" />
-	<link rel="stylesheet" href="../../-common/styles/segmented.css?v=2026111814" />
+	<link rel="stylesheet" href="../../-common/styles/apple.css?v=2026111815" />
+	<link rel="stylesheet" href="../../-common/styles/segmented.css?v=2026111815" />
 	<!-- Dock : thème sombre uniquement ; rechargement automatique si une version plus récente est en ligne -->
-	<script src="../../-common/utils/fresh.js?v=2026111814" data-version="2026111814" data-version-url="../version.txt"></script>
-	<link rel="stylesheet" href="./style.css?v=2026111814" />
+	<script src="../../-common/utils/fresh.js?v=2026111815" data-version="2026111815" data-version-url="../version.txt"></script>
+	<link rel="stylesheet" href="./style.css?v=2026111815" />
 	<script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -52,26 +52,25 @@
 	</div>
 
 	<div id="main">
-		<!-- Message à l'écran -->
+		<!-- Message à l'écran (ou sélectionné) -->
 		<div id="nowCard" class="card">
-			<div class="caption-row">
-				<span class="caption">À l’écran</span>
-				<span id="nowTime" class="caption secondary"></span>
+			<div class="now-head">
+				<div class="now-title">
+					<span id="nowCaption" class="caption">À l’écran</span>
+					<span id="nowTime" class="caption secondary"></span>
+				</div>
+				<div class="now-buttons">
+					<button id="prevButton" type="button" class="round" data-icon="chevron.left" title="Message précédent" aria-label="Message précédent"></button>
+					<button id="nextButton" type="button" class="round" data-icon="chevron.right" title="Message suivant" aria-label="Message suivant"></button>
+					<button id="eyeButton" type="button" class="round" data-icon="eye.slash" title="Afficher sur l’overlay" aria-label="Afficher sur l’overlay"></button>
+					<button id="perleButton" type="button" class="round" data-icon="camera.viewfinder" title="Perler sur Discord" aria-label="Perler sur Discord"></button>
+				</div>
 			</div>
 			<div id="nowItem"></div>
 			<div id="nowTimer" class="bar" hidden><i id="nowTimerBar"></i></div>
+			<p id="nowOther" class="muted"></p>
 			<p id="nowHint" class="muted"></p>
-			<div class="actions">
-				<div class="actions-row">
-					<button id="showButton" type="button" class="accent">Afficher</button>
-					<button id="hideButton" type="button">Masquer</button>
-				</div>
-				<button id="perleButton" type="button" class="perle-button" hidden>
-					<img src="../../-common/resources/icons/platforms/discord.png" alt="" />
-					<span>Perler sur Discord</span>
-				</button>
-				<p id="perleOff" class="muted" hidden>Perles Discord inactives : l’overlay dans OBS n’a pas de webhook. Collez le webhook sur la page de paramétrage, recopiez l’URL de l’overlay, puis remplacez-la dans la source OBS (gardée active).</p>
-			</div>
+			<p id="perleOff" class="muted" hidden>Perles Discord inactives : l’overlay dans OBS n’a pas de webhook. Collez le webhook sur la page de paramétrage, recopiez l’URL de l’overlay, puis remplacez-la dans la source OBS (gardée active).</p>
 		</div>
 
 		<!-- Listes -->
@@ -83,10 +82,11 @@
 
 	<div id="toast"></div>
 
-	<script src="../../-common/utils/widget-settings.js?v=2026111814"></script>
-	<script src="../../-common/utils/segmented.js?v=2026111814"></script>
-	<script src="../helpers.js?v=2026111814"></script>
-	<script src="./script.js?v=2026111814"></script>
+	<script src="../../-common/utils/widget-settings.js?v=2026111815"></script>
+	<script src="../../-common/utils/icons.js?v=2026111815"></script>
+	<script src="../../-common/utils/segmented.js?v=2026111815"></script>
+	<script src="../helpers.js?v=2026111815"></script>
+	<script src="./script.js?v=2026111815"></script>
 </body>
 
 </html>

@@ -160,39 +160,87 @@ function Render() {
 	RenderList();
 }
 
+// Liste de l'onglet affiché : questions de la plus ancienne à la plus récente (ordre de réponse),
+// highlights du plus récent au plus ancien
+function TabList() {
+	return tab === 'qa' ? state.qa.slice().reverse() : state.highlights;
+}
+
+// Message affiché dans la carte : la sélection, sinon le message à l'écran
+function FocusItem() {
+	return MeaFind(state, selectedId) || state.current;
+}
+
+function KindLabel(item) { return item.kind === 'qa' ? 'Question' : 'Highlight'; }
+
 function RenderNow() {
 	const cur = state.current;
+	const focus = FocusItem();
+	const onScreen = !!(cur && focus && cur.id === focus.id);
 	const box = $('nowItem');
 	box.innerHTML = '';
-	box.classList.toggle('on', !!cur);
-	if (cur) box.appendChild(MessageEl(cur, { tag: cur.kind === 'qa' ? 'Question' : 'Highlight' }));
+	box.classList.toggle('on', onScreen);
+	box.classList.toggle('selection', !!focus && !onScreen);
+	if (focus) box.appendChild(MessageEl(onScreen ? cur : focus, { tag: KindLabel(focus) }));
 	else {
 		const empty = document.createElement('div');
 		empty.className = 'empty';
 		empty.textContent = 'Rien à l’écran';
 		box.appendChild(empty);
 	}
-	$('nowTime').textContent = cur && cur.shownAt ? `depuis ${Clock(cur.shownAt)}` : '';
+	$('nowCaption').textContent = focus && !onScreen ? 'Sélection' : 'À l’écran';
+	$('nowCaption').classList.toggle('live', onScreen);
+	$('nowTime').textContent = onScreen && cur.shownAt ? `depuis ${Clock(cur.shownAt)}` : '';
+	$('nowOther').textContent = focus && !onScreen ? (cur ? `À l’écran : ${cur.name} (${KindLabel(cur).toLowerCase()})` : 'Rien à l’écran') : '';
 
-	// Hint : file d'attente et retour à la question
+	// File d'attente et retour à la question
 	const hints = [];
 	if (state.queue.length) hints.push(state.queue.length === 1 ? '1 highlight en attente' : `${state.queue.length} highlights en attente`);
 	const resume = state.resume ? MeaFind(state, state.resume) : null;
 	if (resume) hints.push(`Ensuite : retour à la question de ${resume.name}`);
 	$('nowHint').textContent = hints.join(' · ');
 
-	// Afficher : le message sélectionné dans la liste
-	const selected = MeaFind(state, selectedId);
-	$('showButton').disabled = !selected || (cur && cur.id === selected.id);
-	$('showButton').textContent = selected && (!cur || cur.id !== selected.id) && selected.shown ? 'Afficher à nouveau' : 'Afficher';
-	$('hideButton').disabled = !cur;
+	// Œil : afficher le message de la carte, ou le masquer s'il est déjà à l'écran
+	const eye = $('eyeButton');
+	eye.disabled = !focus;
+	eye.classList.toggle('on', onScreen);
+	SetIcon(eye, onScreen ? 'eye' : 'eye.slash');
+	const eyeTitle = onScreen ? 'Masquer de l’overlay' : (focus && focus.shown ? 'Afficher à nouveau sur l’overlay' : 'Afficher sur l’overlay');
+	eye.title = eyeTitle;
+	eye.setAttribute('aria-label', eyeTitle);
 
-	$('perleButton').hidden = !state.config.perles && !demo;
-	$('perleOff').hidden = !!state.config.perles || demo;
-	$('perleButton').disabled = !cur || PerleBusy();
+	// Chevrons : message précédent ou suivant de l'onglet
+	const list = TabList();
+	const idx = focus ? list.findIndex(x => x.id === focus.id) : -1;
+	$('prevButton').disabled = idx <= 0;
+	$('nextButton').disabled = !list.length || idx >= list.length - 1;
+
+	// Perle
+	const perlesOn = !!state.config.perles || demo;
+	$('perleButton').disabled = !focus || !perlesOn || PerleBusy();
+	$('perleOff').hidden = perlesOn;
 
 	UpdateTimer();
 	ScheduleExpire();
+}
+
+function SetIcon(button, name) {
+	if (button.dataset.drawn === name) return;
+	button.dataset.drawn = name;
+	button.innerHTML = window.UIIcon ? UIIcon(name) : '';
+}
+
+function Step(delta) {
+	const list = TabList();
+	if (!list.length) return;
+	const focus = FocusItem();
+	const idx = focus ? list.findIndex(x => x.id === focus.id) : -1;
+	const next = idx < 0 ? (delta > 0 ? 0 : -1) : idx + delta;
+	if (next < 0 || next >= list.length) return;
+	selectedId = list[next].id;
+	Render();
+	const row = document.querySelector(`#list .msg[data-id="${CSS.escape(selectedId)}"]`);
+	if (row) row.scrollIntoView({ block: 'nearest' });
 }
 
 function PerleBusy() {
@@ -228,7 +276,7 @@ function ScheduleExpire() {
 }
 
 function RenderList() {
-	const list = tab === 'qa' ? state.qa : state.highlights;
+	const list = TabList();
 	tabs.setCount('qa', state.qa.filter(x => !x.shown).length || '');
 	tabs.setCount('highlights', state.highlights.length || '');
 
@@ -462,9 +510,16 @@ function Bind() {
 		onChange: (v) => { tab = v; selectedId = null; Render(); }
 	});
 
-	$('showButton').addEventListener('click', () => { if (selectedId) Send('show', { id: selectedId }); });
-	$('hideButton').addEventListener('click', () => Send('hide'));
-	$('perleButton').addEventListener('click', () => { if (state.current) RequestPerle(state.current.id); });
+	document.querySelectorAll('button.round[data-icon]').forEach(b => SetIcon(b, b.dataset.icon));
+	$('prevButton').addEventListener('click', () => Step(-1));
+	$('nextButton').addEventListener('click', () => Step(1));
+	$('eyeButton').addEventListener('click', () => {
+		const focus = FocusItem();
+		if (!focus) return;
+		if (state.current && state.current.id === focus.id) Send('hide');
+		else Send('show', { id: focus.id });
+	});
+	$('perleButton').addEventListener('click', () => { const f = FocusItem(); if (f) RequestPerle(f.id); });
 	WithConfirmation($('clearButton'), 'Confirmer : vider la liste', () => { selectedId = null; Send('clear', { list: tab }); });
 	$('recheckButton').addEventListener('click', CheckAction);
 }

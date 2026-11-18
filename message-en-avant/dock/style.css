@@ -140,15 +140,50 @@ html.apple a.button-link {
 
 /* ---------- Message à l'écran ---------- */
 
-#nowCard { padding: 16px; margin-bottom: 16px; }
+#nowCard { padding: 14px 16px 16px; margin-bottom: 16px; }
 
-.caption-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+.now-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.now-title { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
 .caption { font-size: 12px; font-weight: 600; color: var(--ui-text-secondary); }
+#nowCaption.live { color: var(--ui-green); }
+#nowCaption.live::before {
+	content: "";
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	margin-right: 5px;
+	border-radius: 50%;
+	background: var(--ui-green);
+	vertical-align: 0;
+}
+.now-buttons { display: flex; gap: 6px; flex-shrink: 0; }
 
-#nowItem .msg { padding: 0; }
+/* Boutons ronds (symboles SF) */
+html.apple button.round {
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border-radius: 50%;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--ui-fill-strong);
+	color: var(--ui-text);
+}
+html.apple button.round svg { width: 18px; height: 18px; fill: currentColor; }
+html.apple button.round[data-icon^="chevron"] svg { width: 9px; height: 15px; }
+html.apple button.round:hover { filter: brightness(1.15); }
+html.apple button.round:disabled { opacity: .35; filter: none; cursor: default; }
+/* Œil : en couleur quand le message est à l'écran */
+html.apple button.round.on { background: var(--ui-accent); color: #fff; }
+/* Perle : bleu Discord */
+html.apple #perleButton:not(:disabled) { background: #5865f2; color: #fff; }
+
+#nowItem .msg { padding: 0; cursor: default; }
 #nowItem .msg .text { -webkit-line-clamp: 6; font-size: 15px; }
 #nowItem .empty { color: var(--ui-text-secondary); font-size: 15px; padding: 6px 0; }
 #nowItem.on .msg { padding: 10px 12px; border-radius: 16px; background: var(--ui-accent-soft); }
+#nowItem.selection .msg { padding: 10px 12px; border-radius: 16px; background: var(--ui-cell); }
 
 .bar {
 	height: 4px;
@@ -167,34 +202,8 @@ html.apple a.button-link {
 	transition: transform .25s linear;
 }
 
-#nowHint:empty { display: none; }
-
-.actions { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-.actions-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.actions-row > button { flex: 1 1 120px; min-width: 0; }
-html.apple .actions button {
-	height: 50px;
-	border-radius: 999px;
-	font-size: 16px;
-	font-weight: 600;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-/* Perler sur Discord : bouton couleur Discord */
-html.apple .actions button.perle-button {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-	background: #5865f2;
-	color: #fff;
-}
-html.apple .actions button.perle-button:hover { background: #4752c4; }
-html.apple .actions button.perle-button:disabled { background: var(--ui-fill); color: var(--ui-text-secondary); }
-.perle-button img { width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; }
-html.apple .actions button.perle-button:disabled img { filter: grayscale(1); opacity: .5; }
+#nowOther:empty, #nowHint:empty { display: none; }
+#nowCard .muted { margin: 8px 2px 0; }
 
 /* ---------- Listes ---------- */
 
