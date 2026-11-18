@@ -657,6 +657,14 @@ async function CaptureNow(item) {
 		});
 		if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	} else if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
+	// Couleur du texte de l'image (filigrane) et ombre du texte adaptée : claire sous un texte foncé
+	if (!(bgImage && pc === 'image') && cards.length) {
+		const t = (cards[cards.length - 1].style.getPropertyValue('--text-color') || '').trim(); // carte pas encore dans la page : valeur posée sur elle
+		if (/^#[0-9a-f]{6}$/i.test(t)) frame.style.setProperty('--text-color', t);
+	}
+	const textHex = (frame.style.getPropertyValue('--text-color') || '#FFFFFF').trim();
+	frame.style.setProperty('--perle-shadow', /^#[0-9a-f]{6}$/i.test(textHex) && MeaContrast(textHex, '#000000') < 4.5 ? 'rgba(255, 255, 255, 0.35)' : 'rgba(0, 0, 0, 0.35)');
+	if (!bgImage && v.perleBg === 'color') frame.classList.add('solid');
 	// Couleur unie : le fond vient du thème (Personnalisées : la couleur choisie ; Avatar : l'auteur du message perlé)
 	if (!bgImage && v.perleBg === 'color' && cards.length) {
 		const last = cards[cards.length - 1];
