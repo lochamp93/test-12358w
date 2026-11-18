@@ -477,6 +477,15 @@
 			"showIf": "perles"
 		},
 		{
+			"id": "perleCommand",
+			"label": "Commande",
+			"description": "Un modo ou la streameuse répond à un message avec la commande : il part sur Discord avec « Perlé par … le jj/mm/aaaa à hh:mm », sans s’afficher sur l’overlay",
+			"type": "text",
+			"defaultValue": "!perle",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
 			"id": "caption",
 			"label": "Ajouter une légende (pseudo, date)",
 			"description": "",

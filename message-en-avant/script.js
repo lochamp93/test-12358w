@@ -70,7 +70,8 @@ function ApplySettings() {
 function LabelFor(item) {
 	if (!ws.values.showLabel) return '';
 	if (item.kind === 'qa') return ws.isActive('labelQa') ? String(ws.values.labelQa || '').trim() : '';
-	return ws.isActive('labelHighlight') ? String(ws.values.labelHighlight || '').trim() : '';
+	if (item.kind === 'highlight') return ws.isActive('labelHighlight') ? String(ws.values.labelHighlight || '').trim() : '';
+	return ''; // perle par commande : pas d'étiquette
 }
 
 function TextScale(item) {
@@ -230,7 +231,8 @@ function PublicConfig() {
 		highlightDuration: Number(s.highlightDuration),
 		conflict: ws.isActive('conflict') ? s.conflict : 'replace',
 		queue: s.queue,
-		perles: !!(s.perles && WebhookURL())
+		perles: !!(s.perles && WebhookURL()),
+		perleCommand: ws.isActive('perleCommand') ? String(s.perleCommand || '') : ''
 	};
 }
 
@@ -308,7 +310,10 @@ function ConnectStreamerBot() {
 	if (!ws.demo) {
 		MeaCollector.start({
 			sbClient,
-			getConfig: () => ({ qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command }),
+			getConfig: () => ({
+				qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command,
+				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : ''
+			}),
 			send: (args) => Send(args)
 		});
 	}
@@ -337,11 +342,11 @@ function CheckPerle(state) {
 		lastPerleN = n;
 		if (WebhookURL()) Send({ mode: 'perleClaim', n: String(n), by: INSTANCE });
 	}
-	if (p.status === 'claimed' && p.by === INSTANCE && perleDoing !== n) {
+	if (p.status === 'claimed' && p.claimedBy === INSTANCE && perleDoing !== n) {
 		perleDoing = n;
 		const item = MeaFind(state, p.id) || p.item;
 		if (!item) { Send({ mode: 'perleDone', n: String(n), ok: 'false', error: 'Message introuvable' }); return; }
-		Perle(item, false)
+		Perle(item, false, p.by ? { by: p.by, at: p.at } : null)
 			.then(() => Send({ mode: 'perleDone', n: String(n), ok: 'true' }))
 			.catch(e => {
 				console.error('[Message en avant] Perle impossible :', e);
@@ -388,18 +393,19 @@ async function Capture(item) {
 
 function DiscordEscape(text) { return String(text || '').replace(/([\\*_~`|>#\[\]()-])/g, '\\$1'); }
 
-async function Perle(item, test) {
+// perledBy : { by, at } pour une perle demandée par commande dans le chat
+async function Perle(item, test, perledBy) {
 	const url = WebhookURL();
 	if (!url) throw new Error('URL du webhook manquante ou invalide');
 	const blob = await Capture(item);
 	if (!blob) throw new Error('Image vide');
+	const when = (ms) => {
+		const d = new Date(Number(ms) || Date.now());
+		return `${d.toLocaleDateString('fr-FR')} à ${d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+	};
 	let content = '';
-	if (ws.values.caption) {
-		const d = new Date(Number(item.at) || Date.now());
-		const date = d.toLocaleDateString('fr-FR');
-		const time = d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-		content = `Perle de **${DiscordEscape(item.name || item.login)}**, le ${date} à ${time}`;
-	}
+	if (perledBy && perledBy.by) content = `Perlé par **${DiscordEscape(perledBy.by)}** le ${when(perledBy.at)}`;
+	else if (ws.values.caption) content = `Perle de **${DiscordEscape(item.name || item.login)}**, le ${when(item.at)}`;
 	if (test) content = content ? `${content} (test)` : 'Test de perle depuis la page de paramétrage';
 	const form = new FormData();
 	form.append('payload_json', JSON.stringify({ content, allowed_mentions: { parse: [] } }));

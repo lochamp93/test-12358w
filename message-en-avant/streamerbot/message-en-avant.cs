@@ -12,11 +12,12 @@
 //  Arguments acceptés :
 //    mode : config | qa | highlight | show | hide | expire | remove | clear | perle | perleClaim | perleDone | reset
 //    config : JSON des réglages publiés par l'overlay (mode config)
-//    item   : JSON du message (modes qa et highlight)
+//    item   : JSON du message (modes qa et highlight, et perle par commande)
 //    msgId  : identifiant de l'événement (anti-doublon)
 //    id     : identifiant d'un message (modes show, expire, remove, perle)
 //    list   : qa | highlights (mode clear)
-//    n, by, ok, error : suivi d'une perle (modes perleClaim et perleDone)
+//    by     : auteur de la commande !perle (mode perle) ou page qui traite la perle (mode perleClaim)
+//    n, ok, error : suivi d'une perle (modes perleClaim et perleDone)
 // =====================================================================
 using System;
 using System.Collections.Generic;
@@ -145,7 +146,16 @@ public class CPHInline
 			}
 			case "perle":
 			{
-				JObject item = Trouver(data, Arg("id"));
+				// Depuis le dock : message des listes (id). Depuis le chat (commande) : message fourni (item) et auteur de la commande (by)
+				JObject item = null;
+				string par = Arg("by").Trim();
+				if (Arg("item") != "")
+				{
+					if (!cfg.Value<bool>("perles")) return true;
+					try { item = JObject.Parse(Arg("item")); } catch (Exception) { }
+					if (item == null || string.IsNullOrEmpty(item.Value<string>("id"))) return false;
+				}
+				else item = Trouver(data, Arg("id"));
 				if (item == null) return false;
 				JObject perle = data["perle"] as JObject ?? new JObject();
 				long n = (perle.Value<long?>("n") ?? 0) + 1;
@@ -154,6 +164,7 @@ public class CPHInline
 					["n"] = n, ["id"] = item.Value<string>("id"), ["item"] = item.DeepClone(),
 					["status"] = "pending", ["at"] = Maintenant()
 				};
+				if (par != "") data["perle"]["by"] = par;
 				Sauver(data, "perle");
 				return true;
 			}
@@ -162,7 +173,7 @@ public class CPHInline
 				JObject perle = data["perle"] as JObject;
 				if (perle == null || perle.Value<string>("status") != "pending" || perle.Value<long>("n").ToString() != Arg("n")) return true;
 				perle["status"] = "claimed";
-				perle["by"] = Arg("by");
+				perle["claimedBy"] = Arg("by");
 				perle["claimedAt"] = Maintenant();
 				Sauver(data, "perle");
 				return true;
@@ -306,7 +317,7 @@ public class CPHInline
 		return new JObject
 		{
 			["qa"] = true, ["rewardName"] = "Q&A", ["highlight"] = true, ["command"] = "!highlight",
-			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false
+			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false, ["perleCommand"] = "!perle"
 		};
 	}
 

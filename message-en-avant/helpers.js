@@ -171,33 +171,17 @@ const MeaCollector = (function () {
 		return (words[0] || '').toLowerCase();
 	}
 
-	async function onChat(d) {
-		if (!d) return;
-		const msg = fromTwitchChat(d);
-		if (msg.login) remember(users, msg.login, { color: msg.color, badges: msg.badges, userId: msg.userId, name: msg.name });
-
-		const cfg = opts && opts.getConfig();
-		const reply = replyInfo(d);
-		const command = String((cfg && cfg.command) || '').trim().toLowerCase();
-		const isCommand = !!(cfg && cfg.highlight && command && commandOf(msg.text) === command);
-
-		if (!isCommand) {
-			// Message ordinaire : gardé en mémoire pour un éventuel highlight
-			if (msg.msgId) remember(messages, msg.msgId, msg);
-			return;
-		}
-		if (!reply || !isStaff(d)) return;
-
-		// Message d'origine : version complète (emotes, badges, couleur) si on l'a vu passer
+	// Message d'origine d'une réponse : version complète (emotes, badges, couleur) si on l'a vu passer
+	async function originalItem(reply, msg, prefix, kind) {
 		const seen = messages.get(reply.msgId);
 		const known = users.get(reply.login) || {};
 		const src = seen || {
 			msgId: reply.msgId, userId: reply.userId || known.userId || '', login: reply.login, name: reply.name || known.name || reply.login,
 			color: known.color || '', badges: known.badges || [], parts: [{ t: 'text', v: reply.text }], text: reply.text
 		};
-		const item = {
-			id: 'hl:' + (src.msgId || msg.msgId),
-			kind: 'highlight',
+		return {
+			id: prefix + (src.msgId || msg.msgId),
+			kind,
 			name: src.name || src.login,
 			login: src.login,
 			userId: src.userId,
@@ -209,7 +193,36 @@ const MeaCollector = (function () {
 			at: Date.now(),
 			by: msg.name || msg.login
 		};
-		opts.send({ mode: 'highlight', msgId: 'hl:' + msg.msgId, item: JSON.stringify(item) });
+	}
+
+	async function onChat(d) {
+		if (!d) return;
+		const msg = fromTwitchChat(d);
+		if (msg.login) remember(users, msg.login, { color: msg.color, badges: msg.badges, userId: msg.userId, name: msg.name });
+
+		const cfg = opts && opts.getConfig();
+		const cmd = commandOf(msg.text);
+		const highlightCmd = String((cfg && cfg.command) || '').trim().toLowerCase();
+		const perleCmd = String((cfg && cfg.perleCommand) || '').trim().toLowerCase();
+		const isHighlight = !!(cfg && cfg.highlight && highlightCmd && cmd === highlightCmd);
+		const isPerle = !!(cfg && cfg.perles && perleCmd && cmd === perleCmd);
+
+		if (!isHighlight && !isPerle) {
+			// Message ordinaire : gardé en mémoire pour un éventuel highlight ou une perle
+			if (msg.msgId) remember(messages, msg.msgId, msg);
+			return;
+		}
+		const reply = replyInfo(d);
+		if (!reply || !isStaff(d)) return;
+
+		if (isHighlight) {
+			const item = await originalItem(reply, msg, 'hl:', 'highlight');
+			opts.send({ mode: 'highlight', msgId: 'hl:' + msg.msgId, item: JSON.stringify(item) });
+		} else {
+			// Perle : envoyée sur Discord sans passer par l'overlay
+			const item = await originalItem(reply, msg, 'pl:', 'perle');
+			opts.send({ mode: 'perle', msgId: 'pl:' + msg.msgId, item: JSON.stringify(item), by: item.by });
+		}
 	}
 
 	async function onReward(d) {
@@ -243,7 +256,7 @@ const MeaCollector = (function () {
 	}
 
 	return {
-		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command } | null, send: (args) => void }
+		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command, perles, perleCommand } | null, send: (args) => void }
 		start(o) {
 			opts = o;
 			o.sbClient.on('Twitch.ChatMessage', ({ data }) => { onChat(data).catch(e => console.error('[Message en avant]', e)); });
