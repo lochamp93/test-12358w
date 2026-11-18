@@ -12,7 +12,7 @@
 //  Plusieurs pages peuvent envoyer le même événement : les doublons sont ignorés (msgId).
 //
 //  Arguments acceptés :
-//    mode : config | qa | highlight | show | hide | expire | remove | clear | perle | perleClaim | perleDone | perleImage | reset
+//    mode : config | qa | highlight | show | hide | expire | extend | remove | clear | perle | perleClaim | perleDone | perleImage | reset
 //    data   : image de fond des perles en data URL, vide pour la retirer (mode perleImage)
 //    config : JSON des réglages publiés par l'overlay (mode config)
 //    item   : JSON du message (modes qa et highlight, et perle par commande)
@@ -136,6 +136,19 @@ public class CPHInline
 				if (fin == 0 || Maintenant() < fin - 1500) return true; // trop tôt (horloge d'une autre page)
 				Suivant(data, cfg);
 				Sauver(data, "expire");
+				return true;
+			}
+			case "extend":
+			{
+				// Bandeau : le highlight reste le temps que son texte finisse de défiler (2 minutes de plus au maximum)
+				JObject cur = data["current"] as JObject;
+				if (cur == null || cur.Value<string>("id") != Arg("id")) return true;
+				long fin = cur.Value<long?>("until") ?? 0;
+				long voulu = 0;
+				long.TryParse(Arg("until"), out voulu);
+				if (fin == 0 || voulu <= fin) return true;
+				cur["until"] = Math.Min(voulu, fin + 120000);
+				Sauver(data, "extend");
 				return true;
 			}
 			case "remove":

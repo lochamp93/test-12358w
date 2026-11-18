@@ -225,9 +225,152 @@
 				{
 					"value": "call",
 					"label": "Écran d’appel"
+				},
+				{
+					"value": "banner",
+					"label": "Bandeau"
 				}
 			],
 			"group": "Style"
+		},
+		{
+			"id": "bannerPos",
+			"type": "select",
+			"label": "Position du bandeau",
+			"defaultValue": "top",
+			"options": [
+				{
+					"value": "top",
+					"label": "En haut"
+				},
+				{
+					"value": "bottom",
+					"label": "En bas"
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerRadius",
+			"type": "checkbox",
+			"label": "Coins arrondis",
+			"defaultValue": false,
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerScroll",
+			"type": "checkbox",
+			"label": "Faire défiler les messages longs",
+			"description": "Quand le message dépasse la largeur du bandeau",
+			"defaultValue": true,
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": "banner"
+			}
+		},
+		{
+			"id": "bannerScrollMode",
+			"type": "select",
+			"label": "Défilement",
+			"defaultValue": "pingpong",
+			"options": [
+				{
+					"value": "pingpong",
+					"label": "Aller-retour"
+				},
+				{
+					"value": "loop",
+					"label": "En boucle"
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "layout",
+						"value": "banner"
+					},
+					{
+						"id": "bannerScroll"
+					}
+				]
+			}
+		},
+		{
+			"id": "bannerSpeed",
+			"type": "number",
+			"label": "Vitesse",
+			"description": "En pixels par seconde",
+			"defaultValue": 60,
+			"min": 10,
+			"max": 400,
+			"step": 5,
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "layout",
+						"value": "banner"
+					},
+					{
+						"id": "bannerScroll"
+					}
+				]
+			}
+		},
+		{
+			"id": "bannerPause",
+			"type": "number",
+			"label": "Pause aux extrémités",
+			"description": "En secondes",
+			"defaultValue": 1.5,
+			"min": 0,
+			"max": 10,
+			"step": 0.5,
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "layout",
+						"value": "banner"
+					},
+					{
+						"id": "bannerScroll"
+					},
+					{
+						"id": "bannerScrollMode",
+						"value": "pingpong"
+					}
+				]
+			}
+		},
+		{
+			"id": "bannerWait",
+			"type": "checkbox",
+			"label": "Laisser défiler jusqu’au bout avant de masquer",
+			"description": "Highlight à durée limitée : reste affiché le temps d’un passage complet",
+			"defaultValue": true,
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "layout",
+						"value": "banner"
+					},
+					{
+						"id": "bannerScroll"
+					}
+				]
+			}
 		},
 		{
 			"id": "cardAlign",
@@ -249,7 +392,11 @@
 					"label": "À droite"
 				}
 			],
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"notValue": "banner"
+			}
 		},
 		{
 			"id": "colorMode",
@@ -315,7 +462,8 @@
 						"value": [
 							"card",
 							"bubble",
-							"ticket"
+							"ticket",
+							"banner"
 						]
 					}
 				]
@@ -365,7 +513,8 @@
 						"value": [
 							"card",
 							"bubble",
-							"ticket"
+							"ticket",
+							"banner"
 						]
 					}
 				]
@@ -421,7 +570,11 @@
 			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"notValue": "banner"
+			}
 		},
 		{
 			"id": "align",
@@ -446,7 +599,10 @@
 			"group": "Style",
 			"showIf": {
 				"id": "layout",
-				"notValue": "call"
+				"notValue": [
+					"call",
+					"banner"
+				]
 			}
 		},
 		{
@@ -907,6 +1063,21 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#1C1C1E",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleColors",
+				"value": "custom"
+			}
+		},
+		{
+			"id": "perleCardOpacity",
+			"type": "number",
+			"label": "Opacité du fond",
+			"description": "En %. Sous 100, l’arrière-plan (couleur ou image) se voit à travers les cartes",
+			"defaultValue": 100,
+			"min": 0,
+			"max": 100,
+			"step": 5,
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": {
 				"id": "perleColors",

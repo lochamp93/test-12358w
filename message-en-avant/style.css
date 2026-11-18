@@ -81,13 +81,12 @@ body {
 /* Fond image : l'image fait la carte, les messages sont posés dessus sans fond */
 #capture .perle-frame.with-image { border-radius: 36px; padding: 48px 56px; }
 #capture .perle-frame.with-image .mea {
-	background: transparent !important;
 	box-shadow: none !important;
 	-webkit-backdrop-filter: none !important;
 	backdrop-filter: none !important;
 }
 #capture .perle-frame.with-image .mea .bg-avatar { display: none; }
-#capture .perle-frame.with-image .mea { padding-left: 0; padding-right: 0; text-shadow: 0 1px 6px var(--perle-shadow, rgba(0, 0, 0, 0.3)); }
+#capture .perle-frame.with-image .mea { text-shadow: 0 1px 6px var(--perle-shadow, rgba(0, 0, 0, 0.3)); }
 
 /* ---------- Message (commun) ---------- */
 
@@ -583,8 +582,42 @@ body {
 #previewToast[data-status="error"] { color: #ff6961; }
 
 /* Bulle sur une image : la bulle garde sa forme, dans une teinte de l'image, en transparence */
-#capture.layout-bubble .perle-frame.with-image .mea .bubble-bg { opacity: var(--image-bubble-alpha, 0.55); }
+#capture.layout-bubble .perle-frame.with-image .mea .bubble-bg { opacity: var(--bg-alpha, 0.55); filter: none; }
 #capture.layout-bubble .perle-frame.with-image .mea { text-shadow: none; }
 
 /* Image Discord en Bulle : toutes les bulles ont la même largeur (hauteur variable) */
 #capture.layout-bubble .perle-frame .mea .body { flex: 1 1 auto; }
+
+/* Image Discord : textes secondaires bien lisibles (pas de transparence sur le message) */
+#capture .mea .text { opacity: 1; }
+#capture .mea .date,
+#capture .mea .head .time { opacity: 0.85; }
+
+/* ---------- Bandeau (overlay seulement) : une ligne sur toute la largeur, défilement si trop long ---------- */
+
+#widget.layout-banner #stage { padding: 0; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); align-items: start; justify-items: stretch; }
+#widget.layout-banner.banner-bottom #stage { align-items: end; }
+#widget.layout-banner.banner-round #stage { padding: 0.35em; }
+.layout-banner #stage > .mea { width: 100%; }
+.layout-banner .mea {
+	--avatar-size: calc(var(--font-size) * 1.1);
+	flex-direction: row;
+	align-items: center;
+	gap: 0.4em;
+	padding: 0.28em 0.55em;
+	background: var(--bg);
+	white-space: nowrap;
+}
+.layout-banner.banner-round .mea { border-radius: 0.5em; }
+.layout-banner .mea .body { flex: 1 1 auto; flex-direction: row; align-items: center; gap: 0.35em; min-width: 0; }
+.layout-banner .mea .head { display: contents; font-size: var(--font-size); }
+.layout-banner .mea .badges { order: 1; }
+.layout-banner .mea .badges img { width: 0.8em; height: 0.8em; }
+.layout-banner .mea .name { order: 2; flex-shrink: 0; overflow: visible; font-size: calc(var(--font-size) * var(--text-scale)); }
+.layout-banner .mea .name::after { content: "\00a0:"; }
+.layout-banner .mea .bubble { order: 3; flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.layout-banner .mea .bubble.scrolling { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 1.5em), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 1.5em), transparent); }
+.layout-banner .mea .text { display: inline-block; white-space: nowrap; overflow-wrap: normal; will-change: transform; }
+.layout-banner .mea .label { order: 4; margin-left: 0.4em; font-size: calc(var(--font-size) * 0.5); }
+.layout-banner .mea .head .date,
+.layout-banner .mea .head .time { display: none; }

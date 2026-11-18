@@ -63,6 +63,7 @@ function ApplySettings() {
 		const el = BuildCard(shown);
 		stageEl.replaceChild(el, shownEl);
 		shownEl = el;
+		StartMarquee(el, shown);
 	}
 	QueueConfig();
 }
@@ -96,24 +97,27 @@ function FixedColors(mode, item, custom, layout) {
 // Classes de mise en page d'un style (overlay, ou image Discord avec son propre style)
 function LayoutClasses(layout) {
 	const s = ws.values;
-	// L'Écran d'appel est toujours centré
-	const align = layout === 'call' ? 'center' : s.align;
+	// L'Écran d'appel est toujours centré, le Bandeau toujours calé à gauche
+	const align = layout === 'call' ? 'center' : (layout === 'banner' ? 'left' : s.align);
 	return [
 		`layout-${layout}`,
+		layout === 'banner' ? `banner-${s.bannerPos === 'bottom' ? 'bottom' : 'top'}` : '',
+		layout === 'banner' && s.bannerRadius ? 'banner-round' : '',
 		['minimal', 'ticket'].includes(layout) ? 'layout-card' : '',
 		`align-${align}`,
 		`in-${s.animIn}`,
 		`out-${s.animOut}`,
 		s.showAvatar ? '' : 'hide-avatar',
 		s.showBadges ? '' : 'hide-badges',
-		['card', 'bubble', 'ticket'].includes(layout) && s.colorMode === 'custom' && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
+		['card', 'bubble', 'ticket', 'banner'].includes(layout) && s.colorMode === 'custom' && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
 	].filter(Boolean).join(' ');
 }
 
 // Style de l'image Discord : le sien, ou celui de l'overlay
 function PerleLayout() {
 	const v = ws.values.perleLayout;
-	return v && v !== 'same' ? v : ws.values.layout;
+	const l = v && v !== 'same' ? v : ws.values.layout;
+	return l === 'banner' ? 'card' : l; // le Bandeau n'existe que sur l'overlay : la perle passe en Carte
 }
 
 // Étiquette du mode (vide : pas d'étiquette)
@@ -125,7 +129,7 @@ function LabelFor(item) {
 }
 
 function TextScale(item) {
-	if (!ws.values.shrinkLong) return 1;
+	if (!ws.values.shrinkLong || ws.values.layout === 'banner') return 1; // le Bandeau défile au lieu de réduire
 	const len = MeaTextLength(item);
 	return len <= 80 ? 1 : Math.max(0.55, Math.sqrt(80 / len));
 }
@@ -318,22 +322,82 @@ function Show(item) {
 		el.addEventListener('animationend', () => el.classList.remove('enter'), { once: true });
 		el.style.visibility = 'hidden';
 		stageEl.appendChild(el);
-		const reveal = () => { if (el.style.visibility !== 'hidden') return; el.style.visibility = ''; el.classList.add('enter'); };
+		const reveal = () => { if (el.style.visibility !== 'hidden') return; el.style.visibility = ''; el.classList.add('enter'); StartMarquee(el, item); };
 		Promise.race([el._ready, new Promise(r => setTimeout(r, 700))]).then(reveal);
 		shown = item;
 		shownEl = el;
 	}
 
-	// Highlight : masqué à la fin de sa durée
-	if (item.until) {
-		expireTimer = setTimeout(() => {
-			if (!shown || shown.id !== item.id) return;
-			Leave(shownEl);
-			shown = null;
-			shownEl = null;
-			if (!ws.demo) SendExpire(item);
-		}, Math.max(0, Number(item.until) - Date.now()));
+	ScheduleExpire(item);
+}
+
+// Highlight : masqué à la fin de sa durée (Bandeau : pas avant la fin d'un passage du défilement)
+function ScheduleExpire(item) {
+	clearTimeout(expireTimer);
+	if (!item || !item.until) return;
+	let end = Number(item.until);
+	const pass = shownEl && shown && shown.id === item.id ? shownEl._marqueeEnd : 0;
+	if (pass && pass > end && ws.values.bannerWait !== false) {
+		// Prévient l'action, sinon le dock masquerait le message à l'heure prévue
+		if (!ws.demo && !shownEl._extended) { shownEl._extended = true; Send({ mode: 'extend', id: item.id, until: String(Math.round(pass)) }); }
+		end = pass;
 	}
+	expireTimer = setTimeout(() => {
+		if (!shown || shown.id !== item.id) return;
+		Leave(shownEl);
+		shown = null;
+		shownEl = null;
+		if (!ws.demo) SendExpire(item);
+	}, Math.max(0, end - Date.now()));
+}
+
+// Bandeau : défilement latéral du message trop long (aller-retour façon nutty, ou en boucle)
+function StartMarquee(el, item) {
+	const v = ws.values;
+	if (!el || v.layout !== 'banner' || !v.bannerScroll) return;
+	const box = el.querySelector('.bubble');
+	const text = el.querySelector('.text');
+	if (!box || !text) return;
+	const run = () => {
+		if (!el.isConnected) return;
+		if (text._anim) { text._anim.cancel(); text._anim = null; }
+		if (text._original != null) text.innerHTML = text._original;
+		const width = text.scrollWidth;
+		const overflow = width - box.clientWidth;
+		box.classList.toggle('scrolling', overflow > 1);
+		el._marqueeEnd = 0;
+		if (overflow <= 1) { if (item) ScheduleExpire(shown); return; }
+		const speed = Math.max(10, Number(v.bannerSpeed) || 60);
+		let passMs;
+		if (v.bannerScrollMode === 'loop') {
+			// Le texte est répété après un blanc : la boucle est continue
+			const gap = parseFloat(getComputedStyle(text).fontSize) * 3;
+			text._original = text.innerHTML;
+			text.innerHTML = `${text._original}<span class="marquee-gap" style="display:inline-block;width:${gap}px"></span>${text._original}`;
+			const cycle = (width + gap) / speed * 1000;
+			text._anim = text.animate([{ transform: 'translateX(0)' }, { transform: `translateX(${-(width + gap)}px)` }], { duration: cycle, delay: 1000, iterations: Infinity, easing: 'linear' });
+			passMs = 1000 + cycle;
+		} else {
+			const pause = Math.max(0, Number(v.bannerPause) || 0) * 1000;
+			const move = overflow / speed * 1000;
+			const total = 2 * pause + 2 * move;
+			text._anim = text.animate([
+				{ transform: 'translateX(0)', offset: 0 },
+				{ transform: 'translateX(0)', offset: pause / total },
+				{ transform: `translateX(${-overflow}px)`, offset: (pause + move) / total },
+				{ transform: `translateX(${-overflow}px)`, offset: (2 * pause + move) / total },
+				{ transform: 'translateX(0)', offset: 1 }
+			], { duration: total, iterations: Infinity }); // vitesse constante pendant le défilement
+			passMs = 2 * pause + move; // jusqu'à la fin du texte, plus la pause
+		}
+		if (!el._marqueeStart) el._marqueeStart = Date.now();
+		el._marqueeEnd = el._marqueeStart + passMs;
+		if (item && shown && shown.id === item.id) ScheduleExpire(shown);
+	};
+	// Mesure après le chargement des polices et des emotes (la largeur change)
+	requestAnimationFrame(run);
+	if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+	text.querySelectorAll('img').forEach(img => { if (!img.complete) img.addEventListener('load', run, { once: true }); });
 }
 
 function Sync() { Show(TargetItem()); }
@@ -528,7 +592,7 @@ async function CaptureNow(item) {
 	const pc = v.perleColors && v.perleColors !== 'same' && v.perleColors !== 'image' ? v.perleColors : null;
 	const cardOpts = { layout: perleLayout };
 	if (pc) cardOpts.colorMode = pc;
-	if (pc === 'custom') cardOpts.custom = { name: v.perleNameColor, text: v.perleTextColor, bg: v.perleCardColor, accent: v.perleAccentColor, opacity: 100 };
+	if (pc === 'custom') cardOpts.custom = { name: v.perleNameColor, text: v.perleTextColor, bg: v.perleCardColor, accent: v.perleAccentColor, opacity: Number(v.perleCardOpacity) };
 	const withDate = ws.isActive('perleDate') && v.perleDate;
 	let card;
 	if (Array.isArray(item.thread) && item.thread.length > 1) {
@@ -554,24 +618,40 @@ async function CaptureNow(item) {
 	const cards = card.classList.contains('mea') ? [card] : Array.from(card.querySelectorAll('.mea'));
 	const avatars = Array.from(card.querySelectorAll('.avatar')).map(a => a._ready);
 	await Promise.race([Promise.all(cards.map(c => c._ready).concat(avatars)), new Promise(r => setTimeout(r, 6000))]);
-	// Couleurs issues de l'image de fond (lisibilité jugée sur sa teinte moyenne)
+	// Sur une image : pas d'avatar flouté (l'image fait le fond), les cartes passent en transparence
+	const hasCard = ['card', 'bubble', 'ticket'].includes(perleLayout);
+	const IMAGE_ALPHA = 55;
+	const setCardBg = (x, hex, alpha) => {
+		x.style.setProperty('--bg', HexToRgba(hex, alpha));
+		x.style.setProperty('--bg-solid', hex);
+		x.style.setProperty('--bg-alpha', String(Math.max(0, Math.min(100, alpha)) / 100));
+	};
+	if (bgImage) cards.forEach(x => {
+		x.classList.remove('with-bg-avatar');
+		x.querySelectorAll('.bg-avatar').forEach(b => b.remove());
+		x.style.removeProperty('--tail-color');
+	});
+	// Couleurs issues de l'image de fond (lisibilité jugée sur la carte posée sur l'image)
 	if (bgImage && v.perleColors === 'image') {
 		const pal = await MeaPalette(bgImage, '#FFFFFF');
 		const under = pal.average || pal.muted;
 		// Bulle : teinte sombre de l'image, en transparence ; le texte est jugé sur le mélange obtenu
 		const bubble = MeaMix(pal.darkMuted || under, '#000000', 0.25);
 		const onBubble = MeaMix(under, bubble, 0.55);
-		const bg = perleLayout === 'bubble' ? onBubble : under;
+		const bg = hasCard ? onBubble : under;
 		const c = { name: Readable(pal.lightVibrant, bg, 3), text: Readable(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), bg, 4.5), accent: pal.darkVibrant };
 		frame.style.setProperty('--text-color', c.text);
 		frame.style.setProperty('--perle-shadow', MeaContrast(c.text, '#000000') < 4.5 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)');
 		cards.forEach(x => {
 			x.style.setProperty('--name-color', c.name); x.style.setProperty('--text-color', c.text); x.style.setProperty('--accent', c.accent);
-			x.style.setProperty('--bg-solid', bubble); x.style.removeProperty('--tail-color');
+			setCardBg(x, bubble, IMAGE_ALPHA);
 		});
 	} else if (bgImage) {
-		// Bulle sur une image, autres couleurs : la bulle garde la couleur de carte du mode, en transparence
-		cards.forEach(x => x.style.removeProperty('--tail-color'));
+		// Autres couleurs : la carte garde la couleur du mode, en transparence (Personnalisées : son opacité)
+		if (pc !== 'custom') cards.forEach(x => {
+			const hex = (x.style.getPropertyValue('--bg-solid') || '').trim();
+			if (/^#[0-9a-f]{6}$/i.test(hex)) setCardBg(x, hex, IMAGE_ALPHA);
+		});
 		if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	} else if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	frame.appendChild(card);
