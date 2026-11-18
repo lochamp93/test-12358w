@@ -205,8 +205,15 @@ function Show(item) {
 		// Même message (mise à jour de l'état) : pas de nouvelle animation
 		shown = item;
 	} else {
+		const replacing = !!shownEl;
 		if (shownEl) Leave(shownEl);
 		const el = BuildCard(item);
+		// Remplacement : l'entrée commence quand la sortie de l'ancien message est finie
+		if (replacing && ws.values.animOut !== 'none') {
+			const wait = Number(ws.values.animOutDuration) || 0;
+			el.style.animationDelay = `${wait}ms`;
+			if (ws.values.animIn === 'none') { el.style.visibility = 'hidden'; setTimeout(() => { el.style.visibility = ''; }, wait); }
+		}
 		el.classList.add('enter');
 		el.addEventListener('animationend', () => el.classList.remove('enter'), { once: true });
 		stageEl.appendChild(el);

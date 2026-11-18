@@ -238,7 +238,9 @@ function Step(delta) {
 	const next = idx < 0 ? (delta > 0 ? 0 : -1) : idx + delta;
 	if (next < 0 || next >= list.length) return;
 	selectedId = list[next].id;
-	Render();
+	// Un message est à l'écran : le suivant le remplace directement (sortie puis entrée sur l'overlay)
+	if (state.current) Send('show', { id: selectedId });
+	else Render();
 	const row = document.querySelector(`#list .msg[data-id="${CSS.escape(selectedId)}"]`);
 	if (row) row.scrollIntoView({ block: 'nearest' });
 }
@@ -289,8 +291,12 @@ function RenderList() {
 		row.classList.toggle('shown', !!item.shown && !isCurrent);
 		row.classList.toggle('current', isCurrent);
 		row.classList.toggle('selected', item.id === selectedId);
-		row.addEventListener('click', () => { selectedId = item.id === selectedId ? null : item.id; Render(); });
-		row.addEventListener('dblclick', () => { selectedId = item.id; Send('show', { id: item.id }); });
+		// Un clic affiche le message (s'il n'est pas déjà à l'écran)
+		row.addEventListener('click', () => {
+			selectedId = item.id;
+			if (isCurrent) { Render(); return; }
+			Send('show', { id: item.id });
+		});
 
 		const actions = document.createElement('span');
 		actions.className = 'row-actions';
