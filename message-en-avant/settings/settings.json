@@ -945,7 +945,7 @@
 		{
 			"id": "perleBg",
 			"label": "Arrière-plan",
-			"description": "Image : l’image fait la carte, le texte s’affiche par-dessus",
+			"description": "Couleur unie : la couleur vient du thème choisi dans « Couleurs ». Image : l’image fait la carte, le texte s’affiche par-dessus",
 			"type": "select",
 			"defaultValue": "transparent",
 			"options": [
@@ -966,18 +966,6 @@
 			"showIf": "perles"
 		},
 		{
-			"id": "perleBgColor",
-			"label": "Couleur de l’arrière-plan",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#1C1C1E",
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": {
-				"id": "perleBg",
-				"value": "color"
-			}
-		},
-		{
 			"id": "perleImage",
 			"label": "Image de fond",
 			"description": "Conseillé : 2000 × 1000 px (format 2:1), PNG ou JPG. Image centrée. Enregistrée dans Streamer.bot (il doit être ouvert)",
@@ -993,14 +981,10 @@
 		{
 			"id": "perleColors",
 			"label": "Couleurs",
-			"description": "« Issues de l’image de fond » : seulement avec une image en arrière-plan",
+			"description": "Fond, cartes et textes. « Issues de l’image de fond » : seulement avec une image en arrière-plan",
 			"type": "select",
-			"defaultValue": "same",
+			"defaultValue": "fixed",
 			"options": [
-				{
-					"value": "same",
-					"label": "Comme l’overlay"
-				},
 				{
 					"value": "fixed",
 					"label": "Fixe sombre"
@@ -1094,6 +1078,26 @@
 			"showIf": {
 				"id": "perleColors",
 				"value": "custom"
+			}
+		},
+		{
+			"id": "perleBgColor",
+			"label": "Couleur de l’arrière-plan",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"all": [
+					{
+						"id": "perleBg",
+						"value": "color"
+					},
+					{
+						"id": "perleColors",
+						"value": "custom"
+					}
+				]
 			}
 		},
 		{

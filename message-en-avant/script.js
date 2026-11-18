@@ -581,18 +581,21 @@ async function CaptureNow(item) {
 	const frame = document.createElement('div');
 	frame.className = 'perle-frame' + (v.perleLine === false ? ' no-line' : '');
 	frame.style.width = '900px'; // largeur fixe (image deux fois plus grande pour la netteté)
-	frame.style.background = ws.isActive('perleBgColor') ? v.perleBgColor : 'transparent';
+	frame.style.background = 'transparent';
 	// Arrière-plan image : l'image fait la carte (centrée), le texte s'affiche par-dessus
 	const bgImage = ws.isActive('perleImage') ? await PerleImage() : '';
 	if (bgImage) {
 		frame.classList.add('with-image');
 		frame.style.background = `url("${bgImage}") center / cover no-repeat`;
 	}
-	// Couleurs de la perle : celles de l'overlay, ou un mode à elle
-	const pc = v.perleColors && v.perleColors !== 'same' && v.perleColors !== 'image' ? v.perleColors : null;
+	// Couleurs de la perle : un thème à elle (fond, cartes, textes)
+	// Ancienne URL « Comme l'overlay » (perleColors=same) : le thème de l'overlay, avec ses couleurs personnalisées
+	const legacySame = new URLSearchParams(location.search).get('perleColors') === 'same';
+	let pc = legacySame ? v.colorMode : v.perleColors;
+	if (pc === 'image' && !bgImage) pc = 'fixed'; // pas d'image : thème sombre par défaut
 	const cardOpts = { layout: perleLayout };
-	if (pc) cardOpts.colorMode = pc;
-	if (pc === 'custom') cardOpts.custom = { name: v.perleNameColor, text: v.perleTextColor, bg: v.perleCardColor, accent: v.perleAccentColor, opacity: Number(v.perleCardOpacity) };
+	if (pc !== 'image') cardOpts.colorMode = pc;
+	if (pc === 'custom' && !legacySame) cardOpts.custom = { name: v.perleNameColor, text: v.perleTextColor, bg: v.perleCardColor, accent: v.perleAccentColor, opacity: Number(v.perleCardOpacity) };
 	const withDate = ws.isActive('perleDate') && v.perleDate;
 	let card;
 	if (Array.isArray(item.thread) && item.thread.length > 1) {
@@ -632,7 +635,7 @@ async function CaptureNow(item) {
 		x.style.removeProperty('--tail-color');
 	});
 	// Couleurs issues de l'image de fond (lisibilité jugée sur la carte posée sur l'image)
-	if (bgImage && v.perleColors === 'image') {
+	if (bgImage && pc === 'image') {
 		const pal = await MeaPalette(bgImage, '#FFFFFF');
 		const under = pal.average || pal.muted;
 		// Bulle : teinte sombre de l'image, en transparence ; le texte est jugé sur le mélange obtenu
@@ -648,12 +651,22 @@ async function CaptureNow(item) {
 		});
 	} else if (bgImage) {
 		// Autres couleurs : la carte garde la couleur du mode, en transparence (Personnalisées : son opacité)
-		if (pc !== 'custom') cards.forEach(x => {
+		if (pc !== 'custom' || legacySame) cards.forEach(x => {
 			const hex = (x.style.getPropertyValue('--bg-solid') || '').trim();
 			if (/^#[0-9a-f]{6}$/i.test(hex)) setCardBg(x, hex, IMAGE_ALPHA);
 		});
 		if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	} else if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
+	// Couleur unie : le fond vient du thème (Personnalisées : la couleur choisie ; Avatar : l'auteur du message perlé)
+	if (!bgImage && v.perleBg === 'color' && cards.length) {
+		const last = cards[cards.length - 1];
+		const cardBg = (last.style.getPropertyValue('--bg-solid') || '').trim();
+		let bg = '#0B0B0C';
+		if (pc === 'fixedLight') bg = '#F2F2F7';
+		else if (pc === 'custom') bg = legacySame ? MeaMix(/^#[0-9a-f]{6}$/i.test(cardBg) ? cardBg : '#1C1C1E', '#000000', 0.55) : v.perleBgColor;
+		else if (IsAvatarMode(pc) && /^#[0-9a-f]{6}$/i.test(cardBg)) bg = MeaMix(cardBg, last.classList.contains('bg-light') ? '#FFFFFF' : '#000000', 0.55);
+		frame.style.background = bg;
+	}
 	frame.appendChild(card);
 	// Filigrane : logo Twitch et nom de la chaîne, en bas à droite
 	const mark = WatermarkText();
