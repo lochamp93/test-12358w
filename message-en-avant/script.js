@@ -116,6 +116,27 @@ function BuildCard(item, opts = {}) {
 	card.style.setProperty('--text-scale', String(TextScale(item)));
 	card.style.setProperty('--name-color', s.nameColorMode === 'fixed' ? s.nameColor : (item.color || s.textColor));
 
+	// Fond : avatar du viewer flouté et assombri (Carte et Bulle)
+	let bgAvatar = null;
+	if (ws.isActive('bgMode') && s.bgMode === 'avatar') {
+		bgAvatar = document.createElement('div');
+		bgAvatar.className = 'bg-avatar';
+		bgAvatar.appendChild(document.createElement('i'));
+		card.classList.add('with-bg-avatar');
+	}
+
+	// Couleurs tirées de l'avatar (palette calculée une fois par avatar)
+	card._ready = (async () => {
+		const url = item.avatar || (item.login ? await MeaAvatar(item.login) : '');
+		if (bgAvatar && url) bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		if (s.colorMode === 'fixed') return;
+		const c = MeaPaletteColors(await MeaPalette(url, item.color), s.colorMode);
+		card.style.setProperty('--bg', HexToRgba(c.bg, s.bgOpacity));
+		card.style.setProperty('--name-color', c.name);
+		card.style.setProperty('--text-color', c.text);
+		card.style.setProperty('--accent', c.accent);
+	})().catch(() => { });
+
 	card.appendChild(AvatarEl(item, 'avatar'));
 
 	const body = document.createElement('div');
@@ -171,6 +192,11 @@ function BuildCard(item, opts = {}) {
 
 	body.append(mark, head, bubble);
 	card.appendChild(body);
+	if (bgAvatar) {
+		// Carte : fond de toute la carte ; Bulle : fond de la bulle
+		if (s.layout === 'bubble') bubble.insertBefore(bgAvatar, bubble.firstChild);
+		else card.insertBefore(bgAvatar, card.firstChild);
+	}
 	return card;
 }
 
@@ -213,11 +239,13 @@ function Show(item) {
 		if (replacing && ws.values.animOut !== 'none') {
 			const wait = Number(ws.values.animOutDuration) || 0;
 			el.style.animationDelay = `${wait}ms`;
-			if (ws.values.animIn === 'none') { el.style.visibility = 'hidden'; setTimeout(() => { el.style.visibility = ''; }, wait); }
+			if (ws.values.animIn === 'none') { el.style.opacity = '0'; setTimeout(() => { el.style.opacity = ''; }, wait); }
 		}
-		el.classList.add('enter');
 		el.addEventListener('animationend', () => el.classList.remove('enter'), { once: true });
+		el.style.visibility = 'hidden';
 		stageEl.appendChild(el);
+		const reveal = () => { if (el.style.visibility !== 'hidden') return; el.style.visibility = ''; el.classList.add('enter'); };
+		Promise.race([el._ready, new Promise(r => setTimeout(r, 700))]).then(reveal);
 		shown = item;
 		shownEl = el;
 	}
@@ -326,6 +354,7 @@ function ConnectStreamerBot() {
 			connected = true;
 			console.log(`[Message en avant] Connecté à Streamer.bot (${host}:${port})`);
 			RefreshFromStreamerBot();
+			ReadChannel();
 		},
 		onDisconnect: () => { connected = false; console.warn('[Message en avant] Déconnecté de Streamer.bot'); }
 	});
@@ -423,6 +452,9 @@ async function Capture(item) {
 			} else card.appendChild(c);
 		});
 	} else card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
+	// Couleurs tirées des avatars : calculées avant la capture
+	const cards = card.classList.contains('mea') ? [card] : Array.from(card.querySelectorAll('.mea'));
+	await Promise.race([Promise.all(cards.map(c => c._ready)), new Promise(r => setTimeout(r, 6000))]);
 	// Couleurs propres à l'image (lisibilité sur le fond choisi)
 	if (ws.isActive('perleNameColor')) {
 		frame.style.setProperty('--text-color', ws.values.perleTextColor);
@@ -430,6 +462,22 @@ async function Capture(item) {
 		if (card.classList.contains('mea')) card.style.setProperty('--name-color', ws.values.perleNameColor);
 	}
 	frame.appendChild(card);
+	// Filigrane : logo Twitch et nom de la chaîne
+	const mark = WatermarkText();
+	if (ws.isActive('perleWatermark') && ws.values.perleWatermark && mark) {
+		const wm = document.createElement('div');
+		wm.className = 'watermark';
+		if (ws.values.perleWatermarkLogo === 'twitch') {
+			const logo = document.createElement('img');
+			logo.alt = '';
+			logo.src = '../-common/resources/icons/platforms/twitch.png';
+			wm.appendChild(logo);
+		}
+		const t = document.createElement('span');
+		t.textContent = mark;
+		wm.appendChild(t);
+		frame.appendChild(wm);
+	}
 	captureEl.appendChild(frame);
 	try {
 		await WaitImages(frame);
@@ -447,6 +495,22 @@ async function Capture(item) {
 	} finally {
 		captureEl.innerHTML = '';
 	}
+}
+
+// Nom de la chaîne (lu dans Streamer.bot) pour le filigrane
+let channelName = '';
+function WatermarkText() {
+	const custom = String(ws.values.perleWatermarkText || '').trim();
+	if (custom) return custom;
+	return channelName ? `twitch.tv/${channelName}` : '';
+}
+
+async function ReadChannel() {
+	try {
+		const b = await sbClient.getBroadcaster();
+		const t = b && b.platforms && b.platforms.twitch;
+		if (t && (t.broadcastUser || t.broadcastUserName)) channelName = String(t.broadcastUser || t.broadcastUserName).toLowerCase();
+	} catch (e) { }
 }
 
 function DiscordEscape(text) { return String(text || '').replace(/([\\*_~`|>#\[\]()-])/g, '\\$1'); }

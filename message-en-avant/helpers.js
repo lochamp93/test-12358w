@@ -415,3 +415,157 @@ function MeaDemoThread() {
 	];
 	return Object.assign({ id: 'demo:thread', kind: 'perle', thread }, thread[thread.length - 1]);
 }
+
+/////////////////////////////////////////////
+// PALETTE DE L'AVATAR (façon nutty / Vibrant) //
+/////////////////////////////////////////////
+
+// Six teintes tirées d'une image : vibrant, muted, darkVibrant, darkMuted, lightVibrant, lightMuted
+// (couleurs hexadécimales). Image illisible : palette dérivée de la couleur de secours.
+const meaPaletteCache = new Map();
+
+function MeaRgbToHsl(r, g, b) {
+	r /= 255; g /= 255; b /= 255;
+	const max = Math.max(r, g, b), min = Math.min(r, g, b);
+	let h = 0, s = 0;
+	const l = (max + min) / 2;
+	if (max !== min) {
+		const d = max - min;
+		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		h = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+		h /= 6;
+	}
+	return [h, s, l];
+}
+
+function MeaHslToHex(h, s, l) {
+	const f = (n) => {
+		const k = (n + h * 12) % 12;
+		const a = s * Math.min(l, 1 - l);
+		const c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+		return Math.round(c * 255).toString(16).padStart(2, '0');
+	};
+	return '#' + f(0) + f(8) + f(4);
+}
+
+function MeaHexToRgb(hex) {
+	let h = String(hex || '').replace('#', '');
+	if (h.length === 3) h = h.split('').map(c => c + c).join('');
+	const n = parseInt(h.slice(0, 6), 16);
+	return Number.isFinite(n) ? [(n >> 16) & 255, (n >> 8) & 255, n & 255] : [94, 92, 230];
+}
+
+// Palette construite à partir d'une seule couleur (pseudo Twitch, ou repli)
+function MeaPaletteFromColor(hex) {
+	const [r, g, b] = MeaHexToRgb(hex || '#5E5CE6');
+	const [h, s0] = MeaRgbToHsl(r, g, b);
+	const s = Math.max(0.45, s0);
+	return {
+		vibrant: MeaHslToHex(h, s, 0.5), muted: MeaHslToHex(h, 0.25, 0.5),
+		darkVibrant: MeaHslToHex(h, s, 0.26), darkMuted: MeaHslToHex(h, 0.22, 0.22),
+		lightVibrant: MeaHslToHex(h, s, 0.74), lightMuted: MeaHslToHex(h, 0.25, 0.76)
+	};
+}
+
+// Choix des teintes : mêmes cibles de saturation et de luminosité que Vibrant.js
+function MeaPaletteFromPixels(data) {
+	const buckets = new Map();
+	for (let i = 0; i < data.length; i += 4) {
+		if (data[i + 3] < 125) continue;
+		const r = data[i], g = data[i + 1], b = data[i + 2];
+		if (r > 250 && g > 250 && b > 250) continue;
+		const key = ((r >> 3) << 10) | ((g >> 3) << 5) | (b >> 3);
+		const x = buckets.get(key) || [0, 0, 0, 0];
+		x[0] += r; x[1] += g; x[2] += b; x[3]++;
+		buckets.set(key, x);
+	}
+	const swatches = [];
+	let maxPop = 1;
+	buckets.forEach(([r, g, b, n]) => {
+		const rgb = [r / n, g / n, b / n];
+		swatches.push({ rgb, hsl: MeaRgbToHsl(...rgb), pop: n });
+		maxPop = Math.max(maxPop, n);
+	});
+	if (!swatches.length) return null;
+	const targets = {
+		vibrant: [0.5, 0.3, 0.7, 1, 0.35, 1],
+		lightVibrant: [0.74, 0.55, 1, 1, 0.35, 1],
+		darkVibrant: [0.26, 0, 0.45, 1, 0.35, 1],
+		muted: [0.5, 0.3, 0.7, 0.3, 0, 0.4],
+		lightMuted: [0.74, 0.55, 1, 0.3, 0, 0.4],
+		darkMuted: [0.26, 0, 0.45, 0.3, 0, 0.4]
+	};
+	const used = new Set();
+	const out = {};
+	Object.entries(targets).forEach(([name, [tl, minL, maxL, ts, minS, maxS]]) => {
+		let best = null, bestScore = -1;
+		swatches.forEach(sw => {
+			const [, s, l] = sw.hsl;
+			if (used.has(sw) || s < minS || s > maxS || l < minL || l > maxL) return;
+			const score = (1 - Math.abs(s - ts)) * 3 + (1 - Math.abs(l - tl)) * 6.5 + (sw.pop / maxPop) * 0.5;
+			if (score > bestScore) { bestScore = score; best = sw; }
+		});
+		if (best) { used.add(best); out[name] = MeaHslToHex(...best.hsl); }
+	});
+	// Teintes manquantes : dérivées de la plus proche
+	const base = out.vibrant || out.darkVibrant || out.lightVibrant || out.muted || out.darkMuted || out.lightMuted;
+	if (!base) return null;
+	const derived = MeaPaletteFromColor(base);
+	Object.keys(targets).forEach(k => { if (!out[k]) out[k] = derived[k]; });
+	return out;
+}
+
+function MeaPalette(url, fallbackColor) {
+	const key = `${url || ''}|${fallbackColor || ''}`;
+	if (meaPaletteCache.has(key)) return meaPaletteCache.get(key);
+	const p = new Promise(resolve => {
+		if (!url || !/^https:\/\//.test(url)) { resolve(MeaPaletteFromColor(fallbackColor)); return; }
+		const img = new Image();
+		img.crossOrigin = 'anonymous';
+		const done = (pal) => resolve(pal || MeaPaletteFromColor(fallbackColor));
+		img.onload = () => {
+			try {
+				const c = document.createElement('canvas');
+				c.width = c.height = 48;
+				const ctx = c.getContext('2d', { willReadFrequently: true });
+				ctx.drawImage(img, 0, 0, 48, 48);
+				done(MeaPaletteFromPixels(ctx.getImageData(0, 0, 48, 48).data));
+			} catch (e) { done(null); }
+		};
+		img.onerror = () => done(null);
+		setTimeout(() => done(null), 5000);
+		img.src = url;
+	});
+	meaPaletteCache.set(key, p);
+	return p;
+}
+
+// Contraste (WCAG) entre deux couleurs hexadécimales
+function MeaContrast(a, b) {
+	const lum = (hex) => {
+		const v = MeaHexToRgb(hex).map(c => { c /= 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); });
+		return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+	};
+	const la = lum(a), lb = lum(b);
+	return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+}
+
+// Mélange de deux couleurs (t : part de la seconde, de 0 à 1)
+function MeaMix(a, b, t) {
+	const x = MeaHexToRgb(a), y = MeaHexToRgb(b);
+	return '#' + x.map((c, i) => Math.round(c + (y[i] - c) * t).toString(16).padStart(2, '0')).join('');
+}
+
+// Couleurs d'un message selon le mode choisi : fond, pseudo, texte, accent (texte toujours lisible)
+function MeaPaletteColors(pal, mode) {
+	let bg, name, text, accent;
+	if (mode === 'matteLight') {
+		bg = pal.lightVibrant; name = pal.darkVibrant; text = MeaMix(pal.darkMuted, '#000000', 0.35); accent = pal.darkVibrant;
+	} else if (mode === 'vibrant') {
+		bg = MeaMix(pal.vibrant, '#000000', 0.35); name = '#FFFFFF'; text = '#FFFFFF'; accent = pal.lightVibrant;
+	} else {
+		bg = MeaMix(pal.darkMuted, '#000000', 0.55); name = pal.lightVibrant; text = MeaMix(pal.lightMuted, '#FFFFFF', 0.8); accent = pal.vibrant;
+	}
+	const readable = (fg, min) => (MeaContrast(fg, bg) >= min ? fg : (MeaContrast('#FFFFFF', bg) >= MeaContrast('#000000', bg) ? '#FFFFFF' : '#000000'));
+	return { bg, name: readable(name, 3), text: readable(text, 4.5), accent };
+}

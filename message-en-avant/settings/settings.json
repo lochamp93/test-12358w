@@ -218,6 +218,57 @@
 			"group": "Style"
 		},
 		{
+			"id": "colorMode",
+			"label": "Couleurs",
+			"description": "Tirées de l’avatar de chaque viewer (comme la palette de nutty), ou fixes",
+			"type": "select",
+			"defaultValue": "matteDark",
+			"options": [
+				{
+					"value": "matteDark",
+					"label": "Avatar : mat sombre"
+				},
+				{
+					"value": "matteLight",
+					"label": "Avatar : mat clair"
+				},
+				{
+					"value": "vibrant",
+					"label": "Avatar : vif"
+				},
+				{
+					"value": "fixed",
+					"label": "Fixes"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "bgMode",
+			"label": "Fond",
+			"description": "Avatar flouté : l’avatar du viewer, flouté et assombri, en fond de la carte",
+			"type": "select",
+			"defaultValue": "color",
+			"options": [
+				{
+					"value": "color",
+					"label": "Couleur"
+				},
+				{
+					"value": "avatar",
+					"label": "Avatar flouté"
+				}
+			],
+			"group": "Style",
+			"showIf": {
+				"id": "layout",
+				"value": [
+					"card",
+					"bubble"
+				]
+			}
+		},
+		{
 			"id": "font",
 			"label": "Police",
 			"description": "",
@@ -297,7 +348,11 @@
 					"label": "Couleur fixe"
 				}
 			],
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "colorMode",
+				"value": "fixed"
+			}
 		},
 		{
 			"id": "nameColor",
@@ -361,7 +416,11 @@
 			"description": "Étiquette, guillemet de la Citation",
 			"type": "color",
 			"defaultValue": "#FF4FA3",
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "colorMode",
+				"value": "fixed"
+			}
 		},
 		{
 			"id": "textColor",
@@ -369,7 +428,11 @@
 			"description": "",
 			"type": "color",
 			"defaultValue": "#FFFFFF",
-			"group": "Style"
+			"group": "Style",
+			"showIf": {
+				"id": "colorMode",
+				"value": "fixed"
+			}
 		},
 		{
 			"id": "bgColor",
@@ -379,10 +442,18 @@
 			"defaultValue": "#1C1C1E",
 			"group": "Style",
 			"showIf": {
-				"id": "layout",
-				"value": [
-					"card",
-					"bubble"
+				"all": [
+					{
+						"id": "colorMode",
+						"value": "fixed"
+					},
+					{
+						"id": "layout",
+						"value": [
+							"card",
+							"bubble"
+						]
+					}
 				]
 			}
 		},
@@ -664,6 +735,43 @@
 				"id": "perleColors",
 				"value": "custom"
 			}
+		},
+		{
+			"id": "perleWatermark",
+			"label": "Filigrane",
+			"description": "En bas de l’image : logo Twitch et nom de la chaîne",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleWatermarkText",
+			"label": "Texte du filigrane",
+			"description": "Vide : twitch.tv/ suivi du nom de la chaîne connectée à Streamer.bot",
+			"type": "text",
+			"defaultValue": "",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perleWatermark"
+		},
+		{
+			"id": "perleWatermarkLogo",
+			"label": "Logo du filigrane",
+			"description": "",
+			"type": "select",
+			"defaultValue": "twitch",
+			"options": [
+				{
+					"value": "twitch",
+					"label": "Twitch"
+				},
+				{
+					"value": "none",
+					"label": "Aucun"
+				}
+			],
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perleWatermark"
 		},
 		{
 			"id": "testPerle",
