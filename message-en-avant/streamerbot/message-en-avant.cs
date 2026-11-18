@@ -306,11 +306,14 @@ public class CPHInline
 		string login = (Arg("userName") != "" ? Arg("userName") : Arg("user")).ToLowerInvariant();
 		string nom = Arg("user") != "" ? Arg("user") : login;
 		if (texte.Length > 600) texte = texte.Substring(0, 600);
+		// (pas d'initialiseur de collection sur JArray : il demande System.dll et System.Core.dll)
+		JArray morceaux = new JArray();
+		morceaux.Add(new JObject { ["t"] = "text", ["v"] = texte });
 		return new JObject
 		{
 			["id"] = "qa:" + Arg("redemptionId"), ["kind"] = "qa", ["name"] = nom, ["login"] = login,
 			["userId"] = Arg("userId"), ["color"] = "", ["badges"] = new JArray(), ["avatar"] = "",
-			["parts"] = new JArray { new JObject { ["t"] = "text", ["v"] = texte } }, ["text"] = texte,
+			["parts"] = morceaux, ["text"] = texte,
 			["at"] = Maintenant(), ["shown"] = false
 		};
 	}
