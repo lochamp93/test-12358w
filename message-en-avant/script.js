@@ -258,7 +258,8 @@ function PublicConfig() {
 		conflict: ws.isActive('conflict') ? s.conflict : 'replace',
 		queue: s.queue,
 		perles: !!(s.perles && WebhookURL()),
-		perleCommand: ws.isActive('perleCommand') ? String(s.perleCommand || '') : ''
+		perleCommand: ws.isActive('perleCommand') ? String(s.perleCommand || '') : '',
+		hideCommand: String(s.hideCommand || '')
 	};
 }
 
@@ -338,7 +339,8 @@ function ConnectStreamerBot() {
 			sbClient,
 			getConfig: () => ({
 				qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command,
-				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : ''
+				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : '',
+				hideCommand: ws.values.hideCommand
 			}),
 			send: (args) => Send(args)
 		});
@@ -451,7 +453,7 @@ async function Perle(item, test, perledBy) {
 function PreviewShow(key) {
 	const items = MeaDemoItems();
 	const item = Object.assign({}, items[key], { id: `${items[key].id}:${Date.now()}`, at: Date.now() });
-	if (item.kind === 'highlight') item.until = Date.now() + Number(ws.values.highlightDuration) * 1000;
+	if (item.kind === 'highlight' && Number(ws.values.highlightDuration) > 0) item.until = Date.now() + Number(ws.values.highlightDuration) * 1000;
 	previewItem = item;
 	previewForced = true;
 	previewHidden = false;

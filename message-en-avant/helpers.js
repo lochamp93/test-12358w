@@ -207,6 +207,13 @@ const MeaCollector = (function () {
 		const perleCmd = String((cfg && cfg.perleCommand) || '').trim().toLowerCase();
 		const isHighlight = !!(cfg && cfg.highlight && highlightCmd && cmd === highlightCmd);
 		const isPerle = !!(cfg && cfg.perles && perleCmd && cmd === perleCmd);
+		const hideCmd = String((cfg && cfg.hideCommand) || '').trim().toLowerCase();
+
+		// Commande pour masquer le message à l'écran (modo ou streameuse, sans réponse)
+		if (hideCmd && cmd === hideCmd) {
+			if (isStaff(d)) opts.send({ mode: 'hide', msgId: 'hd:' + msg.msgId });
+			return;
+		}
 
 		if (!isHighlight && !isPerle) {
 			// Message ordinaire : gardé en mémoire pour un éventuel highlight ou une perle
@@ -260,7 +267,7 @@ const MeaCollector = (function () {
 	}
 
 	return {
-		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command, perles, perleCommand } | null, send: (args) => void }
+		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command, perles, perleCommand, hideCommand } | null, send: (args) => void }
 		start(o) {
 			opts = o;
 			o.sbClient.on('Twitch.ChatMessage', ({ data }) => { onChat(data).catch(e => console.error('[Message en avant]', e)); });

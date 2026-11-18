@@ -26,7 +26,7 @@ const TRASH = '<svg viewBox="0 0 27 31" aria-hidden="true"><path d="M7.21 30.85H
 function DefaultState() {
 	return {
 		version: 1, updated: 0, current: null, qa: [], highlights: [], queue: [], resume: null, perle: { n: 0 },
-		config: { qa: true, rewardName: 'Q&A', highlight: true, command: '!highlight', highlightDuration: 15, conflict: 'return', queue: 'queue', perles: false, perleCommand: '!perle' }
+		config: { qa: true, rewardName: 'Q&A', highlight: true, command: '!highlight', highlightDuration: 15, conflict: 'return', queue: 'queue', perles: false, perleCommand: '!perle', hideCommand: '!hide' }
 	};
 }
 
@@ -239,7 +239,7 @@ function Step(delta) {
 	if (next < 0 || next >= list.length) return;
 	selectedId = list[next].id;
 	// Un message est à l'écran : le suivant le remplace directement (sortie puis entrée sur l'overlay)
-	if (state.current) Send('show', { id: selectedId });
+	if (state.current) Send('show', { manual: 'true', id: selectedId });
 	else Render();
 	const row = document.querySelector(`#list .msg[data-id="${CSS.escape(selectedId)}"]`);
 	if (row) row.scrollIntoView({ block: 'nearest' });
@@ -295,7 +295,7 @@ function RenderList() {
 		row.addEventListener('click', () => {
 			selectedId = item.id;
 			if (isCurrent) { Render(); return; }
-			Send('show', { id: item.id });
+			Send('show', { manual: 'true', id: item.id });
 		});
 
 		const actions = document.createElement('span');
@@ -380,9 +380,10 @@ function TrackPerle() {
 // Démo : mêmes règles que l'action, en local
 function LocalApply(a) {
 	const find = (id) => MeaFind(state, id);
+	const manual = a.manual === 'true';
 	const show = (item) => {
 		const copy = Object.assign({}, item, { shownAt: Date.now() });
-		if (copy.kind === 'highlight') copy.until = Date.now() + 15000; else delete copy.until;
+		if (copy.kind === 'highlight' && !manual) copy.until = Date.now() + 15000; else delete copy.until;
 		item.shown = true;
 		state.current = copy;
 	};
@@ -523,7 +524,7 @@ function Bind() {
 		const focus = FocusItem();
 		if (!focus) return;
 		if (state.current && state.current.id === focus.id) Send('hide');
-		else Send('show', { id: focus.id });
+		else Send('show', { manual: 'true', id: focus.id });
 	});
 	$('perleButton').addEventListener('click', () => { const f = FocusItem(); if (f) RequestPerle(f.id); });
 	// « Effacer » : vide la liste de l'onglet (deux clics)

@@ -17,6 +17,7 @@
 //    item   : JSON du message (modes qa et highlight, et perle par commande)
 //    msgId  : identifiant de l'événement (anti-doublon)
 //    id     : identifiant d'un message (modes show, expire, remove, perle)
+//    manual : true si affiché à la main depuis le dock (mode show) : pas de durée
 //    list   : qa | highlights (mode clear)
 //    by     : auteur de la commande !perle (mode perle) ou page qui traite la perle (mode perleClaim)
 //    n, ok, error : suivi d'une perle (modes perleClaim et perleDone)
@@ -110,7 +111,8 @@ public class CPHInline
 				if (item == null) return false;
 				data["resume"] = null;
 				RetirerDeLaFile(data, item.Value<string>("id"));
-				Afficher(data, cfg, item);
+				// Affiché à la main depuis le dock : reste jusqu'à ce qu'on le masque
+				Afficher(data, cfg, item, Arg("manual") == "true");
 				Sauver(data, "show");
 				return true;
 			}
@@ -232,18 +234,18 @@ public class CPHInline
 		else MettreEnFile(data, id);
 	}
 
-	void Afficher(JObject data, JObject cfg, JObject item)
+	void Afficher(JObject data, JObject cfg, JObject item, bool permanent = false)
 	{
 		JObject copie = (JObject)item.DeepClone();
 		long maintenant = Maintenant();
 		copie["shownAt"] = maintenant;
-		if (copie.Value<string>("kind") == "highlight")
+		copie.Remove("until");
+		// Highlight : durée réglée sur l'overlay (0 : reste affiché jusqu'à ce qu'on le masque)
+		if (copie.Value<string>("kind") == "highlight" && !permanent)
 		{
 			double duree = cfg.Value<double?>("highlightDuration") ?? 15;
-			if (duree < 3) duree = 3;
-			copie["until"] = maintenant + (long)(duree * 1000);
+			if (duree > 0) copie["until"] = maintenant + (long)(Math.Max(1, duree) * 1000);
 		}
-		else copie.Remove("until");
 		data["current"] = copie;
 		item["shown"] = true;
 	}
@@ -365,7 +367,7 @@ public class CPHInline
 		return new JObject
 		{
 			["qa"] = true, ["rewardName"] = "Q&A", ["highlight"] = true, ["command"] = "!highlight",
-			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false, ["perleCommand"] = "!perle"
+			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false, ["perleCommand"] = "!perle", ["hideCommand"] = "!hide"
 		};
 	}
 

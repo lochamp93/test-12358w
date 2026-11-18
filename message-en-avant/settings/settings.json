@@ -112,10 +112,10 @@
 		{
 			"id": "highlightDuration",
 			"label": "Durée d’affichage",
-			"description": "En secondes",
+			"description": "En secondes, quand il arrive par la commande. 0 : reste affiché jusqu’à ce qu’on le masque. Affiché depuis le dock : reste toujours jusqu’à ce qu’on le masque",
 			"type": "number",
 			"defaultValue": 15,
-			"min": 3,
+			"min": 0,
 			"max": 120,
 			"group": "Modes",
 			"showIf": "highlight"
@@ -170,6 +170,14 @@
 			],
 			"group": "Modes",
 			"showIf": "highlight"
+		},
+		{
+			"id": "hideCommand",
+			"label": "Commande pour masquer",
+			"description": "Un modo ou la streameuse tape la commande dans le chat pour masquer le message à l’écran. Vide : pas de commande",
+			"type": "text",
+			"defaultValue": "!hide",
+			"group": "Modes"
 		},
 		{
 			"id": "layout",
