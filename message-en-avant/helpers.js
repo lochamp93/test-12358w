@@ -147,7 +147,8 @@ const MeaCollector = (function () {
 			color: String(u.color || m.color || ''),
 			badges: badgeUrls(u.badges || m.badges),
 			parts: MeaPartsFromTwitch(d.parts || m.parts, text),
-			text: String(text || '')
+			text: String(text || ''),
+			at: Date.now()
 		};
 	}
 
@@ -190,7 +191,7 @@ const MeaCollector = (function () {
 			avatar: await MeaAvatar(src.login),
 			parts: src.parts,
 			text: src.text,
-			at: Date.now(),
+			at: src.at || Date.now(), // heure du message d'origine si on l'a vu passer
 			by: msg.name || msg.login
 		};
 	}

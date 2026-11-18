@@ -107,7 +107,7 @@ function AvatarEl(item, className) {
 }
 
 // Carte du message (même structure pour les trois styles, mise en forme par le CSS)
-function BuildCard(item) {
+function BuildCard(item, opts = {}) {
 	const s = ws.values;
 	const card = document.createElement('div');
 	card.className = `mea kind-${item.kind}`;
@@ -143,6 +143,14 @@ function BuildCard(item) {
 	name.className = 'name';
 	name.textContent = item.name || item.login || '';
 	head.append(line, AvatarEl(item, 'avatar sign-avatar'), badges, name);
+	// Image Discord : date et heure du message à côté du pseudo
+	if (opts.date) {
+		const date = document.createElement('span');
+		date.className = 'date';
+		const d = new Date(Number(opts.date) || Date.now());
+		date.textContent = `${d.toLocaleDateString('fr-FR')} à ${d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}`;
+		head.appendChild(date);
+	}
 	const labelText = LabelFor(item);
 	if (labelText) {
 		const label = document.createElement('span');
@@ -380,7 +388,7 @@ async function Capture(item) {
 	const frame = document.createElement('div');
 	frame.className = 'perle-frame';
 	frame.style.background = ws.isActive('perleBgColor') ? ws.values.perleBgColor : 'transparent';
-	const card = BuildCard(item);
+	const card = BuildCard(item, { date: ws.isActive('perleDate') && ws.values.perleDate ? (item.at || Date.now()) : 0 });
 	frame.appendChild(card);
 	captureEl.appendChild(frame);
 	try {

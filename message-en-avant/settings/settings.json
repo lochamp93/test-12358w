@@ -495,6 +495,15 @@
 			"showIf": "perles"
 		},
 		{
+			"id": "perleDate",
+			"label": "Date et heure dans l’image",
+			"description": "Affichées à côté du pseudo, sur l’image envoyée dans Discord",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
 			"id": "perleBg",
 			"label": "Fond de l’image",
 			"description": "",

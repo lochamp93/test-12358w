@@ -122,6 +122,15 @@ body {
 	min-width: 0;
 }
 
+.mea .date {
+	flex-shrink: 0;
+	font-size: 0.8em;
+	font-weight: 500;
+	color: var(--text-color);
+	opacity: 0.55;
+	white-space: nowrap;
+}
+
 .mea .label {
 	flex-shrink: 0;
 	margin-left: 0.3em;
