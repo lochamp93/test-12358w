@@ -26,7 +26,7 @@ const TRASH = '<svg viewBox="0 0 27 31" aria-hidden="true"><path d="M7.21 30.85H
 function DefaultState() {
 	return {
 		version: 1, updated: 0, current: null, qa: [], highlights: [], queue: [], resume: null, perle: { n: 0 },
-		config: { qa: true, rewardName: 'Q&A', highlight: true, command: '!highlight', highlightDuration: 15, conflict: 'return', queue: 'queue', perles: false, perleCommand: '!perle', hideCommand: '!hide', perleWho: 'all', perleCooldown: 30 }
+		config: { qa: true, rewardName: 'Q&A', highlight: true, command: '!highlight', highlightDuration: 15, conflict: 'return', queue: 'queue', perles: false, perleCommand: '!perle', hideCommand: '!hide', perleWho: 'all', perleCooldown: 30, perleThread: true, perleThreadMax: 3 }
 	};
 }
 

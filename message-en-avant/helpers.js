@@ -161,7 +161,8 @@ const MeaCollector = (function () {
 			badges: badgeUrls(u.badges || m.badges),
 			parts: MeaPartsFromTwitch(d.parts || m.parts, text),
 			text: String(text || ''),
-			at: Date.now()
+			at: Date.now(),
+			reply: replyInfo(d)
 		};
 	}
 
@@ -174,8 +175,56 @@ const MeaCollector = (function () {
 			userId: String(r.userId || r.parentUserId || r.parent_user_id || ''),
 			login: String(r.userLogin || r.parentUserLogin || r.parent_user_login || r.login || '').toLowerCase(),
 			name: String(r.userName || r.parentUserName || r.parent_user_name || r.displayName || r.userLogin || ''),
-			text: String(r.msgBody || r.parentMessageBody || r.parent_message_body || r.message || r.text || '')
+			text: String(r.msgBody || r.parentMessageBody || r.parent_message_body || r.message || r.text || ''),
+			threadMsgId: String(r.threadMsgId || r.threadParentMsgId || r.thread_message_id || r.threadMessageId || '')
 		};
+	}
+
+	// Message « vu » à partir des infos de réponse (texte seul, sans emotes ni badges)
+	function fromReply(reply) {
+		const known = users.get(reply.login) || {};
+		return {
+			msgId: reply.msgId, userId: reply.userId || known.userId || '', login: reply.login, name: reply.name || known.name || reply.login,
+			color: known.color || '', badges: known.badges || [], parts: [{ t: 'text', v: reply.text }], text: reply.text, reply: null
+		};
+	}
+
+	// Texte d'une réponse sans le « @pseudo » ajouté par Twitch (le fil montre déjà à qui elle répond)
+	function withoutMention(msg) {
+		const parts = (msg.parts || []).map(p => Object.assign({}, p));
+		if (msg.reply && parts.length && parts[0].t === 'text') {
+			const names = [msg.reply.login, msg.reply.name].filter(Boolean).map(n => '@' + n.toLowerCase());
+			const v = parts[0].v;
+			const hit = names.find(n => v.toLowerCase().startsWith(n));
+			if (hit) parts[0].v = v.slice(hit.length).replace(/^[\s,:]+/, '');
+		}
+		return parts;
+	}
+
+	// Fil de discussion d'un message : ses parents successifs jusqu'au message d'origine
+	async function threadOf(src, max) {
+		const chain = [src];
+		let cur = src;
+		while (cur.reply && cur.reply.msgId && chain.length < 30) {
+			const parent = messages.get(cur.reply.msgId) || fromReply(cur.reply);
+			if (chain.some(x => x.msgId && x.msgId === parent.msgId)) break;
+			chain.unshift(parent);
+			cur = parent;
+		}
+		// Message d'origine connu par son identifiant de fil, mais pas atteint en remontant
+		const rootId = src.reply && src.reply.threadMsgId;
+		if (rootId && chain[0].msgId !== rootId && messages.get(rootId)) chain.unshift(messages.get(rootId));
+		// Trop long : le message d'origine et les plus récents
+		let list = chain;
+		if (list.length > max) list = [chain[0]].concat(chain.slice(chain.length - (max - 1)));
+		const out = [];
+		for (const m of list) {
+			out.push({
+				name: m.name || m.login, login: m.login, color: m.color, badges: m.badges || [],
+				avatar: await MeaAvatar(m.login), parts: withoutMention(m), text: m.text, at: m.at || 0
+			});
+		}
+		return out;
 	}
 
 	// Texte de la commande : Twitch ajoute « @pseudo » au début d'une réponse
@@ -187,13 +236,8 @@ const MeaCollector = (function () {
 
 	// Message d'origine d'une réponse : version complète (emotes, badges, couleur) si on l'a vu passer
 	async function originalItem(reply, msg, prefix, kind) {
-		const seen = messages.get(reply.msgId);
-		const known = users.get(reply.login) || {};
-		const src = seen || {
-			msgId: reply.msgId, userId: reply.userId || known.userId || '', login: reply.login, name: reply.name || known.name || reply.login,
-			color: known.color || '', badges: known.badges || [], parts: [{ t: 'text', v: reply.text }], text: reply.text
-		};
-		return {
+		const src = messages.get(reply.msgId) || fromReply(reply);
+		const item = {
 			id: prefix + (src.msgId || msg.msgId),
 			kind,
 			name: src.name || src.login,
@@ -207,6 +251,13 @@ const MeaCollector = (function () {
 			at: src.at || Date.now(), // heure du message d'origine si on l'a vu passer
 			by: msg.name || msg.login
 		};
+		// Perle d'une réponse : tout le fil sur la même image
+		const cfg = opts && opts.getConfig();
+		if (kind === 'perle' && cfg && cfg.perleThread && src.reply) {
+			const thread = await threadOf(src, Math.max(2, Number(cfg.perleThreadMax) || 3));
+			if (thread.length > 1) item.thread = thread;
+		}
+		return item;
 	}
 
 	async function onChat(d) {
@@ -283,7 +334,7 @@ const MeaCollector = (function () {
 	}
 
 	return {
-		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command, perles, perleCommand, hideCommand } | null, send: (args) => void }
+		// opts : { sbClient, getConfig: () => { qa, rewardName, highlight, command, perles, perleCommand, hideCommand, perleWho, perleThread, perleThreadMax } | null, send: (args) => void }
 		start(o) {
 			opts = o;
 			o.sbClient.on('Twitch.ChatMessage', ({ data }) => { onChat(data).catch(e => console.error('[Message en avant]', e)); });

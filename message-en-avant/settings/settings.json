@@ -538,6 +538,26 @@
 			}
 		},
 		{
+			"id": "perleThread",
+			"label": "Perler le fil de discussion",
+			"description": "Si le message perlé répond à un autre : message d’origine, réponse, réponse à la réponse, sur une seule image. Seuls les messages vus par l’overlay ou le dock peuvent être repris",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleThreadMax",
+			"label": "Messages du fil au maximum",
+			"description": "Au-delà, on garde le message d’origine et les plus récents",
+			"type": "number",
+			"defaultValue": 3,
+			"min": 2,
+			"max": 6,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perleThread"
+		},
+		{
 			"id": "caption",
 			"label": "Ajouter une légende (pseudo, date)",
 			"description": "",

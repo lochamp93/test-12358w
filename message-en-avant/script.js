@@ -261,7 +261,9 @@ function PublicConfig() {
 		perleCommand: ws.isActive('perleCommand') ? String(s.perleCommand || '') : '',
 		hideCommand: String(s.hideCommand || ''),
 		perleWho: s.perleWho,
-		perleCooldown: ws.isActive('perleCooldown') ? Number(s.perleCooldown) : 0
+		perleCooldown: ws.isActive('perleCooldown') ? Number(s.perleCooldown) : 0,
+		perleThread: !!(ws.isActive('perleThread') && s.perleThread),
+		perleThreadMax: Number(s.perleThreadMax)
 	};
 }
 
@@ -342,7 +344,8 @@ function ConnectStreamerBot() {
 			getConfig: () => ({
 				qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command,
 				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : '',
-				hideCommand: ws.values.hideCommand, perleWho: ws.values.perleWho
+				hideCommand: ws.values.hideCommand, perleWho: ws.values.perleWho,
+				perleThread: !!(ws.isActive('perleThread') && ws.values.perleThread), perleThreadMax: ws.values.perleThreadMax
 			}),
 			send: (args) => Send(args)
 		});
@@ -399,7 +402,23 @@ async function Capture(item) {
 	const frame = document.createElement('div');
 	frame.className = 'perle-frame';
 	frame.style.background = ws.isActive('perleBgColor') ? ws.values.perleBgColor : 'transparent';
-	const card = BuildCard(item, { date: ws.isActive('perleDate') && ws.values.perleDate ? (item.at || Date.now()) : 0 });
+	const withDate = ws.isActive('perleDate') && ws.values.perleDate;
+	let card;
+	if (Array.isArray(item.thread) && item.thread.length > 1) {
+		// Fil de discussion : message d'origine en haut, réponses reliées par un trait
+		card = document.createElement('div');
+		card.className = 'mea-thread';
+		item.thread.forEach((m, i) => {
+			const one = Object.assign({ id: `${item.id}:${i}`, kind: 'perle' }, m);
+			const c = BuildCard(one, { date: withDate ? (m.at || item.at || Date.now()) : 0 });
+			if (i > 0) {
+				const row = document.createElement('div');
+				row.className = 'thread-reply';
+				row.appendChild(c);
+				card.appendChild(row);
+			} else card.appendChild(c);
+		});
+	} else card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
 	frame.appendChild(card);
 	captureEl.appendChild(frame);
 	try {
@@ -412,8 +431,7 @@ async function Capture(item) {
 		});
 		if (document.fonts && document.fonts.ready) await document.fonts.ready;
 		// Le flou d'arrière-plan n'a pas de sens sur une image : le fond garde sa couleur et son opacité
-		card.style.backdropFilter = 'none';
-		card.style.webkitBackdropFilter = 'none';
+		frame.querySelectorAll('.mea').forEach(c => { c.style.backdropFilter = 'none'; c.style.webkitBackdropFilter = 'none'; });
 		const options = { pixelRatio: 2, cacheBust: false, imagePlaceholder: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' };
 		return await window.htmlToImage.toBlob(frame, options);
 	} finally {
