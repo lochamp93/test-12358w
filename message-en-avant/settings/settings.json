@@ -44,7 +44,7 @@
 		},
 		{
 			"id": "previewQuestion",
-			"label": "Exemple : question Q&A",
+			"label": "Question Q&A",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewQuestion",
@@ -52,7 +52,7 @@
 		},
 		{
 			"id": "previewHighlight",
-			"label": "Exemple : highlight",
+			"label": "Highlight",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewHighlight",
@@ -60,7 +60,7 @@
 		},
 		{
 			"id": "previewLong",
-			"label": "Exemple : message long",
+			"label": "Message long",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewLong",
@@ -68,7 +68,7 @@
 		},
 		{
 			"id": "previewPerleImage",
-			"label": "Aperçu de l’image Discord",
+			"label": "Perle Message (Discord)",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewPerleImage",
@@ -76,7 +76,7 @@
 		},
 		{
 			"id": "previewPerleThread",
-			"label": "Aperçu d’un fil de discussion sur Discord",
+			"label": "Perle Fil (Discord)",
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewPerleThread",
@@ -94,7 +94,7 @@
 		{
 			"id": "qa",
 			"label": "Q&A",
-			"description": "Questions posées avec une récompense de points de chaîne (avec texte)",
+			"description": "Questions posées via points de chaîne",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Modes"
@@ -111,7 +111,7 @@
 		{
 			"id": "highlight",
 			"label": "Highlight",
-			"description": "Un modo ou la streameuse répond à un message du chat avec la commande",
+			"description": "Affichage d’un message sur l’overlay",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Modes"
@@ -128,7 +128,7 @@
 		{
 			"id": "highlightDuration",
 			"label": "Durée d’affichage",
-			"description": "En secondes, quand il arrive par la commande. 0 : reste affiché jusqu’à ce qu’on le masque. Affiché depuis le dock : reste toujours jusqu’à ce qu’on le masque",
+			"description": "En secondes. 0 : reste affiché jusqu’à ce qu’on le masque.",
 			"type": "number",
 			"defaultValue": 15,
 			"min": 0,
@@ -170,7 +170,7 @@
 		},
 		{
 			"id": "queue",
-			"label": "Plusieurs highlights d’affilée",
+			"label": "Highlights consécutifs",
 			"description": "",
 			"type": "select",
 			"defaultValue": "queue",
@@ -189,8 +189,8 @@
 		},
 		{
 			"id": "hideCommand",
-			"label": "Commande pour masquer",
-			"description": "Un modo ou la streameuse tape la commande dans le chat pour masquer le message à l’écran. Vide : pas de commande",
+			"label": "Masquer le message",
+			"description": "Commande pour masquer le message à l’écran. Vide : pas de commande",
 			"type": "text",
 			"defaultValue": "!hide",
 			"group": "Modes"
@@ -198,7 +198,7 @@
 		{
 			"id": "layout",
 			"label": "Style",
-			"description": "Carte : verre arrondi. Bulle : message façon iMessage. Citation : grand guillemet. Minimaliste : sans cadre. Ticket : liseré coloré et heure. Polaroid : photo de l’avatar sur papier blanc. Écran d’appel : avatar au centre avec un halo. Bannière de jeu : jaquette du jeu en cours floutée en fond",
+			"description": "",
 			"type": "select",
 			"defaultValue": "card",
 			"options": [
@@ -238,35 +238,161 @@
 			"group": "Style"
 		},
 		{
-			"id": "colorMode",
-			"label": "Couleurs",
-			"description": "Tirées de l’avatar de chaque viewer (comme la palette de nutty), ou fixes",
+			"id": "cardAlign",
+			"label": "Alignement de la carte",
+			"description": "Position de la carte dans la source",
 			"type": "select",
-			"defaultValue": "matteDark",
+			"defaultValue": "left",
 			"options": [
 				{
-					"value": "matteDark",
-					"label": "Avatar : mat sombre"
+					"value": "left",
+					"label": "À gauche"
 				},
 				{
-					"value": "matteLight",
-					"label": "Avatar : mat clair"
+					"value": "center",
+					"label": "Centrée"
 				},
 				{
-					"value": "vibrant",
-					"label": "Avatar : vif"
-				},
-				{
-					"value": "fixed",
-					"label": "Fixes"
+					"value": "right",
+					"label": "À droite"
 				}
 			],
 			"group": "Style"
 		},
 		{
+			"id": "colorMode",
+			"label": "Couleurs",
+			"description": "Issues de l’avatar, ou fixes",
+			"type": "select",
+			"defaultValue": "fixed",
+			"options": [
+				{
+					"value": "fixed",
+					"label": "Fixe sombre"
+				},
+				{
+					"value": "fixedLight",
+					"label": "Fixe clair"
+				},
+				{
+					"value": "matteDark",
+					"label": "Avatar sombre"
+				},
+				{
+					"value": "matteLight",
+					"label": "Avatar clair"
+				},
+				{
+					"value": "vibrant",
+					"label": "Avatar vif"
+				},
+				{
+					"value": "custom",
+					"label": "Personnalisées"
+				}
+			],
+			"group": "Style"
+		},
+		{
+			"id": "nameColor",
+			"label": "Couleur du pseudo",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Style",
+			"showIf": {
+				"id": "colorMode",
+				"value": "custom"
+			}
+		},
+		{
+			"id": "bgColor",
+			"label": "Couleur de la carte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "colorMode",
+						"value": "custom"
+					},
+					{
+						"id": "layout",
+						"value": [
+							"card",
+							"bubble",
+							"ticket",
+							"game"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "textColor",
+			"label": "Couleur du texte",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "colorMode",
+						"value": "custom"
+					},
+					{
+						"id": "layout",
+						"notValue": "polaroid"
+					}
+				]
+			}
+		},
+		{
+			"id": "accentColor",
+			"label": "Couleur d’accent",
+			"description": "Étiquette, liseré, guillemet, halo",
+			"type": "color",
+			"defaultValue": "#FF4FA3",
+			"group": "Style",
+			"showIf": {
+				"id": "colorMode",
+				"value": "custom"
+			}
+		},
+		{
+			"id": "bgOpacity",
+			"label": "Opacité de la carte",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 85,
+			"min": 0,
+			"max": 100,
+			"group": "Style",
+			"showIf": {
+				"all": [
+					{
+						"id": "colorMode",
+						"value": "custom"
+					},
+					{
+						"id": "layout",
+						"value": [
+							"card",
+							"bubble",
+							"ticket",
+							"game"
+						]
+					}
+				]
+			}
+		},
+		{
 			"id": "bgMode",
 			"label": "Fond",
-			"description": "Avatar flouté : l’avatar du viewer, flouté et assombri, en fond de la carte",
+			"description": "Avatar flouté : l’avatar du viewer",
 			"type": "select",
 			"defaultValue": "color",
 			"options": [
@@ -365,40 +491,6 @@
 			}
 		},
 		{
-			"id": "nameColorMode",
-			"label": "Couleur du pseudo",
-			"description": "",
-			"type": "select",
-			"defaultValue": "twitch",
-			"options": [
-				{
-					"value": "twitch",
-					"label": "Couleur Twitch du viewer"
-				},
-				{
-					"value": "fixed",
-					"label": "Couleur fixe"
-				}
-			],
-			"group": "Style",
-			"showIf": {
-				"id": "colorMode",
-				"value": "fixed"
-			}
-		},
-		{
-			"id": "nameColor",
-			"label": "Couleur fixe du pseudo",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#FFFFFF",
-			"group": "Style",
-			"showIf": {
-				"id": "nameColorMode",
-				"value": "fixed"
-			}
-		},
-		{
 			"id": "showLabel",
 			"label": "Afficher l’étiquette du mode",
 			"description": "",
@@ -443,82 +535,6 @@
 			}
 		},
 		{
-			"id": "accentColor",
-			"label": "Couleur d’accent",
-			"description": "Étiquette, guillemet de la Citation",
-			"type": "color",
-			"defaultValue": "#FF4FA3",
-			"group": "Style",
-			"showIf": {
-				"id": "colorMode",
-				"value": "fixed"
-			}
-		},
-		{
-			"id": "textColor",
-			"label": "Couleur du texte",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#FFFFFF",
-			"group": "Style",
-			"showIf": {
-				"all": [
-					{
-						"id": "colorMode",
-						"value": "fixed"
-					},
-					{
-						"id": "layout",
-						"notValue": "polaroid"
-					}
-				]
-			}
-		},
-		{
-			"id": "bgColor",
-			"label": "Couleur du fond",
-			"description": "",
-			"type": "color",
-			"defaultValue": "#1C1C1E",
-			"group": "Style",
-			"showIf": {
-				"all": [
-					{
-						"id": "colorMode",
-						"value": "fixed"
-					},
-					{
-						"id": "layout",
-						"value": [
-							"card",
-							"bubble",
-							"ticket",
-							"game"
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "bgOpacity",
-			"label": "Opacité du fond",
-			"description": "En %",
-			"type": "number",
-			"defaultValue": 85,
-			"min": 0,
-			"max": 100,
-			"group": "Style",
-			"showIf": {
-				"id": "layout",
-				"value": [
-					"card",
-					"bubble",
-					"ticket",
-					"game"
-				]
-			}
-		},
-		{
 			"id": "animIn",
 			"label": "Entrée",
 			"description": "",
@@ -527,7 +543,7 @@
 			"options": [
 				{
 					"value": "slide",
-					"label": "Glissement vers le haut"
+					"label": "Glissement"
 				},
 				{
 					"value": "fade",
@@ -543,6 +559,36 @@
 				}
 			],
 			"group": "Animations"
+		},
+		{
+			"id": "animInDir",
+			"label": "Sens",
+			"description": "",
+			"type": "select",
+			"defaultValue": "up",
+			"options": [
+				{
+					"value": "up",
+					"label": "Vers le haut"
+				},
+				{
+					"value": "down",
+					"label": "Vers le bas"
+				},
+				{
+					"value": "left",
+					"label": "Vers la gauche"
+				},
+				{
+					"value": "right",
+					"label": "Vers la droite"
+				}
+			],
+			"group": "Animations",
+			"showIf": {
+				"id": "animIn",
+				"value": "slide"
+			}
 		},
 		{
 			"id": "animInDuration",
@@ -571,7 +617,7 @@
 				},
 				{
 					"value": "slide",
-					"label": "Glissement vers le bas"
+					"label": "Glissement"
 				},
 				{
 					"value": "zoom",
@@ -583,6 +629,36 @@
 				}
 			],
 			"group": "Animations"
+		},
+		{
+			"id": "animOutDir",
+			"label": "Sens",
+			"description": "",
+			"type": "select",
+			"defaultValue": "down",
+			"options": [
+				{
+					"value": "up",
+					"label": "Vers le haut"
+				},
+				{
+					"value": "down",
+					"label": "Vers le bas"
+				},
+				{
+					"value": "left",
+					"label": "Vers la gauche"
+				},
+				{
+					"value": "right",
+					"label": "Vers la droite"
+				}
+			],
+			"group": "Animations",
+			"showIf": {
+				"id": "animOut",
+				"value": "slide"
+			}
 		},
 		{
 			"id": "animOutDuration",
@@ -601,7 +677,7 @@
 		{
 			"id": "perles",
 			"label": "Activer les perles",
-			"description": "Bouton Discord du dock : l’overlay fait une image du message et la poste dans le salon",
+			"description": "",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Discord (Les Perles du Chat)"
@@ -613,12 +689,13 @@
 			"type": "password",
 			"defaultValue": "",
 			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perles"
+			"showIf": "perles",
+			"inputWidth": 72
 		},
 		{
 			"id": "perleCommand",
 			"label": "Commande",
-			"description": "Réponse à un message du chat avec la commande : il part sur Discord avec « Perlé par … le jj/mm/aaaa à hh:mm », sans s’afficher sur l’overlay",
+			"description": "Réponse à un message du chat avec la commande",
 			"type": "text",
 			"defaultValue": "!perle",
 			"group": "Discord (Les Perles du Chat)",
@@ -654,7 +731,7 @@
 		{
 			"id": "perleCooldown",
 			"label": "Délai entre deux perles",
-			"description": "En secondes, par personne (les modos et la streameuse n’en ont pas). Un même message n’est perlé qu’une fois. 0 : pas de délai",
+			"description": "En secondes. Pour éviter le spam. Un même message n’est perlé qu’une fois.",
 			"type": "number",
 			"defaultValue": 30,
 			"min": 0,
@@ -671,36 +748,25 @@
 		{
 			"id": "perleThread",
 			"label": "Perler le fil de discussion",
-			"description": "Si le message perlé répond à un autre : message d’origine, réponse, réponse à la réponse, sur une seule image. Seuls les messages vus par l’overlay ou le dock peuvent être repris",
+			"description": "Dans le cas d’une réponse, affiche aussi le message auquel il répond (3 messages au maximum)",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perles"
 		},
 		{
-			"id": "perleThreadMax",
-			"label": "Messages du fil au maximum",
-			"description": "Au-delà, on garde le message d’origine et les plus récents",
-			"type": "number",
-			"defaultValue": 3,
-			"min": 2,
-			"max": 6,
+			"id": "perleLine",
+			"label": "Afficher la ligne",
+			"description": "Ligne latérale qui relie les réponses. Sans la ligne, les messages s’alignent sur le premier",
+			"type": "checkbox",
+			"defaultValue": true,
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perleThread"
 		},
 		{
-			"id": "caption",
-			"label": "Ajouter une légende (pseudo, date)",
-			"description": "",
-			"type": "checkbox",
-			"defaultValue": true,
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perles"
-		},
-		{
 			"id": "perleDate",
-			"label": "Date et heure dans l’image",
-			"description": "Affichées à côté du pseudo, sur l’image envoyée dans Discord",
+			"label": "Horodatage du message",
+			"description": "À côté du pseudo, sur l’image envoyée dans Discord",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Discord (Les Perles du Chat)",
@@ -708,7 +774,7 @@
 		},
 		{
 			"id": "perleLayout",
-			"label": "Style de l’image",
+			"label": "Style de la perle",
 			"description": "Peut être différent de l’overlay (ex. Carte à l’écran, Citation sur Discord)",
 			"type": "select",
 			"defaultValue": "same",
@@ -755,8 +821,8 @@
 		},
 		{
 			"id": "perleBg",
-			"label": "Fond de l’image",
-			"description": "Image : remplace le fond des cartes, le texte s’affiche par-dessus",
+			"label": "Arrière-plan",
+			"description": "Image : l’image fait la carte, le texte s’affiche par-dessus",
 			"type": "select",
 			"defaultValue": "transparent",
 			"options": [
@@ -778,7 +844,7 @@
 		},
 		{
 			"id": "perleBgColor",
-			"label": "Couleur du fond de l’image",
+			"label": "Couleur de l’arrière-plan",
 			"description": "",
 			"type": "color",
 			"defaultValue": "#1C1C1E",
@@ -791,7 +857,7 @@
 		{
 			"id": "perleImage",
 			"label": "Image de fond",
-			"description": "Conseillé : 2000 × 1000 px (format 2:1), PNG ou JPG. Le sujet dans le tiers droit, la partie gauche calme pour le texte. Enregistrée dans Streamer.bot (il doit être ouvert)",
+			"description": "Conseillé : 2000 × 1000 px (format 2:1), PNG ou JPG. Image centrée. Enregistrée dans Streamer.bot (il doit être ouvert)",
 			"type": "image",
 			"maxWidth": 2000,
 			"maxHeight": 2000,
@@ -802,66 +868,35 @@
 			}
 		},
 		{
-			"id": "perleImagePos",
-			"label": "Position de l’image",
-			"description": "Côté gardé quand l’image est recadrée",
-			"type": "select",
-			"defaultValue": "right",
-			"options": [
-				{
-					"value": "right",
-					"label": "À droite"
-				},
-				{
-					"value": "center",
-					"label": "Centrée"
-				},
-				{
-					"value": "left",
-					"label": "À gauche"
-				}
-			],
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": {
-				"id": "perleBg",
-				"value": "image"
-			}
-		},
-		{
-			"id": "perleImageDim",
-			"label": "Assombrir l’image",
-			"description": "En %",
-			"type": "number",
-			"defaultValue": 20,
-			"min": 0,
-			"max": 90,
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": {
-				"id": "perleBg",
-				"value": "image"
-			}
-		},
-		{
-			"id": "perleWidth",
-			"label": "Largeur de l’image",
-			"description": "En pixels (image envoyée deux fois plus grande, pour la netteté). Largeur fixe, la hauteur s’adapte au texte",
-			"type": "number",
-			"defaultValue": 900,
-			"min": 400,
-			"max": 1600,
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perles"
-		},
-		{
 			"id": "perleColors",
-			"label": "Couleurs du texte de l’image",
-			"description": "Pour garder le texte lisible sur le fond de l’image",
+			"label": "Couleurs",
+			"description": "« Issues de l’image de fond » : seulement avec une image en arrière-plan",
 			"type": "select",
 			"defaultValue": "same",
 			"options": [
 				{
 					"value": "same",
-					"label": "Comme sur l’overlay"
+					"label": "Comme l’overlay"
+				},
+				{
+					"value": "fixed",
+					"label": "Fixe sombre"
+				},
+				{
+					"value": "fixedLight",
+					"label": "Fixe clair"
+				},
+				{
+					"value": "matteDark",
+					"label": "Avatar sombre"
+				},
+				{
+					"value": "matteLight",
+					"label": "Avatar clair"
+				},
+				{
+					"value": "vibrant",
+					"label": "Avatar vif"
 				},
 				{
 					"value": "custom",
@@ -869,7 +904,7 @@
 				},
 				{
 					"value": "image",
-					"label": "Tirées de l’image de fond"
+					"label": "Issues de l’image de fond"
 				}
 			],
 			"group": "Discord (Les Perles du Chat)",
@@ -900,41 +935,37 @@
 			}
 		},
 		{
+			"id": "perleCardColor",
+			"label": "Couleur du fond",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#1C1C1E",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleColors",
+				"value": "custom"
+			}
+		},
+		{
+			"id": "perleAccentColor",
+			"label": "Couleur d’accent",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FF4FA3",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleColors",
+				"value": "custom"
+			}
+		},
+		{
 			"id": "perleWatermark",
 			"label": "Filigrane",
-			"description": "En bas de l’image : logo Twitch et nom de la chaîne",
+			"description": "En bas à droite de l’image : logo Twitch et nom de la chaîne",
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perles"
-		},
-		{
-			"id": "perleWatermarkText",
-			"label": "Texte du filigrane",
-			"description": "Vide : twitch.tv/ suivi du nom de la chaîne connectée à Streamer.bot",
-			"type": "text",
-			"defaultValue": "",
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perleWatermark"
-		},
-		{
-			"id": "perleWatermarkLogo",
-			"label": "Logo du filigrane",
-			"description": "",
-			"type": "select",
-			"defaultValue": "twitch",
-			"options": [
-				{
-					"value": "twitch",
-					"label": "Twitch"
-				},
-				{
-					"value": "none",
-					"label": "Aucun"
-				}
-			],
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perleWatermark"
 		},
 		{
 			"id": "testPerle",
@@ -942,15 +973,6 @@
 			"description": "",
 			"type": "button",
 			"callFunction": "PreviewPerle",
-			"group": "Discord (Les Perles du Chat)",
-			"showIf": "perles"
-		},
-		{
-			"id": "perleInfo",
-			"label": "Dernier envoi",
-			"description": "",
-			"type": "info",
-			"defaultValue": "Aucun envoi depuis l’ouverture de la page",
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perles"
 		}

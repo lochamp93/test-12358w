@@ -360,6 +360,11 @@ function LoadJSON(settingsJson) {
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 					}
 
+					// "inputWidth": 72 : champ étroit (en pixels), pour laisser la place à la description
+					if (setting.inputWidth && inputElement && inputElement.tagName === 'INPUT') {
+						inputElement.style.width = `${Number(setting.inputWidth)}px`;
+						inputElement.style.flex = '0 0 auto';
+					}
 					// "placeholder" : texte gris affiché quand le champ est vide
 					if (setting.placeholder && inputElement && inputElement.tagName === 'INPUT') inputElement.placeholder = setting.placeholder;
 

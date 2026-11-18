@@ -47,8 +47,14 @@ function ApplySettings() {
 	SetVar('--bg', HexToRgba(s.bgColor, s.bgOpacity));
 	SetVar('--in-ms', `${s.animInDuration}ms`);
 	SetVar('--out-ms', `${s.animOutDuration}ms`);
+	// Glissement : sens choisi (entrée : d'où arrive la carte ; sortie : où elle part)
+	const D = { up: ['0', '45%'], down: ['0', '-45%'], left: ['45%', '0'], right: ['-45%', '0'] };
+	const inD = D[s.animInDir] || D.up, outD = D[s.animOutDir] || D.down;
+	SetVar('--in-dx', inD[0]); SetVar('--in-dy', inD[1]);
+	SetVar('--out-dx', outD[0].startsWith('-') ? outD[0].slice(1) : (outD[0] === '0' ? '0' : '-' + outD[0]));
+	SetVar('--out-dy', outD[1].startsWith('-') ? outD[1].slice(1) : (outD[1] === '0' ? '0' : '-' + outD[1]));
 
-	widgetEl.className = LayoutClasses(s.layout);
+	widgetEl.className = LayoutClasses(s.layout) + ` card-${s.cardAlign}`;
 
 	// Le message affiché suit les nouveaux réglages, sans animation
 	if (shown && shownEl) {
@@ -57,6 +63,36 @@ function ApplySettings() {
 		shownEl = el;
 	}
 	QueueConfig();
+}
+
+// Couleurs
+function IsAvatarMode(mode) { return ['matteDark', 'matteLight', 'vibrant'].includes(mode); }
+
+// Couleur lisible sur un fond donné (assombrie ou éclaircie au besoin)
+function Readable(fg, bg, min) {
+	if (MeaContrast(fg, bg) >= min) return fg;
+	const dark = MeaContrast('#000000', bg) > MeaContrast('#FFFFFF', bg);
+	for (let t = 0.2; t <= 1; t += 0.2) {
+		const c = MeaMix(fg, dark ? '#000000' : '#FFFFFF', t);
+		if (MeaContrast(c, bg) >= min) return c;
+	}
+	return dark ? '#000000' : '#FFFFFF';
+}
+
+// Fixe sombre, Fixe clair, Personnalisées : pseudo dans sa couleur Twitch (lisible), accent = pseudo
+function FixedColors(mode, item, custom, layout) {
+	const twitch = /^#[0-9a-f]{6}$/i.test(String(item.color || '')) ? item.color : '#BF94FF';
+	if (mode === 'custom') return { bg: custom.bg, opacity: custom.opacity, name: custom.name, text: custom.text, accent: custom.accent };
+	if (layout === 'polaroid') {
+		const n = Readable(twitch, '#FBFAF7', 3);
+		return { bg: '#FBFAF7', opacity: 100, text: '#1C1C1E', name: n, accent: n };
+	}
+	if (mode === 'fixedLight') {
+		const n = Readable(twitch, '#FFFFFF', 3);
+		return { bg: '#FFFFFF', opacity: 92, text: '#1C1C1E', name: n, accent: n };
+	}
+	const n = Readable(twitch, '#1C1C1E', 3);
+	return { bg: '#1C1C1E', opacity: 85, text: '#FFFFFF', name: n, accent: n };
 }
 
 // Classes de mise en page d'un style (overlay, ou image Discord avec son propre style)
@@ -72,7 +108,7 @@ function LayoutClasses(layout) {
 		`out-${s.animOut}`,
 		s.showAvatar ? '' : 'hide-avatar',
 		s.showBadges ? '' : 'hide-badges',
-		['card', 'bubble', 'ticket', 'game'].includes(layout) && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
+		['card', 'bubble', 'ticket', 'game'].includes(layout) && s.colorMode === 'custom' && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
 	].filter(Boolean).join(' ');
 }
 
@@ -130,7 +166,16 @@ function BuildCard(item, opts = {}) {
 	card.className = `mea kind-${item.kind}`;
 	card.dataset.id = item.id;
 	card.style.setProperty('--text-scale', String(TextScale(item)));
-	card.style.setProperty('--name-color', s.nameColorMode === 'fixed' ? s.nameColor : (item.color || s.textColor));
+	// Couleurs : mode de l'overlay, ou celui de la perle (opts.colorMode, opts.custom)
+	const mode = opts.colorMode || s.colorMode;
+	const custom = opts.custom || { name: s.nameColor, text: s.textColor, bg: s.bgColor, accent: s.accentColor, opacity: s.bgOpacity };
+	const apply = (c) => {
+		card.style.setProperty('--bg', HexToRgba(c.bg, c.opacity));
+		card.style.setProperty('--name-color', c.name);
+		card.style.setProperty('--text-color', c.text);
+		card.style.setProperty('--accent', c.accent);
+	};
+	if (!IsAvatarMode(mode)) apply(FixedColors(mode, item, custom, layout));
 
 	// Fond : avatar du viewer flouté et assombri (Carte, Bulle, Ticket), ou jaquette du jeu (Bannière de jeu)
 	let bgAvatar = null;
@@ -147,21 +192,15 @@ function BuildCard(item, opts = {}) {
 	card._ready = (async () => {
 		const url = item.avatar || (item.login ? await MeaAvatar(item.login) : '');
 		if (bgAvatar && url && layout !== 'game') bgAvatar.firstChild.style.backgroundImage = `url("${url}")`;
+		if (!IsAvatarMode(mode)) return;
 		const pal = await MeaPalette(url, item.color);
 		if (layout === 'polaroid') {
-			// Papier blanc : pseudo dans une teinte foncée de l'avatar (lisible), texte noir
-			const paper = '#FBFAF7';
-			const nm = s.colorMode === 'fixed' && s.nameColorMode === 'fixed' ? s.nameColor : (s.colorMode === 'fixed' ? (item.color || pal.darkVibrant) : pal.darkVibrant);
-			card.style.setProperty('--name-color', MeaContrast(nm, paper) >= 3 ? nm : MeaMix(nm, '#000000', 0.5));
-			card.style.setProperty('--accent', s.colorMode === 'fixed' ? s.accentColor : pal.vibrant);
+			// Papier blanc : pseudo dans une teinte foncée de l'avatar, texte noir
+			apply({ bg: '#FBFAF7', opacity: 100, text: '#1C1C1E', name: Readable(pal.darkVibrant, '#FBFAF7', 3), accent: pal.vibrant });
 			return;
 		}
-		if (s.colorMode === 'fixed') return;
-		const c = MeaPaletteColors(pal, s.colorMode);
-		card.style.setProperty('--bg', HexToRgba(c.bg, s.bgOpacity));
-		card.style.setProperty('--name-color', c.name);
-		card.style.setProperty('--text-color', c.text);
-		card.style.setProperty('--accent', c.accent);
+		const c = MeaPaletteColors(pal, mode);
+		apply({ bg: c.bg, opacity: 85, name: c.name, text: c.text, accent: c.accent });
 	})().catch(() => { });
 
 	card.appendChild(AvatarEl(item, 'avatar'));
@@ -324,7 +363,7 @@ function PublicConfig() {
 		perleWho: s.perleWho,
 		perleCooldown: ws.isActive('perleCooldown') ? Number(s.perleCooldown) : 0,
 		perleThread: !!(ws.isActive('perleThread') && s.perleThread),
-		perleThreadMax: Number(s.perleThreadMax)
+		perleThreadMax: 3
 	};
 }
 
@@ -408,7 +447,7 @@ function ConnectStreamerBot() {
 				qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command,
 				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : '',
 				hideCommand: ws.values.hideCommand, perleWho: ws.values.perleWho,
-				perleThread: !!(ws.isActive('perleThread') && ws.values.perleThread), perleThreadMax: ws.values.perleThreadMax
+				perleThread: !!(ws.isActive('perleThread') && ws.values.perleThread), perleThreadMax: 3
 			}),
 			send: (args) => Send(args)
 		});
@@ -463,29 +502,32 @@ async function Capture(item) {
 	captureEl.className = LayoutClasses(perleLayout);
 	captureEl.style.cssText = widgetEl.style.cssText;
 	captureEl.innerHTML = '';
+	const v = ws.values;
 	const frame = document.createElement('div');
-	frame.className = 'perle-frame';
-	frame.style.width = `${Number(ws.values.perleWidth) || 900}px`;
-	frame.style.background = ws.isActive('perleBgColor') ? ws.values.perleBgColor : 'transparent';
-	// Fond image : l'image devient la carte, le texte s'affiche par-dessus
+	frame.className = 'perle-frame' + (v.perleLine === false ? ' no-line' : '');
+	frame.style.width = '900px'; // largeur fixe (image deux fois plus grande pour la netteté)
+	frame.style.background = ws.isActive('perleBgColor') ? v.perleBgColor : 'transparent';
+	// Arrière-plan image : l'image fait la carte (centrée), le texte s'affiche par-dessus
 	const bgImage = ws.isActive('perleImage') ? await PerleImage() : '';
 	if (bgImage) {
-		const dim = Math.max(0, Math.min(90, Number(ws.values.perleImageDim) || 0)) / 100;
 		frame.classList.add('with-image');
-		frame.style.background = `linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url("${bgImage}") ${ws.values.perleImagePos} center / cover no-repeat`;
+		frame.style.background = `url("${bgImage}") center / cover no-repeat`;
 	}
-	const withDate = ws.isActive('perleDate') && ws.values.perleDate;
+	// Couleurs de la perle : celles de l'overlay, ou un mode à elle
+	const pc = v.perleColors && v.perleColors !== 'same' && v.perleColors !== 'image' ? v.perleColors : null;
+	const cardOpts = { layout: perleLayout };
+	if (pc) cardOpts.colorMode = pc;
+	if (pc === 'custom') cardOpts.custom = { name: v.perleNameColor, text: v.perleTextColor, bg: v.perleCardColor, accent: v.perleAccentColor, opacity: 100 };
+	const withDate = ws.isActive('perleDate') && v.perleDate;
 	let card;
 	if (Array.isArray(item.thread) && item.thread.length > 1) {
 		// Fil de discussion : message d'origine en haut, réponses reliées par un trait
 		card = document.createElement('div');
 		card.className = 'mea-thread';
-		// Même taille de texte pour tout le fil : celle du message le plus long
-		const scale = 1; // image : taille de police fixe, la hauteur s'adapte
 		item.thread.forEach((m, i) => {
 			const one = Object.assign({ id: `${item.id}:${i}`, kind: 'perle' }, m);
-			const c = BuildCard(one, { layout: perleLayout, date: withDate ? (m.at || item.at || Date.now()) : 0 });
-			c.style.setProperty('--text-scale', String(scale));
+			const c = BuildCard(one, Object.assign({ date: withDate ? (m.at || item.at || Date.now()) : 0 }, cardOpts));
+			c.style.setProperty('--text-scale', '1'); // taille de police fixe, la hauteur s'adapte
 			if (i > 0) {
 				const row = document.createElement('div');
 				row.className = 'thread-reply' + (m.gap ? ' gap' : '');
@@ -494,44 +536,33 @@ async function Capture(item) {
 			} else card.appendChild(c);
 		});
 	} else {
-		card = BuildCard(item, { layout: perleLayout, date: withDate ? (item.at || Date.now()) : 0 });
+		card = BuildCard(item, Object.assign({ date: withDate ? (item.at || Date.now()) : 0 }, cardOpts));
 		card.style.setProperty('--text-scale', '1');
 	}
 	// Couleurs tirées des avatars : calculées avant la capture
 	const cards = card.classList.contains('mea') ? [card] : Array.from(card.querySelectorAll('.mea'));
 	await Promise.race([Promise.all(cards.map(c => c._ready)), new Promise(r => setTimeout(r, 6000))]);
-	// Couleurs tirées de l'image de fond
-	if (bgImage && ws.values.perleColors === 'image') {
+	// Couleurs issues de l'image de fond (lisibilité jugée sur sa teinte moyenne)
+	if (bgImage && v.perleColors === 'image') {
 		const pal = await MeaPalette(bgImage, '#FFFFFF');
-		// Lisibilité jugée sur la teinte dominante de l'image, assombrie comme réglé
-		const under = MeaMix(pal.average || pal.muted, '#000000', Math.max(0, Math.min(90, Number(ws.values.perleImageDim) || 0)) / 100);
-		const pick = (fg, min) => (MeaContrast(fg, under) >= min ? fg : (MeaContrast('#FFFFFF', under) >= MeaContrast('#000000', under) ? '#FFFFFF' : '#000000'));
-		const c = { name: pick(pal.lightVibrant, 3), text: pick(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), 4.5), accent: pal.darkVibrant };
+		const under = pal.average || pal.muted;
+		const c = { name: Readable(pal.lightVibrant, under, 3), text: Readable(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), under, 4.5), accent: pal.darkVibrant };
 		frame.style.setProperty('--text-color', c.text);
 		frame.style.setProperty('--perle-shadow', MeaContrast(c.text, '#000000') < 4.5 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)');
 		cards.forEach(x => { x.style.setProperty('--name-color', c.name); x.style.setProperty('--text-color', c.text); x.style.setProperty('--accent', c.accent); });
-	}
-	// Couleurs propres à l'image (lisibilité sur le fond choisi)
-	if (ws.isActive('perleNameColor')) {
-		frame.style.setProperty('--text-color', ws.values.perleTextColor);
-		card.querySelectorAll('.mea').forEach(c => c.style.setProperty('--name-color', ws.values.perleNameColor));
-		if (card.classList.contains('mea')) card.style.setProperty('--name-color', ws.values.perleNameColor);
-	}
+	} else if (cards[0]) frame.style.setProperty('--text-color', getComputedStyle(cards[0]).getPropertyValue('--text-color') || '#FFFFFF');
 	frame.appendChild(card);
-	// Filigrane : logo Twitch et nom de la chaîne
+	// Filigrane : logo Twitch et nom de la chaîne, en bas à droite
 	const mark = WatermarkText();
-	if (ws.isActive('perleWatermark') && ws.values.perleWatermark && mark) {
+	if (ws.isActive('perleWatermark') && v.perleWatermark && mark) {
 		const wm = document.createElement('div');
 		wm.className = 'watermark';
-		if (ws.values.perleWatermarkLogo === 'twitch') {
-			const logo = document.createElement('img');
-			logo.alt = '';
-			logo.src = '../-common/resources/icons/platforms/twitch.png';
-			wm.appendChild(logo);
-		}
+		const logo = document.createElement('img');
+		logo.alt = '';
+		logo.src = '../-common/resources/icons/platforms/twitch.png';
 		const t = document.createElement('span');
 		t.textContent = mark;
-		wm.appendChild(t);
+		wm.append(logo, t);
 		frame.appendChild(wm);
 	}
 	captureEl.appendChild(frame);
@@ -597,9 +628,8 @@ function GameCover() {
 // Nom de la chaîne (lu dans Streamer.bot) pour le filigrane
 let channelName = '';
 function WatermarkText() {
-	const custom = String(ws.values.perleWatermarkText || '').trim();
-	if (custom) return custom;
-	return channelName ? `twitch.tv/${channelName}` : '';
+	if (channelName) return `twitch.tv/${channelName}`;
+	return ws.demo ? 'twitch.tv/votre-chaine' : '';
 }
 
 async function ReadChannel() {
@@ -624,7 +654,7 @@ async function Perle(item, test, perledBy) {
 	};
 	let content = '';
 	if (perledBy && perledBy.by) content = `Perlé par **${DiscordEscape(perledBy.by)}** le ${when(perledBy.at)}`;
-	else if (ws.values.caption) content = `Perle de **${DiscordEscape(item.name || item.login)}**, le ${when(item.at)}`;
+	else content = `Perle de **${DiscordEscape(item.name || item.login)}**, le ${when(item.at)}`;
 	if (test) content = content ? `${content} (test)` : 'Test de perle depuis la page de paramétrage';
 	const form = new FormData();
 	form.append('payload_json', JSON.stringify({ content, allowed_mentions: { parse: [] } }));
@@ -660,8 +690,15 @@ window.PreviewHide = function () {
 	Sync();
 };
 
+// Résultat du test d'envoi : petite notification dans l'aperçu
 function PerleInfo(text, status) {
-	try { window.parent.postMessage({ type: 'widget-info', id: 'perleInfo', lines: [{ label: '', text, status }] }, '*'); } catch (e) { }
+	let t = document.getElementById('previewToast');
+	if (!t) { t = document.createElement('div'); t.id = 'previewToast'; document.body.appendChild(t); }
+	t.textContent = text;
+	t.dataset.status = status || '';
+	t.classList.add('on');
+	clearTimeout(PerleInfo.timer);
+	if (status !== 'warn' || !/cours/.test(text)) PerleInfo.timer = setTimeout(() => t.classList.remove('on'), 4000);
 }
 
 // Aperçu de l'image Discord, sans l'envoyer (fenêtre par-dessus l'aperçu, un clic la ferme)

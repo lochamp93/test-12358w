@@ -47,6 +47,11 @@ body {
 	box-sizing: border-box;
 }
 
+/* Alignement de la carte dans la source */
+#widget.card-left #stage { justify-items: start; }
+#widget.card-center #stage { justify-items: center; }
+#widget.card-right #stage { justify-items: end; }
+
 /* Les messages se superposent pendant la transition (sortie de l'ancien, entrée du nouveau) */
 #stage > .mea {
 	grid-area: 1 / 1;
@@ -60,6 +65,8 @@ body {
 	left: -20000px;
 	top: 0;
 	pointer-events: none;
+	font-family: var(--font), "SF Pro Overlay", -apple-system, "Segoe UI", sans-serif;
+	color: var(--text-color);
 }
 #capture .perle-frame {
 	display: block;
@@ -312,10 +319,12 @@ body {
 	top: 0;
 	bottom: 0;
 	width: 0.26em;
-	background: var(--accent);
+	background: var(--name-color);
 	border-radius: 0.45em 0 0 0.45em;
 	z-index: 2;
 }
+/* Ticket : le liseré prend la couleur du pseudo, le pseudo celle du texte */
+.layout-ticket .mea .head .name { color: var(--text-color); }
 #capture.layout-ticket .perle-frame.with-image .mea { padding-left: 1.1em; }
 .layout-ticket .mea > .avatar { width: calc(var(--font-size) * 1.1); height: calc(var(--font-size) * 1.1); }
 .layout-ticket .mea .head .name {
@@ -525,8 +534,8 @@ body {
 
 @keyframes mea-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes mea-fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes mea-in-slide { from { opacity: 0; transform: translateY(45%); } to { opacity: 1; transform: none; } }
-@keyframes mea-out-slide { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(45%); } }
+@keyframes mea-in-slide { from { opacity: 0; transform: translate(var(--in-dx, 0), var(--in-dy, 45%)); } to { opacity: 1; transform: none; } }
+@keyframes mea-out-slide { from { opacity: 1; transform: none; } to { opacity: 0; transform: translate(var(--out-dx, 0), var(--out-dy, 45%)); } }
 @keyframes mea-in-zoom { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: none; } }
 @keyframes mea-out-zoom { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.85); } }
 
@@ -555,3 +564,33 @@ body {
 	background-position: 0 0, 0 10px, 10px -10px, -10px 0;
 	background-color: #1f1f1f;
 }
+
+/* Fil sans ligne : les réponses s'alignent sur le premier message */
+#capture .perle-frame.no-line .thread-reply { padding-left: 0; }
+#capture .perle-frame.no-line .thread-reply::before,
+#capture .perle-frame.no-line .thread-reply::after { display: none; }
+
+/* Résultat du test d'envoi sur Discord (page de paramétrage) */
+#previewToast {
+	position: fixed;
+	left: 50%;
+	bottom: 16px;
+	z-index: 60;
+	transform: translateX(-50%);
+	padding: 9px 16px;
+	border-radius: 999px;
+	background: rgba(28, 28, 30, 0.92);
+	color: #fff;
+	font: 600 13px -apple-system, "SF Pro Overlay", "Segoe UI", sans-serif;
+	opacity: 0;
+	transition: opacity .2s;
+	pointer-events: none;
+}
+#previewToast.on { opacity: 1; }
+#previewToast[data-status="ok"] { color: #30d158; }
+#previewToast[data-status="error"] { color: #ff6961; }
+
+/* Bulle sur une image : sans fond, la bulle et le pseudo ne gardent pas leur retrait */
+#capture .perle-frame.with-image .layout-bubble-fix,
+#capture.layout-bubble .perle-frame.with-image .mea .bubble { padding-left: 0; padding-right: 0; }
+#capture.layout-bubble .perle-frame.with-image .mea .head { padding-left: 0; }
