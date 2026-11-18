@@ -134,6 +134,19 @@ const MeaCollector = (function () {
 		return names.includes('moderator') || names.includes('broadcaster') || names.includes('lead_moderator');
 	}
 
+	// Rôle dans le chat : 1 viewer, 2 VIP, 3 modo, 4 streameuse
+	function roleLevel(d) {
+		const u = d.user || {};
+		const m = typeof d.message === 'object' && d.message ? d.message : {};
+		const names = badgeNames(u.badges || m.badges);
+		let level = Number(u.role) || 1;
+		if (names.includes('broadcaster') || u.isBroadcaster) level = Math.max(level, 4);
+		if (names.includes('moderator') || names.includes('lead_moderator') || u.isModerator) level = Math.max(level, 3);
+		if (names.includes('vip') || u.isVip) level = Math.max(level, 2);
+		return level;
+	}
+	const PERLE_LEVELS = { all: 1, vip: 2, mod: 3, broadcaster: 4 };
+
 	// Message du chat Twitch (Streamer.bot 0.2 et 1.0) au format du widget
 	function fromTwitchChat(d) {
 		const u = d.user || {};
@@ -221,7 +234,10 @@ const MeaCollector = (function () {
 			return;
 		}
 		const reply = replyInfo(d);
-		if (!reply || !isStaff(d)) return;
+		if (!reply) return;
+		if (isHighlight && !isStaff(d)) return;
+		// Perle : rôle minimum choisi sur la page de paramétrage (tout le monde par défaut)
+		if (!isHighlight && roleLevel(d) < (PERLE_LEVELS[cfg.perleWho] || 1)) return;
 
 		if (isHighlight) {
 			const item = await originalItem(reply, msg, 'hl:', 'highlight');
@@ -229,7 +245,7 @@ const MeaCollector = (function () {
 		} else {
 			// Perle : envoyée sur Discord sans passer par l'overlay
 			const item = await originalItem(reply, msg, 'pl:', 'perle');
-			opts.send({ mode: 'perle', msgId: 'pl:' + msg.msgId, item: JSON.stringify(item), by: item.by });
+			opts.send({ mode: 'perle', msgId: 'pl:' + msg.msgId, item: JSON.stringify(item), by: item.by, byLogin: msg.login, byStaff: isStaff(d) ? 'true' : 'false' });
 		}
 	}
 

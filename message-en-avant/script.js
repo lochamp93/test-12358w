@@ -259,7 +259,9 @@ function PublicConfig() {
 		queue: s.queue,
 		perles: !!(s.perles && WebhookURL()),
 		perleCommand: ws.isActive('perleCommand') ? String(s.perleCommand || '') : '',
-		hideCommand: String(s.hideCommand || '')
+		hideCommand: String(s.hideCommand || ''),
+		perleWho: s.perleWho,
+		perleCooldown: ws.isActive('perleCooldown') ? Number(s.perleCooldown) : 0
 	};
 }
 
@@ -340,7 +342,7 @@ function ConnectStreamerBot() {
 			getConfig: () => ({
 				qa: ws.values.qa, rewardName: ws.values.rewardName, highlight: ws.values.highlight, command: ws.values.command,
 				perles: !!(ws.values.perles && WebhookURL()), perleCommand: ws.isActive('perleCommand') ? ws.values.perleCommand : '',
-				hideCommand: ws.values.hideCommand
+				hideCommand: ws.values.hideCommand, perleWho: ws.values.perleWho
 			}),
 			send: (args) => Send(args)
 		});

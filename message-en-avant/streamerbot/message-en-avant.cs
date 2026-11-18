@@ -20,6 +20,7 @@
 //    manual : true si affiché à la main depuis le dock (mode show) : pas de durée
 //    list   : qa | highlights (mode clear)
 //    by     : auteur de la commande !perle (mode perle) ou page qui traite la perle (mode perleClaim)
+//    byLogin, byStaff : identifiant de l'auteur de !perle et s'il est modo ou streameuse (délai entre deux perles)
 //    n, ok, error : suivi d'une perle (modes perleClaim et perleDone)
 // =====================================================================
 using System;
@@ -38,6 +39,8 @@ public class CPHInline
 	static readonly object verrou = new object();
 	static readonly Dictionary<string, bool> evenementsTraites = new Dictionary<string, bool>();
 	static readonly List<string> ordreEvenements = new List<string>();
+	static readonly Dictionary<string, long> dernieresPerles = new Dictionary<string, long>(); // login → heure de sa dernière perle
+	static readonly List<string> messagesPerles = new List<string>();                          // messages déjà perlés par commande
 
 	public bool Execute()
 	{
@@ -166,6 +169,17 @@ public class CPHInline
 					if (!cfg.Value<bool>("perles")) return true;
 					try { item = JObject.Parse(Arg("item")); } catch (Exception) { }
 					if (item == null || string.IsNullOrEmpty(item.Value<string>("id"))) return false;
+					// Un même message n'est perlé qu'une fois ; délai par personne (sauf modos et streameuse)
+					string idMessage = item.Value<string>("id");
+					if (messagesPerles.Contains(idMessage)) return true;
+					string auteur = Arg("byLogin").ToLowerInvariant();
+					double delai = cfg.Value<double?>("perleCooldown") ?? 0;
+					long derniere;
+					if (Arg("byStaff") != "true" && delai > 0 && auteur != "" && dernieresPerles.TryGetValue(auteur, out derniere)
+						&& Maintenant() - derniere < (long)(delai * 1000)) return true;
+					if (auteur != "") dernieresPerles[auteur] = Maintenant();
+					messagesPerles.Add(idMessage);
+					while (messagesPerles.Count > 300) messagesPerles.RemoveAt(0);
 				}
 				else item = Trouver(data, Arg("id"));
 				if (item == null) return false;
@@ -367,7 +381,7 @@ public class CPHInline
 		return new JObject
 		{
 			["qa"] = true, ["rewardName"] = "Q&A", ["highlight"] = true, ["command"] = "!highlight",
-			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false, ["perleCommand"] = "!perle", ["hideCommand"] = "!hide"
+			["highlightDuration"] = 15, ["conflict"] = "return", ["queue"] = "queue", ["perles"] = false, ["perleCommand"] = "!perle", ["hideCommand"] = "!hide", ["perleWho"] = "all", ["perleCooldown"] = 30
 		};
 	}
 

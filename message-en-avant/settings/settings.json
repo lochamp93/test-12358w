@@ -487,11 +487,55 @@
 		{
 			"id": "perleCommand",
 			"label": "Commande",
-			"description": "Un modo ou la streameuse répond à un message avec la commande : il part sur Discord avec « Perlé par … le jj/mm/aaaa à hh:mm », sans s’afficher sur l’overlay",
+			"description": "Réponse à un message du chat avec la commande : il part sur Discord avec « Perlé par … le jj/mm/aaaa à hh:mm », sans s’afficher sur l’overlay",
 			"type": "text",
 			"defaultValue": "!perle",
 			"group": "Discord (Les Perles du Chat)",
 			"showIf": "perles"
+		},
+		{
+			"id": "perleWho",
+			"label": "Qui peut perler",
+			"description": "",
+			"type": "select",
+			"defaultValue": "all",
+			"options": [
+				{
+					"value": "all",
+					"label": "Tout le monde"
+				},
+				{
+					"value": "vip",
+					"label": "VIP, modos et streameuse"
+				},
+				{
+					"value": "mod",
+					"label": "Modos et streameuse"
+				},
+				{
+					"value": "broadcaster",
+					"label": "Streameuse uniquement"
+				}
+			],
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleCooldown",
+			"label": "Délai entre deux perles",
+			"description": "En secondes, par personne (les modos et la streameuse n’en ont pas). Un même message n’est perlé qu’une fois. 0 : pas de délai",
+			"type": "number",
+			"defaultValue": 30,
+			"min": 0,
+			"max": 3600,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleWho",
+				"value": [
+					"all",
+					"vip"
+				]
+			}
 		},
 		{
 			"id": "caption",
