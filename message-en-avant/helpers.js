@@ -189,11 +189,11 @@ const MeaCollector = (function () {
 		};
 	}
 
-	// Texte d'une réponse sans le « @pseudo » ajouté par Twitch (le fil montre déjà à qui elle répond)
-	function withoutMention(msg) {
+	// Texte d'une réponse sans le « @pseudo » du début (le fil montre déjà à qui elle répond)
+	function withoutMention(msg, parentLogin, parentName) {
 		const parts = (msg.parts || []).map(p => Object.assign({}, p));
-		if (msg.reply && parts.length && parts[0].t === 'text') {
-			const names = [msg.reply.login, msg.reply.name].filter(Boolean).map(n => '@' + n.toLowerCase());
+		if (parts.length && parts[0].t === 'text') {
+			const names = [parentLogin, parentName].filter(Boolean).map(n => '@' + String(n).toLowerCase());
 			const v = parts[0].v;
 			const hit = names.find(n => v.toLowerCase().startsWith(n));
 			if (hit) parts[0].v = v.slice(hit.length).replace(/^[\s,:]+/, '');
@@ -201,27 +201,54 @@ const MeaCollector = (function () {
 		return parts;
 	}
 
+	// Message sans infos de réponse mais qui commence par « @pseudo » : réponse au dernier message
+	// de cette personne vu dans les 10 minutes précédentes (fils écrits à la main)
+	function mentionParent(msg) {
+		const m = /^@([A-Za-z0-9_]+)/.exec(String(msg.text || '').trim());
+		if (!m) return null;
+		const login = m[1].toLowerCase();
+		const list = Array.from(messages.values());
+		for (let i = list.length - 1; i >= 0; i--) {
+			const x = list[i];
+			if (x.msgId === msg.msgId || !(Number(x.at) < Number(msg.at))) continue;
+			if (Number(msg.at) - Number(x.at) > 10 * 60 * 1000) break;
+			if (x.login === login) return x;
+		}
+		return null;
+	}
+
 	// Fil de discussion d'un message : ses parents successifs jusqu'au message d'origine
 	async function threadOf(src, max) {
 		const chain = [src];
+		const parentOf = new Map(); // msgId → parent (pour retirer le « @pseudo »)
 		let cur = src;
-		while (cur.reply && cur.reply.msgId && chain.length < 30) {
-			const parent = messages.get(cur.reply.msgId) || fromReply(cur.reply);
-			if (chain.some(x => x.msgId && x.msgId === parent.msgId)) break;
+		while (chain.length < 50) {
+			let parent = null;
+			if (cur.reply && cur.reply.msgId) parent = messages.get(cur.reply.msgId) || fromReply(cur.reply);
+			else parent = mentionParent(cur);
+			if (!parent || chain.some(x => x.msgId && x.msgId === parent.msgId)) break;
+			parentOf.set(cur, parent);
 			chain.unshift(parent);
 			cur = parent;
 		}
 		// Message d'origine connu par son identifiant de fil, mais pas atteint en remontant
 		const rootId = src.reply && src.reply.threadMsgId;
-		if (rootId && chain[0].msgId !== rootId && messages.get(rootId)) chain.unshift(messages.get(rootId));
-		// Trop long : le message d'origine et les plus récents
+		const root = rootId ? messages.get(rootId) : null;
+		if (root && chain[0].msgId !== rootId && !chain.includes(root)) chain.unshift(root);
+		// Trop long : le message d'origine, puis les plus récents (les messages sautés sont signalés par des pointillés)
 		let list = chain;
-		if (list.length > max) list = [chain[0]].concat(chain.slice(chain.length - (max - 1)));
+		let gap = false;
+		if (list.length > max) { list = [chain[0]].concat(chain.slice(chain.length - (max - 1))); gap = true; }
 		const out = [];
-		for (const m of list) {
+		for (let i = 0; i < list.length; i++) {
+			const m = list[i];
+			const parent = parentOf.get(m) || (m.reply ? { login: m.reply.login, name: m.reply.name } : null);
 			out.push({
 				name: m.name || m.login, login: m.login, color: m.color, badges: m.badges || [],
-				avatar: await MeaAvatar(m.login), parts: withoutMention(m), text: m.text, at: m.at || 0
+				avatar: await MeaAvatar(m.login),
+				parts: i > 0 && parent ? withoutMention(m, parent.login, parent.name) : (m.parts || []),
+				text: m.text, at: m.at || 0,
+				gap: gap && i === 1
 			});
 		}
 		return out;
@@ -253,7 +280,7 @@ const MeaCollector = (function () {
 		};
 		// Perle d'une réponse : tout le fil sur la même image
 		const cfg = opts && opts.getConfig();
-		if (kind === 'perle' && cfg && cfg.perleThread && src.reply) {
+		if (kind === 'perle' && cfg && cfg.perleThread) {
 			const thread = await threadOf(src, Math.max(2, Number(cfg.perleThreadMax) || 3));
 			if (thread.length > 1) item.thread = thread;
 		}

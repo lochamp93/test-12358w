@@ -408,12 +408,15 @@ async function Capture(item) {
 		// Fil de discussion : message d'origine en haut, réponses reliées par un trait
 		card = document.createElement('div');
 		card.className = 'mea-thread';
+		// Même taille de texte pour tout le fil : celle du message le plus long
+		const scale = Math.min(...item.thread.map(m => TextScale(m)));
 		item.thread.forEach((m, i) => {
 			const one = Object.assign({ id: `${item.id}:${i}`, kind: 'perle' }, m);
 			const c = BuildCard(one, { date: withDate ? (m.at || item.at || Date.now()) : 0 });
+			c.style.setProperty('--text-scale', String(scale));
 			if (i > 0) {
 				const row = document.createElement('div');
-				row.className = 'thread-reply';
+				row.className = 'thread-reply' + (m.gap ? ' gap' : '');
 				row.appendChild(c);
 				card.appendChild(row);
 			} else card.appendChild(c);

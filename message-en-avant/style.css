@@ -305,6 +305,9 @@ body {
 	bottom: 0;
 	border-left: 0.1em solid var(--thread-line);
 }
+/* Messages sautés entre le message d'origine et la suite du fil : trait en pointillés */
+.mea-thread .thread-reply.gap::before { border-left-style: dotted; border-left-width: 0.14em; }
+
 /* Citation : un seul grand guillemet, sur le message d'origine */
 .mea-thread .thread-reply .quote-mark { display: none !important; }
 
