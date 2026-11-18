@@ -67,6 +67,22 @@
 			"group": "Aperçu"
 		},
 		{
+			"id": "previewPerleImage",
+			"label": "Aperçu de l’image Discord",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewPerleImage",
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewPerleThread",
+			"label": "Aperçu d’un fil de discussion sur Discord",
+			"description": "",
+			"type": "button",
+			"callFunction": "PreviewPerleThread",
+			"group": "Aperçu"
+		},
+		{
 			"id": "previewHide",
 			"label": "Masquer (animation de sortie)",
 			"description": "",
@@ -604,6 +620,49 @@
 			"showIf": {
 				"id": "perleBg",
 				"value": "color"
+			}
+		},
+		{
+			"id": "perleColors",
+			"label": "Couleurs du texte de l’image",
+			"description": "Pour garder le texte lisible sur le fond de l’image",
+			"type": "select",
+			"defaultValue": "same",
+			"options": [
+				{
+					"value": "same",
+					"label": "Comme sur l’overlay"
+				},
+				{
+					"value": "custom",
+					"label": "Personnalisées"
+				}
+			],
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
+			"id": "perleNameColor",
+			"label": "Couleur des pseudos",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleColors",
+				"value": "custom"
+			}
+		},
+		{
+			"id": "perleTextColor",
+			"label": "Couleur des messages",
+			"description": "",
+			"type": "color",
+			"defaultValue": "#FFFFFF",
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleColors",
+				"value": "custom"
 			}
 		},
 		{

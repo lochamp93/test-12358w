@@ -404,3 +404,14 @@ function MeaDemoItems() {
 		}
 	};
 }
+
+// Fil de discussion d'exemple (aperçu de l'image Discord)
+function MeaDemoThread() {
+	const now = Date.now();
+	const thread = [
+		{ name: 'Biscotte', login: 'biscotte', color: '#FF7F50', badges: [MEA_DEMO_BADGES.vip], avatar: '', parts: [{ t: 'text', v: 'qui a mangé la dernière part de pizza ?' }], at: now - 240000 },
+		{ name: 'Nougatine', login: 'nougatine', color: '#64D2FF', badges: [MEA_DEMO_BADGES.sub], avatar: '', parts: [{ t: 'text', v: 'c’est le chat, je le jure' }], at: now - 120000, gap: true },
+		{ name: 'PixelPanda', login: 'pixelpanda', color: '#9B8CFF', badges: [MEA_DEMO_BADGES.mod], avatar: '', parts: [{ t: 'text', v: 'le chat a des miettes sur les moustaches ' }, { t: 'emote', v: 'LUL', u: MEA_DEMO_EMOTES.LUL }], at: now - 60000 }
+	];
+	return Object.assign({ id: 'demo:thread', kind: 'perle', thread }, thread[thread.length - 1]);
+}

@@ -54,7 +54,8 @@ function ApplySettings() {
 		`in-${s.animIn}`,
 		`out-${s.animOut}`,
 		s.showAvatar ? '' : 'hide-avatar',
-		s.showBadges ? '' : 'hide-badges'
+		s.showBadges ? '' : 'hide-badges',
+		ws.isActive('bgOpacity') && Number(s.bgOpacity) === 0 ? 'no-bg' : ''
 	].filter(Boolean).join(' ');
 
 	// Le message affiché suit les nouveaux réglages, sans animation
@@ -422,6 +423,12 @@ async function Capture(item) {
 			} else card.appendChild(c);
 		});
 	} else card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
+	// Couleurs propres à l'image (lisibilité sur le fond choisi)
+	if (ws.isActive('perleNameColor')) {
+		frame.style.setProperty('--text-color', ws.values.perleTextColor);
+		card.querySelectorAll('.mea').forEach(c => c.style.setProperty('--name-color', ws.values.perleNameColor));
+		if (card.classList.contains('mea')) card.style.setProperty('--name-color', ws.values.perleNameColor);
+	}
 	frame.appendChild(card);
 	captureEl.appendChild(frame);
 	try {
@@ -495,6 +502,35 @@ window.PreviewHide = function () {
 function PerleInfo(text, status) {
 	try { window.parent.postMessage({ type: 'widget-info', id: 'perleInfo', lines: [{ label: '', text, status }] }, '*'); } catch (e) { }
 }
+
+// Aperçu de l'image Discord, sans l'envoyer (fenêtre par-dessus l'aperçu, un clic la ferme)
+async function ShowPerlePreview(item) {
+	let box = document.getElementById('perlePreview');
+	if (!box) {
+		box = document.createElement('div');
+		box.id = 'perlePreview';
+		box.addEventListener('click', () => { box.remove(); });
+		document.body.appendChild(box);
+	}
+	box.innerHTML = '<span>Création de l’image…</span>';
+	try {
+		const blob = await Capture(item);
+		const img = document.createElement('img');
+		img.src = URL.createObjectURL(blob);
+		const caption = document.createElement('span');
+		caption.textContent = 'Image envoyée sur Discord (cliquez pour fermer)';
+		box.innerHTML = '';
+		box.append(img, caption);
+	} catch (e) {
+		box.innerHTML = '';
+		const err = document.createElement('span');
+		err.textContent = 'Image impossible : ' + ((e && e.message) || e);
+		box.appendChild(err);
+	}
+}
+
+window.PreviewPerleImage = () => ShowPerlePreview(shown || TargetItem() || MeaDemoItems().question);
+window.PreviewPerleThread = () => ShowPerlePreview(MeaDemoThread());
 
 window.PreviewPerle = async function () {
 	const item = shown || TargetItem() || MeaDemoItems().question;
