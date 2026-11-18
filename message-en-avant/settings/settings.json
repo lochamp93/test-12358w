@@ -665,7 +665,7 @@
 		{
 			"id": "perleBg",
 			"label": "Fond de l’image",
-			"description": "",
+			"description": "Image : remplace le fond des cartes, le texte s’affiche par-dessus",
 			"type": "select",
 			"defaultValue": "transparent",
 			"options": [
@@ -676,6 +676,10 @@
 				{
 					"value": "color",
 					"label": "Couleur unie"
+				},
+				{
+					"value": "image",
+					"label": "Image"
 				}
 			],
 			"group": "Discord (Les Perles du Chat)",
@@ -694,6 +698,70 @@
 			}
 		},
 		{
+			"id": "perleImage",
+			"label": "Image de fond",
+			"description": "Conseillé : 2000 × 1000 px (format 2:1), PNG ou JPG. Le sujet dans le tiers droit, la partie gauche calme pour le texte. Enregistrée dans Streamer.bot (il doit être ouvert)",
+			"type": "image",
+			"maxWidth": 2000,
+			"maxHeight": 2000,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleBg",
+				"value": "image"
+			}
+		},
+		{
+			"id": "perleImagePos",
+			"label": "Position de l’image",
+			"description": "Côté gardé quand l’image est recadrée",
+			"type": "select",
+			"defaultValue": "right",
+			"options": [
+				{
+					"value": "right",
+					"label": "À droite"
+				},
+				{
+					"value": "center",
+					"label": "Centrée"
+				},
+				{
+					"value": "left",
+					"label": "À gauche"
+				}
+			],
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleBg",
+				"value": "image"
+			}
+		},
+		{
+			"id": "perleImageDim",
+			"label": "Assombrir l’image",
+			"description": "En %",
+			"type": "number",
+			"defaultValue": 20,
+			"min": 0,
+			"max": 90,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": {
+				"id": "perleBg",
+				"value": "image"
+			}
+		},
+		{
+			"id": "perleWidth",
+			"label": "Largeur de l’image",
+			"description": "En pixels (image envoyée deux fois plus grande, pour la netteté). Largeur fixe, la hauteur s’adapte au texte",
+			"type": "number",
+			"defaultValue": 900,
+			"min": 400,
+			"max": 1600,
+			"group": "Discord (Les Perles du Chat)",
+			"showIf": "perles"
+		},
+		{
 			"id": "perleColors",
 			"label": "Couleurs du texte de l’image",
 			"description": "Pour garder le texte lisible sur le fond de l’image",
@@ -707,6 +775,10 @@
 				{
 					"value": "custom",
 					"label": "Personnalisées"
+				},
+				{
+					"value": "image",
+					"label": "Tirées de l’image de fond"
 				}
 			],
 			"group": "Discord (Les Perles du Chat)",

@@ -512,6 +512,10 @@ function MeaPaletteFromPixels(data) {
 	if (!base) return null;
 	const derived = MeaPaletteFromColor(base);
 	Object.keys(targets).forEach(k => { if (!out[k]) out[k] = derived[k]; });
+	// Couleur moyenne de l'image (pour juger la lisibilité du texte posé dessus)
+	let tr = 0, tg = 0, tb = 0, tn = 0;
+	swatches.forEach(sw => { tr += sw.rgb[0] * sw.pop; tg += sw.rgb[1] * sw.pop; tb += sw.rgb[2] * sw.pop; tn += sw.pop; });
+	out.average = '#' + [tr, tg, tb].map(v => Math.round(v / tn).toString(16).padStart(2, '0')).join('');
 	return out;
 }
 
@@ -519,7 +523,7 @@ function MeaPalette(url, fallbackColor) {
 	const key = `${url || ''}|${fallbackColor || ''}`;
 	if (meaPaletteCache.has(key)) return meaPaletteCache.get(key);
 	const p = new Promise(resolve => {
-		if (!url || !/^https:\/\//.test(url)) { resolve(MeaPaletteFromColor(fallbackColor)); return; }
+		if (!url || !/^(https:\/\/|data:image\/)/.test(url)) { resolve(MeaPaletteFromColor(fallbackColor)); return; }
 		const img = new Image();
 		img.crossOrigin = 'anonymous';
 		const done = (pal) => resolve(pal || MeaPaletteFromColor(fallbackColor));

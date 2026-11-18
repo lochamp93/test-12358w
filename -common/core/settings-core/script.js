@@ -264,6 +264,11 @@ function LoadJSON(settingsJson) {
 							inputElement.addEventListener('mousedown', LoadLocalFonts);
 							inputElement.addEventListener('focus', LoadLocalFonts);
 							break;
+						case 'image':
+							// Image choisie sur l'ordinateur, réduite puis transmise à l'aperçu (postMessage),
+							// qui l'enregistre où il veut (ex. variable Streamer.bot). Jamais dans l'URL.
+							inputElement = MakeImageField(setting);
+							break;
 						case 'import-string':
 							// Code d’import Streamer.bot : icône « Copier », état « Code à importer » / « Code importé » sous le libellé
 							inputElement = MakeImportField(setting, labelDescriptionDiv);
@@ -886,6 +891,10 @@ function OpenLoadSettingsPopup() {
 
 // Gérer la première interaction avec la fenêtre
 window.addEventListener('message', (event) => {
+	// État d'un réglage « image » envoyé par l'aperçu (miniature, texte d'état)
+	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-image-state' && typeof event.data.id === 'string')
+		SetImageFieldState(event.data.id, String(event.data.data || ''), event.data.text || '', event.data.status || '');
+
 	// Suggestions envoyées par l’aperçu : { type: 'widget-datalist', id: 'liste', options: ['a', 'b'] }
 	// (utilisées par les champs texte qui déclarent "datalist": "liste" dans settings.json)
 	if (event.source === widgetPreview.contentWindow && event.data && event.data.type === 'widget-datalist'
@@ -1070,7 +1079,98 @@ function OpenDock() {
 
 // Réglages sans valeur (jamais dans l’URL) : boutons, infos, lignes d’actions
 function IsValueless(setting) {
-	return setting.type === 'button' || setting.type === 'info' || setting.type === 'actions' || setting.type === 'import-string';
+	return setting.type === 'button' || setting.type === 'info' || setting.type === 'actions' || setting.type === 'import-string' || setting.type === 'image';
+}
+
+// Réglage « image » : miniature, « Choisir une image », corbeille.
+// L'image est réduite ("maxWidth" et "maxHeight", 2000 px par défaut) puis envoyée à l'aperçu :
+//   { type: 'widget-image', id, data: 'data:image/…' }  (data vide : retirer l'image)
+// L'aperçu renvoie l'état pour la miniature : { type: 'widget-image-state', id, data, text, status }
+function MakeImageField(setting) {
+	const wrap = document.createElement('span');
+	wrap.className = 'image-field';
+	wrap.id = setting.id;
+	const thumb = document.createElement('img');
+	thumb.className = 'image-thumb';
+	thumb.alt = '';
+	thumb.hidden = true;
+	const choose = document.createElement('button');
+	choose.type = 'button';
+	choose.className = 'link-button image-choose';
+	choose.textContent = 'Choisir une image';
+	const remove = document.createElement('button');
+	remove.type = 'button';
+	remove.className = 'image-remove';
+	remove.title = 'Retirer l’image';
+	remove.setAttribute('aria-label', 'Retirer l’image');
+	remove.innerHTML = ACTION_ICONS.trash;
+	remove.hidden = true;
+	const file = document.createElement('input');
+	file.type = 'file';
+	file.accept = 'image/png,image/jpeg,image/webp';
+	file.hidden = true;
+	file.addEventListener('input', (e) => e.stopPropagation()); // pas de valeur dans l'URL
+	const send = (data) => {
+		try { widgetPreview.contentWindow.postMessage({ type: 'widget-image', id: setting.id, data }, '*'); } catch (e) { }
+	};
+	choose.addEventListener('click', () => file.click());
+	file.addEventListener('change', async () => {
+		const f = file.files[0];
+		file.value = '';
+		if (!f) return;
+		try {
+			const data = await ResizeImageFile(f, Number(setting.maxWidth) || 2000, Number(setting.maxHeight) || 2000);
+			SetImageFieldState(setting.id, data);
+			send(data);
+		} catch (e) { SetImageFieldState(setting.id, '', 'Image illisible', 'warn'); }
+	});
+	remove.addEventListener('click', () => { SetImageFieldState(setting.id, ''); send(''); });
+	wrap.append(thumb, choose, remove, file);
+	return wrap;
+}
+
+function SetImageFieldState(id, data, text, status) {
+	const wrap = document.getElementById(id);
+	if (!wrap || !wrap.classList.contains('image-field')) return;
+	const thumb = wrap.querySelector('.image-thumb');
+	thumb.hidden = !data;
+	if (data) thumb.src = data; else thumb.removeAttribute('src');
+	wrap.querySelector('.image-remove').hidden = !data;
+	wrap.querySelector('.image-choose').textContent = data ? 'Changer' : 'Choisir une image';
+	let note = wrap.querySelector('.image-note');
+	if (text) {
+		if (!note) { note = document.createElement('span'); note.className = 'image-note'; wrap.appendChild(note); }
+		note.textContent = text;
+		note.dataset.status = status || '';
+	} else if (note) note.remove();
+}
+
+// Réduit une image (canvas) ; garde le PNG s'il a de la transparence, sinon JPEG
+function ResizeImageFile(f, maxW, maxH) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onerror = reject;
+		reader.onload = () => {
+			const img = new Image();
+			img.onerror = reject;
+			img.onload = () => {
+				const k = Math.min(1, maxW / img.naturalWidth, maxH / img.naturalHeight);
+				const c = document.createElement('canvas');
+				c.width = Math.max(1, Math.round(img.naturalWidth * k));
+				c.height = Math.max(1, Math.round(img.naturalHeight * k));
+				const ctx = c.getContext('2d');
+				ctx.drawImage(img, 0, 0, c.width, c.height);
+				let alpha = false;
+				if (f.type === 'image/png' || f.type === 'image/webp') {
+					const d = ctx.getImageData(0, 0, c.width, c.height).data;
+					for (let i = 3; i < d.length; i += 4 * 7) if (d[i] < 250) { alpha = true; break; }
+				}
+				resolve(alpha ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', 0.88));
+			};
+			img.src = reader.result;
+		};
+		reader.readAsDataURL(f);
+	});
 }
 
 // Libellé à trous : « Règle 1 : {nomRegle|resumeRegle|sans nom} » : chaque élément entre | est

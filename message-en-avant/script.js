@@ -355,6 +355,7 @@ function ConnectStreamerBot() {
 			console.log(`[Message en avant] Connecté à Streamer.bot (${host}:${port})`);
 			RefreshFromStreamerBot();
 			ReadChannel();
+			if (ws.demo) PerleImage().then(data => SendImageState(data, data ? 'Enregistrée dans Streamer.bot' : '', 'ok'));
 		},
 		onDisconnect: () => { connected = false; console.warn('[Message en avant] Déconnecté de Streamer.bot'); }
 	});
@@ -431,7 +432,15 @@ async function Capture(item) {
 	captureEl.innerHTML = '';
 	const frame = document.createElement('div');
 	frame.className = 'perle-frame';
+	frame.style.width = `${Number(ws.values.perleWidth) || 900}px`;
 	frame.style.background = ws.isActive('perleBgColor') ? ws.values.perleBgColor : 'transparent';
+	// Fond image : l'image devient la carte, le texte s'affiche par-dessus
+	const bgImage = ws.isActive('perleImage') ? await PerleImage() : '';
+	if (bgImage) {
+		const dim = Math.max(0, Math.min(90, Number(ws.values.perleImageDim) || 0)) / 100;
+		frame.classList.add('with-image');
+		frame.style.background = `linear-gradient(rgba(0,0,0,${dim}), rgba(0,0,0,${dim})), url("${bgImage}") ${ws.values.perleImagePos} center / cover no-repeat`;
+	}
 	const withDate = ws.isActive('perleDate') && ws.values.perleDate;
 	let card;
 	if (Array.isArray(item.thread) && item.thread.length > 1) {
@@ -439,7 +448,7 @@ async function Capture(item) {
 		card = document.createElement('div');
 		card.className = 'mea-thread';
 		// Même taille de texte pour tout le fil : celle du message le plus long
-		const scale = Math.min(...item.thread.map(m => TextScale(m)));
+		const scale = 1; // image : taille de police fixe, la hauteur s'adapte
 		item.thread.forEach((m, i) => {
 			const one = Object.assign({ id: `${item.id}:${i}`, kind: 'perle' }, m);
 			const c = BuildCard(one, { date: withDate ? (m.at || item.at || Date.now()) : 0 });
@@ -451,10 +460,24 @@ async function Capture(item) {
 				card.appendChild(row);
 			} else card.appendChild(c);
 		});
-	} else card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
+	} else {
+		card = BuildCard(item, { date: withDate ? (item.at || Date.now()) : 0 });
+		card.style.setProperty('--text-scale', '1');
+	}
 	// Couleurs tirées des avatars : calculées avant la capture
 	const cards = card.classList.contains('mea') ? [card] : Array.from(card.querySelectorAll('.mea'));
 	await Promise.race([Promise.all(cards.map(c => c._ready)), new Promise(r => setTimeout(r, 6000))]);
+	// Couleurs tirées de l'image de fond
+	if (bgImage && ws.values.perleColors === 'image') {
+		const pal = await MeaPalette(bgImage, '#FFFFFF');
+		// Lisibilité jugée sur la teinte dominante de l'image, assombrie comme réglé
+		const under = MeaMix(pal.average || pal.muted, '#000000', Math.max(0, Math.min(90, Number(ws.values.perleImageDim) || 0)) / 100);
+		const pick = (fg, min) => (MeaContrast(fg, under) >= min ? fg : (MeaContrast('#FFFFFF', under) >= MeaContrast('#000000', under) ? '#FFFFFF' : '#000000'));
+		const c = { name: pick(pal.lightVibrant, 3), text: pick(MeaMix(pal.lightMuted, '#FFFFFF', 0.8), 4.5), accent: pal.darkVibrant };
+		frame.style.setProperty('--text-color', c.text);
+		frame.style.setProperty('--perle-shadow', MeaContrast(c.text, '#000000') < 4.5 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)');
+		cards.forEach(x => { x.style.setProperty('--name-color', c.name); x.style.setProperty('--text-color', c.text); x.style.setProperty('--accent', c.accent); });
+	}
 	// Couleurs propres à l'image (lisibilité sur le fond choisi)
 	if (ws.isActive('perleNameColor')) {
 		frame.style.setProperty('--text-color', ws.values.perleTextColor);
@@ -496,6 +519,37 @@ async function Capture(item) {
 		captureEl.innerHTML = '';
 	}
 }
+
+// Image de fond des perles : gardée dans une variable Streamer.bot (trop lourde pour l'URL)
+const PERLE_IMAGE_VARIABLE = 'messageEnAvantPerleImage';
+let perleImageCache = { v: null, data: '' };
+async function PerleImage() {
+	const v = realState ? Number(realState.perleImageV) || 0 : 0;
+	if (perleImageCache.v === v && perleImageCache.data) return perleImageCache.data;
+	let data = '';
+	try {
+		const r = await sbClient.getGlobal(PERLE_IMAGE_VARIABLE, true);
+		data = r && r.status === 'ok' && r.variable ? String(r.variable.value || '') : '';
+	} catch (e) { }
+	perleImageCache = { v, data };
+	return data;
+}
+
+function SendImageState(data, text, status) {
+	try { window.parent.postMessage({ type: 'widget-image-state', id: 'perleImage', data, text, status }, '*'); } catch (e) { }
+}
+
+// Page de paramétrage : image choisie ou retirée
+window.addEventListener('message', async (event) => {
+	const msg = event.data;
+	if (!msg || msg.type !== 'widget-image' || msg.id !== 'perleImage') return;
+	if (!sbClient || !connected) { SendImageState(msg.data, 'Streamer.bot n’est pas connecté : image non enregistrée', 'warn'); return; }
+	SendImageState(msg.data, 'Enregistrement…', '');
+	const r = await Send({ mode: 'perleImage', data: String(msg.data || '') });
+	if (!r) { SendImageState(msg.data, 'Enregistrement impossible', 'warn'); return; }
+	perleImageCache = { v: null, data: '' };
+	SendImageState(msg.data, msg.data ? 'Enregistrée dans Streamer.bot' : '', 'ok');
+});
 
 // Nom de la chaîne (lu dans Streamer.bot) pour le filigrane
 let channelName = '';

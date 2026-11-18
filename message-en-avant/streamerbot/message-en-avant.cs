@@ -12,7 +12,8 @@
 //  Plusieurs pages peuvent envoyer le même événement : les doublons sont ignorés (msgId).
 //
 //  Arguments acceptés :
-//    mode : config | qa | highlight | show | hide | expire | remove | clear | perle | perleClaim | perleDone | reset
+//    mode : config | qa | highlight | show | hide | expire | remove | clear | perle | perleClaim | perleDone | perleImage | reset
+//    data   : image de fond des perles en data URL, vide pour la retirer (mode perleImage)
 //    config : JSON des réglages publiés par l'overlay (mode config)
 //    item   : JSON du message (modes qa et highlight, et perle par commande)
 //    msgId  : identifiant de l'événement (anti-doublon)
@@ -214,6 +215,15 @@ public class CPHInline
 				perle["doneAt"] = Maintenant();
 				perle.Remove("item");
 				Sauver(data, "perle");
+				return true;
+			}
+			case "perleimage":
+			{
+				// Image de fond des perles (data URL), dans sa propre variable
+				CPH.SetGlobalVar("messageEnAvantPerleImage", Arg("data"), true);
+				data["perleImageV"] = (data.Value<long?>("perleImageV") ?? 0) + 1;
+				data["hasPerleImage"] = Arg("data") != "";
+				Sauver(data, "perleImage");
 				return true;
 			}
 			case "reset":

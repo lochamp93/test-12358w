@@ -62,10 +62,27 @@ body {
 	pointer-events: none;
 }
 #capture .perle-frame {
-	display: inline-block;
+	display: block;
+	box-sizing: border-box;
 	padding: 40px;
-	max-width: 1000px;
 }
+/* Largeur fixe : toutes les cartes finissent au même endroit à droite */
+#capture .perle-frame > .mea,
+#capture .perle-frame .mea-thread,
+#capture .perle-frame .mea-thread > .mea,
+#capture .perle-frame .thread-reply > .mea { width: 100%; max-width: none; box-sizing: border-box; }
+/* Fond image : l'image fait la carte, les messages sont posés dessus sans fond */
+#capture .perle-frame.with-image { border-radius: 36px; padding: 48px 56px; }
+#capture .perle-frame.with-image .mea,
+#capture .perle-frame.with-image .mea .bubble,
+#capture .perle-frame.with-image .mea .bubble::before {
+	background: transparent !important;
+	box-shadow: none !important;
+	-webkit-backdrop-filter: none !important;
+	backdrop-filter: none !important;
+}
+#capture .perle-frame.with-image .mea .bg-avatar { display: none; }
+#capture .perle-frame.with-image .mea { padding-left: 0; padding-right: 0; text-shadow: 0 1px 6px var(--perle-shadow, rgba(0, 0, 0, 0.3)); }
 
 /* ---------- Message (commun) ---------- */
 
