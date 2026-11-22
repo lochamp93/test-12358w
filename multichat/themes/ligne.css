@@ -55,11 +55,10 @@ body {
 	overflow: hidden;
 }
 
-/* La ligne : ancrée à droite, centrée en hauteur dans la source */
+/* La ligne : ancrée à droite et en bas de la source (petite marge : rien n'est rogné) */
 #messageList {
 	position: absolute;
-	top: 0;
-	bottom: 0;
+	bottom: 0.2em;
 	right: 0.4em; /* petite marge : le dernier caractère n'est jamais rogné */
 	display: flex;
 	flex-direction: row;
