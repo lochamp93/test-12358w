@@ -437,3 +437,8 @@ html.apple #header button svg:not(.icon-sun):not(.icon-moon) {
 .setting-item.indent-1 { margin-left: 16px; padding-left: 10px; border-left: 2px solid #3a3a3a; }
 .setting-item.indent-2 { margin-left: 32px; padding-left: 10px; border-left: 2px solid #2b4f73; }
 .setting-group.setting-group-bare h2 { display: none; }
+
+/* Réglage "segmented" (design d'origine) */
+.setting-item-segmented > div:first-child:empty { display: none; }
+.setting-item-segmented .setting-item-content { flex: 1 1 auto; }
+.setting-item-segmented .segmented-field { width: 100%; }

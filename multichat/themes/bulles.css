@@ -1,0 +1,79 @@
+/*
+ * Thème vertical « Bulles » du multichat (chargé après standard.css)
+ *
+ * Chaque message dans une bulle arrondie façon Messages : la ligne du pseudo (avatar,
+ * plateforme, badges…) en plus petit au-dessus, le message dans la bulle en dessous.
+ * Rendu fixe : la bulle a sa propre couleur (le réglage « Bulles de chat » est masqué ici).
+ * En « Pseudo et message sur la même ligne », c'est tout le message qui devient la bulle.
+ */
+
+#userInfo {
+	display: block;
+	font-size: 0.8em;
+	margin: 0 0 0.25em 0.55em;
+}
+
+#userInfo .avatar {
+	width: 1.6em;
+	height: 1.6em;
+	vertical-align: middle;
+}
+
+#message {
+	display: block;
+	width: fit-content;
+	max-width: 100%;
+	padding: 0.4em 0.8em;
+	border-radius: 1.1em;
+	background: rgba(44, 44, 46, 0.92);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+	text-shadow: none;
+	line-height: calc(var(--line-spacing, 1.7em) * 0.8);
+	box-sizing: border-box;
+}
+
+#reply {
+	margin: 0 0 0.2em 0.8em;
+}
+
+/* Même ligne : la bulle englobe le pseudo et le message */
+html.inlineChat #messageContainer {
+	display: inline-block;
+	max-width: 100%;
+	padding: 0.4em 0.8em;
+	border-radius: 1.1em;
+	background: rgba(44, 44, 46, 0.92);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+	text-shadow: none;
+	box-sizing: border-box;
+}
+
+html.inlineChat #userInfo {
+	display: inline;
+	font-size: 1em;
+	margin: 0;
+}
+
+html.inlineChat #message {
+	display: inline;
+	padding: 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+}
+
+/* Premier message ou chat partagé : contour discret autour de la bulle */
+.highlightMessage {
+	box-shadow: none;
+	padding: 0;
+}
+
+.highlightMessage #message,
+html.inlineChat .highlightMessage {
+	box-shadow: 0 0 0 0.08em rgba(255, 255, 255, 0.35), 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.timestamp,
+.pronouns {
+	background: rgba(255, 255, 255, 0.16);
+}

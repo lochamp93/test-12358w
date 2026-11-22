@@ -224,6 +224,12 @@ function LoadJSON(settingsJson) {
 							});
 							inputElement.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
 							break;
+						case 'segmented':
+							// Segmented control (même composant que les docks, -common/utils/segmented.js).
+							// La valeur vit dans une liste masquée qui porte l'id du réglage : lecture, URL,
+							// showIf et chargement d'une ancienne URL fonctionnent comme pour un "select".
+							inputElement = MakeSegmentedField(setting);
+							break;
 						case 'color':
 							inputElement = document.createElement('input');
 							inputElement.type = 'color';
@@ -390,6 +396,7 @@ function LoadJSON(settingsJson) {
 					settingItemContent.appendChild(inputElement);
 					if (extraElement) settingItemContent.appendChild(extraElement);
 					if (setting.type === 'actions') settingItem.classList.add('setting-item-actions');
+					if (setting.type === 'segmented') settingItem.classList.add('setting-item-segmented');
 					if (setting.copyable) settingItem.classList.add('setting-item-copy');
 					// "sub": true : ligne rattachée à la précédente (règles sous une alerte), même alignement
 					if (setting.sub) settingItem.classList.add('setting-item-sub');
@@ -627,6 +634,7 @@ function SyncColorHexFields() {
 
 function RefreshWidgetPreview() {
 	SyncColorHexFields();
+	SyncSegmentedFields();
 	UpdateImportActionButton();
 	const settings = {};
 	settingsData.settings.forEach(setting => {
@@ -831,10 +839,14 @@ function CloseSettings() {
 function LoadSettings() {
 	const url = new URL(loadURLBox.value);
 
-	// URL compacte : un réglage absent de l’URL reprend sa valeur par défaut
-	if (settingsData && settingsData.compactURL === true) {
+	// Un réglage absent de l’URL reprend sa valeur par défaut (URL compacte, ou ancienne URL
+	// d’avant l’ajout du réglage) : le formulaire affiche alors ce que l’overlay affichera.
+	// Les réglages "previewOnly" ne sont jamais dans l’URL : ils gardent leur valeur.
+	if (settingsData && settingsData.settings) {
 		settingsData.settings.forEach(setting => {
-			if (IsValueless(setting)) return;
+			if (IsValueless(setting) || setting.previewOnly) return;
+			if (url.searchParams.has(setting.id)) return;
+			if (Array.isArray(setting.aliases) && setting.aliases.some(a => url.searchParams.has(a))) return;
 			const el = document.getElementById(setting.id);
 			if (!el) return;
 			if (el.type === 'checkbox') el.checked = setting.defaultValue === true;
@@ -862,8 +874,8 @@ function LoadSettings() {
 		}
 	});
 
-	// URL compacte sans paramètre : rafraîchir quand même le formulaire, l’aperçu et le lien
-	if (settingsData && settingsData.compactURL === true) {
+	// URL sans paramètre : rafraîchir quand même le formulaire, l’aperçu et le lien
+	if (settingsData && settingsData.settings) {
 		const first = settingsData.settings.find(st => !IsValueless(st) && document.getElementById(st.id));
 		if (first) document.getElementById(first.id).dispatchEvent(new Event('input', { bubbles: true }));
 	}
@@ -1426,4 +1438,51 @@ function SetupNuttyIconLink(enabled) {
 	link.setAttribute('aria-label', 'Découvrez les widgets de nutty');
 	link.innerHTML = '<img src="../../resources/nutty-logo.png" alt="" />';
 	widgetUrlInputWrapper.insertBefore(link, widgetUrlInputWrapper.firstChild);
+}
+
+
+// Réglage "type": "segmented" : rail à options (DA des docks) + liste masquée qui porte l'id.
+// "options": [{ "value": "vertical", "label": "Vertical" }, …], "size": "large" facultatif.
+function MakeSegmentedField(setting) {
+	const wrapper = document.createElement('div');
+	wrapper.className = 'segmented-field';
+
+	const select = document.createElement('select');
+	select.id = setting.id;
+	select.hidden = true;
+	(setting.options || []).forEach(option => {
+		const o = document.createElement('option');
+		o.value = option.value;
+		o.textContent = option.label;
+		select.appendChild(o);
+	});
+	select.value = settingsMap.has(setting.id) ? settingsMap.get(setting.id) : setting.defaultValue;
+
+	const rail = document.createElement('div');
+	wrapper.append(select, rail);
+
+	if (window.Segmented) {
+		const seg = Segmented.create(rail, {
+			options: setting.options || [],
+			value: select.value,
+			size: setting.size,
+			onChange: (value) => {
+				select.value = value;
+				select.dispatchEvent(new Event('input', { bubbles: true }));
+			}
+		});
+		select._segmented = seg;
+	}
+	else {
+		// Composant indisponible : la liste reste utilisable
+		select.hidden = false;
+	}
+	return wrapper;
+}
+
+// Remet chaque segmented control sur la valeur de sa liste (paramètres chargés, valeurs par défaut…)
+function SyncSegmentedFields() {
+	document.querySelectorAll('.segmented-field > select').forEach(select => {
+		if (select._segmented && select._segmented.value !== select.value) select._segmented.set(select.value);
+	});
 }

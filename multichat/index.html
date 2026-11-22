@@ -4,15 +4,28 @@
   <title>Multichat</title>
   <meta charset="UTF-8" />
   <link rel="icon" href="../-common/resources/favicon.png" type="image/png" />
-  <!-- Thème : rendu complet choisi par le paramètre « theme » (standard par défaut) -->
+  <!-- Thème : rendu complet choisi par « orientation » et « theme » (Vertical / Standard par défaut).
+       Bulles, Verre et Épuré partent du rendu Standard et ajoutent leur propre feuille ;
+       l'horizontal (Ligne) a sa feuille et son gabarit à lui. -->
   <link id="themeStylesheet" rel="stylesheet" href="./themes/standard.css" />
+  <link id="themeExtraStylesheet" rel="stylesheet" disabled />
   <script>
     (function () {
-      var THEMES = ['standard', 'encadre'];
-      var t = new URLSearchParams(location.search).get('theme');
-      window.MultichatTheme = THEMES.indexOf(t) >= 0 ? t : 'standard';
-      document.getElementById('themeStylesheet').href = './themes/' + window.MultichatTheme + '.css';
-      document.documentElement.dataset.theme = window.MultichatTheme;
+      var params = new URLSearchParams(location.search);
+      var THEMES = ['standard', 'encadre', 'bulles', 'verre', 'epure'];
+      var EXTRA = ['bulles', 'verre', 'epure'];
+      var horizontal = params.get('orientation') === 'horizontal';
+      var t = params.get('theme');
+      t = THEMES.indexOf(t) >= 0 ? t : 'standard';
+      if (horizontal) t = 'ligne';
+      window.MultichatOrientation = horizontal ? 'horizontal' : 'vertical';
+      window.MultichatTheme = t;
+      var base = document.getElementById('themeStylesheet');
+      var extra = document.getElementById('themeExtraStylesheet');
+      if (t === 'encadre' || t === 'ligne') base.href = './themes/' + t + '.css';
+      if (EXTRA.indexOf(t) >= 0) { extra.href = './themes/' + t + '.css'; extra.disabled = false; }
+      document.documentElement.dataset.theme = t;
+      document.documentElement.dataset.orientation = window.MultichatOrientation;
     })();
   </script>
   <script type="text/javascript" src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
@@ -81,6 +94,30 @@
     </div>
   </template>
 
+  <!-- Thème horizontal « Ligne » : tout sur une ligne, sans forme autour (à la manière de nutty) -->
+  <template id="messageTemplate-ligne" data-theme="ligne">
+    <div id="messageContainer">
+      <div class="message-contents">
+        <div class="message-right">
+          <div id="firstMessage"></div>
+          <div id="sharedChat"><span id="sharedChatChannel"></span></div>
+          <label id="userInfo" class="userinfo-row">
+            <span id="platform"></span>
+            <span id="avatar"></span>
+            <span id="timestamp"></span>
+            <span id="badgeList"></span>
+            <span id="pronouns"></span>
+            <span id="username"></span>
+            <span id="colon-separator" style="display:none;">: </span>
+            <br id="line-space" />
+          </label>
+          <div id="reply"><div><span id="replyUser"></span><span id="replyMsg"></span></div></div>
+          <span id="message"></span>
+        </div>
+      </div>
+    </div>
+  </template>
+
   <template id="cardTemplate">
     <div id="card">
       <div class="message-contents add-this-class-to-the-thing-to-make-all-the-text-centered-vertically-because-that-looks-much-better">
@@ -126,13 +163,15 @@
   </template>
 
   <script>
-    // Thème Encadré : son gabarit remplace celui du thème Standard
+    // Thèmes Encadré et Ligne : leur gabarit remplace celui du thème Standard
+    // (Bulles, Verre et Épuré gardent le gabarit Standard)
     (function () {
-      if (window.MultichatTheme !== 'encadre') return;
+      var t = window.MultichatTheme;
+      if (t !== 'encadre' && t !== 'ligne') return;
       var std = document.getElementById('messageTemplate');
-      var enc = document.getElementById('messageTemplate-encadre');
+      var own = document.getElementById('messageTemplate-' + t);
       std.id = 'messageTemplate-standard';
-      enc.id = 'messageTemplate';
+      own.id = 'messageTemplate';
     })();
   </script>
   <script src="./helpers.js"></script>

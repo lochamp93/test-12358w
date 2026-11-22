@@ -52,9 +52,27 @@ const opacity = urlParams.get("opacity") || "0"; // opacité du fond, en % (0 à
 const hideAfter = GetIntParam("hideAfter", 0);
 const excludeCommands = GetBooleanParam("excludeCommands", true);
 const ignoreChatters = urlParams.get("ignoreChatters") || "";
-const scrollDirection = GetIntParam("scrollDirection", 1);
-const groupConsecutiveMessages = GetBooleanParam("groupConsecutiveMessages", false);
-const inlineChat = GetBooleanParam("inlineChat", false);
+// Orientation : "vertical" (défaut, anciennes URL comprises) ou "horizontal" (thème Ligne).
+// Lue dans index.html avant le chargement du thème (window.MultichatOrientation).
+const isHorizontal = window.MultichatOrientation === 'horizontal';
+const multichatTheme = window.MultichatTheme || 'standard';
+
+// En horizontal : pas de sens de défilement, pas de regroupement, toujours sur une ligne
+const scrollDirection = isHorizontal ? 1 : GetIntParam("scrollDirection", 1);
+const groupConsecutiveMessages = !isHorizontal && GetBooleanParam("groupConsecutiveMessages", false);
+const inlineChat = isHorizontal || GetBooleanParam("inlineChat", false);
+
+// Réglages du thème horizontal
+const showColon = GetBooleanParam("showColon", true);
+const horizontalGap = Math.max(0, GetIntParam("horizontalGap", 20));
+const separator = ['none', 'dot', 'bar'].includes(urlParams.get("separator")) ? urlParams.get("separator") : 'none';
+const horizontalAnimationDuration = Math.max(0, GetIntParam("horizontalAnimationDuration", 500));
+
+// Le « : » après le pseudo en mode « même ligne » : en horizontal il suit son propre
+// réglage ; en vertical il reste masqué quand le cadre du pseudo (Encadré) le remplace.
+function ShowInlineColon() {
+	return isHorizontal ? showColon : !showUsernameFrame;
+}
 
 // Bulles de chat (repris d'orbix-67) : fond de couleur derrière chaque message
 const useChatBubbles = GetBooleanParam("useChatBubbles", false);
@@ -63,6 +81,8 @@ const bubbleOpacity = urlParams.get("bubbleOpacity") || "90"; // en % (0 à 100)
 
 function ApplyChatBubble(messageContainerDiv) {
 	if (!useChatBubbles || !messageContainerDiv) return;
+	// Bulles et Verre ont déjà leur forme ; l'horizontal n'en a aucune
+	if (isHorizontal || multichatTheme === 'bulles' || multichatTheme === 'verre') return;
 	let alpha = parseFloat(String(bubbleOpacity).replace(',', '.'));
 	if (!Number.isFinite(alpha)) alpha = 90;
 	alpha = alpha / 100;
@@ -188,6 +208,11 @@ document.documentElement.style.setProperty('--card-color', cardColor);
 
 // Get a list of chatters to ignore
 const ignoreUserList = ignoreChatters.split(',').map(item => item.trim().toLowerCase()) || [];
+
+// Thème horizontal : espacement, séparateur et durée d'apparition
+document.documentElement.style.setProperty('--h-gap', `${horizontalGap}px`);
+document.documentElement.style.setProperty('--h-anim-duration', `${horizontalAnimationDuration}ms`);
+if (isHorizontal) document.documentElement.dataset.separator = separator;
 
 // Set the scroll direction
 switch (scrollDirection) {
@@ -625,7 +650,7 @@ async function TwitchChatMessage(data) {
 	// Set First Time Chatter
 	const firstMessage = data.meta.firstMessage;
 	if (firstMessage) {
-		firstMessageDiv.style.display = 'block';
+		if (firstMessageDiv) firstMessageDiv.style.display = 'block';
 		messageContainerDiv.classList.add("highlightMessage");
 	}
 
@@ -703,7 +728,7 @@ async function TwitchChatMessage(data) {
 	if (inlineChat) {
 		// The username frame's own pill shape already visually separates
 		// the pseudo from the message, so the ":" is skipped in that case.
-		if (!showUsernameFrame)
+		if (ShowInlineColon())
 			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
@@ -864,6 +889,11 @@ async function TwitchAutomaticRewardRedemption(data) {
 async function TwitchAnnouncement(data) {
 	if (!showTwitchAnnouncements)
 		return;
+
+	if (isHorizontal) {
+		TwitchAnnouncementInline(data);
+		return;
+	}
 
 	// Get a reference to the template
 	const template = document.getElementById('cardTemplate');
@@ -1364,7 +1394,7 @@ async function YouTubeMessage(data) {
 	if (inlineChat) {
 		// The username frame's own pill shape already visually separates
 		// the pseudo from the message, so the ":" is skipped in that case.
-		if (!showUsernameFrame)
+		if (ShowInlineColon())
 			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
@@ -2303,7 +2333,7 @@ async function KickChatMessage(data) {
 	if (inlineChat) {
 		// The username frame's own pill shape already visually separates
 		// the pseudo from the message, so the ":" is skipped in that case.
-		if (!showUsernameFrame)
+		if (ShowInlineColon())
 			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
@@ -2759,7 +2789,7 @@ async function TikTokChat(data) {
 	if (inlineChat) {
 		// The username frame's own pill shape already visually separates
 		// the pseudo from the message, so the ":" is skipped in that case.
-		if (!showUsernameFrame)
+		if (ShowInlineColon())
 			instance.querySelector("#colon-separator").style.display = `inline`;
 		instance.querySelector("#line-space").style.display = `none`;
 		instance.querySelector(".message-contents").style.alignItems = 'center';
@@ -3008,7 +3038,7 @@ function TikTokSubscribe(data) {
 }
 
 function YouTubeThumbnailPreview(data) {
-	if (!showYouTubeLinkPreviews)
+	if (!showYouTubeLinkPreviews || isHorizontal)
 		return;
 
 	// Get a reference to the template
@@ -3064,7 +3094,87 @@ function ExtractYouTubeVideoId(url) {
 	return match ? match[1] : null;
 }
 
+// Thème horizontal : une annonce Twitch est un message de la ligne, texte en couleur de l'annonce
+function TwitchAnnouncementInline(data) {
+	const instance = document.getElementById('messageTemplate').content.cloneNode(true);
+	const usernameDiv = instance.querySelector("#username");
+	const messageDiv = instance.querySelector("#message");
+
+	const colors = { BLUE: '#4FA3FF', GREEN: '#10DA86', ORANGE: '#FEB419', PURPLE: '#B57BFF' };
+	const announcementColor = useCustomCardColor ? cardColor : (colors[data.announcementColor] || data.user.color || messageColor);
+
+	messageDiv.innerHTML = (data.parts && data.parts.length) ? ConstructMessageFromParts(data.parts) : EscapeHTML(data.text);
+	messageDiv.style.color = (hideAnnouncementUsername && useCustomAnnouncementTextColor) ? announcementTextColor : announcementColor;
+
+	if (hideAnnouncementUsername) {
+		instance.querySelector("#userInfo").style.display = 'none';
+	}
+	else {
+		usernameDiv.innerText = data.user.name.toLowerCase() == data.user.login.toLowerCase()
+			? data.user.name
+			: `${data.user.name} (${data.user.login})`;
+		usernameDiv.style.color = useCustomUsernameColor ? usernameColor : data.user.color;
+		if (showPlatform)
+			instance.querySelector("#platform").innerHTML = `<img src="icons/platforms/twitch.png" class="platform"/>`;
+		if (ShowInlineColon())
+			instance.querySelector("#colon-separator").style.display = 'inline';
+	}
+
+	AddMessageItem(instance, data.messageId, 'twitch', data.user.id);
+}
+
+// Thème horizontal : le message arrive à droite en s'élargissant et pousse les précédents
+// vers la gauche (comme l'horizontal de nutty). Pas de cartes d'événements dans la ligne.
+function AddHorizontalMessageItem(element, elementID, platform, userId) {
+	if (element.querySelector && element.querySelector('#card, .kick-gift, .tiktok-gift'))
+		return;
+
+	const messageList = document.getElementById('messageList');
+	const tempDiv = document.getElementById('IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList');
+	const measure = document.createElement('li');
+	measure.className = 'measure';
+	measure.appendChild(element);
+	tempDiv.appendChild(measure);
+
+	setTimeout(function () {
+		const calculatedWidth = measure.offsetWidth + 'px';
+
+		const lineItem = document.createElement('li');
+		lineItem.id = elementID;
+		lineItem.dataset.platform = platform;
+		lineItem.dataset.userId = userId;
+		while (measure.firstChild) lineItem.appendChild(measure.firstChild);
+		measure.remove();
+
+		messageList.appendChild(lineItem);
+		requestAnimationFrame(function () {
+			requestAnimationFrame(function () {
+				lineItem.classList.add('show');
+				lineItem.style.maxWidth = calculatedWidth;
+				lineItem._releaseMaxWidthTimeout = setTimeout(function () {
+					lineItem.style.maxWidth = 'none';
+				}, horizontalAnimationDuration + 50);
+			});
+		});
+
+		// Les messages sortis du cadre par la gauche ne servent plus : on les retire
+		while (messageList.children.length > 1 && messageList.scrollWidth > 3 * window.innerWidth)
+			messageList.removeChild(messageList.firstChild);
+
+		if (hideAfter > 0) {
+			setTimeout(function () {
+				HideMessageItem(lineItem);
+			}, hideAfter * 1000);
+		}
+	}, 200);
+}
+
 function AddMessageItem(element, elementID, platform, userId) {
+	if (isHorizontal) {
+		AddHorizontalMessageItem(element, elementID, platform, userId);
+		return;
+	}
+
 	// Calculate the height of the div before inserting
 	const tempDiv = document.getElementById('IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList');
 	const tempDivTwoElectricBoogaloo = document.createElement('div');
@@ -3170,6 +3280,15 @@ function AddMessageItem(element, elementID, platform, userId) {
 // nothing left to see move, so the box repositioning some other message
 // above.
 function HideMessageItem(lineItem) {
+	// Horizontal : fondu sur place, puis retrait (les messages plus récents, ancrés à droite, ne bougent pas)
+	if (isHorizontal) {
+		clearTimeout(lineItem._releaseMaxWidthTimeout);
+		lineItem.classList.add('hiding');
+		setTimeout(function () {
+			if (lineItem.parentNode) lineItem.parentNode.removeChild(lineItem);
+		}, 600);
+		return;
+	}
 	// Cancel AddMessageItem's own pending "release to none" timer (see its
 	// comment) - with a short "hideAfter", it can still be sitting there
 	// waiting to fire, and left alone it can stomp the pinned height right
@@ -3252,6 +3371,8 @@ function FindFirstImageUrl(jsonObject) {
 }
 
 function IsThisUserAllowedToPostImagesOrNotReturnTrueIfTheyCanReturnFalseIfTheyCannot(targetPermissions, data, platform) {
+	// Pas d'image dans le fil horizontal : le lien reste en texte
+	if (isHorizontal) return false;
 	return GetPermissionLevel(data, platform) >= targetPermissions;
 }
 

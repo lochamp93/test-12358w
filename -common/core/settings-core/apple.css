@@ -1022,3 +1022,10 @@ html.apple .image-field .image-remove svg { width: 16px; height: 18px; fill: cur
 html.apple .image-field .image-note { grid-column: 1 / -1; white-space: nowrap; text-align: right; font-size: 12px; color: var(--ui-text-secondary); }
 html.apple .image-field .image-note[data-status="warn"] { color: var(--ui-orange); }
 html.apple .image-field .image-note[data-status="ok"] { color: var(--ui-green); }
+
+/* ---------- Réglage "segmented" : rail pleine largeur, sans libellé (ex. orientation du multichat) ---------- */
+
+html.apple .setting-item.setting-item-segmented > div:first-child:empty { display: none; }
+html.apple .setting-item.setting-item-segmented .setting-item-content { flex: 1 1 auto; justify-content: stretch; }
+html.apple .setting-item.setting-item-segmented .segmented-field { width: 100%; }
+html.apple .setting-group.setting-group-bare .setting-item.setting-item-segmented { padding-left: 0; padding-right: 0; }

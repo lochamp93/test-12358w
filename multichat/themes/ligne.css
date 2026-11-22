@@ -1,0 +1,258 @@
+/*
+ * Thème horizontal « Ligne » du multichat
+ *
+ * Tous les messages sur une seule ligne, sans forme autour : plateforme, avatar, heure,
+ * badges, pronoms, pseudo, « : », message. Le nouveau message arrive à droite en
+ * s'élargissant et pousse les précédents vers la gauche (principe de l'horizontal de nutty).
+ * Le fond (couleur et opacité) colore toute la source : réglez sa taille dans OBS en bandeau.
+ *
+ * Variables posées par script.js :
+ *   --h-gap            espace entre deux messages
+ *   --h-anim-duration  durée de l'apparition
+ *   html[data-separator="dot" | "bar"]  séparateur entre les messages
+ */
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	width: 100vw;
+	height: 100vh;
+	font-size: 30px;
+	font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+	color: white;
+	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+body {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+#statusContainer {
+	font-weight: 500;
+	font-size: 30px;
+	text-align: center;
+	background-color: #D12025;
+	color: white;
+	padding: 10px;
+	border-radius: 10px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	white-space: nowrap;
+	z-index: 10;
+}
+
+#mainContainer {
+	position: absolute;
+	inset: 0;
+	overflow: hidden;
+}
+
+/* La ligne : ancrée à droite, centrée en hauteur dans la source */
+#messageList {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0.4em; /* petite marge : le dernier caractère n'est jamais rogné */
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	align-items: center;
+	white-space: nowrap;
+	list-style: none;
+}
+
+#messageList > li {
+	list-style: none;
+	flex: 0 0 auto;
+	max-width: 0;
+	overflow: hidden;
+	opacity: 0;
+	padding-left: var(--h-gap, 20px);
+	transition: max-width var(--h-anim-duration, 500ms) ease-out, opacity var(--h-anim-duration, 500ms) ease-out;
+}
+
+#messageList > li.show { opacity: 1; }
+
+#messageList > li.hiding {
+	opacity: 0;
+	transition: opacity 0.5s ease-in;
+}
+
+/* Mesure d'un message avant son ajout (invisible, largeur libre) */
+#IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList {
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
+	pointer-events: none;
+	white-space: nowrap;
+	list-style: none;
+}
+
+#IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList > li {
+	display: inline-block;
+	padding-left: var(--h-gap, 20px);
+}
+
+/* Séparateur : centré dans l'espace entre deux messages */
+html[data-separator="dot"] #messageList > li::before,
+html[data-separator="bar"] #messageList > li::before,
+html[data-separator="dot"] #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList > li::before,
+html[data-separator="bar"] #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList > li::before {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: calc(-1 * var(--h-gap, 20px));
+	width: var(--h-gap, 20px);
+	text-align: center;
+	color: var(--message-color, #ffffff);
+	opacity: 0.6;
+}
+
+html[data-separator="dot"] #messageList > li::before,
+html[data-separator="dot"] #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList > li::before {
+	content: "•";
+}
+
+html[data-separator="bar"] #messageList > li::before,
+html[data-separator="bar"] #IPutThisHereSoICanCalculateHowBigEachMessageIsSupposedToBeBeforeIAddItToTheMessageList > li::before {
+	content: "";
+	height: 0.9em;
+	width: 2px;
+	margin-right: calc(var(--h-gap, 20px) / 2 - 1px);
+	margin-left: calc(-1 * var(--h-gap, 20px) / 2 - 1px);
+	background: var(--message-color, #ffffff);
+	border-radius: 1px;
+}
+
+/* Un message : tout en ligne */
+#messageContainer,
+.message-contents,
+.message-right,
+#userInfo {
+	display: inline;
+}
+
+.message-contents { align-items: center; }
+
+#line-space,
+#reply,
+#sharedChat,
+#firstMessage {
+	display: none !important;
+}
+
+#platform:empty,
+#avatar:empty,
+#badgeList:empty,
+#timestamp:empty,
+#pronouns:empty {
+	display: none;
+}
+
+#platform,
+#avatar,
+#badgeList,
+#timestamp,
+#pronouns {
+	margin-right: 0.3em;
+}
+
+.platform {
+	height: 1em;
+	width: auto;
+	vertical-align: -0.15em;
+}
+
+.avatar {
+	width: 1.1em;
+	height: 1.1em;
+	border-radius: 50%;
+	object-fit: cover;
+	vertical-align: -0.22em;
+}
+
+#badgeList {
+	display: inline-flex;
+	align-items: center;
+	column-gap: 0.2em;
+	vertical-align: -0.12em;
+}
+
+.badge {
+	height: 0.9em;
+	width: auto;
+}
+
+/* Heure et pronoms : simple texte discret, sans gélule */
+.timestamp,
+.pronouns {
+	font-size: 0.75em;
+	opacity: 0.7;
+}
+
+#username {
+	font-weight: var(--username-font-weight, 700);
+}
+
+#colon-separator {
+	color: var(--message-color, inherit);
+	font-weight: var(--username-font-weight, 700);
+}
+
+#message {
+	display: inline;
+	font-weight: var(--message-font-weight, 400);
+	color: var(--message-color, inherit);
+	font-family: var(--message-font-family, inherit);
+	font-size: var(--message-font-size, inherit);
+}
+
+.emote {
+	height: 1.3em;
+	vertical-align: -0.3em;
+	margin: 0 1px;
+}
+
+/* GIF Twitch : une emote parmi les autres dans la ligne */
+.gif-emote {
+	display: inline-block;
+	height: 1.3em;
+	width: auto;
+	vertical-align: -0.3em;
+}
+
+.bits {
+	font-size: 0.75em;
+	opacity: 0.8;
+}
+
+/* Statut de connexion (repris du thème Standard) */
+.statusConnected {
+	animation-name: statusConnected;
+	animation-duration: 2s;
+	animation-fill-mode: forwards;
+}
+
+.statusDisconnected {
+	animation-name: statusDisconnected;
+	animation-duration: 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes statusConnected {
+	0% { opacity: 1; background-color: #2FB774; }
+	100% { opacity: 0; background-color: #2FB774; }
+}
+
+@keyframes statusDisconnected {
+	0% { background-color: #D12025; }
+	100% { background-color: #D12025; }
+}

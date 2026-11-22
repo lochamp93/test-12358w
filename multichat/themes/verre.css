@@ -1,0 +1,43 @@
+/*
+ * Thème vertical « Verre » du multichat (chargé après standard.css)
+ *
+ * Chaque message est une carte translucide à liseré clair, dans l'esprit des matériaux
+ * Apple. Note : dans OBS, une source navigateur ne voit pas la scène derrière elle, donc
+ * le flou d'arrière-plan n'agit pas ; la carte reste lisible grâce à sa teinte sombre.
+ */
+
+#messageContainer,
+#card {
+	padding: 0.55em 0.8em;
+	border-radius: 0.8em;
+	background:
+		linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.05)),
+		rgba(28, 28, 30, 0.5);
+	border: 1px solid rgba(255, 255, 255, 0.18);
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	backdrop-filter: blur(20px) saturate(180%);
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+	box-sizing: border-box;
+}
+
+/* Une carte ne s'emboîte pas dans une autre (annonces : le message est dans la carte) */
+#card #messageContainer {
+	padding: 0;
+	background: none;
+	border: 0;
+	box-shadow: none;
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+}
+
+/* Premier message ou chat partagé : liseré plus marqué */
+.highlightMessage {
+	border-color: rgba(255, 255, 255, 0.45);
+	padding: 0.55em 0.8em;
+}
+
+.timestamp,
+.pronouns {
+	background: rgba(255, 255, 255, 0.14);
+}

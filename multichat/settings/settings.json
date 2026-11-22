@@ -22,6 +22,23 @@
 			"group": "Streamer.bot"
 		},
 		{
+			"id": "orientation",
+			"type": "segmented",
+			"options": [
+				{
+					"value": "vertical",
+					"label": "Vertical"
+				},
+				{
+					"value": "horizontal",
+					"label": "Horizontal"
+				}
+			],
+			"defaultValue": "vertical",
+			"group": "Orientation",
+			"bare": true
+		},
+		{
 			"id": "theme",
 			"label": "Thème",
 			"description": "Un rendu complet, prêt à l’emploi, que les réglages ci-dessous ajustent",
@@ -34,10 +51,26 @@
 				{
 					"value": "encadre",
 					"label": "Encadré"
+				},
+				{
+					"value": "bulles",
+					"label": "Bulles"
+				},
+				{
+					"value": "verre",
+					"label": "Verre"
+				},
+				{
+					"value": "epure",
+					"label": "Épuré"
 				}
 			],
 			"defaultValue": "standard",
-			"group": "Apparence"
+			"group": "Apparence",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
 		},
 		{
 			"id": "font",
@@ -154,7 +187,11 @@
 			"min": 0,
 			"defaultValue": 1.7,
 			"step": ".1",
-			"group": "Apparence"
+			"group": "Apparence",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
 		},
 		{
 			"id": "useCustomMessageFont",
@@ -236,7 +273,14 @@
 			"label": "Bulles derrière les messages",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Couleurs"
+			"group": "Couleurs",
+			"showIf": {
+				"id": "theme",
+				"notValue": [
+					"bulles",
+					"verre"
+				]
+			}
 		},
 		{
 			"id": "bubbleColor",
@@ -362,7 +406,11 @@
 				}
 			],
 			"defaultValue": 1,
-			"group": "Affichage"
+			"group": "Affichage",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
 		},
 		{
 			"id": "groupConsecutiveMessages",
@@ -370,7 +418,11 @@
 			"description": "Cache le pseudo sur les messages consécutifs d’un même utilisateur<br>Remarque : ce paramètre est ignoré si le sens de défilement est « Inversé »",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Affichage"
+			"group": "Affichage",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
 		},
 		{
 			"id": "inlineChat",
@@ -378,7 +430,76 @@
 			"description": "Supprime l’espace après le pseudo",
 			"type": "checkbox",
 			"defaultValue": false,
-			"group": "Affichage"
+			"group": "Affichage",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
+		},
+		{
+			"id": "showColon",
+			"label": "Deux-points après le pseudo",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Horizontal",
+			"showIf": {
+				"id": "orientation",
+				"value": "horizontal"
+			}
+		},
+		{
+			"id": "horizontalGap",
+			"label": "Espacement entre messages",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"defaultValue": 20,
+			"group": "Horizontal",
+			"showIf": {
+				"id": "orientation",
+				"value": "horizontal"
+			}
+		},
+		{
+			"id": "separator",
+			"label": "Séparateur",
+			"type": "select",
+			"options": [
+				{
+					"value": "none",
+					"label": "Aucun"
+				},
+				{
+					"value": "dot",
+					"label": "Point"
+				},
+				{
+					"value": "bar",
+					"label": "Trait"
+				}
+			],
+			"defaultValue": "none",
+			"group": "Horizontal",
+			"showIf": {
+				"id": "orientation",
+				"value": "horizontal"
+			}
+		},
+		{
+			"id": "horizontalAnimationDuration",
+			"label": "Durée de l’apparition",
+			"description": "En millisecondes",
+			"type": "number",
+			"min": 0,
+			"max": 3000,
+			"step": 50,
+			"defaultValue": 500,
+			"group": "Horizontal",
+			"showIf": {
+				"id": "orientation",
+				"value": "horizontal"
+			}
 		},
 		{
 			"id": "excludeCommands",
@@ -429,7 +550,11 @@
 				}
 			],
 			"defaultValue": 20,
-			"group": "Messages"
+			"group": "Messages",
+			"showIf": {
+				"id": "orientation",
+				"value": "vertical"
+			}
 		},
 		{
 			"id": "showTwitchAnnouncements",
