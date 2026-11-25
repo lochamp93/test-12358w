@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<!-- OBS garde la page en cache : rechargement automatique si une version plus récente est en ligne -->
+	<script src="../-common/utils/fresh.js?v=2026112501" data-version="2026112501" data-version-url="version.txt"></script>
+	<title>Trame dynamique</title>
+	<link rel="icon" href="../-common/resources/favicon.png" type="image/png">
+	<link rel="stylesheet" href="./style.css?v=2026112501" />
+	<!-- Analyse des couleurs d'une image (6 rôles : Vibrant, Muted, Dark…, Light…) -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/node-vibrant/3.1.6/vibrant.min.js"></script>
+	<script src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
+</head>
+
+<body>
+	<!-- Filtres SVG utilisés par le canvas -->
+	<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+		<defs>
+			<!-- Lave : flou puis seuil sur la transparence, les bulles proches fusionnent -->
+			<filter id="goo" color-interpolation-filters="sRGB">
+				<feGaussianBlur id="gooBlur" in="SourceGraphic" stdDeviation="20" />
+				<feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -11" />
+			</filter>
+			<!-- Vidéo blanc sur noir : la luminosité devient la transparence (blanc = opaque) -->
+			<filter id="lumaToAlpha" color-interpolation-filters="sRGB">
+				<feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.2126 0.7152 0.0722 0 0" />
+			</filter>
+		</defs>
+	</svg>
+
+	<div id="area">
+		<div id="stage"><canvas id="canvas"></canvas></div>
+	</div>
+
+	<!-- Aperçu seulement : image analysée et palette trouvée -->
+	<aside id="palettePanel" hidden>
+		<img id="paletteImage" alt="" hidden />
+		<div id="paletteCards"></div>
+	</aside>
+
+	<video id="video" muted loop playsinline preload="auto"></video>
+
+	<script src="../-common/utils/widget-settings.js?v=2026112501"></script>
+	<script src="./helpers.js?v=2026112501"></script>
+	<script src="./themes.js?v=2026112501"></script>
+	<script src="./script.js?v=2026112501"></script>
+</body>
+
+</html>

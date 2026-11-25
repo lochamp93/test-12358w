@@ -1,0 +1,625 @@
+{
+	"title": "Trame dynamique",
+	"design": "apple",
+	"showLogo": false,
+	"checkerPreview": true,
+	"livePreview": true,
+	"compactURL": true,
+	"demo": true,
+	"settings": [
+		{
+			"id": "paletteSource",
+			"label": "Source des couleurs",
+			"description": "D’où viennent les teintes de la trame",
+			"type": "select",
+			"options": [
+				{ "value": "jeu", "label": "Artwork du jeu (dynamique)" },
+				{ "value": "musique", "label": "Musique en cours (dynamique)" },
+				{ "value": "chaine", "label": "Photo de profil de la chaîne (fixe)" },
+				{ "value": "perso", "label": "Couleurs personnalisées (fixe)" }
+			],
+			"defaultValue": "jeu",
+			"group": "Source des couleurs"
+		},
+		{
+			"id": "channel",
+			"label": "Chaîne Twitch",
+			"description": "Laisser vide pour utiliser la chaîne connectée à Streamer.bot",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "anaismrn",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+		},
+		{
+			"id": "includedApps",
+			"label": "Applications incluses",
+			"description": "Prioritaires, dans l’ordre (séparées par des virgules). Vide : toutes",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "spotify, chrome",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "excludedApps",
+			"label": "Applications exclues",
+			"description": "Ignorées (séparées par des virgules)",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "vlc",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "detectedApps",
+			"label": "Applications détectées",
+			"description": "Identifiants à recopier dans les listes ci-dessus",
+			"type": "info",
+			"defaultValue": "En attente de SMTC Bridge…",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "whenIdle",
+			"label": "Quand rien ne joue",
+			"type": "select",
+			"options": [
+				{ "value": "keep", "label": "Garder la dernière palette" },
+				{ "value": "fallback", "label": "Couleur de secours" }
+			],
+			"defaultValue": "keep",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "color1",
+			"label": "Couleur 1",
+			"type": "color",
+			"defaultValue": "#8a5cf6",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "value": "perso" }
+		},
+		{
+			"id": "color2",
+			"label": "Couleur 2",
+			"type": "color",
+			"defaultValue": "#ff5fa2",
+			"group": "Source des couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "value": "perso" }, { "id": "colorCount", "value": ["duo", "trio"] }] }
+		},
+		{
+			"id": "color3",
+			"label": "Couleur 3",
+			"type": "color",
+			"defaultValue": "#2ad1ff",
+			"group": "Source des couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "value": "perso" }, { "id": "colorCount", "value": "trio" }] }
+		},
+		{
+			"id": "fallbackColor",
+			"label": "Couleur de secours",
+			"description": "Utilisée tant que l’image n’est pas analysée, ou si l’analyse échoue",
+			"type": "color",
+			"defaultValue": "#8a5cf6",
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "notValue": "perso" }
+		},
+		{
+			"id": "transitionDuration",
+			"label": "Durée de transition",
+			"description": "En secondes, quand la palette change",
+			"type": "number",
+			"min": 0,
+			"max": 30,
+			"step": 0.5,
+			"defaultValue": 2,
+			"inputWidth": 72,
+			"group": "Source des couleurs",
+			"showIf": { "id": "paletteSource", "notValue": "perso" }
+		},
+		{
+			"id": "paletteStatus",
+			"label": "État",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Source des couleurs"
+		},
+		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion",
+			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion",
+			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+		},
+		{
+			"id": "smtcBridgeAddress",
+			"label": "Adresse SMTC Bridge",
+			"description": "SMTC Bridge doit tourner sur le PC du stream : <a href=\"https://github.com/nuttylmao/smtc-bridge/releases\" target=\"_blank\" rel=\"noopener\">télécharger SMTC Bridge</a>",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "smtcBridgePort",
+			"label": "Port SMTC Bridge",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 5000,
+			"group": "Connexion",
+			"showIf": { "id": "paletteSource", "value": "musique" }
+		},
+		{
+			"id": "colorCount",
+			"label": "Nombre de couleurs",
+			"type": "segmented",
+			"options": [
+				{ "value": "mono", "label": "Mono" },
+				{ "value": "duo", "label": "Duo" },
+				{ "value": "trio", "label": "Trio" }
+			],
+			"defaultValue": "mono",
+			"group": "Couleurs"
+		},
+		{
+			"id": "colorPick",
+			"label": "Choix des teintes",
+			"type": "segmented",
+			"options": [
+				{ "value": "auto", "label": "Automatique" },
+				{ "value": "manual", "label": "Manuel" }
+			],
+			"defaultValue": "auto",
+			"group": "Couleurs",
+			"showIf": { "id": "paletteSource", "notValue": "perso" }
+		},
+		{
+			"id": "ambiance",
+			"label": "Ambiance",
+			"description": "Vive : teintes saturées. Douce : teintes adoucies. Sombre : teintes profondes",
+			"type": "segmented",
+			"options": [
+				{ "value": "vive", "label": "Vive" },
+				{ "value": "douce", "label": "Douce" },
+				{ "value": "sombre", "label": "Sombre" }
+			],
+			"defaultValue": "vive",
+			"group": "Couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "auto" }] }
+		},
+		{
+			"id": "role1",
+			"label": "Teinte 1",
+			"type": "select",
+			"options": [
+				{ "value": "Vibrant", "label": "Vibrant" },
+				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
+				{ "value": "LightVibrant", "label": "Light Vibrant" },
+				{ "value": "Muted", "label": "Muted" },
+				{ "value": "DarkMuted", "label": "Dark Muted" },
+				{ "value": "LightMuted", "label": "Light Muted" }
+			],
+			"defaultValue": "Vibrant",
+			"group": "Couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }] }
+		},
+		{
+			"id": "role2",
+			"label": "Teinte 2",
+			"type": "select",
+			"options": [
+				{ "value": "Vibrant", "label": "Vibrant" },
+				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
+				{ "value": "LightVibrant", "label": "Light Vibrant" },
+				{ "value": "Muted", "label": "Muted" },
+				{ "value": "DarkMuted", "label": "Dark Muted" },
+				{ "value": "LightMuted", "label": "Light Muted" }
+			],
+			"defaultValue": "DarkVibrant",
+			"group": "Couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }, { "id": "colorCount", "value": ["duo", "trio"] }] }
+		},
+		{
+			"id": "role3",
+			"label": "Teinte 3",
+			"type": "select",
+			"options": [
+				{ "value": "Vibrant", "label": "Vibrant" },
+				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
+				{ "value": "LightVibrant", "label": "Light Vibrant" },
+				{ "value": "Muted", "label": "Muted" },
+				{ "value": "DarkMuted", "label": "Dark Muted" },
+				{ "value": "LightMuted", "label": "Light Muted" }
+			],
+			"defaultValue": "LightVibrant",
+			"group": "Couleurs",
+			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }, { "id": "colorCount", "value": "trio" }] }
+		},
+		{
+			"id": "autoShades",
+			"label": "Nuances automatiques",
+			"description": "Ajoute une version claire et une version sombre de la teinte pour garder du relief",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Couleurs",
+			"showIf": { "id": "colorCount", "value": "mono" }
+		},
+		{
+			"id": "background",
+			"label": "Fond plein",
+			"description": "Remplit la trame avec la teinte la plus sombre. Désactivé : fond transparent",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Couleurs"
+		},
+		{
+			"id": "theme",
+			"label": "Thème",
+			"type": "select",
+			"options": [
+				{ "value": "brouillard", "label": "Brouillard" },
+				{ "value": "vagues", "label": "Vagues (Bézier)" },
+				{ "value": "aurore", "label": "Aurore" },
+				{ "value": "bokeh", "label": "Bokeh" },
+				{ "value": "geometrique", "label": "Géométrique" },
+				{ "value": "lave", "label": "Lave" },
+				{ "value": "video", "label": "Vidéo importée" }
+			],
+			"defaultValue": "brouillard",
+			"group": "Trame"
+		},
+		{
+			"id": "videoUrl",
+			"label": "URL de la vidéo",
+			"description": "Boucle blanche sur fond noir (MP4) ou sur fond transparent (WebM)",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "https://…/boucle.mp4",
+			"group": "Trame",
+			"showIf": { "id": "theme", "value": "video" }
+		},
+		{
+			"id": "videoBackground",
+			"label": "Fond de la vidéo",
+			"type": "segmented",
+			"options": [
+				{ "value": "noir", "label": "Noir" },
+				{ "value": "transparent", "label": "Transparent" }
+			],
+			"defaultValue": "noir",
+			"group": "Trame",
+			"showIf": { "id": "theme", "value": "video" }
+		},
+		{
+			"id": "videoFill",
+			"label": "Remplissage du blanc",
+			"type": "select",
+			"options": [
+				{ "value": "couleur", "label": "Couleur unie" },
+				{ "value": "degrade", "label": "Dégradé de la palette" },
+				{ "value": "trame", "label": "Trame animée" }
+			],
+			"defaultValue": "degrade",
+			"group": "Trame",
+			"showIf": { "id": "theme", "value": "video" }
+		},
+		{
+			"id": "videoTone",
+			"label": "Teinte",
+			"type": "select",
+			"options": [
+				{ "value": "hi", "label": "Claire" },
+				{ "value": "mid", "label": "Moyenne" },
+				{ "value": "bg", "label": "Sombre" }
+			],
+			"defaultValue": "mid",
+			"group": "Trame",
+			"showIf": { "id": "videoFill", "value": "couleur" }
+		},
+		{
+			"id": "videoTheme",
+			"label": "Trame de remplissage",
+			"type": "select",
+			"options": [
+				{ "value": "brouillard", "label": "Brouillard" },
+				{ "value": "vagues", "label": "Vagues (Bézier)" },
+				{ "value": "aurore", "label": "Aurore" },
+				{ "value": "bokeh", "label": "Bokeh" },
+				{ "value": "geometrique", "label": "Géométrique" },
+				{ "value": "lave", "label": "Lave" }
+			],
+			"defaultValue": "brouillard",
+			"group": "Trame",
+			"showIf": { "id": "videoFill", "value": "trame" }
+		},
+		{
+			"id": "videoRate",
+			"label": "Vitesse de lecture",
+			"description": "En %",
+			"type": "number",
+			"min": 25,
+			"max": 300,
+			"step": 5,
+			"defaultValue": 100,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": { "id": "theme", "value": "video" }
+		},
+		{
+			"id": "speed",
+			"label": "Vitesse de la trame",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 300,
+			"step": 5,
+			"defaultValue": 100,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": { "any": [{ "id": "theme", "notValue": "video" }, { "id": "videoFill", "value": ["trame", "degrade"] }] }
+		},
+		{
+			"id": "density",
+			"label": "Densité",
+			"type": "segmented",
+			"options": [
+				{ "value": "faible", "label": "Faible" },
+				{ "value": "moyenne", "label": "Moyenne" },
+				{ "value": "forte", "label": "Forte" }
+			],
+			"defaultValue": "moyenne",
+			"group": "Trame",
+			"showIf": { "any": [{ "id": "theme", "notValue": "video" }, { "id": "videoFill", "value": "trame" }] }
+		},
+		{
+			"id": "shapeKind",
+			"label": "Formes",
+			"type": "select",
+			"options": [
+				{ "value": "triangles", "label": "Triangles" },
+				{ "value": "hexagones", "label": "Hexagones" },
+				{ "value": "losanges", "label": "Losanges" },
+				{ "value": "cercles", "label": "Cercles" }
+			],
+			"defaultValue": "triangles",
+			"group": "Trame",
+			"showIf": { "any": [{ "id": "theme", "value": "geometrique" }, { "all": [{ "id": "videoFill", "value": "trame" }, { "id": "videoTheme", "value": "geometrique" }] }] }
+		},
+		{
+			"id": "lineWidth",
+			"label": "Épaisseur des lignes",
+			"description": "En pixels",
+			"type": "number",
+			"min": 1,
+			"max": 20,
+			"defaultValue": 2,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": { "any": [{ "id": "theme", "value": "vagues" }, { "all": [{ "id": "videoFill", "value": "trame" }, { "id": "videoTheme", "value": "vagues" }] }] }
+		},
+		{
+			"id": "grain",
+			"label": "Grain",
+			"description": "Fine texture « film » par-dessus la trame",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Trame"
+		},
+		{
+			"id": "grainAmount",
+			"label": "Intensité du grain",
+			"description": "En %",
+			"type": "number",
+			"min": 1,
+			"max": 100,
+			"defaultValue": 15,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": "grain"
+		},
+		{
+			"id": "format",
+			"label": "Format",
+			"description": "Mettez les mêmes dimensions à la source navigateur dans OBS",
+			"type": "select",
+			"options": [
+				{ "value": "2560x1440", "label": "1440p paysage (2560 × 1440)" },
+				{ "value": "1440x2560", "label": "1440p portrait (1440 × 2560)" },
+				{ "value": "1920x1080", "label": "1080p paysage (1920 × 1080)" },
+				{ "value": "1080x1920", "label": "1080p portrait (1080 × 1920)" },
+				{ "value": "2560x160", "label": "Chat horizontal 1440p (2560 × 160)" },
+				{ "value": "1920x120", "label": "Chat horizontal 1080p (1920 × 120)" },
+				{ "value": "1080x1080", "label": "Carré (1080 × 1080)" },
+				{ "value": "custom", "label": "Personnalisé" }
+			],
+			"defaultValue": "2560x1440",
+			"group": "Forme et dimensions"
+		},
+		{
+			"id": "customWidth",
+			"label": "Largeur",
+			"description": "En pixels",
+			"type": "number",
+			"min": 16,
+			"max": 7680,
+			"defaultValue": 1920,
+			"inputWidth": 90,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "format", "value": "custom" }
+		},
+		{
+			"id": "customHeight",
+			"label": "Hauteur",
+			"description": "En pixels",
+			"type": "number",
+			"min": 16,
+			"max": 7680,
+			"defaultValue": 1080,
+			"inputWidth": 90,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "format", "value": "custom" }
+		},
+		{
+			"id": "shape",
+			"label": "Forme",
+			"type": "select",
+			"options": [
+				{ "value": "plein", "label": "Plein cadre" },
+				{ "value": "arrondi", "label": "Rectangle arrondi" },
+				{ "value": "pilule", "label": "Pilule" },
+				{ "value": "cercle", "label": "Cercle" },
+				{ "value": "cadre", "label": "Cadre seul (bordure)" }
+			],
+			"defaultValue": "plein",
+			"group": "Forme et dimensions"
+		},
+		{
+			"id": "radius",
+			"label": "Arrondi",
+			"description": "En pixels",
+			"type": "number",
+			"min": 0,
+			"max": 1000,
+			"defaultValue": 24,
+			"inputWidth": 72,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "shape", "value": ["arrondi", "cadre"] }
+		},
+		{
+			"id": "frameWidth",
+			"label": "Épaisseur du cadre",
+			"description": "En pixels",
+			"type": "number",
+			"min": 1,
+			"max": 500,
+			"defaultValue": 12,
+			"inputWidth": 72,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "shape", "value": "cadre" }
+		},
+		{
+			"id": "margin",
+			"label": "Marge",
+			"description": "Espace vide autour de la forme, en pixels",
+			"type": "number",
+			"min": 0,
+			"max": 1000,
+			"defaultValue": 0,
+			"inputWidth": 72,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "shape", "notValue": "plein" }
+		},
+		{
+			"id": "feather",
+			"label": "Fondu des bords",
+			"type": "checkbox",
+			"defaultValue": false,
+			"group": "Forme et dimensions",
+			"showIf": { "id": "shape", "notValue": "plein" }
+		},
+		{
+			"id": "featherSize",
+			"label": "Largeur du fondu",
+			"description": "En pixels",
+			"type": "number",
+			"min": 1,
+			"max": 300,
+			"defaultValue": 16,
+			"inputWidth": 72,
+			"group": "Forme et dimensions",
+			"showIf": "feather"
+		},
+		{
+			"id": "opacity",
+			"label": "Opacité",
+			"description": "En %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 100,
+			"inputWidth": 72,
+			"group": "Forme et dimensions"
+		},
+		{
+			"id": "quality",
+			"label": "Qualité de rendu",
+			"description": "50 % est invisible sur les trames floues (brouillard, aurore, bokeh) et soulage la carte graphique",
+			"type": "segmented",
+			"options": [
+				{ "value": "100", "label": "100 %" },
+				{ "value": "75", "label": "75 %" },
+				{ "value": "50", "label": "50 %" }
+			],
+			"defaultValue": "100",
+			"group": "Rendu"
+		},
+		{
+			"id": "fps",
+			"label": "Images par seconde",
+			"type": "segmented",
+			"options": [
+				{ "value": "30", "label": "30" },
+				{ "value": "60", "label": "60" }
+			],
+			"defaultValue": "30",
+			"group": "Rendu"
+		},
+		{
+			"id": "previewSource",
+			"label": "Couleurs de l’aperçu",
+			"description": "Pour tester le rendu. N’est jamais dans l’URL copiée pour OBS",
+			"type": "select",
+			"options": [
+				{ "value": "reel", "label": "Source réelle" },
+				{ "value": "image", "label": "Image importée" },
+				{ "value": "jeu", "label": "Jeu (par son nom)" }
+			],
+			"defaultValue": "reel",
+			"previewOnly": true,
+			"group": "Aperçu"
+		},
+		{
+			"id": "previewImage",
+			"label": "Image de test",
+			"description": "Pochette, jaquette, photo…",
+			"type": "image",
+			"maxWidth": 400,
+			"maxHeight": 400,
+			"group": "Aperçu",
+			"showIf": { "id": "previewSource", "value": "image" }
+		},
+		{
+			"id": "previewGame",
+			"label": "Nom du jeu",
+			"description": "Nom exact de la catégorie Twitch. Les jaquettes viennent d’<a href=\"https://www.igdb.com\" target=\"_blank\" rel=\"noopener\">IGDB</a>",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "Hollow Knight",
+			"previewOnly": true,
+			"group": "Aperçu",
+			"showIf": { "id": "previewSource", "value": "jeu" }
+		},
+		{
+			"id": "previewPalette",
+			"label": "Afficher la palette",
+			"description": "Image analysée et teintes trouvées, à droite de l’aperçu",
+			"type": "checkbox",
+			"defaultValue": true,
+			"previewOnly": true,
+			"group": "Aperçu"
+		}
+	]
+}
