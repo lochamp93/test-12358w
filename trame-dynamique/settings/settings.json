@@ -537,56 +537,20 @@
 			"type": "select",
 			"options": [
 				{
-					"value": "halo",
-					"label": "Halo"
-				},
-				{
-					"value": "brouillard",
-					"label": "Brouillard"
+					"value": "aurore",
+					"label": "Aurore"
 				},
 				{
 					"value": "vagues",
 					"label": "Bézier"
 				},
 				{
-					"value": "aurore",
-					"label": "Aurore"
-				},
-				{
 					"value": "bokeh",
 					"label": "Bokeh"
 				},
 				{
-					"value": "lave",
-					"label": "Lave"
-				},
-				{
-					"value": "mosaique",
-					"label": "Mosaïque"
-				},
-				{
-					"value": "plasma",
-					"label": "Plasma rétro"
-				},
-				{
-					"value": "disco",
-					"label": "Disco"
-				},
-				{
-					"value": "matrix",
-					"label": "Matrix"
-				},
-				{
-					"value": "starfield",
-					"label": "Starfield"
-				},
-				{
-					"value": "synthwave",
-					"label": "Synthwave"
-				},
-				{
-					"value": "ondes",
-					"label": "Ondes"
+					"value": "brouillard",
+					"label": "Brouillard"
 				},
 				{
 					"value": "cretes",
@@ -595,6 +559,38 @@
 				{
 					"value": "degrade",
 					"label": "Dégradé fluide"
+				},
+				{
+					"value": "disco",
+					"label": "Disco"
+				},
+				{
+					"value": "halo",
+					"label": "Halo"
+				},
+				{
+					"value": "matrix",
+					"label": "Matrix"
+				},
+				{
+					"value": "mosaique",
+					"label": "Mosaïque"
+				},
+				{
+					"value": "ondes",
+					"label": "Ondes"
+				},
+				{
+					"value": "plasma",
+					"label": "Plasma rétro"
+				},
+				{
+					"value": "starfield",
+					"label": "Starfield"
+				},
+				{
+					"value": "synthwave",
+					"label": "Synthwave"
 				},
 				{
 					"value": "video",
@@ -694,56 +690,20 @@
 			"type": "select",
 			"options": [
 				{
-					"value": "halo",
-					"label": "Halo"
-				},
-				{
-					"value": "brouillard",
-					"label": "Brouillard"
+					"value": "aurore",
+					"label": "Aurore"
 				},
 				{
 					"value": "vagues",
 					"label": "Bézier"
 				},
 				{
-					"value": "aurore",
-					"label": "Aurore"
-				},
-				{
 					"value": "bokeh",
 					"label": "Bokeh"
 				},
 				{
-					"value": "lave",
-					"label": "Lave"
-				},
-				{
-					"value": "mosaique",
-					"label": "Mosaïque"
-				},
-				{
-					"value": "plasma",
-					"label": "Plasma rétro"
-				},
-				{
-					"value": "disco",
-					"label": "Disco"
-				},
-				{
-					"value": "matrix",
-					"label": "Matrix"
-				},
-				{
-					"value": "starfield",
-					"label": "Starfield"
-				},
-				{
-					"value": "synthwave",
-					"label": "Synthwave"
-				},
-				{
-					"value": "ondes",
-					"label": "Ondes"
+					"value": "brouillard",
+					"label": "Brouillard"
 				},
 				{
 					"value": "cretes",
@@ -752,6 +712,38 @@
 				{
 					"value": "degrade",
 					"label": "Dégradé fluide"
+				},
+				{
+					"value": "disco",
+					"label": "Disco"
+				},
+				{
+					"value": "halo",
+					"label": "Halo"
+				},
+				{
+					"value": "matrix",
+					"label": "Matrix"
+				},
+				{
+					"value": "mosaique",
+					"label": "Mosaïque"
+				},
+				{
+					"value": "ondes",
+					"label": "Ondes"
+				},
+				{
+					"value": "plasma",
+					"label": "Plasma rétro"
+				},
+				{
+					"value": "starfield",
+					"label": "Starfield"
+				},
+				{
+					"value": "synthwave",
+					"label": "Synthwave"
 				}
 			],
 			"defaultValue": "brouillard",
@@ -974,7 +966,6 @@
 							"vagues",
 							"aurore",
 							"bokeh",
-							"lave",
 							"matrix",
 							"starfield",
 							"ondes",
@@ -994,7 +985,6 @@
 									"vagues",
 									"aurore",
 									"bokeh",
-									"lave",
 									"matrix",
 									"starfield",
 									"ondes",
@@ -1469,47 +1459,6 @@
 			}
 		},
 		{
-			"id": "lavaBlur",
-			"label": "Douceur des bords",
-			"type": "select",
-			"options": [
-				{
-					"value": "leger",
-					"label": "Légère"
-				},
-				{
-					"value": "moyen",
-					"label": "Moyenne"
-				},
-				{
-					"value": "fort",
-					"label": "Forte"
-				}
-			],
-			"defaultValue": "moyen",
-			"group": "Trame",
-			"showIf": {
-				"any": [
-					{
-						"id": "theme",
-						"value": "lave"
-					},
-					{
-						"all": [
-							{
-								"id": "videoFill",
-								"value": "trame"
-							},
-							{
-								"id": "videoTheme",
-								"value": "lave"
-							}
-						]
-					}
-				]
-			}
-		},
-		{
 			"id": "blur",
 			"label": "Flou",
 			"description": "En pixels, sur toute la trame (comme un filtre de flou dans OBS). 0 : aucun",
@@ -1731,45 +1680,6 @@
 			"defaultValue": 100,
 			"inputWidth": 72,
 			"group": "Forme et dimensions"
-		},
-		{
-			"id": "quality",
-			"label": "Qualité de rendu",
-			"description": "50 % est invisible sur les trames floues (brouillard, aurore, bokeh) et soulage la carte graphique",
-			"type": "select",
-			"options": [
-				{
-					"value": "100",
-					"label": "100 %"
-				},
-				{
-					"value": "75",
-					"label": "75 %"
-				},
-				{
-					"value": "50",
-					"label": "50 %"
-				}
-			],
-			"defaultValue": "100",
-			"group": "Rendu"
-		},
-		{
-			"id": "fps",
-			"label": "Images par seconde",
-			"type": "select",
-			"options": [
-				{
-					"value": "30",
-					"label": "30"
-				},
-				{
-					"value": "60",
-					"label": "60"
-				}
-			],
-			"defaultValue": "30",
-			"group": "Rendu"
 		},
 		{
 			"id": "previewSource",

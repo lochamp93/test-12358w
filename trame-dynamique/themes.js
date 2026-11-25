@@ -289,46 +289,6 @@ const THEMES = {
 		}
 	},
 
-	// Lave : bulles molles qui montent, se déforment et fusionnent (lampe à lave)
-	// Calque à mi-résolution, filtre « gooey » puis flou pour des bords doux
-	lave(ctx, w, h, t, set, o) {
-		const n = [4, 7, 11][o.density];
-		const blobs = Particles('lave2', n, (r) => ({ x: 0.1 + r() * 0.8, f: 0.012 + r() * 0.025, ph: r() * 6.28, s: 0.11 + r() * 0.11, tone: r() < 0.55, wob: 0.6 + r() * 0.8 }));
-		const layer = o.layer;
-		const lw = Math.max(16, Math.round(w / 2)), lh = Math.max(16, Math.round(h / 2));
-		if (layer.width !== lw || layer.height !== lh) { layer.width = lw; layer.height = lh; }
-		const lc = layer.getContext('2d');
-		lc.clearRect(0, 0, lw, lh);
-		const big = Math.min(lw, lh);
-		const blob = (x, y, rad, col, ph) => {
-			// Bulle déformée : 3 cercles qui oscillent autour du centre
-			lc.fillStyle = Rgba(col, 1);
-			for (let j = 0; j < 3; j++) {
-				const a = ph + j * 2.1 + t * 0.4;
-				lc.beginPath();
-				lc.arc(x + Math.cos(a) * rad * 0.35, y + Math.sin(a * 1.3) * rad * 0.45, rad * (0.62 + 0.12 * Math.sin(t * 0.7 + ph + j)), 0, 6.2832);
-				lc.fill();
-			}
-		};
-		for (const b of blobs) {
-			const y = lh * (0.5 + 0.55 * Math.sin(t * b.f * 6.28 + b.ph));
-			const x = lw * (b.x + 0.06 * Math.sin(t * 0.25 * b.wob + b.ph));
-			blob(x, y, b.s * big, ToneAt(set, blobs.indexOf(b)), b.ph);
-		}
-		// Bas et haut de la lampe : des masses molles, pas des bandes droites
-		for (let i = 0; i < 8; i++) {
-			const x = lw * (i + 0.5) / 8;
-			blob(x + Math.sin(t * 0.3 + i) * big * 0.06, lh * (1.1 + 0.03 * Math.sin(t * 0.5 + i * 1.3)), big * 0.26, set.mid, i * 1.7);
-			if (i % 2) blob(x + Math.cos(t * 0.27 + i) * big * 0.06, -lh * 0.1, big * 0.2, set.mid, i * 2.3);
-		}
-		const soft = { leger: 0.006, moyen: 0.014, fort: 0.026 }[o.lavaBlur] || 0.014;
-		ctx.save();
-		ctx.imageSmoothingEnabled = true;
-		ctx.filter = `url(#goo) blur(${Math.max(1, Math.min(w, h) * soft)}px)`;
-		ctx.drawImage(layer, 0, 0, w, h);
-		ctx.restore();
-	},
-
 	// Mosaïque : grille de gros pixels qui s'allument et s'éteignent en vagues (écran LED)
 	mosaique(ctx, w, h, t, set, o) {
 		const cell = Math.max(4, o.pixelSize * o.unit);
@@ -387,46 +347,52 @@ const THEMES = {
 		ctx.restore();
 	},
 
-	// Disco : reflets carrés d'une boule à facettes qui glissent sur l'écran et scintillent
+	// Disco : tout l'écran est couvert de facettes carrées, comme la surface d'une boule à
+	// facettes. Les facettes reflètent la lumière au hasard (couleurs de la palette), et un
+	// reflet plus large balaie lentement la surface, comme quand la boule tourne.
 	disco(ctx, w, h, t, set, o) {
 		const size = Math.max(6, o.discoSize * o.unit);
-		const rows = Math.ceil(h / (size * 1.6)) + 1;
-		const perRow = Math.ceil(w / (size * 2.2)) + 2;
-		const spin = t * 0.06; // rotation de la boule
-		const sparkle = { faible: 0.97, moyen: 0.93, fort: 0.87 }[o.discoSparkle] ?? 0.93;
-		ctx.save();
-		for (let r = 0; r < rows; r++) {
-			const rnd = SeededRandom(r * 7919 + 13);
-			const y0 = (r + 0.5) * h / rows;
-			const lane = 0.7 + 0.6 * rnd(); // vitesse propre à chaque rangée (courbure de la boule)
-			for (let k = 0; k < perRow; k++) {
-				const base = rnd(), tone = rnd(), ph = rnd() * 100, jitter = rnd() - 0.5;
-				let u = ((base + k / perRow + spin * lane) % 1 + 1) % 1;
-				// Projection sur la sphère : les reflets vont plus vite au centre, se tassent sur les bords
-				const xx = (0.5 - 0.5 * Math.cos(u * Math.PI)) * (w + size * 2) - size;
-				const edge = Math.sin(u * Math.PI);
-				const sw = size * (0.35 + 0.65 * edge), sh = size * 0.8;
-				const y = y0 + jitter * size * 0.8;
-				const flick = Noise2(ph + t * 0.8, r);
-				const a = (0.25 + 0.6 * flick) * (0.3 + 0.7 * edge);
+		const gap = Math.max(1, size * 0.08);
+		const cols = Math.ceil(w / size) + 1, rows = Math.ceil(h / size) + 1;
+		const ox = (w - cols * size) / 2, oy = (h - rows * size) / 2;
+		const freq = { faible: 0.82, moyen: 0.72, fort: 0.6 }[o.discoSparkle] ?? 0.72;
+		const base = MixRgb(set.bg, [0, 0, 0], 0.35);
+		// Fond : joints sombres entre les facettes
+		ctx.fillStyle = Rgba(MixRgb(set.bg, [0, 0, 0], 0.7), o.background ? 1 : 0.85);
+		ctx.fillRect(0, 0, w, h);
+		const sweep = t * 0.12; // reflet large qui balaie (rotation de la boule)
+		for (let j = 0; j < rows; j++) {
+			for (let i = 0; i < cols; i++) {
+				const seed = i * 73.1 + j * 37.7;
+				// Chaque facette a une inclinaison propre : teinte et éclat de base
+				const tilt = Noise2(i * 0.9 + 3.3, j * 0.9 + 7.7);
+				const tone = Noise2(i * 0.31 + 50, j * 0.31 + 20);
+				// Reflet qui balaie en diagonale
+				// Un seul grand reflet : sa position avance en diagonale et revient
+				const u = (i / cols) * 0.75 + (j / rows) * 0.25;
+				const pos = ((sweep % 1.6) + 1.6) % 1.6 - 0.3;
+				const sw = Math.exp(-Math.pow((u - pos) / 0.12, 2)) * 0.5;
+				// Éclat aléatoire : la facette « attrape » la lumière un court instant
+				const flash = Smooth(freq, 1, Noise2(seed * 0.13 + t * 1.6, seed * 0.07 - t * 0.9));
+				const lum = 0.1 + 0.2 * tilt + sw + flash * 0.9;
 				const col = Tone(set, tone);
-				ctx.fillStyle = Rgba(col, a);
-				ctx.shadowColor = Rgba(col, a);
-				ctx.shadowBlur = size * 0.5;
-				ctx.fillRect(xx - sw / 2, y - sh / 2, sw, sh);
-				// Éclat : petite étoile blanche par moments
-				if (flick > sparkle) {
-					const g = (flick - sparkle) / (1 - sparkle);
-					const L = size * (0.8 + 1.6 * g);
-					ctx.shadowBlur = size;
-					ctx.shadowColor = 'rgba(255,255,255,0.9)';
-					ctx.fillStyle = `rgba(255,255,255,${0.5 + 0.5 * g})`;
-					ctx.fillRect(xx - L, y - 1.5 * o.unit, L * 2, 3 * o.unit);
-					ctx.fillRect(xx - 1.5 * o.unit, y - L, 3 * o.unit, L * 2);
+				const c = lum < 0.5 ? MixRgb(base, col, lum * 2) : MixRgb(col, [255, 255, 255], Math.min(0.75, (lum - 0.5) * 1.1));
+				const x = ox + i * size, y = oy + j * size;
+				ctx.fillStyle = Rgba(c, 1);
+				ctx.fillRect(x + gap / 2, y + gap / 2, size - gap, size - gap);
+				if (flash > 0.55) {
+					// Petite étoile sur les éclats les plus forts
+					const L = size * (0.6 + flash);
+					ctx.save();
+					ctx.globalCompositeOperation = 'lighter';
+					ctx.fillStyle = `rgba(255,255,255,${(flash - 0.55) * 1.6})`;
+					const cx = x + size / 2, cy = y + size / 2, th = Math.max(1, size * 0.06);
+					ctx.fillRect(cx - L, cy - th / 2, L * 2, th);
+					ctx.fillRect(cx - th / 2, cy - L, th, L * 2);
+					ctx.restore();
 				}
 			}
 		}
-		ctx.restore();
 	},
 
 	// Matrix : colonnes de caractères qui tombent, tête claire et traînée qui s'éteint
@@ -435,27 +401,28 @@ const THEMES = {
 		const chars = o.matrixChars;
 		const cols = Math.ceil(w / size);
 		const rows = Math.ceil(h / size) + 1;
-		const fill = [0.45, 0.7, 1][o.density];
+		const fill = [0.45, 0.8, 1][o.density];
+		const streams = [1, 1, 3][o.density]; // forte : plusieurs pluies par colonne
 		ctx.save();
 		ctx.font = `600 ${Math.round(size * 0.9)}px 'SF Mono', Consolas, 'Courier New', monospace`;
 		ctx.textAlign = 'center';
 		ctx.textBaseline = 'top';
 		const light = MixRgb(set.hi, [255, 255, 255], 0.55);
-		for (let c = 0; c < cols; c++) {
+		for (let c = 0; c < cols * streams; c++) {
 			const rnd = SeededRandom(c * 104729 + 7);
 			if (rnd() > fill) continue;
 			const speed = 6 + rnd() * 10;              // cases par seconde
-			const len = 8 + Math.floor(rnd() * 18);   // longueur de la traînée
+			const len = 8 + Math.floor(rnd() * (o.density === 2 ? 26 : 18));   // longueur de la traînée
 			const ph = rnd() * 50, tone = rnd();
 			const cycle = rows + len + 4 + Math.floor(rnd() * 12);
 			const head = ((t * speed + ph * cycle) % cycle);
 			const col = Tone(set, tone);
-			const x = c * size + size / 2;
+			const x = (c % cols) * size + size / 2;
 			for (let k = 0; k < len; k++) {
 				const row = Math.floor(head) - k;
 				if (row < 0 || row >= rows) continue;
 				// Le caractère d'une case change de temps en temps
-				const n = Math.floor(Noise2(c * 3.1 + row * 0.7, Math.floor(t * 3 + c) * 0.5) * 9973 + c * 31 + row * 17);
+				const n = Math.floor(Noise2((c % cols) * 3.1 + row * 0.7, Math.floor(t * 3 + c) * 0.5) * 9973 + (c % cols) * 31 + row * 17);
 				const ch = chars[n % chars.length];
 				const a = k === 0 ? 1 : Math.pow(1 - k / len, 1.4) * 0.9;
 				ctx.fillStyle = k === 0 ? Rgba(light, 1) : Rgba(col, a);

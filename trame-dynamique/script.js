@@ -24,7 +24,7 @@ let currentSet = null, fromSet = null, targetSet = null;
 let transitionStart = 0, transitionDuration = 0;
 
 // Calques hors écran
-const layerCanvas = document.createElement('canvas');   // lave
+const layerCanvas = document.createElement('canvas');   // calque de travail des thèmes
 const fillCanvas = document.createElement('canvas');    // remplissage de la vidéo
 const maskCanvas = document.createElement('canvas');    // masque de la vidéo
 let noisePattern = null;
@@ -549,7 +549,7 @@ function Resize() {
 		cssW = stageEl.clientWidth || window.innerWidth;
 		cssH = stageEl.clientHeight || window.innerHeight;
 	}
-	const q = (Number(ws.values.quality) || 100) / 100;
+	const q = RenderPreset().quality;
 	const dpr = ws.demo ? Math.min(2, window.devicePixelRatio || 1) : 1;
 	const w = Math.max(1, Math.round(cssW * q * dpr));
 	const h = Math.max(1, Math.round(cssH * q * dpr));
@@ -558,6 +558,25 @@ function Resize() {
 		canvas.height = h;
 		gooBlurEl.setAttribute('stdDeviation', String(Math.max(4, Math.min(w, h) * 0.022)));
 	}
+}
+
+// Rendu choisi automatiquement selon le thème (compromis qualité / fluidité / carte graphique) :
+// les trames floues sont calculées à mi-résolution (la différence ne se voit pas),
+// les trames nettes à pleine résolution, et seules les trames rapides passent à 60 images/s
+const RENDER_PRESETS = {
+	aurore: [0.5, 30], bokeh: [0.6, 30], brouillard: [0.5, 30], degrade: [0.5, 30], halo: [0.5, 30],
+	cretes: [1, 30], disco: [1, 30], matrix: [1, 30], mosaique: [1, 30], ondes: [0.75, 30], plasma: [1, 30],
+	starfield: [0.75, 60], synthwave: [0.75, 60], vagues: [0.75, 60], video: [0.75, 30]
+};
+function RenderPreset() {
+	const s = ws.values;
+	const name = s.theme === 'video' && s.videoFill === 'trame' ? s.videoTheme : s.theme;
+	let [quality, fps] = RENDER_PRESETS[name] || [0.75, 30];
+	if (Number(s.blur) >= 10) quality = Math.min(quality, 0.5); // flou fort : la résolution ne se voit plus
+	// Très grandes sources : on plafonne le nombre de pixels calculés
+	const px = (stageEl.clientWidth || window.innerWidth) * (stageEl.clientHeight || window.innerHeight);
+	if (!ws.demo && px * quality * quality > 2560 * 1440) quality = Math.sqrt(2560 * 1440 / px);
+	return { quality, fps };
 }
 
 // Pixels de la source → pixels du canvas
@@ -686,7 +705,6 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		haloSize: Number(s.haloSize) || 100,
 		haloBlur: s.haloBlur,
 		haloBlack: withBackground ? Number(s.haloBlack) || 0 : 0,
-		lavaBlur: s.lavaBlur,
 		amplitude: { faible: 0.4, moyenne: 1, forte: 1.6 }[s.amplitude] ?? 1,
 		background: withBackground,
 		pixelSize: Number(s.pixelSize) || 40,
@@ -707,7 +725,7 @@ let animTime = 0, lastFrame = 0, lastDraw = 0;
 function Frame(now) {
 	requestAnimationFrame(Frame);
 	if (!ws) return;
-	const fps = Number(ws.values.fps) || 30;
+	const fps = RenderPreset().fps;
 	if (now - lastDraw < 1000 / fps - 2) return;
 	const dt = lastFrame ? Math.min(0.1, (now - lastFrame) / 1000) : 0;
 	lastFrame = now;
