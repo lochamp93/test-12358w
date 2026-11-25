@@ -332,7 +332,6 @@ function StartChannelSource() {
 // --- Musique en cours (SMTC Bridge de nutty) ---
 
 let currentMusicKey = null;
-let lastAppsText = '';
 
 function StartMusicSource() {
 	const s = ws.values;
@@ -344,12 +343,10 @@ function StartMusicSource() {
 			data = await r.json();
 		} catch (e) {
 			SetStatus('SMTC Bridge ne répond pas : lancez-le sur le PC', 'warn');
-			PostApps('SMTC Bridge ne répond pas');
 			return;
 		}
 		if (data.error) { SetStatus(`SMTC Bridge : ${data.error}`, 'warn'); return; }
 		const sessions = Array.isArray(data.sessions) ? data.sessions : [];
-		PostApps(sessions.length ? [...new Set(sessions.map(x => x.source_app_id).filter(Boolean))].join(', ') : 'Aucune application ne joue de média');
 
 		const session = PickMusicSession(data, sessions);
 		if (!session) {
@@ -371,11 +368,6 @@ function StartMusicSource() {
 	sourceTimers.push(setInterval(poll, 1000));
 }
 
-function PostApps(text) {
-	if (text === lastAppsText) return;
-	lastAppsText = text;
-	PostInfo('detectedApps', text, '');
-}
 
 // Lecture en cours : Windows renvoie 4 (Playing) ou le texte « Playing » selon les versions
 function IsPlaying(session) {

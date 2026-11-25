@@ -52,7 +52,7 @@
 		{
 			"id": "includedApps",
 			"label": "Applications incluses",
-			"description": "Prioritaires, dans l’ordre (séparées par des virgules). Vide : toutes",
+			"description": "Prioritaires, dans l’ordre (séparées par des virgules). Vide : toutes. Sources : <a href=\"http://127.0.0.1:5000/sessions\" target=\"_blank\" rel=\"noopener\">View active sources</a>",
 			"type": "text",
 			"defaultValue": "",
 			"placeholder": "spotify, chrome",
@@ -65,22 +65,10 @@
 		{
 			"id": "excludedApps",
 			"label": "Applications exclues",
-			"description": "Ignorées (séparées par des virgules)",
+			"description": "Ignorées (séparées par des virgules). Sources : <a href=\"http://127.0.0.1:5000/sessions\" target=\"_blank\" rel=\"noopener\">View active sources</a>",
 			"type": "text",
 			"defaultValue": "",
 			"placeholder": "vlc",
-			"group": "Source des couleurs",
-			"showIf": {
-				"id": "paletteSource",
-				"value": "musique"
-			}
-		},
-		{
-			"id": "detectedApps",
-			"label": "Applications détectées",
-			"description": "Identifiants à recopier dans les listes ci-dessus",
-			"type": "info",
-			"defaultValue": "En attente de SMTC Bridge…",
 			"group": "Source des couleurs",
 			"showIf": {
 				"id": "paletteSource",
@@ -189,13 +177,6 @@
 			}
 		},
 		{
-			"id": "paletteStatus",
-			"label": "État",
-			"type": "info",
-			"defaultValue": "",
-			"group": "Source des couleurs"
-		},
-		{
 			"id": "address",
 			"label": "Adresse Streamer.bot",
 			"type": "text",
@@ -302,6 +283,14 @@
 					"label": "Dominantes"
 				},
 				{
+					"value": "mixte",
+					"label": "Dominantes et accent"
+				},
+				{
+					"value": "accents",
+					"label": "Accents"
+				},
+				{
 					"value": "vive",
 					"label": "Vive"
 				},
@@ -345,6 +334,14 @@
 				{
 					"value": "Dominant3",
 					"label": "Dominante 3"
+				},
+				{
+					"value": "Accent1",
+					"label": "Accent 1"
+				},
+				{
+					"value": "Accent2",
+					"label": "Accent 2"
 				},
 				{
 					"value": "Vibrant",
@@ -402,6 +399,14 @@
 				{
 					"value": "Dominant3",
 					"label": "Dominante 3"
+				},
+				{
+					"value": "Accent1",
+					"label": "Accent 1"
+				},
+				{
+					"value": "Accent2",
+					"label": "Accent 2"
 				},
 				{
 					"value": "Vibrant",
@@ -466,6 +471,14 @@
 				{
 					"value": "Dominant3",
 					"label": "Dominante 3"
+				},
+				{
+					"value": "Accent1",
+					"label": "Accent 1"
+				},
+				{
+					"value": "Accent2",
+					"label": "Accent 2"
 				},
 				{
 					"value": "Vibrant",

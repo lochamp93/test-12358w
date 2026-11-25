@@ -4,16 +4,21 @@
 const ROLES = ['Vibrant', 'Muted', 'DarkVibrant', 'DarkMuted', 'LightVibrant', 'LightMuted'];
 // Couleurs dominantes : les plus présentes dans l'image
 const DOMINANTS = ['Dominant1', 'Dominant2', 'Dominant3'];
-const ALL_KEYS = DOMINANTS.concat(ROLES);
+// Accents : petites touches de couleur vive (un logo rouge, un mot orange…)
+const ACCENTS = ['Accent1', 'Accent2'];
+const ALL_KEYS = DOMINANTS.concat(ACCENTS, ROLES);
 const ROLE_LABELS = {
 	Vibrant: 'Vibrant', Muted: 'Muted', DarkVibrant: 'Dark Vibrant',
 	DarkMuted: 'Dark Muted', LightVibrant: 'Light Vibrant', LightMuted: 'Light Muted',
-	Dominant1: 'Dominante 1', Dominant2: 'Dominante 2', Dominant3: 'Dominante 3'
+	Dominant1: 'Dominante 1', Dominant2: 'Dominante 2', Dominant3: 'Dominante 3',
+	Accent1: 'Accent 1', Accent2: 'Accent 2'
 };
 
 // Rôles choisis par chaque ambiance (le mono prend le premier, le duo les deux premiers)
 const AMBIANCES = {
 	dominantes: ['Dominant1', 'Dominant2', 'Dominant3'],
+	mixte: ['Dominant1', 'Accent1', 'Dominant2'],
+	accents: ['Accent1', 'Accent2', 'Dominant1'],
 	vive: ['Vibrant', 'DarkVibrant', 'LightVibrant'],
 	douce: ['Muted', 'DarkMuted', 'LightMuted'],
 	sombre: ['DarkVibrant', 'DarkMuted', 'Vibrant']
@@ -164,6 +169,31 @@ async function AnalyseImageColors(src) {
 	if (!dom.length) dom = clusters.slice();
 	dom.sort((a, b) => b.share - a.share);
 	dom.slice(0, 3).forEach((cl, i) => { roles[DOMINANTS[i]] = cl.hex; });
+
+	// Accents : on cherche à part les pixels vifs (bien saturés), même s'ils sont peu nombreux,
+	// et on les regroupe par teinte. Une teinte compte dès 0,3 % de l'image.
+	const BINS = 24;
+	const bins = Array.from({ length: BINS }, () => ({ n: 0, r: 0, g: 0, b: 0, s: 0 }));
+	for (const p of px) {
+		const [hh, ss, ll] = RgbToHsl(p);
+		if (ss < 0.25 || ll < 0.18 || ll > 0.85) continue;
+		const bn = bins[Math.floor(hh * BINS) % BINS];
+		bn.n++; bn.r += p[0]; bn.g += p[1]; bn.b += p[2]; bn.s += ss;
+	}
+	// Chaque tranche de teinte est une candidate ; les plus vives et les plus présentes passent devant
+	// Une dominante déjà colorée et proche en couleur n'a pas besoin d'être répétée en accent
+	const domRgb = dom.slice(0, 3).filter(cl => cl.s > 0.25).map(cl => cl.rgb);
+	const accents = bins
+		.filter(bn => bn.n / total >= 0.003)
+		.map(bn => ({ rgb: [bn.r / bn.n, bn.g / bn.n, bn.b / bn.n], score: bn.n * Math.pow(bn.s / bn.n, 3) }))
+		.filter(a => domRgb.every(d => ColorDistance(d, a.rgb) > 60)) // pas une simple dominante
+		.sort((a, b) => b.score - a.score);
+	const kept = [];
+	for (const a of accents) {
+		if (kept.every(k => ColorDistance(k.rgb, a.rgb) > 60)) kept.push(a);
+		if (kept.length === 2) break;
+	}
+	kept.forEach((a, i) => { roles[ACCENTS[i]] = RgbToHex(a.rgb); });
 	return roles;
 }
 
