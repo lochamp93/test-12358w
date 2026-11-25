@@ -8,6 +8,61 @@
 	"demo": true,
 	"settings": [
 		{
+			"id": "address",
+			"label": "Adresse Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion",
+			"showIf": {
+				"id": "paletteSource",
+				"value": [
+					"jeu",
+					"chaine"
+				]
+			}
+		},
+		{
+			"id": "port",
+			"label": "Port Streamer.bot",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 8080,
+			"group": "Connexion",
+			"showIf": {
+				"id": "paletteSource",
+				"value": [
+					"jeu",
+					"chaine"
+				]
+			}
+		},
+		{
+			"id": "smtcBridgeAddress",
+			"label": "Adresse SMTC Bridge",
+			"description": "Télécharger SMTC Bridge - §1 de ce <a href=\"https://nuttylmao.notion.site/Universal-Now-Playing-38f19969b237801e8484c9f387071409\" target=\"_blank\" rel=\"noopener\">lien</a> pour détecter la musique en cours",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Connexion",
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
+		},
+		{
+			"id": "smtcBridgePort",
+			"label": "Port SMTC Bridge",
+			"type": "number",
+			"min": 1,
+			"max": 65535,
+			"defaultValue": 5000,
+			"group": "Connexion",
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
+		},
+		{
 			"id": "paletteSource",
 			"label": "Source des couleurs",
 			"description": "D’où viennent les teintes de la trame",
@@ -32,18 +87,6 @@
 			],
 			"defaultValue": "jeu",
 			"group": "Source des couleurs"
-		},
-		{
-			"id": "smtcBridgeInfo",
-			"label": "SMTC Bridge",
-			"description": "Télécharger le SMTC Bridge §1 de ce <a href=\"https://nuttylmao.notion.site/Universal-Now-Playing-38f19969b237801e8484c9f387071409\" target=\"_blank\" rel=\"noopener\">lien</a> pour détecter la musique en cours",
-			"type": "info",
-			"defaultValue": "",
-			"group": "Source des couleurs",
-			"showIf": {
-				"id": "paletteSource",
-				"value": "musique"
-			}
 		},
 		{
 			"id": "channel",
@@ -186,61 +229,6 @@
 			"showIf": {
 				"id": "paletteSource",
 				"notValue": "perso"
-			}
-		},
-		{
-			"id": "address",
-			"label": "Adresse Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Connexion",
-			"showIf": {
-				"id": "paletteSource",
-				"value": [
-					"jeu",
-					"chaine"
-				]
-			}
-		},
-		{
-			"id": "port",
-			"label": "Port Streamer.bot",
-			"type": "number",
-			"min": 1,
-			"max": 65535,
-			"defaultValue": 8080,
-			"group": "Connexion",
-			"showIf": {
-				"id": "paletteSource",
-				"value": [
-					"jeu",
-					"chaine"
-				]
-			}
-		},
-		{
-			"id": "smtcBridgeAddress",
-			"label": "Adresse SMTC Bridge",
-			"description": "SMTC Bridge doit tourner sur le PC du stream : <a href=\"https://github.com/nuttylmao/smtc-bridge/releases\" target=\"_blank\" rel=\"noopener\">télécharger SMTC Bridge</a>",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Connexion",
-			"showIf": {
-				"id": "paletteSource",
-				"value": "musique"
-			}
-		},
-		{
-			"id": "smtcBridgePort",
-			"label": "Port SMTC Bridge",
-			"type": "number",
-			"min": 1,
-			"max": 65535,
-			"defaultValue": 5000,
-			"group": "Connexion",
-			"showIf": {
-				"id": "paletteSource",
-				"value": "musique"
 			}
 		},
 		{

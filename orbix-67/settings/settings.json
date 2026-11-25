@@ -1,6 +1,22 @@
 {
 	"settings": [
 		{
+			"id": "address",
+			"label": "Adresse",
+			"description": "Adresse du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port",
+			"description": "Port du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "8080",
+			"group": "Streamer.bot"
+		},
+		{
 			"id": "showPlatform",
 			"label": "Afficher la plateforme",
 			"description": "",
@@ -24,7 +40,6 @@
 			"defaultValue": true,
 			"group": "Apparence"
 		},
-		
 		{
 			"id": "showBadges",
 			"label": "Afficher les badges",
@@ -290,7 +305,7 @@
 			"type": "select",
 			"options": [
 				{
-					"value":  2,
+					"value": 2,
 					"label": "Afficher & Mettre en évidence"
 				},
 				{
@@ -501,22 +516,6 @@
 			"type": "checkbox",
 			"defaultValue": false,
 			"group": "Trucs très importants"
-		},
-		{
-			"id": "address",
-			"label": "Adresse",
-			"description": "Adresse du serveur Websocket Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Avancé"
-		},
-		{
-			"id": "port",
-			"label": "Port",
-			"description": "Port du serveur Websocket Streamer.bot",
-			"type": "text",
-			"defaultValue": "8080",
-			"group": "Avancé"
 		}
 	]
 }

@@ -1,6 +1,22 @@
 {
 	"settings": [
 		{
+			"id": "address",
+			"label": "Adresse",
+			"description": "Adresse du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "127.0.0.1",
+			"group": "Streamer.bot"
+		},
+		{
+			"id": "port",
+			"label": "Port",
+			"description": "Port du serveur Websocket Streamer.bot",
+			"type": "text",
+			"defaultValue": "8080",
+			"group": "Streamer.bot"
+		},
+		{
 			"id": "background",
 			"label": "Arrière-plan",
 			"description": "",
@@ -135,15 +151,42 @@
 			"description": "",
 			"type": "select",
 			"options": [
-				{ "value": 100, "label": "100 - Très fin" },
-				{ "value": 200, "label": "200 - Extra léger" },
-				{ "value": 300, "label": "300 - Léger" },
-				{ "value": 400, "label": "400 - Normal" },
-				{ "value": 500, "label": "500 - Moyen" },
-				{ "value": 600, "label": "600 - Semi-gras" },
-				{ "value": 700, "label": "700 - Gras" },
-				{ "value": 800, "label": "800 - Extra gras" },
-				{ "value": 900, "label": "900 - Noir / Très gras" }
+				{
+					"value": 100,
+					"label": "100 - Très fin"
+				},
+				{
+					"value": 200,
+					"label": "200 - Extra léger"
+				},
+				{
+					"value": 300,
+					"label": "300 - Léger"
+				},
+				{
+					"value": 400,
+					"label": "400 - Normal"
+				},
+				{
+					"value": 500,
+					"label": "500 - Moyen"
+				},
+				{
+					"value": 600,
+					"label": "600 - Semi-gras"
+				},
+				{
+					"value": 700,
+					"label": "700 - Gras"
+				},
+				{
+					"value": 800,
+					"label": "800 - Extra gras"
+				},
+				{
+					"value": 900,
+					"label": "900 - Noir / Très gras"
+				}
 			],
 			"defaultValue": 700,
 			"group": "Pseudo"
@@ -198,15 +241,42 @@
 			"description": "",
 			"type": "select",
 			"options": [
-				{ "value": 100, "label": "100 - Très fin" },
-				{ "value": 200, "label": "200 - Extra léger" },
-				{ "value": 300, "label": "300 - Léger" },
-				{ "value": 400, "label": "400 - Normal" },
-				{ "value": 500, "label": "500 - Moyen" },
-				{ "value": 600, "label": "600 - Semi-gras" },
-				{ "value": 700, "label": "700 - Gras" },
-				{ "value": 800, "label": "800 - Extra gras" },
-				{ "value": 900, "label": "900 - Noir / Très gras" }
+				{
+					"value": 100,
+					"label": "100 - Très fin"
+				},
+				{
+					"value": 200,
+					"label": "200 - Extra léger"
+				},
+				{
+					"value": 300,
+					"label": "300 - Léger"
+				},
+				{
+					"value": 400,
+					"label": "400 - Normal"
+				},
+				{
+					"value": 500,
+					"label": "500 - Moyen"
+				},
+				{
+					"value": 600,
+					"label": "600 - Semi-gras"
+				},
+				{
+					"value": 700,
+					"label": "700 - Gras"
+				},
+				{
+					"value": 800,
+					"label": "800 - Extra gras"
+				},
+				{
+					"value": 900,
+					"label": "900 - Noir / Très gras"
+				}
 			],
 			"defaultValue": 400,
 			"group": "Message"
@@ -375,7 +445,7 @@
 			"type": "select",
 			"options": [
 				{
-					"value":  2,
+					"value": 2,
 					"label": "Afficher & Mettre en évidence"
 				},
 				{
@@ -487,22 +557,6 @@
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Dons"
-		},
-		{
-			"id": "address",
-			"label": "Adresse",
-			"description": "Adresse du serveur Websocket Streamer.bot",
-			"type": "text",
-			"defaultValue": "127.0.0.1",
-			"group": "Avancé"
-		},
-		{
-			"id": "port",
-			"label": "Port",
-			"description": "Port du serveur Websocket Streamer.bot",
-			"type": "text",
-			"defaultValue": "8080",
-			"group": "Avancé"
 		}
 	]
 }
