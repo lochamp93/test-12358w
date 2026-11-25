@@ -6,6 +6,7 @@
 		{ "id": "giveaway", "name": "Giveaway", "icon": "gift", "settings": "giveaway/settings/" },
 		{ "id": "message-en-avant", "name": "Message en avant", "icon": "pin", "settings": "message-en-avant/settings/" },
 		{ "id": "multichat", "name": "Multichat", "icon": "bubble.left.and.bubble.right", "settings": "multichat/settings/" },
-		{ "id": "subgoal", "name": "Subgoal", "icon": "star.circle", "settings": "subgoal/settings/" }
+		{ "id": "subgoal", "name": "Subgoal", "icon": "star.circle", "settings": "subgoal/settings/" },
+		{ "id": "trame-dynamique", "name": "Trame dynamique", "icon": "wand.and.sparkles", "settings": "trame-dynamique/settings/" }
 	]
 }
