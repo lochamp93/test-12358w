@@ -98,6 +98,7 @@ const THEMES = {
 			ph: r() * 6.28
 		}));
 		const lwidth = Math.max(1, o.lineWidth * o.unit);
+		const spread = 1 + Math.max(0, o.amplitude - 0.4) * 0.7; // faible : dans le cadre ; forte : bien au-delà
 		ctx.save();
 		ctx.lineWidth = lwidth;
 		ctx.lineCap = 'round';
@@ -105,7 +106,8 @@ const THEMES = {
 		items.forEach((c, ci) => {
 			for (let i = trail - 1; i >= 0; i--) {
 				const tt = t - i * 0.06;
-				const P = c.pts.map(p => [Bounce(p.x + p.vx * tt) * w, Bounce(p.y + p.vy * tt) * h]);
+				// Amplitude : les points ricochent au-delà du cadre, les courbes s'étalent et en sortent
+				const P = c.pts.map(p => [(0.5 + (Bounce(p.x + p.vx * tt) - 0.5) * spread) * w, (0.5 + (Bounce(p.y + p.vy * tt) - 0.5) * spread) * h]);
 				const fade = 1 - i / trail;
 				// La couleur glisse lentement entre la teinte et sa version claire
 				const k = 0.5 + 0.5 * Math.sin(tt * 0.25 + c.ph + ci);
