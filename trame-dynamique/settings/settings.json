@@ -538,15 +538,15 @@
 			"options": [
 				{
 					"value": "halo",
-					"label": "Halo (formes organiques)"
+					"label": "Halo"
 				},
 				{
 					"value": "brouillard",
-					"label": "Brouillard (coton)"
+					"label": "Brouillard"
 				},
 				{
 					"value": "vagues",
-					"label": "Bézier (écran de veille)"
+					"label": "Bézier"
 				},
 				{
 					"value": "aurore",
@@ -659,15 +659,15 @@
 			"options": [
 				{
 					"value": "halo",
-					"label": "Halo (formes organiques)"
+					"label": "Halo"
 				},
 				{
 					"value": "brouillard",
-					"label": "Brouillard (coton)"
+					"label": "Brouillard"
 				},
 				{
 					"value": "vagues",
-					"label": "Bézier (écran de veille)"
+					"label": "Bézier"
 				},
 				{
 					"value": "aurore",
@@ -1360,5 +1360,6 @@
 			"previewOnly": true,
 			"group": "Aperçu"
 		}
-	]
+	],
+	"showNuttyLink": false
 }

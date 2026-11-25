@@ -45,6 +45,9 @@ function Smooth(a, b, x) { const k = Math.max(0, Math.min(1, (x - a) / (b - a)))
 // Rebond entre 0 et 1 (onde triangle) : points qui ricochent sur les bords
 function Bounce(u) { const m = ((u % 2) + 2) % 2; return m < 1 ? m : 2 - m; }
 
+// Horloges internes du thème Halo
+const haloClock = { t: null, move: 0, spin: 0 };
+
 const THEMES = {
 	// Brouillard « coton » : nuages doux qui roulent lentement
 	// (bruit calculé en basse résolution, puis agrandi et lissé)
@@ -143,6 +146,13 @@ const THEMES = {
 
 		// Énergie : 0 = calme, 1 = agité (varie lentement et sans à-coups)
 		const energy = Smooth(0.42, 0.72, Noise2(t * 0.07, 3.7) * 0.7 + Noise2(t * 0.19, 9.1) * 0.3);
+		// Horloges qui avancent pas à pas (vitesse = énergie) : jamais de saut, quelle que soit
+		// la durée depuis le lancement (multiplier le temps total par une vitesse variable
+		// donnait des accélérations folles au bout de quelques minutes)
+		const dt = haloClock.t === null ? 0 : Math.max(0, Math.min(0.1, t - haloClock.t));
+		haloClock.t = t;
+		haloClock.move += dt * (0.05 + energy * 0.22);
+		haloClock.spin += dt * (0.2 + energy * 0.9);
 		const size = (o.haloSize || 100) / 100;
 		const aspect = w / h;
 
@@ -150,11 +160,10 @@ const THEMES = {
 		const pts = [];
 		for (const b of blobs) {
 			const wander = (0.12 + energy * 0.55) * (0.5 + o.amplitude * 0.5);
-			const spd = 0.05 + energy * 0.22;
-			const cx = b.ax + (Noise2(b.sx + t * spd, 1.3) - 0.5) * 2 * wander + (0.5 - b.ax) * energy * 0.6;
-			const cy = b.ay + (Noise2(b.sy + t * spd, 7.9) - 0.5) * 2 * wander + (0.5 - b.ay) * energy * 0.6;
+			const cx = b.ax + (Noise2(b.sx + haloClock.move, 1.3) - 0.5) * 2 * wander + (0.5 - b.ax) * energy * 0.6;
+			const cy = b.ay + (Noise2(b.sy + haloClock.move, 7.9) - 0.5) * 2 * wander + (0.5 - b.ay) * energy * 0.6;
 			const rad = b.size * size * (0.75 + energy * 0.75 * o.amplitude) * (1 - 0.3 * o.amplitude + 0.6 * o.amplitude * Noise2(b.sr + t * 0.3, 4.2));
-			const a = b.sub + t * (0.2 + energy * 0.9);
+			const a = b.sub + haloClock.spin;
 			const off = rad * 0.6;
 			const col = set.count > 1 ? ToneAt(set, pts.length / 2) : set.mid;
 			pts.push([cx + Math.cos(a) * off / aspect, cy + Math.sin(a) * off, rad * 0.8, col]);
