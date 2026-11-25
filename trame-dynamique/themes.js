@@ -380,17 +380,6 @@ const THEMES = {
 				const x = ox + i * size, y = oy + j * size;
 				ctx.fillStyle = Rgba(c, 1);
 				ctx.fillRect(x + gap / 2, y + gap / 2, size - gap, size - gap);
-				if (flash > 0.55) {
-					// Petite étoile sur les éclats les plus forts
-					const L = size * (0.6 + flash);
-					ctx.save();
-					ctx.globalCompositeOperation = 'lighter';
-					ctx.fillStyle = `rgba(255,255,255,${(flash - 0.55) * 1.6})`;
-					const cx = x + size / 2, cy = y + size / 2, th = Math.max(1, size * 0.06);
-					ctx.fillRect(cx - L, cy - th / 2, L * 2, th);
-					ctx.fillRect(cx - th / 2, cy - L, th, L * 2);
-					ctx.restore();
-				}
 			}
 		}
 	},
@@ -455,113 +444,6 @@ const THEMES = {
 			ctx.moveTo(x0, y0);
 			ctx.lineTo(x1, y1);
 			ctx.stroke();
-		}
-		ctx.restore();
-	},
-
-	// Synthwave : grille rétro en perspective qui défile, soleil en dégradé
-	synthwave(ctx, w, h, t, set, o) {
-		const hor = h * 0.56;
-		const c1 = set.list[0], c2 = set.count > 1 ? set.list[1] : set.hi;
-		ctx.save();
-		// Ciel : lueur au-dessus de l'horizon
-		const sky = ctx.createLinearGradient(0, 0, 0, hor);
-		sky.addColorStop(0, Rgba(c1, 0));
-		sky.addColorStop(1, Rgba(c1, 0.35));
-		ctx.fillStyle = sky;
-		ctx.fillRect(0, 0, w, hor);
-		// Soleil rayé
-		const R = Math.min(w, h) * 0.22, sx = w / 2, sy = hor - R * 0.35;
-		const sun = ctx.createLinearGradient(0, sy - R, 0, sy + R);
-		sun.addColorStop(0, Rgba(MixRgb(c2, [255, 255, 255], 0.3), 1));
-		sun.addColorStop(1, Rgba(c1, 1));
-		ctx.save();
-		ctx.beginPath();
-		ctx.rect(0, 0, w, hor);
-		ctx.clip();
-		ctx.beginPath();
-		ctx.arc(sx, sy, R, 0, 6.2832);
-		ctx.fillStyle = sun;
-		ctx.shadowColor = Rgba(c2, 0.8);
-		ctx.shadowBlur = R * 0.4;
-		ctx.fill();
-		ctx.shadowBlur = 0;
-		ctx.globalCompositeOperation = 'destination-out';
-		for (let i = 0; i < 7; i++) {
-			const yy = sy + R * (0.05 + i * 0.14) + ((t * 6) % (R * 0.14));
-			ctx.fillRect(sx - R, yy, R * 2, R * 0.035 * (1 + i * 0.5));
-		}
-		ctx.restore();
-		// Grille au sol
-		const lineCol = MixRgb(c2, [255, 255, 255], 0.15);
-		ctx.strokeStyle = Rgba(lineCol, 0.9);
-		ctx.shadowColor = Rgba(c2, 0.9);
-		ctx.shadowBlur = 8 * o.unit;
-		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
-		const scroll = (t * 0.6) % 1;
-		for (let i = 0; i < 18; i++) {
-			const z = (i + 1 - scroll) / 18; // 0 = horizon
-			const y = hor + (h - hor) * Math.pow(z, 2.2);
-			ctx.globalAlpha = Math.min(1, z * 2);
-			ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
-		}
-		ctx.globalAlpha = 1;
-		for (let i = -14; i <= 14; i++) {
-			ctx.beginPath();
-			ctx.moveTo(w / 2 + i * w * 0.02, hor);
-			ctx.lineTo(w / 2 + i * w * 0.16, h);
-			ctx.stroke();
-		}
-		ctx.restore();
-	},
-
-	// Ondes : cercles qui se propagent comme des gouttes sur l'eau
-	ondes(ctx, w, h, t, set, o) {
-		const n = [3, 5, 8][o.density];
-		const drops = Particles('ondes', n, (r) => ({ x: r(), y: r(), period: 4 + r() * 4, ph: r() * 10, tone: r() }));
-		const maxR = Math.hypot(w, h) * 0.55;
-		ctx.save();
-		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
-		for (const d of drops) {
-			const cx = w * (d.x + 0.05 * Math.sin(t * 0.1 + d.ph)), cy = h * (d.y + 0.05 * Math.cos(t * 0.12 + d.ph));
-			const col = Tone(set, d.tone);
-			for (let k = 0; k < 4; k++) {
-				const age = (((t + d.ph) / d.period + k / 4) % 1);
-				const r = age * maxR;
-				ctx.strokeStyle = Rgba(col, (1 - age) * (1 - age) * 0.9);
-				ctx.beginPath();
-				ctx.arc(cx, cy, Math.max(0.1, r), 0, 6.2832);
-				ctx.stroke();
-			}
-		}
-		ctx.restore();
-	},
-
-	// Crêtes : lignes empilées qui ondulent comme des montagnes (style « Unknown Pleasures »)
-	cretes(ctx, w, h, t, set, o) {
-		const n = [18, 30, 48][o.density];
-		const top = h * 0.12, span = h * 0.8, step = span / n;
-		const pts = 90;
-		ctx.save();
-		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
-		ctx.lineJoin = 'round';
-		for (let i = 0; i < n; i++) {
-			const y0 = top + i * step;
-			const ridge = new Path2D();
-			for (let p = 0; p <= pts; p++) {
-				const u = p / pts;
-				const env = Math.exp(-Math.pow((u - 0.5) / 0.2, 2)); // relief surtout au centre
-				const v = Fbm(u * 6 + i * 0.37, t * 0.25 + i * 0.13);
-				const y = y0 - env * Math.pow(v, 2.2) * step * 7;
-				p ? ridge.lineTo(u * w, y) : ridge.moveTo(u * w, y);
-			}
-			// Fond sous la ligne : cache les lignes de derrière (sans tracer les bords du cadre)
-			const under = new Path2D(ridge);
-			under.lineTo(w, h + 10); under.lineTo(0, h + 10); under.closePath();
-			if (o.background) { ctx.fillStyle = Rgba(set.bg, 1); ctx.fill(under); }
-			else { ctx.save(); ctx.globalCompositeOperation = 'destination-out'; ctx.fill(under); ctx.restore(); }
-			ctx.strokeStyle = Rgba(Tone(set, i / Math.max(1, n - 1)), 1);
-			ctx.stroke(ridge);
 		}
 		ctx.restore();
 	},

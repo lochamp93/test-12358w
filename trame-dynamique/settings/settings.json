@@ -524,12 +524,40 @@
 			}
 		},
 		{
-			"id": "background",
-			"label": "Fond plein",
-			"description": "Remplit la trame avec la teinte la plus sombre. Désactivé : fond transparent",
-			"type": "checkbox",
-			"defaultValue": true,
+			"id": "backgroundMode",
+			"label": "Fond",
+			"type": "select",
+			"options": [
+				{
+					"value": "transparent",
+					"label": "Transparent"
+				},
+				{
+					"value": "sombre",
+					"label": "Palette sombre"
+				},
+				{
+					"value": "clair",
+					"label": "Palette claire"
+				},
+				{
+					"value": "perso",
+					"label": "Personnalisé"
+				}
+			],
+			"defaultValue": "sombre",
 			"group": "Couleurs"
+		},
+		{
+			"id": "backgroundColor",
+			"label": "Couleur du fond",
+			"type": "color",
+			"defaultValue": "#0b0b0f",
+			"group": "Couleurs",
+			"showIf": {
+				"id": "backgroundMode",
+				"value": "perso"
+			}
 		},
 		{
 			"id": "theme",
@@ -553,10 +581,6 @@
 					"label": "Brouillard"
 				},
 				{
-					"value": "cretes",
-					"label": "Crêtes"
-				},
-				{
 					"value": "degrade",
 					"label": "Dégradé fluide"
 				},
@@ -577,20 +601,12 @@
 					"label": "Mosaïque"
 				},
 				{
-					"value": "ondes",
-					"label": "Ondes"
-				},
-				{
 					"value": "plasma",
 					"label": "Plasma rétro"
 				},
 				{
 					"value": "starfield",
 					"label": "Starfield"
-				},
-				{
-					"value": "synthwave",
-					"label": "Synthwave"
 				},
 				{
 					"value": "video",
@@ -706,10 +722,6 @@
 					"label": "Brouillard"
 				},
 				{
-					"value": "cretes",
-					"label": "Crêtes"
-				},
-				{
 					"value": "degrade",
 					"label": "Dégradé fluide"
 				},
@@ -730,20 +742,12 @@
 					"label": "Mosaïque"
 				},
 				{
-					"value": "ondes",
-					"label": "Ondes"
-				},
-				{
 					"value": "plasma",
 					"label": "Plasma rétro"
 				},
 				{
 					"value": "starfield",
 					"label": "Starfield"
-				},
-				{
-					"value": "synthwave",
-					"label": "Synthwave"
 				}
 			],
 			"defaultValue": "brouillard",
@@ -932,7 +936,8 @@
 						]
 					},
 					{
-						"id": "background"
+						"id": "backgroundMode",
+						"value": "sombre"
 					}
 				]
 			}
@@ -967,9 +972,7 @@
 							"aurore",
 							"bokeh",
 							"matrix",
-							"starfield",
-							"ondes",
-							"cretes"
+							"starfield"
 						]
 					},
 					{
@@ -986,9 +989,7 @@
 									"aurore",
 									"bokeh",
 									"matrix",
-									"starfield",
-									"ondes",
-									"cretes"
+									"starfield"
 								]
 							}
 						]
@@ -1061,10 +1062,7 @@
 					{
 						"id": "theme",
 						"value": [
-							"vagues",
-							"synthwave",
-							"ondes",
-							"cretes"
+							"vagues"
 						]
 					},
 					{
@@ -1076,10 +1074,7 @@
 							{
 								"id": "videoTheme",
 								"value": [
-									"vagues",
-									"synthwave",
-									"ondes",
-									"cretes"
+									"vagues"
 								]
 							}
 						]

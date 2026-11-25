@@ -565,8 +565,8 @@ function Resize() {
 // les trames nettes à pleine résolution, et seules les trames rapides passent à 60 images/s
 const RENDER_PRESETS = {
 	aurore: [0.5, 30], bokeh: [0.6, 30], brouillard: [0.5, 30], degrade: [0.5, 30], halo: [0.5, 30],
-	cretes: [1, 30], disco: [1, 30], matrix: [1, 30], mosaique: [1, 30], ondes: [0.75, 30], plasma: [1, 30],
-	starfield: [0.75, 60], synthwave: [0.75, 60], vagues: [0.75, 60], video: [0.75, 30]
+	disco: [1, 30], matrix: [1, 30], mosaique: [1, 30], plasma: [1, 30],
+	starfield: [0.75, 60], vagues: [0.75, 60], video: [0.75, 30]
 };
 function RenderPreset() {
 	const s = ws.values;
@@ -682,6 +682,22 @@ function MatrixChars(s) {
 	return Array.from(MATRIX_SETS[s.matrixChars] || MATRIX_SETS.matrix);
 }
 
+// Mode du fond. Anciennes URL : background=false (ancien interrupteur) donne un fond transparent
+const urlAtLoad = new URLSearchParams(location.search);
+function BackgroundMode() {
+	if (!ws.demo && !urlAtLoad.has('backgroundMode') && /^(false|0|non|off|no)$/i.test(urlAtLoad.get('background') || '')) return 'transparent';
+	return ws.values.backgroundMode;
+}
+function BackgroundColor(mode, set) {
+	if (mode === 'perso') return HexToRgb(ws.values.backgroundColor);
+	if (mode === 'clair') {
+		const cols = set.count > 1 ? set.list.slice(0, set.count) : [set.hi];
+		const light = cols.slice().sort((a, b) => Luma(b) - Luma(a))[0];
+		return MixRgb(light, [255, 255, 255], 0.6);
+	}
+	return set.bg; // palette sombre
+}
+
 // Dessine un thème (fond plein éventuel compris) dans un contexte
 function DrawTheme(c, name, w, h, t, set, withBackground) {
 	c.save();
@@ -704,7 +720,7 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		haloCount: Number(s.haloCount) || 4,
 		haloSize: Number(s.haloSize) || 100,
 		haloBlur: s.haloBlur,
-		haloBlack: withBackground ? Number(s.haloBlack) || 0 : 0,
+		haloBlack: withBackground && BackgroundMode() === 'sombre' ? Number(s.haloBlack) || 0 : 0,
 		amplitude: { faible: 0.4, moyenne: 1, forte: 1.6 }[s.amplitude] ?? 1,
 		background: withBackground,
 		pixelSize: Number(s.pixelSize) || 40,
@@ -738,8 +754,13 @@ function Frame(now) {
 	if (!set) return;
 	const w = canvas.width, h = canvas.height;
 
-	if (s.theme === 'video') DrawVideo(w, h, t, set);
-	else DrawTheme(ctx, s.theme, w, h, t, set, s.background);
+	// Fond : transparent, palette sombre, palette claire ou couleur choisie
+	const mode = BackgroundMode();
+	const withBg = mode !== 'transparent';
+	const fset = withBg ? Object.assign({}, set, { bg: BackgroundColor(mode, set) }) : set;
+
+	if (s.theme === 'video') DrawVideo(w, h, t, fset, withBg);
+	else DrawTheme(ctx, s.theme, w, h, t, fset, withBg);
 
 	// Flou global (comme un filtre « flou » d'OBS)
 	if (Number(s.blur) > 0) ApplyBlur(w, h, Number(s.blur) * PxScale());
@@ -758,7 +779,7 @@ function Frame(now) {
 	ApplyShape(w, h);
 }
 
-function DrawVideo(w, h, t, set) {
+function DrawVideo(w, h, t, set, withBg) {
 	const s = ws.values;
 	if (fillCanvas.width !== w || fillCanvas.height !== h) { fillCanvas.width = w; fillCanvas.height = h; }
 	const fc = fillCanvas.getContext('2d');
@@ -796,7 +817,7 @@ function DrawVideo(w, h, t, set) {
 
 	ctx.save();
 	ctx.clearRect(0, 0, w, h);
-	if (s.background) { ctx.fillStyle = Rgba(set.bg, 1); ctx.fillRect(0, 0, w, h); }
+	if (withBg) { ctx.fillStyle = Rgba(set.bg, 1); ctx.fillRect(0, 0, w, h); }
 	if (hasMask) {
 		fc.save();
 		fc.globalCompositeOperation = 'destination-in';
