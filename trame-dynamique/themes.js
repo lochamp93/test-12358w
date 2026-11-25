@@ -149,11 +149,11 @@ const THEMES = {
 		// Position et rayon de chaque forme (2 points par forme : formes allongées, en haricot)
 		const pts = [];
 		for (const b of blobs) {
-			const wander = 0.12 + energy * 0.55;
+			const wander = (0.12 + energy * 0.55) * (0.5 + o.amplitude * 0.5);
 			const spd = 0.05 + energy * 0.22;
 			const cx = b.ax + (Noise2(b.sx + t * spd, 1.3) - 0.5) * 2 * wander + (0.5 - b.ax) * energy * 0.6;
 			const cy = b.ay + (Noise2(b.sy + t * spd, 7.9) - 0.5) * 2 * wander + (0.5 - b.ay) * energy * 0.6;
-			const rad = b.size * size * (0.75 + energy * 0.75) * (0.85 + 0.3 * Noise2(b.sr + t * 0.3, 4.2));
+			const rad = b.size * size * (0.75 + energy * 0.75 * o.amplitude) * (1 - 0.3 * o.amplitude + 0.6 * o.amplitude * Noise2(b.sr + t * 0.3, 4.2));
 			const a = b.sub + t * (0.2 + energy * 0.9);
 			const off = rad * 0.6;
 			const col = set.count > 1 ? ToneAt(set, pts.length / 2) : set.mid;
@@ -207,37 +207,54 @@ const THEMES = {
 		ctx.restore();
 	},
 
-	// Rideaux lumineux qui se tordent doucement
-	// Dessinés en basse résolution sur un calque, puis agrandis : le lissage fond les colonnes
+	// Rideaux lumineux qui se tordent, montent, descendent et changent de taille.
+	// Ils peuvent sortir du cadre (haut ou bas) et ne couvrent pas toujours toute la largeur.
+	// Dessinés en basse résolution sur un calque (avec marge), puis agrandis et lissés.
 	aurore(ctx, w, h, t, set, o) {
 		const n = [3, 5, 8][o.density];
-		const bands = Particles('aurore', n, (r) => ({ ph: r() * 6.28, f: 0.5 + r(), y: 0.2 + r() * 0.35, len: 0.35 + r() * 0.35, tone: r() }));
+		const amp = o.amplitude;
+		const bands = Particles('aurore2', n, (r, i) => ({
+			ph: r() * 6.28, f: 0.5 + r(), fy: 0.03 + r() * 0.05, fl: 0.04 + r() * 0.06, fx: 0.02 + r() * 0.04,
+			y: 0.15 + r() * 0.5, len: 0.35 + r() * 0.4, tone: r(), up: i % 3 === 2
+		}));
 		const layer = o.layer;
 		const lw = Math.max(16, Math.round(w / 6)), lh = Math.max(16, Math.round(h / 6));
-		if (layer.width !== lw || layer.height !== lh) { layer.width = lw; layer.height = lh; }
+		const my = Math.round(lh * 0.5); // marge verticale : les rideaux peuvent dépasser du cadre
+		if (layer.width !== lw || layer.height !== lh + 2 * my) { layer.width = lw; layer.height = lh + 2 * my; }
 		const lc = layer.getContext('2d');
-		lc.clearRect(0, 0, lw, lh);
+		lc.clearRect(0, 0, layer.width, layer.height);
 		lc.globalCompositeOperation = 'lighter';
 		for (const b of bands) {
 			const col = Tone(set, b.tone);
+			// Hauteur du rideau dans le cadre : dérive lente, plus ou moins large selon l'amplitude
+			const yc = b.y + 0.42 * amp * Math.sin(t * b.fy * 6.28 + b.ph) + 0.12 * amp * Math.sin(t * b.fy * 15 + b.ph * 2);
+			// Longueur qui respire : du rideau court au grand voile qui sort du cadre
+			const lenK = b.len * (0.55 + 0.75 * amp * (0.5 + 0.5 * Math.sin(t * b.fl * 6.28 + b.ph * 3)));
+			// Zone éclairée horizontalement : le rideau ne couvre pas toujours toute la largeur
+			const cx = 0.5 + 0.45 * Math.sin(t * b.fx * 6.28 + b.ph * 1.7);
+			const spread = 0.35 + 0.5 * (0.5 + 0.5 * Math.sin(t * b.fx * 9 + b.ph));
 			for (let x = 0; x < lw; x++) {
 				const u = x / lw;
-				const top = lh * (b.y + 0.08 * Math.sin(u * 6.28 * b.f + t * 0.35 + b.ph) + 0.04 * Math.sin(u * 17 + t * 0.9));
-				const len = lh * b.len * (0.6 + 0.4 * Math.sin(u * 9 + t * 0.5 + b.ph));
-				const a = 0.22 * (0.5 + 0.5 * Math.sin(u * 5 + t * 0.6 + b.ph));
-				const g = lc.createLinearGradient(0, top, 0, top + len);
+				const env = Math.exp(-((u - cx) ** 2) / (2 * spread * spread));
+				const top = my + lh * (yc + 0.1 * Math.sin(u * 6.28 * b.f + t * 0.35 + b.ph) + 0.05 * Math.sin(u * 17 + t * 0.9));
+				const len = lh * lenK * (0.6 + 0.4 * Math.sin(u * 9 + t * 0.5 + b.ph));
+				const a = 0.26 * env * (0.5 + 0.5 * Math.sin(u * 5 + t * 0.6 + b.ph));
+				if (a < 0.004) continue;
+				// Rideau vers le bas (lumière en haut) ou vers le haut (lumière en bas)
+				const y0 = b.up ? top - len : top, y1 = b.up ? top : top + len;
+				const g = lc.createLinearGradient(0, b.up ? y1 : y0, 0, b.up ? y0 : y1);
 				g.addColorStop(0, Rgba(col, 0));
 				g.addColorStop(0.15, Rgba(col, a));
 				g.addColorStop(1, Rgba(col, 0));
 				lc.fillStyle = g;
-				lc.fillRect(x, top, 1, len);
+				lc.fillRect(x, y0, 1, len);
 			}
 		}
 		ctx.save();
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
 		ctx.filter = `blur(${Math.max(1, w / 400)}px)`;
-		ctx.drawImage(layer, 0, 0, w, h);
+		ctx.drawImage(layer, 0, my, lw, lh, 0, 0, w, h);
 		ctx.restore();
 	},
 
@@ -249,7 +266,7 @@ const THEMES = {
 		for (const d of dots) {
 			const y = ((d.y - t * d.v) % 1 + 1) % 1;
 			const x = d.x + 0.02 * Math.sin(t * 0.5 + d.ph);
-			const px = x * w, py = y * h * 1.2 - h * 0.1, rad = d.s * big;
+			const px = x * w, py = y * h * 1.2 - h * 0.1, rad = d.s * big * (1 + 0.8 * o.amplitude * (Noise2(d.ph * 10 + t * 0.15, 2.2) - 0.35));
 			const col = Tone(set, d.tone);
 			const g = ctx.createRadialGradient(px, py, 0, px, py, rad);
 			const a = d.a * (0.6 + 0.4 * Math.sin(t + d.ph));
@@ -274,7 +291,7 @@ const THEMES = {
 		for (const it of items) {
 			const x = (((it.x + it.vx * t) % 1) + 1) % 1 * w;
 			const y = (((it.y + it.vy * t) % 1) + 1) % 1 * h;
-			const rad = it.s * big * 0.5;
+			const rad = it.s * big * 0.5 * (1 + 0.7 * o.amplitude * (Noise2(it.rot * 10 + t * 0.12, 5.5) - 0.35));
 			const col = Rgba(Tone(set, it.tone), it.a);
 			ctx.beginPath();
 			if (sides === 0) ctx.arc(x, y, rad, 0, 6.2832);

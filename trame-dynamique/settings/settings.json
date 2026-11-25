@@ -927,6 +927,58 @@
 			}
 		},
 		{
+			"id": "amplitude",
+			"label": "Amplitude",
+			"description": "Variation de taille et de position. Forte : les formes grandissent, rétrécissent et sortent souvent du cadre",
+			"type": "segmented",
+			"options": [
+				{
+					"value": "faible",
+					"label": "Faible"
+				},
+				{
+					"value": "moyenne",
+					"label": "Moyenne"
+				},
+				{
+					"value": "forte",
+					"label": "Forte"
+				}
+			],
+			"defaultValue": "moyenne",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"aurore",
+							"halo",
+							"bokeh",
+							"geometrique"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"aurore",
+									"halo",
+									"bokeh",
+									"geometrique"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
 			"id": "shapeKind",
 			"label": "Formes",
 			"type": "select",

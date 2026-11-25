@@ -646,6 +646,7 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		haloBlur: s.haloBlur,
 		haloBlack: withBackground ? Number(s.haloBlack) || 0 : 0,
 		lavaBlur: s.lavaBlur,
+		amplitude: { faible: 0.4, moyenne: 1, forte: 1.6 }[s.amplitude] ?? 1,
 		background: withBackground,
 		layer: layerCanvas
 	});
