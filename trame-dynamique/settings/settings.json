@@ -295,9 +295,13 @@
 		{
 			"id": "ambiance",
 			"label": "Ambiance",
-			"description": "Vive : teintes saturées. Douce : teintes adoucies. Sombre : teintes profondes",
+			"description": "Dominantes : les couleurs qui occupent le plus de place dans l’image. Vive : teintes saturées. Douce : teintes adoucies. Sombre : teintes profondes",
 			"type": "segmented",
 			"options": [
+				{
+					"value": "dominantes",
+					"label": "Dominantes"
+				},
 				{
 					"value": "vive",
 					"label": "Vive"
@@ -331,6 +335,18 @@
 			"label": "Teinte 1",
 			"type": "select",
 			"options": [
+				{
+					"value": "Dominant1",
+					"label": "Dominante 1"
+				},
+				{
+					"value": "Dominant2",
+					"label": "Dominante 2"
+				},
+				{
+					"value": "Dominant3",
+					"label": "Dominante 3"
+				},
 				{
 					"value": "Vibrant",
 					"label": "Vibrant"
@@ -376,6 +392,18 @@
 			"label": "Teinte 2",
 			"type": "select",
 			"options": [
+				{
+					"value": "Dominant1",
+					"label": "Dominante 1"
+				},
+				{
+					"value": "Dominant2",
+					"label": "Dominante 2"
+				},
+				{
+					"value": "Dominant3",
+					"label": "Dominante 3"
+				},
 				{
 					"value": "Vibrant",
 					"label": "Vibrant"
@@ -428,6 +456,18 @@
 			"label": "Teinte 3",
 			"type": "select",
 			"options": [
+				{
+					"value": "Dominant1",
+					"label": "Dominante 1"
+				},
+				{
+					"value": "Dominant2",
+					"label": "Dominante 2"
+				},
+				{
+					"value": "Dominant3",
+					"label": "Dominante 3"
+				},
 				{
 					"value": "Vibrant",
 					"label": "Vibrant"
@@ -598,16 +638,16 @@
 			"type": "select",
 			"options": [
 				{
-					"value": "hi",
-					"label": "Claire"
+					"value": "mid",
+					"label": "Teinte 1"
 				},
 				{
-					"value": "mid",
-					"label": "Moyenne"
+					"value": "hi",
+					"label": "Teinte 2"
 				},
 				{
 					"value": "bg",
-					"label": "Sombre"
+					"label": "Fond (sombre)"
 				}
 			],
 			"defaultValue": "mid",

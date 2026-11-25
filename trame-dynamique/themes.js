@@ -67,7 +67,8 @@ const THEMES = {
 				const lit = Smooth(0.42, 0.86, n2 * 0.6 + n1 * 0.4);
 				const k = (y * gw + x) * 4;
 				// Couleur : fond → teinte → clair selon l'épaisseur du nuage
-				const r = mid[0] + (hi[0] - mid[0]) * lit, g = mid[1] + (hi[1] - mid[1]) * lit, b = mid[2] + (hi[2] - mid[2]) * lit;
+				const tc = Tone(set, lit);
+				const r = tc[0], g = tc[1], b = tc[2];
 				if (o.background) {
 					d[k] = bg[0] + (r - bg[0]) * v; d[k + 1] = bg[1] + (g - bg[1]) * v; d[k + 2] = bg[2] + (b - bg[2]) * v; d[k + 3] = 255;
 				} else {
@@ -105,7 +106,7 @@ const THEMES = {
 				const fade = 1 - i / trail;
 				// La couleur glisse lentement entre la teinte et sa version claire
 				const k = 0.5 + 0.5 * Math.sin(tt * 0.25 + c.ph + ci);
-				const col = MixRgb(set.mid, set.hi, k);
+				const col = set.count > 1 ? MixRgb(ToneAt(set, ci), ToneAt(set, ci + 1), k * 0.5) : Tone(set, k);
 				ctx.strokeStyle = Rgba(col, (i === 0 ? 1 : 0.55) * fade * fade);
 				if (i === 0) { ctx.shadowColor = Rgba(col, 0.9); ctx.shadowBlur = lwidth * 5; } else ctx.shadowBlur = 0;
 				ctx.beginPath();
@@ -155,14 +156,15 @@ const THEMES = {
 			const rad = b.size * size * (0.75 + energy * 0.75) * (0.85 + 0.3 * Noise2(b.sr + t * 0.3, 4.2));
 			const a = b.sub + t * (0.2 + energy * 0.9);
 			const off = rad * 0.6;
-			pts.push([cx + Math.cos(a) * off / aspect, cy + Math.sin(a) * off, rad * 0.8]);
-			pts.push([cx - Math.cos(a) * off / aspect, cy - Math.sin(a) * off, rad * 0.65]);
+			const col = set.count > 1 ? ToneAt(set, pts.length / 2) : set.mid;
+			pts.push([cx + Math.cos(a) * off / aspect, cy + Math.sin(a) * off, rad * 0.8, col]);
+			pts.push([cx - Math.cos(a) * off / aspect, cy - Math.sin(a) * off, rad * 0.65, col]);
 		}
 
 		// Douceur des bords : plus la bande de transition est large, plus c'est flou
 		const soft = { doux: 0.3, fort: 0.4, tres: 0.48 }[o.haloBlur] || 0.4;
 		const lo = 0.5 - soft, hiT = 0.5 + soft;
-		const bg = set.bg, mid = set.mid, hi = set.hi;
+		const bg = set.bg;
 		const black = o.background ? Math.min(1, (o.haloBlack || 0) / 100) : 0;
 		const base = [bg[0] * (1 - black), bg[1] * (1 - black), bg[2] * (1 - black)];
 
@@ -172,17 +174,21 @@ const THEMES = {
 				// Léger gauchissement de l'espace : contours irréguliers, pas des cercles
 				const px = (x + 0.5) / gw + (Noise2(x * 0.05 + t * 0.15, y * 0.05) - 0.5) * 0.12;
 				const qy = py + (Noise2(x * 0.05 + 50, y * 0.05 - t * 0.12) - 0.5) * 0.12;
-				let f = 0;
+				// Champ de présence, et couleur mélangée selon la part de chaque forme
+				let f = 0, cr = 0, cg = 0, cb = 0;
 				for (let i = 0; i < pts.length; i++) {
 					const dx = (px - pts[i][0]) * aspect, dy = qy - pts[i][1];
 					const rr = pts[i][2] * pts[i][2];
-					f += Math.exp(-(dx * dx + dy * dy) / rr);
+					const e = Math.exp(-(dx * dx + dy * dy) / rr);
+					f += e; cr += e * pts[i][3][0]; cg += e * pts[i][3][1]; cb += e * pts[i][3][2];
 				}
+				const inv = f > 1e-6 ? 1 / f : 0;
+				const mid = [cr * inv, cg * inv, cb * inv];
 				const v = Smooth(lo, hiT, f);          // présence de la forme
 				const core = Smooth(hiT, 1.6, f);  // cœur à peine plus clair
-				const r = mid[0] + (hi[0] - mid[0]) * core * 0.15;
-				const g = mid[1] + (hi[1] - mid[1]) * core * 0.15;
-				const bl = mid[2] + (hi[2] - mid[2]) * core * 0.15;
+				const r = mid[0] + (255 - mid[0]) * core * 0.08;
+				const g = mid[1] + (255 - mid[1]) * core * 0.08;
+				const bl = mid[2] + (255 - mid[2]) * core * 0.08;
 				const k = (y * gw + x) * 4;
 				if (o.background) {
 					d[k] = base[0] + (r - base[0]) * v; d[k + 1] = base[1] + (g - base[1]) * v; d[k + 2] = base[2] + (bl - base[2]) * v; d[k + 3] = 255;
@@ -213,7 +219,7 @@ const THEMES = {
 		lc.clearRect(0, 0, lw, lh);
 		lc.globalCompositeOperation = 'lighter';
 		for (const b of bands) {
-			const col = MixRgb(set.mid, set.hi, b.tone);
+			const col = Tone(set, b.tone);
 			for (let x = 0; x < lw; x++) {
 				const u = x / lw;
 				const top = lh * (b.y + 0.08 * Math.sin(u * 6.28 * b.f + t * 0.35 + b.ph) + 0.04 * Math.sin(u * 17 + t * 0.9));
@@ -244,7 +250,7 @@ const THEMES = {
 			const y = ((d.y - t * d.v) % 1 + 1) % 1;
 			const x = d.x + 0.02 * Math.sin(t * 0.5 + d.ph);
 			const px = x * w, py = y * h * 1.2 - h * 0.1, rad = d.s * big;
-			const col = MixRgb(set.mid, set.hi, d.tone);
+			const col = Tone(set, d.tone);
 			const g = ctx.createRadialGradient(px, py, 0, px, py, rad);
 			const a = d.a * (0.6 + 0.4 * Math.sin(t + d.ph));
 			g.addColorStop(0, Rgba(col, a));
@@ -269,7 +275,7 @@ const THEMES = {
 			const x = (((it.x + it.vx * t) % 1) + 1) % 1 * w;
 			const y = (((it.y + it.vy * t) % 1) + 1) % 1 * h;
 			const rad = it.s * big * 0.5;
-			const col = Rgba(MixRgb(set.mid, set.hi, it.tone), it.a);
+			const col = Rgba(Tone(set, it.tone), it.a);
 			ctx.beginPath();
 			if (sides === 0) ctx.arc(x, y, rad, 0, 6.2832);
 			else {
@@ -311,7 +317,7 @@ const THEMES = {
 		for (const b of blobs) {
 			const y = lh * (0.5 + 0.55 * Math.sin(t * b.f * 6.28 + b.ph));
 			const x = lw * (b.x + 0.06 * Math.sin(t * 0.25 * b.wob + b.ph));
-			blob(x, y, b.s * big, b.tone ? set.mid : set.hi, b.ph);
+			blob(x, y, b.s * big, ToneAt(set, blobs.indexOf(b)), b.ph);
 		}
 		// Bas et haut de la lampe : des masses molles, pas des bandes droites
 		for (let i = 0; i < 8; i++) {

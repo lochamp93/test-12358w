@@ -14,7 +14,7 @@ const gooBlurEl = document.getElementById('gooBlur');
 
 let ws = null;                 // réglages (module commun WidgetSettings)
 
-// Palette analysée : { Vibrant: '#…', Muted: '#…', … } (null : rien d'analysé)
+// Palette analysée : { Dominant1: '#…', Vibrant: '#…', … } (null : rien d'analysé)
 let palette = null;
 let paletteImage = '';         // image analysée (vignette de l'aperçu)
 let usedRoles = [];            // rôles retenus (numérotés dans l'aperçu)
@@ -70,17 +70,14 @@ function SetStatus(text, status) {
 const paletteCache = new Map();  // une analyse par image
 let analyseToken = 0;
 
-// Analyse une image avec Vibrant et applique sa palette
+// Analyse une image et applique sa palette
 async function AnalyseImage(src, label) {
 	if (!src) return;
 	const token = ++analyseToken;
 	try {
 		let result = paletteCache.get(src);
 		if (!result) {
-			if (typeof Vibrant === 'undefined') throw new Error('Vibrant.js indisponible');
-			const swatches = await Vibrant.from(src).maxColorCount(64).getPalette();
-			result = {};
-			for (const role of ROLES) if (swatches[role]) result[role] = swatches[role].getHex();
+			result = await AnalyseImageColors(src);
 			if (!Object.keys(result).length) throw new Error('aucune couleur trouvée');
 			paletteCache.set(src, result);
 			if (paletteCache.size > 30) paletteCache.delete(paletteCache.keys().next().value);
@@ -130,8 +127,8 @@ function UpdateColors() {
 		mono = true;
 	}
 
-	const autoShades = mono ? (s.colorCount !== 'mono' || s.autoShades) : true;
-	const next = BuildWorkingSet(hexes, hexes.length, autoShades);
+	const autoShades = s.colorCount !== 'mono' || s.autoShades;
+	const next = BuildWorkingSet(hexes, autoShades);
 
 	if (!currentSet) {
 		currentSet = next;
@@ -171,12 +168,12 @@ function RenderPalettePanel(hexes) {
 	panelImgEl.hidden = !paletteImage;
 	if (paletteImage && panelImgEl.getAttribute('src') !== paletteImage) panelImgEl.src = paletteImage;
 
-	// Couleurs personnalisées : les couleurs choisies ; sinon les 6 rôles de Vibrant
+	// Couleurs personnalisées : les couleurs choisies ; sinon les dominantes et les 6 rôles
 	let cards;
 	if (ws.values.paletteSource === 'perso' && !PreviewOverride())
 		cards = hexes.map((hex, i) => ({ role: `Couleur ${i + 1}`, hex, num: i + 1 }));
 	else if (palette)
-		cards = ROLES.filter(r => palette[r]).map(r => ({ role: ROLE_LABELS[r], hex: palette[r], num: usedRoles.indexOf(r) + 1 }));
+		cards = ALL_KEYS.filter(r => palette[r]).map(r => ({ role: ROLE_LABELS[r], hex: palette[r], num: usedRoles.indexOf(r) + 1 }));
 	else
 		cards = [{ role: 'Couleur de secours', hex: ws.values.fallbackColor, num: 1 }];
 
@@ -707,9 +704,9 @@ function DrawVideo(w, h, t, set) {
 			const a = t * 0.25;
 			const cx = w / 2, cy = h / 2, r = Math.hypot(w, h) / 2;
 			const g = fc.createLinearGradient(cx - Math.cos(a) * r, cy - Math.sin(a) * r, cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-			g.addColorStop(0, Rgba(set.mid, 1));
-			g.addColorStop(0.5, Rgba(set.hi, 1));
-			g.addColorStop(1, Rgba(MixRgb(set.mid, set.bg, 0.4), 1));
+			g.addColorStop(0, Rgba(Tone(set, 0), 1));
+			g.addColorStop(0.5, Rgba(Tone(set, 0.5), 1));
+			g.addColorStop(1, Rgba(Tone(set, 1), 1));
 			fc.fillStyle = g;
 		}
 		fc.fillRect(0, 0, w, h);
