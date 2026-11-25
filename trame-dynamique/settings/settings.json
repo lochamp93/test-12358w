@@ -503,11 +503,11 @@
 				},
 				{
 					"value": "brouillard",
-					"label": "Brouillard"
+					"label": "Brouillard (coton)"
 				},
 				{
 					"value": "vagues",
-					"label": "Vagues (Bézier)"
+					"label": "Bézier (écran de veille)"
 				},
 				{
 					"value": "aurore",
@@ -628,11 +628,11 @@
 				},
 				{
 					"value": "brouillard",
-					"label": "Brouillard"
+					"label": "Brouillard (coton)"
 				},
 				{
 					"value": "vagues",
-					"label": "Vagues (Bézier)"
+					"label": "Bézier (écran de veille)"
 				},
 				{
 					"value": "aurore",
@@ -963,6 +963,47 @@
 			}
 		},
 		{
+			"id": "lavaBlur",
+			"label": "Douceur des bords",
+			"type": "segmented",
+			"options": [
+				{
+					"value": "leger",
+					"label": "Légère"
+				},
+				{
+					"value": "moyen",
+					"label": "Moyenne"
+				},
+				{
+					"value": "fort",
+					"label": "Forte"
+				}
+			],
+			"defaultValue": "moyen",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "lave"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "lave"
+							}
+						]
+					}
+				]
+			}
+		},
+		{
 			"id": "grain",
 			"label": "Grain",
 			"description": "Fine texture « film » par-dessus la trame",
@@ -1053,6 +1094,14 @@
 				"id": "format",
 				"value": "custom"
 			}
+		},
+		{
+			"id": "keepRatio",
+			"label": "Proportions plein écran",
+			"description": "L’animation garde les proportions d’un écran 16:9 et est recadrée, au lieu d’être écrasée dans un format vertical ou étroit",
+			"type": "checkbox",
+			"defaultValue": true,
+			"group": "Forme et dimensions"
 		},
 		{
 			"id": "shape",

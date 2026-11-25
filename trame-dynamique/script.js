@@ -34,7 +34,22 @@ let noisePattern = null;
 /////////////////////
 
 // Infos affichées dans la page de paramétrage (seulement dans l'aperçu)
+// ?debug=true dans l'URL (OBS) : l'état s'affiche en bas à gauche de la source
+const debugEl = (() => {
+	if (!/^(true|1|oui)$/i.test(new URLSearchParams(location.search).get('debug') || '')) return null;
+	const el = document.createElement('div');
+	el.style.cssText = 'position:fixed;left:12px;bottom:12px;z-index:9;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,.75);color:#fff;font:600 20px/1.3 sans-serif;max-width:80vw';
+	document.addEventListener('DOMContentLoaded', () => document.body.appendChild(el));
+	if (document.body) document.body.appendChild(el);
+	return el;
+})();
+
 function PostInfo(id, text, status) {
+	if (debugEl && id === 'paletteStatus') {
+		const src = ws ? ws.values.paletteSource : '';
+		debugEl.textContent = `[${src}] ${text}`;
+		debugEl.style.color = status === 'warn' ? '#ffb340' : '#fff';
+	}
 	if (!ws || !ws.demo || window.parent === window) return;
 	try { window.parent.postMessage({ type: 'widget-info', id, text, status: status || '' }, '*'); } catch (e) { }
 }
@@ -616,7 +631,15 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 	if (withBackground) { c.fillStyle = Rgba(set.bg, 1); c.fillRect(0, 0, w, h); }
 	const s = ws.values;
 	const fn = THEMES[name] || THEMES.brouillard;
-	fn(c, w, h, t, set, {
+	// Proportions plein écran : l'animation est calculée pour un écran 16:9 puis recadrée
+	// (un format vertical ou étroit montre une partie de l'animation, sans l'écraser)
+	let vw = w, vh = h;
+	if (s.keepRatio) {
+		const R = 16 / 9;
+		if (w / h < R) { vh = h; vw = h * R; } else { vw = w; vh = w / R; }
+		c.translate((w - vw) / 2, (h - vh) / 2);
+	}
+	fn(c, vw, vh, t, set, {
 		density: DENSITY[s.density] ?? 1,
 		unit: PxScale(),
 		lineWidth: Number(s.lineWidth) || 2,
@@ -625,6 +648,7 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		haloSize: Number(s.haloSize) || 100,
 		haloBlur: s.haloBlur,
 		haloBlack: withBackground ? Number(s.haloBlack) || 0 : 0,
+		lavaBlur: s.lavaBlur,
 		background: withBackground,
 		layer: layerCanvas
 	});
