@@ -34,12 +34,24 @@
 			"group": "Source des couleurs"
 		},
 		{
+			"id": "smtcBridgeInfo",
+			"label": "SMTC Bridge",
+			"description": "Télécharger le SMTC Bridge §1 de ce <a href=\"https://nuttylmao.notion.site/Universal-Now-Playing-38f19969b237801e8484c9f387071409\" target=\"_blank\" rel=\"noopener\">lien</a> pour détecter la musique en cours",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Source des couleurs",
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
+		},
+		{
 			"id": "channel",
 			"label": "Chaîne Twitch",
 			"description": "Laisser vide pour utiliser la chaîne connectée à Streamer.bot",
 			"type": "text",
 			"defaultValue": "",
-			"placeholder": "anaismrn",
+			"placeholder": "Pseudo",
 			"group": "Source des couleurs",
 			"showIf": {
 				"id": "paletteSource",
@@ -1396,7 +1408,7 @@
 			"description": "Les caractères à faire tomber (ex. le pseudo de la chaîne)",
 			"type": "text",
 			"defaultValue": "",
-			"placeholder": "ANAISMRN",
+			"placeholder": "Texte",
 			"group": "Trame",
 			"showIf": {
 				"all": [
