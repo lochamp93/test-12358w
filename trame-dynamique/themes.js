@@ -88,8 +88,8 @@ const THEMES = {
 	// Bézier : courbes qui ricochent sur les bords avec leur traînée,
 	// comme l'écran de veille « Bézier » de Windows 95
 	vagues(ctx, w, h, t, set, o) {
-		const curves = [1, 2, 3][o.density];
-		const trail = 16;
+		const curves = [2, 4, 7][o.density];
+		const trail = [18, 24, 30][o.density];
 		const items = Particles('bezier', curves, (r) => ({
 			pts: Array.from({ length: 7 }, () => ({ x: r() * 2, y: r() * 2, vx: 0.05 + r() * 0.09, vy: 0.05 + r() * 0.09 })),
 			ph: r() * 6.28
@@ -101,7 +101,7 @@ const THEMES = {
 		ctx.lineJoin = 'round';
 		items.forEach((c, ci) => {
 			for (let i = trail - 1; i >= 0; i--) {
-				const tt = t - i * 0.09;
+				const tt = t - i * 0.06;
 				const P = c.pts.map(p => [Bounce(p.x + p.vx * tt) * w, Bounce(p.y + p.vy * tt) * h]);
 				const fade = 1 - i / trail;
 				// La couleur glisse lentement entre la teinte et sa version claire
@@ -277,36 +277,6 @@ const THEMES = {
 			ctx.beginPath();
 			ctx.arc(px, py, rad, 0, 6.2832);
 			ctx.fill();
-		}
-	},
-
-	// Formes géométriques qui flottent et tournent
-	geometrique(ctx, w, h, t, set, o) {
-		const n = [14, 28, 50][o.density];
-		const items = Particles('geometrique', n, (r) => ({ x: r(), y: r(), s: 0.025 + r() * 0.06, vx: (r() - 0.5) * 0.02, vy: (r() - 0.5) * 0.02, rot: r() * 6.28, vr: (r() - 0.5) * 0.5, tone: r(), fill: r() < 0.45, a: 0.35 + r() * 0.45 }));
-		const sides = { triangles: 3, hexagones: 6, losanges: 4, cercles: 0 }[o.shapeKind] ?? 3;
-		const big = Math.min(w, h) * 0.5 + Math.max(w, h) * 0.5;
-		ctx.lineWidth = Math.max(1, 2 * o.unit);
-		ctx.lineJoin = 'round';
-		for (const it of items) {
-			const x = (((it.x + it.vx * t) % 1) + 1) % 1 * w;
-			const y = (((it.y + it.vy * t) % 1) + 1) % 1 * h;
-			const rad = it.s * big * 0.5 * (1 + 0.7 * o.amplitude * (Noise2(it.rot * 10 + t * 0.12, 5.5) - 0.35));
-			const col = Rgba(Tone(set, it.tone), it.a);
-			ctx.beginPath();
-			if (sides === 0) ctx.arc(x, y, rad, 0, 6.2832);
-			else {
-				const a0 = it.rot + it.vr * t;
-				for (let i = 0; i <= sides; i++) {
-					const a = a0 + i * 6.2832 / sides;
-					const rr = sides === 4 && i % 2 ? rad * 0.62 : rad; // losange : un axe plus court
-					const px = x + Math.cos(a) * rr, py = y + Math.sin(a) * rr;
-					i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
-				}
-				ctx.closePath();
-			}
-			if (it.fill) { ctx.fillStyle = col; ctx.fill(); }
-			else { ctx.strokeStyle = col; ctx.stroke(); }
 		}
 	},
 

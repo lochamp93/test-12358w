@@ -253,7 +253,7 @@
 		{
 			"id": "colorCount",
 			"label": "Nombre de couleurs",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "mono",
@@ -274,7 +274,7 @@
 		{
 			"id": "colorPick",
 			"label": "Choix des teintes",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "auto",
@@ -295,8 +295,7 @@
 		{
 			"id": "ambiance",
 			"label": "Ambiance",
-			"description": "Dominantes : les couleurs qui occupent le plus de place dans l’image. Vive : teintes saturées. Douce : teintes adoucies. Sombre : teintes profondes",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "dominantes",
@@ -558,10 +557,6 @@
 					"label": "Bokeh"
 				},
 				{
-					"value": "geometrique",
-					"label": "Géométrique"
-				},
-				{
 					"value": "lave",
 					"label": "Lave"
 				},
@@ -589,7 +584,7 @@
 		{
 			"id": "videoBackground",
 			"label": "Fond de la vidéo",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "noir",
@@ -681,10 +676,6 @@
 				{
 					"value": "bokeh",
 					"label": "Bokeh"
-				},
-				{
-					"value": "geometrique",
-					"label": "Géométrique"
 				},
 				{
 					"value": "lave",
@@ -806,7 +797,7 @@
 		{
 			"id": "haloBlur",
 			"label": "Douceur des bords",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "doux",
@@ -885,7 +876,7 @@
 		{
 			"id": "density",
 			"label": "Densité",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "faible",
@@ -930,7 +921,7 @@
 			"id": "amplitude",
 			"label": "Amplitude",
 			"description": "Variation de taille et de position. Forte : les formes grandissent, rétrécissent et sortent souvent du cadre",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "faible",
@@ -954,8 +945,7 @@
 						"value": [
 							"aurore",
 							"halo",
-							"bokeh",
-							"geometrique"
+							"bokeh"
 						]
 					},
 					{
@@ -969,54 +959,8 @@
 								"value": [
 									"aurore",
 									"halo",
-									"bokeh",
-									"geometrique"
+									"bokeh"
 								]
-							}
-						]
-					}
-				]
-			}
-		},
-		{
-			"id": "shapeKind",
-			"label": "Formes",
-			"type": "select",
-			"options": [
-				{
-					"value": "triangles",
-					"label": "Triangles"
-				},
-				{
-					"value": "hexagones",
-					"label": "Hexagones"
-				},
-				{
-					"value": "losanges",
-					"label": "Losanges"
-				},
-				{
-					"value": "cercles",
-					"label": "Cercles"
-				}
-			],
-			"defaultValue": "triangles",
-			"group": "Trame",
-			"showIf": {
-				"any": [
-					{
-						"id": "theme",
-						"value": "geometrique"
-					},
-					{
-						"all": [
-							{
-								"id": "videoFill",
-								"value": "trame"
-							},
-							{
-								"id": "videoTheme",
-								"value": "geometrique"
 							}
 						]
 					}
@@ -1057,7 +1001,7 @@
 		{
 			"id": "lavaBlur",
 			"label": "Douceur des bords",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "leger",
@@ -1094,6 +1038,18 @@
 					}
 				]
 			}
+		},
+		{
+			"id": "blur",
+			"label": "Flou",
+			"description": "En pixels, sur toute la trame (comme un filtre de flou dans OBS). 0 : aucun",
+			"type": "number",
+			"min": 0,
+			"max": 200,
+			"step": 5,
+			"defaultValue": 0,
+			"inputWidth": 72,
+			"group": "Trame"
 		},
 		{
 			"id": "grain",
@@ -1310,7 +1266,7 @@
 			"id": "quality",
 			"label": "Qualité de rendu",
 			"description": "50 % est invisible sur les trames floues (brouillard, aurore, bokeh) et soulage la carte graphique",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "100",
@@ -1331,7 +1287,7 @@
 		{
 			"id": "fps",
 			"label": "Images par seconde",
-			"type": "segmented",
+			"type": "select",
 			"options": [
 				{
 					"value": "30",

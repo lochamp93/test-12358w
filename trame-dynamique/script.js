@@ -594,6 +594,33 @@ function RoundRectPath(c, x, y, w, h, r) {
 	c.closePath();
 }
 
+// Flou de toute la trame, calculé en réduction (rapide même avec un gros flou) :
+// les bords sont prolongés hors du cadre pour que le flou ne les assombrisse pas
+const blurSmall = document.createElement('canvas');
+const blurOut = document.createElement('canvas');
+function ApplyBlur(w, h, radius) {
+	const k = Math.min(1, Math.max(0.12, 12 / radius)); // plus le flou est fort, plus on réduit
+	const sw = Math.max(8, Math.round(w * k)), sh = Math.max(8, Math.round(h * k));
+	const r = radius * k;
+	const p = Math.ceil(r * 2.5);
+	for (const c of [blurSmall, blurOut]) if (c.width !== sw + 2 * p || c.height !== sh + 2 * p) { c.width = sw + 2 * p; c.height = sh + 2 * p; }
+	const a = blurSmall.getContext('2d');
+	a.clearRect(0, 0, blurSmall.width, blurSmall.height);
+	a.drawImage(canvas, 0, 0, blurSmall.width, blurSmall.height); // bords prolongés (étirés)
+	a.drawImage(canvas, p, p, sw, sh);
+	const b = blurOut.getContext('2d');
+	b.clearRect(0, 0, blurOut.width, blurOut.height);
+	b.filter = `blur(${r}px)`;
+	b.drawImage(blurSmall, 0, 0);
+	b.filter = 'none';
+	ctx.save();
+	ctx.clearRect(0, 0, w, h);
+	ctx.imageSmoothingEnabled = true;
+	ctx.imageSmoothingQuality = 'high';
+	ctx.drawImage(blurOut, p, p, sw, sh, 0, 0, w, h);
+	ctx.restore();
+}
+
 // Découpe la trame selon la forme choisie
 function ApplyShape(w, h) {
 	const s = ws.values;
@@ -640,7 +667,6 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		density: DENSITY[s.density] ?? 1,
 		unit: PxScale(),
 		lineWidth: Number(s.lineWidth) || 2,
-		shapeKind: s.shapeKind,
 		haloCount: Number(s.haloCount) || 4,
 		haloSize: Number(s.haloSize) || 100,
 		haloBlur: s.haloBlur,
@@ -673,6 +699,9 @@ function Frame(now) {
 
 	if (s.theme === 'video') DrawVideo(w, h, t, set);
 	else DrawTheme(ctx, s.theme, w, h, t, set, s.background);
+
+	// Flou global (comme un filtre « flou » d'OBS)
+	if (Number(s.blur) > 0) ApplyBlur(w, h, Number(s.blur) * PxScale());
 
 	// Grain : seulement là où la trame est dessinée
 	if (s.grain) {
