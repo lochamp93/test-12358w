@@ -499,7 +499,7 @@
 			"options": [
 				{
 					"value": "halo",
-					"label": "Halo (bandes floues)"
+					"label": "Halo (formes organiques)"
 				},
 				{
 					"value": "brouillard",
@@ -624,7 +624,7 @@
 			"options": [
 				{
 					"value": "halo",
-					"label": "Halo (bandes floues)"
+					"label": "Halo (formes organiques)"
 				},
 				{
 					"value": "brouillard",
@@ -703,7 +703,7 @@
 		},
 		{
 			"id": "haloCount",
-			"label": "Nombre de bandes",
+			"label": "Nombre de formes",
 			"type": "number",
 			"min": 2,
 			"max": 6,
@@ -733,7 +733,7 @@
 		},
 		{
 			"id": "haloSize",
-			"label": "Largeur des bandes",
+			"label": "Taille des formes",
 			"description": "En %",
 			"type": "number",
 			"min": 40,
@@ -765,7 +765,7 @@
 		},
 		{
 			"id": "haloBlur",
-			"label": "Flou",
+			"label": "Douceur des bords",
 			"type": "segmented",
 			"options": [
 				{
@@ -811,7 +811,7 @@
 			"type": "number",
 			"min": 0,
 			"max": 100,
-			"defaultValue": 85,
+			"defaultValue": 100,
 			"inputWidth": 72,
 			"group": "Trame",
 			"showIf": {

@@ -118,54 +118,86 @@ const THEMES = {
 		ctx.restore();
 	},
 
-	// Halo : grandes bandes floues qui tournent et se croisent sur un fond sombre
-	// (inspiré des fonds animés des lecteurs de musique). Dessiné en basse résolution
-	// avec un gros flou, puis agrandi : rendu très doux et léger pour la carte graphique.
+	// Halo : grandes formes organiques et molles qui fusionnent sur un fond sombre
+	// (inspiré des fonds animés des lecteurs de musique). Champ de « métaballes » calculé
+	// en basse résolution : les formes se rejoignent et se séparent naturellement, bords doux.
+	// Alternance de phases calmes (formes dans les coins qui dérivent) et de phases agitées
+	// (une grande masse qui gonfle et tourbillonne).
 	halo(ctx, w, h, t, set, o) {
 		const n = Math.max(2, Math.min(6, Math.round(o.haloCount || 4)));
-		const bars = Particles('halo', n, (r, i) => ({
-			px: r(), py: r(), fx: 0.03 + r() * 0.05, fy: 0.03 + r() * 0.05, ph: r() * 6.28,
-			ang: r() * 6.28, spin: (r() < 0.5 ? -1 : 1) * (0.35 + r() * 0.5),
-			width: 0.3 + r() * 0.22, tone: i % 3
+		const blobs = Particles('halo2', n, (r) => ({
+			sx: r() * 100, sy: r() * 100, sr: r() * 100,
+			// point d'ancrage au repos : plutôt près des bords et des coins
+			ax: r() < 0.5 ? -0.1 + r() * 0.3 : 0.8 + r() * 0.3,
+			ay: r() < 0.5 ? -0.1 + r() * 0.35 : 0.75 + r() * 0.35,
+			size: 0.3 + r() * 0.2,
+			sub: r() * 6.28
 		}));
 		const layer = o.layer;
-		// Calque plus grand que l'écran (marge de 25 %) : le flou ne crée pas de liseré sur les bords
-		const lw = Math.max(24, Math.round(w / 10)), lh = Math.max(24, Math.round(h / 10));
-		const mx = Math.round(lw * 0.25), my = Math.round(lh * 0.25);
-		if (layer.width !== lw + 2 * mx || layer.height !== lh + 2 * my) { layer.width = lw + 2 * mx; layer.height = lh + 2 * my; }
+		const gw = 128, gh = Math.max(8, Math.round(128 * h / w));
+		if (layer.width !== gw || layer.height !== gh) { layer.width = gw; layer.height = gh; }
 		const lc = layer.getContext('2d');
-		lc.save();
-		lc.clearRect(0, 0, layer.width, layer.height);
-		lc.translate(mx, my);
-		const small = Math.min(lw, lh), diag = Math.hypot(lw, lh);
-		const blur = { doux: 0.1, fort: 0.16, tres: 0.24 }[o.haloBlur] || 0.16;
-		lc.filter = `blur(${Math.max(1, small * blur)}px)`;
+		const img = lc.createImageData(gw, gh);
+		const d = img.data;
+
+		// Énergie : 0 = calme, 1 = agité (varie lentement et sans à-coups)
+		const energy = Smooth(0.42, 0.72, Noise2(t * 0.07, 3.7) * 0.7 + Noise2(t * 0.19, 9.1) * 0.3);
 		const size = (o.haloSize || 100) / 100;
-		for (const b of bars) {
-			// Vitesse de rotation qui varie : accélérations et ralentissements doux
-			const a = b.ang + b.spin * t + 0.9 * Math.sin(t * 0.31 + b.ph) + 0.5 * Math.sin(t * 0.83 + b.ph * 2);
-			// Pivot qui se déplace, parfois hors de l'écran (bandes qui entrent par un coin)
-			const cx = lw * (-0.15 + 1.3 * (0.5 + 0.5 * Math.sin(t * b.fx * 6.28 + b.ph + b.px * 6.28)));
-			const cy = lh * (-0.15 + 1.3 * (0.5 + 0.5 * Math.cos(t * b.fy * 6.28 + b.ph + b.py * 6.28)));
-			const col = b.tone === 0 ? set.mid : b.tone === 1 ? set.hi : MixRgb(set.mid, set.hi, 0.5);
-			lc.fillStyle = Rgba(col, 0.9);
-			lc.save();
-			lc.translate(cx, cy);
-			lc.rotate(a);
-			const bw = small * b.width * size;
-			lc.fillRect(-diag, -bw / 2, diag * 2, bw);
-			lc.restore();
+		const aspect = w / h;
+
+		// Position et rayon de chaque forme (2 points par forme : formes allongées, en haricot)
+		const pts = [];
+		for (const b of blobs) {
+			const wander = 0.12 + energy * 0.55;
+			const spd = 0.05 + energy * 0.22;
+			const cx = b.ax + (Noise2(b.sx + t * spd, 1.3) - 0.5) * 2 * wander + (0.5 - b.ax) * energy * 0.6;
+			const cy = b.ay + (Noise2(b.sy + t * spd, 7.9) - 0.5) * 2 * wander + (0.5 - b.ay) * energy * 0.6;
+			const rad = b.size * size * (0.75 + energy * 0.75) * (0.85 + 0.3 * Noise2(b.sr + t * 0.3, 4.2));
+			const a = b.sub + t * (0.2 + energy * 0.9);
+			const off = rad * 0.6;
+			pts.push([cx + Math.cos(a) * off / aspect, cy + Math.sin(a) * off, rad * 0.8]);
+			pts.push([cx - Math.cos(a) * off / aspect, cy - Math.sin(a) * off, rad * 0.65]);
 		}
-		lc.restore();
-		// Fond : voile noir par-dessus la teinte sombre (le noir fait ressortir la couleur)
-		if (o.background && o.haloBlack > 0) {
-			ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(1, o.haloBlack / 100)})`;
-			ctx.fillRect(0, 0, w, h);
+
+		// Douceur des bords : plus la bande de transition est large, plus c'est flou
+		const soft = { doux: 0.3, fort: 0.4, tres: 0.48 }[o.haloBlur] || 0.4;
+		const lo = 0.5 - soft, hiT = 0.5 + soft;
+		const bg = set.bg, mid = set.mid, hi = set.hi;
+		const black = o.background ? Math.min(1, (o.haloBlack || 0) / 100) : 0;
+		const base = [bg[0] * (1 - black), bg[1] * (1 - black), bg[2] * (1 - black)];
+
+		for (let y = 0; y < gh; y++) {
+			const py = (y + 0.5) / gh;
+			for (let x = 0; x < gw; x++) {
+				// Léger gauchissement de l'espace : contours irréguliers, pas des cercles
+				const px = (x + 0.5) / gw + (Noise2(x * 0.05 + t * 0.15, y * 0.05) - 0.5) * 0.12;
+				const qy = py + (Noise2(x * 0.05 + 50, y * 0.05 - t * 0.12) - 0.5) * 0.12;
+				let f = 0;
+				for (let i = 0; i < pts.length; i++) {
+					const dx = (px - pts[i][0]) * aspect, dy = qy - pts[i][1];
+					const rr = pts[i][2] * pts[i][2];
+					f += Math.exp(-(dx * dx + dy * dy) / rr);
+				}
+				const v = Smooth(lo, hiT, f);          // présence de la forme
+				const core = Smooth(hiT, 1.6, f);  // cœur à peine plus clair
+				const r = mid[0] + (hi[0] - mid[0]) * core * 0.15;
+				const g = mid[1] + (hi[1] - mid[1]) * core * 0.15;
+				const bl = mid[2] + (hi[2] - mid[2]) * core * 0.15;
+				const k = (y * gw + x) * 4;
+				if (o.background) {
+					d[k] = base[0] + (r - base[0]) * v; d[k + 1] = base[1] + (g - base[1]) * v; d[k + 2] = base[2] + (bl - base[2]) * v; d[k + 3] = 255;
+				} else {
+					d[k] = r; d[k + 1] = g; d[k + 2] = bl; d[k + 3] = v * 255;
+				}
+			}
 		}
+		lc.putImageData(img, 0, 0);
 		ctx.save();
 		ctx.imageSmoothingEnabled = true;
 		ctx.imageSmoothingQuality = 'high';
-		ctx.drawImage(layer, mx, my, lw, lh, 0, 0, w, h);
+		ctx.filter = `blur(${Math.max(1, w / 70)}px)`;
+		const m = Math.ceil(w / 40); // déborde un peu : pas de liseré sur les bords
+		ctx.drawImage(layer, -m, -m, w + 2 * m, h + 2 * m);
 		ctx.restore();
 	},
 
