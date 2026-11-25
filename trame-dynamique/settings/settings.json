@@ -1523,18 +1523,6 @@
 					"label": "1080p portrait (1080 × 1920)"
 				},
 				{
-					"value": "2560x160",
-					"label": "Chat horizontal 1440p (2560 × 160)"
-				},
-				{
-					"value": "1920x120",
-					"label": "Chat horizontal 1080p (1920 × 120)"
-				},
-				{
-					"value": "1080x1080",
-					"label": "Carré (1080 × 1080)"
-				},
-				{
 					"value": "custom",
 					"label": "Personnalisé"
 				}
