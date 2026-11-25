@@ -327,6 +327,309 @@ const THEMES = {
 		ctx.filter = `url(#goo) blur(${Math.max(1, Math.min(w, h) * soft)}px)`;
 		ctx.drawImage(layer, 0, 0, w, h);
 		ctx.restore();
-	}
+	},
 
+	// Mosaïque : grille de gros pixels qui s'allument et s'éteignent en vagues (écran LED)
+	mosaique(ctx, w, h, t, set, o) {
+		const cell = Math.max(4, o.pixelSize * o.unit);
+		const gap = Math.min(cell * 0.45, Math.max(0, o.pixelGap * o.unit));
+		const cols = Math.ceil(w / cell) + 1, rows = Math.ceil(h / cell) + 1;
+		const ox = (w - cols * cell) / 2, oy = (h - rows * cell) / 2;
+		const ci = cols / 2, cj = rows / 2;
+		for (let j = 0; j < rows; j++) {
+			for (let i = 0; i < cols; i++) {
+				let v;
+				if (o.waveShape === 'cercle') v = Math.sin(Math.hypot(i - ci, j - cj) * 0.45 - t * 2.2);
+				else if (o.waveShape === 'aleatoire') v = Noise2(i * 0.22 + t * 0.35, j * 0.22 - t * 0.2) * 2 - 1;
+				else v = Math.sin((i + j) * 0.32 - t * 2) * 0.7 + Math.sin(i * 0.11 - t * 0.7) * 0.3;
+				const on = Smooth(-0.2, 0.9, v);
+				if (on < 0.03) continue;
+				const tone = Noise2(i * 0.08 + t * 0.05, j * 0.08 + 11);
+				ctx.fillStyle = Rgba(Tone(set, tone), 0.25 + 0.75 * on);
+				const sz = (cell - gap) * (0.55 + 0.45 * on);
+				ctx.fillRect(ox + i * cell + (cell - sz) / 2, oy + j * cell + (cell - sz) / 2, sz, sz);
+			}
+		}
+	},
+
+	// Plasma rétro : couleurs liquides des démos des années 90, en gros pixels tramés
+	plasma(ctx, w, h, t, set, o) {
+		const cell = Math.max(3, o.pixelSize * o.unit);
+		const gw = Math.max(4, Math.ceil(w / cell)), gh = Math.max(4, Math.ceil(h / cell));
+		const layer = o.layer;
+		if (layer.width !== gw || layer.height !== gh) { layer.width = gw; layer.height = gh; }
+		const lc = layer.getContext('2d');
+		const img = lc.createImageData(gw, gh);
+		const d = img.data;
+		const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+		const dither = { aucune: 0, legere: 0.08, forte: 0.18 }[o.plasmaDither] ?? 0.08;
+		const steps = [set.bg, MixRgb(set.bg, set.list[0], 0.5)].concat(set.count > 1 ? set.list.slice(0, set.count) : [set.mid, set.hi]);
+		const levels = steps.length;
+		const k = 26 / Math.max(gw, gh);
+		for (let y = 0; y < gh; y++) {
+			for (let x = 0; x < gw; x++) {
+				const X = x * k, Y = y * k;
+				let v = Math.sin(X + t) + Math.sin((Y + t) * 0.8) + Math.sin((X + Y + t * 1.3) * 0.6)
+					+ Math.sin(Math.hypot(X - 13 + 5 * Math.sin(t * 0.3), Y - 8 + 4 * Math.cos(t * 0.4)) * 0.7);
+				v = (v + 4) / 8; // 0..1
+				v += (BAYER[(y & 3) * 4 + (x & 3)] / 16 - 0.5) * dither;
+				// Couleurs franches de la palette, sans mélange (rendu rétro à palette limitée)
+				const q = Math.max(0, Math.min(levels - 1, Math.floor(v * levels)));
+				const c = steps[q];
+				const i = (y * gw + x) * 4;
+				d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = o.background || q > 0 ? 255 : 0;
+			}
+		}
+		lc.putImageData(img, 0, 0);
+		ctx.save();
+		ctx.imageSmoothingEnabled = false; // pixels nets
+		ctx.drawImage(layer, 0, 0, gw * cell, gh * cell);
+		ctx.restore();
+	},
+
+	// Disco : reflets carrés d'une boule à facettes qui glissent sur l'écran et scintillent
+	disco(ctx, w, h, t, set, o) {
+		const size = Math.max(6, o.discoSize * o.unit);
+		const rows = Math.ceil(h / (size * 1.6)) + 1;
+		const perRow = Math.ceil(w / (size * 2.2)) + 2;
+		const spin = t * 0.06; // rotation de la boule
+		const sparkle = { faible: 0.97, moyen: 0.93, fort: 0.87 }[o.discoSparkle] ?? 0.93;
+		ctx.save();
+		for (let r = 0; r < rows; r++) {
+			const rnd = SeededRandom(r * 7919 + 13);
+			const y0 = (r + 0.5) * h / rows;
+			const lane = 0.7 + 0.6 * rnd(); // vitesse propre à chaque rangée (courbure de la boule)
+			for (let k = 0; k < perRow; k++) {
+				const base = rnd(), tone = rnd(), ph = rnd() * 100, jitter = rnd() - 0.5;
+				let u = ((base + k / perRow + spin * lane) % 1 + 1) % 1;
+				// Projection sur la sphère : les reflets vont plus vite au centre, se tassent sur les bords
+				const xx = (0.5 - 0.5 * Math.cos(u * Math.PI)) * (w + size * 2) - size;
+				const edge = Math.sin(u * Math.PI);
+				const sw = size * (0.35 + 0.65 * edge), sh = size * 0.8;
+				const y = y0 + jitter * size * 0.8;
+				const flick = Noise2(ph + t * 0.8, r);
+				const a = (0.25 + 0.6 * flick) * (0.3 + 0.7 * edge);
+				const col = Tone(set, tone);
+				ctx.fillStyle = Rgba(col, a);
+				ctx.shadowColor = Rgba(col, a);
+				ctx.shadowBlur = size * 0.5;
+				ctx.fillRect(xx - sw / 2, y - sh / 2, sw, sh);
+				// Éclat : petite étoile blanche par moments
+				if (flick > sparkle) {
+					const g = (flick - sparkle) / (1 - sparkle);
+					const L = size * (0.8 + 1.6 * g);
+					ctx.shadowBlur = size;
+					ctx.shadowColor = 'rgba(255,255,255,0.9)';
+					ctx.fillStyle = `rgba(255,255,255,${0.5 + 0.5 * g})`;
+					ctx.fillRect(xx - L, y - 1.5 * o.unit, L * 2, 3 * o.unit);
+					ctx.fillRect(xx - 1.5 * o.unit, y - L, 3 * o.unit, L * 2);
+				}
+			}
+		}
+		ctx.restore();
+	},
+
+	// Matrix : colonnes de caractères qui tombent, tête claire et traînée qui s'éteint
+	matrix(ctx, w, h, t, set, o) {
+		const size = Math.max(8, o.matrixSize * o.unit);
+		const chars = o.matrixChars;
+		const cols = Math.ceil(w / size);
+		const rows = Math.ceil(h / size) + 1;
+		const fill = [0.45, 0.7, 1][o.density];
+		ctx.save();
+		ctx.font = `600 ${Math.round(size * 0.9)}px 'SF Mono', Consolas, 'Courier New', monospace`;
+		ctx.textAlign = 'center';
+		ctx.textBaseline = 'top';
+		const light = MixRgb(set.hi, [255, 255, 255], 0.55);
+		for (let c = 0; c < cols; c++) {
+			const rnd = SeededRandom(c * 104729 + 7);
+			if (rnd() > fill) continue;
+			const speed = 6 + rnd() * 10;              // cases par seconde
+			const len = 8 + Math.floor(rnd() * 18);   // longueur de la traînée
+			const ph = rnd() * 50, tone = rnd();
+			const cycle = rows + len + 4 + Math.floor(rnd() * 12);
+			const head = ((t * speed + ph * cycle) % cycle);
+			const col = Tone(set, tone);
+			const x = c * size + size / 2;
+			for (let k = 0; k < len; k++) {
+				const row = Math.floor(head) - k;
+				if (row < 0 || row >= rows) continue;
+				// Le caractère d'une case change de temps en temps
+				const n = Math.floor(Noise2(c * 3.1 + row * 0.7, Math.floor(t * 3 + c) * 0.5) * 9973 + c * 31 + row * 17);
+				const ch = chars[n % chars.length];
+				const a = k === 0 ? 1 : Math.pow(1 - k / len, 1.4) * 0.9;
+				ctx.fillStyle = k === 0 ? Rgba(light, 1) : Rgba(col, a);
+				if (k === 0) { ctx.shadowColor = Rgba(col, 0.9); ctx.shadowBlur = size * 0.6; } else ctx.shadowBlur = 0;
+				ctx.fillText(ch, x, row * size);
+			}
+		}
+		ctx.restore();
+	},
+
+	// Starfield : étoiles qui foncent vers l'écran (écran de veille de Windows 95)
+	starfield(ctx, w, h, t, set, o) {
+		const n = [150, 300, 550][o.density];
+		const stars = Particles('stars', n, (r) => ({ x: r() * 2 - 1, y: r() * 2 - 1, z: r(), v: 0.15 + r() * 0.2, tone: r() }));
+		const cx = w / 2, cy = h / 2, f = Math.max(w, h) * 0.5;
+		ctx.save();
+		ctx.lineCap = 'round';
+		for (const s of stars) {
+			const z = 1 - (((s.z + t * s.v) % 1) + 1) % 1; // 1 = loin, 0 = tout près
+			const zz = Math.max(0.02, z);
+			const zPrev = Math.min(1, zz + s.v * 0.08);  // position un peu avant : la traînée
+			const x1 = cx + s.x / zz * f * 0.5, y1 = cy + s.y / zz * f * 0.5;
+			const x0 = cx + s.x / zPrev * f * 0.5, y0 = cy + s.y / zPrev * f * 0.5;
+			if (x1 < -50 || x1 > w + 50 || y1 < -50 || y1 > h + 50) continue;
+			const near = 1 - z;
+			const col = MixRgb(Tone(set, s.tone), [255, 255, 255], 0.35 * near);
+			ctx.strokeStyle = Rgba(col, Math.min(1, 0.15 + near * 1.1));
+			ctx.lineWidth = Math.max(1, (0.6 + near * 3.2) * o.unit);
+			ctx.beginPath();
+			ctx.moveTo(x0, y0);
+			ctx.lineTo(x1, y1);
+			ctx.stroke();
+		}
+		ctx.restore();
+	},
+
+	// Synthwave : grille rétro en perspective qui défile, soleil en dégradé
+	synthwave(ctx, w, h, t, set, o) {
+		const hor = h * 0.56;
+		const c1 = set.list[0], c2 = set.count > 1 ? set.list[1] : set.hi;
+		ctx.save();
+		// Ciel : lueur au-dessus de l'horizon
+		const sky = ctx.createLinearGradient(0, 0, 0, hor);
+		sky.addColorStop(0, Rgba(c1, 0));
+		sky.addColorStop(1, Rgba(c1, 0.35));
+		ctx.fillStyle = sky;
+		ctx.fillRect(0, 0, w, hor);
+		// Soleil rayé
+		const R = Math.min(w, h) * 0.22, sx = w / 2, sy = hor - R * 0.35;
+		const sun = ctx.createLinearGradient(0, sy - R, 0, sy + R);
+		sun.addColorStop(0, Rgba(MixRgb(c2, [255, 255, 255], 0.3), 1));
+		sun.addColorStop(1, Rgba(c1, 1));
+		ctx.save();
+		ctx.beginPath();
+		ctx.rect(0, 0, w, hor);
+		ctx.clip();
+		ctx.beginPath();
+		ctx.arc(sx, sy, R, 0, 6.2832);
+		ctx.fillStyle = sun;
+		ctx.shadowColor = Rgba(c2, 0.8);
+		ctx.shadowBlur = R * 0.4;
+		ctx.fill();
+		ctx.shadowBlur = 0;
+		ctx.globalCompositeOperation = 'destination-out';
+		for (let i = 0; i < 7; i++) {
+			const yy = sy + R * (0.05 + i * 0.14) + ((t * 6) % (R * 0.14));
+			ctx.fillRect(sx - R, yy, R * 2, R * 0.035 * (1 + i * 0.5));
+		}
+		ctx.restore();
+		// Grille au sol
+		const lineCol = MixRgb(c2, [255, 255, 255], 0.15);
+		ctx.strokeStyle = Rgba(lineCol, 0.9);
+		ctx.shadowColor = Rgba(c2, 0.9);
+		ctx.shadowBlur = 8 * o.unit;
+		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
+		const scroll = (t * 0.6) % 1;
+		for (let i = 0; i < 18; i++) {
+			const z = (i + 1 - scroll) / 18; // 0 = horizon
+			const y = hor + (h - hor) * Math.pow(z, 2.2);
+			ctx.globalAlpha = Math.min(1, z * 2);
+			ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+		}
+		ctx.globalAlpha = 1;
+		for (let i = -14; i <= 14; i++) {
+			ctx.beginPath();
+			ctx.moveTo(w / 2 + i * w * 0.02, hor);
+			ctx.lineTo(w / 2 + i * w * 0.16, h);
+			ctx.stroke();
+		}
+		ctx.restore();
+	},
+
+	// Ondes : cercles qui se propagent comme des gouttes sur l'eau
+	ondes(ctx, w, h, t, set, o) {
+		const n = [3, 5, 8][o.density];
+		const drops = Particles('ondes', n, (r) => ({ x: r(), y: r(), period: 4 + r() * 4, ph: r() * 10, tone: r() }));
+		const maxR = Math.hypot(w, h) * 0.55;
+		ctx.save();
+		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
+		for (const d of drops) {
+			const cx = w * (d.x + 0.05 * Math.sin(t * 0.1 + d.ph)), cy = h * (d.y + 0.05 * Math.cos(t * 0.12 + d.ph));
+			const col = Tone(set, d.tone);
+			for (let k = 0; k < 4; k++) {
+				const age = (((t + d.ph) / d.period + k / 4) % 1);
+				const r = age * maxR;
+				ctx.strokeStyle = Rgba(col, (1 - age) * (1 - age) * 0.9);
+				ctx.beginPath();
+				ctx.arc(cx, cy, Math.max(0.1, r), 0, 6.2832);
+				ctx.stroke();
+			}
+		}
+		ctx.restore();
+	},
+
+	// Crêtes : lignes empilées qui ondulent comme des montagnes (style « Unknown Pleasures »)
+	cretes(ctx, w, h, t, set, o) {
+		const n = [18, 30, 48][o.density];
+		const top = h * 0.12, span = h * 0.8, step = span / n;
+		const pts = 90;
+		ctx.save();
+		ctx.lineWidth = Math.max(1, o.lineWidth * o.unit);
+		ctx.lineJoin = 'round';
+		for (let i = 0; i < n; i++) {
+			const y0 = top + i * step;
+			const ridge = new Path2D();
+			for (let p = 0; p <= pts; p++) {
+				const u = p / pts;
+				const env = Math.exp(-Math.pow((u - 0.5) / 0.2, 2)); // relief surtout au centre
+				const v = Fbm(u * 6 + i * 0.37, t * 0.25 + i * 0.13);
+				const y = y0 - env * Math.pow(v, 2.2) * step * 7;
+				p ? ridge.lineTo(u * w, y) : ridge.moveTo(u * w, y);
+			}
+			// Fond sous la ligne : cache les lignes de derrière (sans tracer les bords du cadre)
+			const under = new Path2D(ridge);
+			under.lineTo(w, h + 10); under.lineTo(0, h + 10); under.closePath();
+			if (o.background) { ctx.fillStyle = Rgba(set.bg, 1); ctx.fill(under); }
+			else { ctx.save(); ctx.globalCompositeOperation = 'destination-out'; ctx.fill(under); ctx.restore(); }
+			ctx.strokeStyle = Rgba(Tone(set, i / Math.max(1, n - 1)), 1);
+			ctx.stroke(ridge);
+		}
+		ctx.restore();
+	},
+
+	// Dégradé fluide : dégradé maillé très doux qui ondule lentement
+	degrade(ctx, w, h, t, set, o) {
+		const layer = o.layer;
+		const gw = 48, gh = Math.max(4, Math.round(48 * h / w));
+		if (layer.width !== gw || layer.height !== gh) { layer.width = gw; layer.height = gh; }
+		const lc = layer.getContext('2d');
+		const img = lc.createImageData(gw, gh);
+		const d = img.data;
+		const cols = [set.list[0], set.list[1], set.list[2], set.count > 1 ? set.list[0] : set.hi, set.bg];
+		const P = cols.map((c, i) => [0.5 + 0.45 * Math.sin(t * (0.05 + i * 0.013) + i * 1.9), 0.5 + 0.45 * Math.cos(t * (0.04 + i * 0.011) + i * 2.7), c]);
+		const aspect = w / h;
+		for (let y = 0; y < gh; y++) {
+			for (let x = 0; x < gw; x++) {
+				const px = x / (gw - 1), py = y / (gh - 1);
+				let sw = 0, r = 0, g = 0, b = 0;
+				for (const p of P) {
+					const dd = ((px - p[0]) * aspect) ** 2 + (py - p[1]) ** 2;
+					const wgt = 1 / (dd * dd + 0.002);
+					sw += wgt; r += wgt * p[2][0]; g += wgt * p[2][1]; b += wgt * p[2][2];
+				}
+				const i = (y * gw + x) * 4;
+				d[i] = r / sw; d[i + 1] = g / sw; d[i + 2] = b / sw; d[i + 3] = 255;
+			}
+		}
+		lc.putImageData(img, 0, 0);
+		ctx.save();
+		ctx.imageSmoothingEnabled = true;
+		ctx.imageSmoothingQuality = 'high';
+		ctx.filter = `blur(${Math.max(1, w / 60)}px)`;
+		const m = Math.ceil(w / 20);
+		ctx.drawImage(layer, -m, -m, w + 2 * m, h + 2 * m);
+		ctx.restore();
+	}
 };

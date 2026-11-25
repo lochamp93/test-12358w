@@ -648,6 +648,21 @@ function ApplyShape(w, h) {
 	ctx.restore();
 }
 
+// Jeu de caractères du thème Matrix
+const MATRIX_SETS = {
+	matrix: 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789',
+	chiffres: '0123456789',
+	binaire: '01',
+	symboles: '+-*/=<>#%&@$!?~^|[]{}()'
+};
+function MatrixChars(s) {
+	if (s.matrixChars === 'perso') {
+		const txt = Array.from(String(s.matrixText || '').replace(/\s+/g, ''));
+		return txt.length ? txt : Array.from(MATRIX_SETS.matrix);
+	}
+	return Array.from(MATRIX_SETS[s.matrixChars] || MATRIX_SETS.matrix);
+}
+
 // Dessine un thème (fond plein éventuel compris) dans un contexte
 function DrawTheme(c, name, w, h, t, set, withBackground) {
 	c.save();
@@ -674,6 +689,14 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		lavaBlur: s.lavaBlur,
 		amplitude: { faible: 0.4, moyenne: 1, forte: 1.6 }[s.amplitude] ?? 1,
 		background: withBackground,
+		pixelSize: Number(s.pixelSize) || 40,
+		pixelGap: Number(s.pixelGap) || 0,
+		waveShape: s.waveShape,
+		plasmaDither: s.plasmaDither,
+		discoSize: Number(s.discoSize) || 60,
+		discoSparkle: s.discoSparkle,
+		matrixSize: Number(s.matrixSize) || 28,
+		matrixChars: MatrixChars(s),
 		layer: layerCanvas
 	});
 	c.restore();

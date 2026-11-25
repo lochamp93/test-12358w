@@ -561,6 +561,42 @@
 					"label": "Lave"
 				},
 				{
+					"value": "mosaique",
+					"label": "Mosaïque"
+				},
+				{
+					"value": "plasma",
+					"label": "Plasma rétro"
+				},
+				{
+					"value": "disco",
+					"label": "Disco"
+				},
+				{
+					"value": "matrix",
+					"label": "Matrix"
+				},
+				{
+					"value": "starfield",
+					"label": "Starfield"
+				},
+				{
+					"value": "synthwave",
+					"label": "Synthwave"
+				},
+				{
+					"value": "ondes",
+					"label": "Ondes"
+				},
+				{
+					"value": "cretes",
+					"label": "Crêtes"
+				},
+				{
+					"value": "degrade",
+					"label": "Dégradé fluide"
+				},
+				{
 					"value": "video",
 					"label": "Vidéo importée"
 				}
@@ -680,6 +716,42 @@
 				{
 					"value": "lave",
 					"label": "Lave"
+				},
+				{
+					"value": "mosaique",
+					"label": "Mosaïque"
+				},
+				{
+					"value": "plasma",
+					"label": "Plasma rétro"
+				},
+				{
+					"value": "disco",
+					"label": "Disco"
+				},
+				{
+					"value": "matrix",
+					"label": "Matrix"
+				},
+				{
+					"value": "starfield",
+					"label": "Starfield"
+				},
+				{
+					"value": "synthwave",
+					"label": "Synthwave"
+				},
+				{
+					"value": "ondes",
+					"label": "Ondes"
+				},
+				{
+					"value": "cretes",
+					"label": "Crêtes"
+				},
+				{
+					"value": "degrade",
+					"label": "Dégradé fluide"
 				}
 			],
 			"defaultValue": "brouillard",
@@ -897,9 +969,16 @@
 				"any": [
 					{
 						"id": "theme",
-						"notValue": [
-							"video",
-							"halo"
+						"value": [
+							"brouillard",
+							"vagues",
+							"aurore",
+							"bokeh",
+							"lave",
+							"matrix",
+							"starfield",
+							"ondes",
+							"cretes"
 						]
 					},
 					{
@@ -910,7 +989,17 @@
 							},
 							{
 								"id": "videoTheme",
-								"notValue": "halo"
+								"value": [
+									"brouillard",
+									"vagues",
+									"aurore",
+									"bokeh",
+									"lave",
+									"matrix",
+									"starfield",
+									"ondes",
+									"cretes"
+								]
 							}
 						]
 					}
@@ -981,7 +1070,12 @@
 				"any": [
 					{
 						"id": "theme",
-						"value": "vagues"
+						"value": [
+							"vagues",
+							"synthwave",
+							"ondes",
+							"cretes"
+						]
 					},
 					{
 						"all": [
@@ -991,7 +1085,383 @@
 							},
 							{
 								"id": "videoTheme",
-								"value": "vagues"
+								"value": [
+									"vagues",
+									"synthwave",
+									"ondes",
+									"cretes"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "pixelSize",
+			"label": "Taille des pixels",
+			"description": "En pixels",
+			"type": "number",
+			"min": 4,
+			"max": 300,
+			"defaultValue": 20,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"mosaique",
+							"plasma"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"mosaique",
+									"plasma"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "pixelGap",
+			"label": "Espacement",
+			"description": "Entre les pixels, en pixels",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 6,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"mosaique"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"mosaique"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "waveShape",
+			"label": "Forme des vagues",
+			"type": "select",
+			"options": [
+				{
+					"value": "diagonale",
+					"label": "Diagonale"
+				},
+				{
+					"value": "cercle",
+					"label": "Cercles"
+				},
+				{
+					"value": "aleatoire",
+					"label": "Aléatoire"
+				}
+			],
+			"defaultValue": "diagonale",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"mosaique"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"mosaique"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "plasmaDither",
+			"label": "Trame de points",
+			"type": "select",
+			"options": [
+				{
+					"value": "aucune",
+					"label": "Aucune"
+				},
+				{
+					"value": "legere",
+					"label": "Légère"
+				},
+				{
+					"value": "forte",
+					"label": "Forte"
+				}
+			],
+			"defaultValue": "legere",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"plasma"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"plasma"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "discoSize",
+			"label": "Taille des facettes",
+			"description": "En pixels",
+			"type": "number",
+			"min": 10,
+			"max": 300,
+			"defaultValue": 60,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"disco"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"disco"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "discoSparkle",
+			"label": "Éclats",
+			"type": "select",
+			"options": [
+				{
+					"value": "faible",
+					"label": "Peu"
+				},
+				{
+					"value": "moyen",
+					"label": "Moyen"
+				},
+				{
+					"value": "fort",
+					"label": "Beaucoup"
+				}
+			],
+			"defaultValue": "moyen",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"disco"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"disco"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "matrixChars",
+			"label": "Caractères",
+			"type": "select",
+			"options": [
+				{
+					"value": "matrix",
+					"label": "Matrix"
+				},
+				{
+					"value": "chiffres",
+					"label": "Chiffres"
+				},
+				{
+					"value": "binaire",
+					"label": "Binaire"
+				},
+				{
+					"value": "symboles",
+					"label": "Symboles"
+				},
+				{
+					"value": "perso",
+					"label": "Texte personnalisé"
+				}
+			],
+			"defaultValue": "matrix",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"matrix"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"matrix"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "matrixText",
+			"label": "Texte",
+			"description": "Les caractères à faire tomber (ex. le pseudo de la chaîne)",
+			"type": "text",
+			"defaultValue": "",
+			"placeholder": "ANAISMRN",
+			"group": "Trame",
+			"showIf": {
+				"all": [
+					{
+						"any": [
+							{
+								"id": "theme",
+								"value": [
+									"matrix"
+								]
+							},
+							{
+								"all": [
+									{
+										"id": "videoFill",
+										"value": "trame"
+									},
+									{
+										"id": "videoTheme",
+										"value": [
+											"matrix"
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						"id": "matrixChars",
+						"value": "perso"
+					}
+				]
+			}
+		},
+		{
+			"id": "matrixSize",
+			"label": "Taille des caractères",
+			"description": "En pixels",
+			"type": "number",
+			"min": 8,
+			"max": 200,
+			"defaultValue": 28,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"matrix"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"matrix"
+								]
 							}
 						]
 					}
