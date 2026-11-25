@@ -621,6 +621,11 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		unit: PxScale(),
 		lineWidth: Number(s.lineWidth) || 2,
 		shapeKind: s.shapeKind,
+		haloCount: Number(s.haloCount) || 4,
+		haloSize: Number(s.haloSize) || 100,
+		haloBlur: s.haloBlur,
+		haloBlack: withBackground ? Number(s.haloBlack) || 0 : 0,
+		background: withBackground,
 		layer: layerCanvas
 	});
 	c.restore();

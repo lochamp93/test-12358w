@@ -13,10 +13,22 @@
 			"description": "D’où viennent les teintes de la trame",
 			"type": "select",
 			"options": [
-				{ "value": "jeu", "label": "Artwork du jeu (dynamique)" },
-				{ "value": "musique", "label": "Musique en cours (dynamique)" },
-				{ "value": "chaine", "label": "Photo de profil de la chaîne (fixe)" },
-				{ "value": "perso", "label": "Couleurs personnalisées (fixe)" }
+				{
+					"value": "jeu",
+					"label": "Artwork du jeu (dynamique)"
+				},
+				{
+					"value": "musique",
+					"label": "Musique en cours (dynamique)"
+				},
+				{
+					"value": "chaine",
+					"label": "Photo de profil de la chaîne (fixe)"
+				},
+				{
+					"value": "perso",
+					"label": "Couleurs personnalisées (fixe)"
+				}
 			],
 			"defaultValue": "jeu",
 			"group": "Source des couleurs"
@@ -29,7 +41,13 @@
 			"defaultValue": "",
 			"placeholder": "anaismrn",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+			"showIf": {
+				"id": "paletteSource",
+				"value": [
+					"jeu",
+					"chaine"
+				]
+			}
 		},
 		{
 			"id": "includedApps",
@@ -39,7 +57,10 @@
 			"defaultValue": "",
 			"placeholder": "spotify, chrome",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "excludedApps",
@@ -49,7 +70,10 @@
 			"defaultValue": "",
 			"placeholder": "vlc",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "detectedApps",
@@ -58,19 +82,31 @@
 			"type": "info",
 			"defaultValue": "En attente de SMTC Bridge…",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "whenIdle",
 			"label": "Quand rien ne joue",
 			"type": "select",
 			"options": [
-				{ "value": "keep", "label": "Garder la dernière palette" },
-				{ "value": "fallback", "label": "Couleur de secours" }
+				{
+					"value": "keep",
+					"label": "Garder la dernière palette"
+				},
+				{
+					"value": "fallback",
+					"label": "Couleur de secours"
+				}
 			],
 			"defaultValue": "keep",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "color1",
@@ -78,7 +114,10 @@
 			"type": "color",
 			"defaultValue": "#8a5cf6",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "value": "perso" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "perso"
+			}
 		},
 		{
 			"id": "color2",
@@ -86,7 +125,21 @@
 			"type": "color",
 			"defaultValue": "#ff5fa2",
 			"group": "Source des couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "value": "perso" }, { "id": "colorCount", "value": ["duo", "trio"] }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"value": "perso"
+					},
+					{
+						"id": "colorCount",
+						"value": [
+							"duo",
+							"trio"
+						]
+					}
+				]
+			}
 		},
 		{
 			"id": "color3",
@@ -94,7 +147,18 @@
 			"type": "color",
 			"defaultValue": "#2ad1ff",
 			"group": "Source des couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "value": "perso" }, { "id": "colorCount", "value": "trio" }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"value": "perso"
+					},
+					{
+						"id": "colorCount",
+						"value": "trio"
+					}
+				]
+			}
 		},
 		{
 			"id": "fallbackColor",
@@ -103,7 +167,10 @@
 			"type": "color",
 			"defaultValue": "#8a5cf6",
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "notValue": "perso" }
+			"showIf": {
+				"id": "paletteSource",
+				"notValue": "perso"
+			}
 		},
 		{
 			"id": "transitionDuration",
@@ -116,7 +183,10 @@
 			"defaultValue": 2,
 			"inputWidth": 72,
 			"group": "Source des couleurs",
-			"showIf": { "id": "paletteSource", "notValue": "perso" }
+			"showIf": {
+				"id": "paletteSource",
+				"notValue": "perso"
+			}
 		},
 		{
 			"id": "paletteStatus",
@@ -131,7 +201,13 @@
 			"type": "text",
 			"defaultValue": "127.0.0.1",
 			"group": "Connexion",
-			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+			"showIf": {
+				"id": "paletteSource",
+				"value": [
+					"jeu",
+					"chaine"
+				]
+			}
 		},
 		{
 			"id": "port",
@@ -141,7 +217,13 @@
 			"max": 65535,
 			"defaultValue": 8080,
 			"group": "Connexion",
-			"showIf": { "id": "paletteSource", "value": ["jeu", "chaine"] }
+			"showIf": {
+				"id": "paletteSource",
+				"value": [
+					"jeu",
+					"chaine"
+				]
+			}
 		},
 		{
 			"id": "smtcBridgeAddress",
@@ -150,7 +232,10 @@
 			"type": "text",
 			"defaultValue": "127.0.0.1",
 			"group": "Connexion",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "smtcBridgePort",
@@ -160,16 +245,28 @@
 			"max": 65535,
 			"defaultValue": 5000,
 			"group": "Connexion",
-			"showIf": { "id": "paletteSource", "value": "musique" }
+			"showIf": {
+				"id": "paletteSource",
+				"value": "musique"
+			}
 		},
 		{
 			"id": "colorCount",
 			"label": "Nombre de couleurs",
 			"type": "segmented",
 			"options": [
-				{ "value": "mono", "label": "Mono" },
-				{ "value": "duo", "label": "Duo" },
-				{ "value": "trio", "label": "Trio" }
+				{
+					"value": "mono",
+					"label": "Mono"
+				},
+				{
+					"value": "duo",
+					"label": "Duo"
+				},
+				{
+					"value": "trio",
+					"label": "Trio"
+				}
 			],
 			"defaultValue": "mono",
 			"group": "Couleurs"
@@ -179,12 +276,21 @@
 			"label": "Choix des teintes",
 			"type": "segmented",
 			"options": [
-				{ "value": "auto", "label": "Automatique" },
-				{ "value": "manual", "label": "Manuel" }
+				{
+					"value": "auto",
+					"label": "Automatique"
+				},
+				{
+					"value": "manual",
+					"label": "Manuel"
+				}
 			],
 			"defaultValue": "auto",
 			"group": "Couleurs",
-			"showIf": { "id": "paletteSource", "notValue": "perso" }
+			"showIf": {
+				"id": "paletteSource",
+				"notValue": "perso"
+			}
 		},
 		{
 			"id": "ambiance",
@@ -192,61 +298,179 @@
 			"description": "Vive : teintes saturées. Douce : teintes adoucies. Sombre : teintes profondes",
 			"type": "segmented",
 			"options": [
-				{ "value": "vive", "label": "Vive" },
-				{ "value": "douce", "label": "Douce" },
-				{ "value": "sombre", "label": "Sombre" }
+				{
+					"value": "vive",
+					"label": "Vive"
+				},
+				{
+					"value": "douce",
+					"label": "Douce"
+				},
+				{
+					"value": "sombre",
+					"label": "Sombre"
+				}
 			],
 			"defaultValue": "vive",
 			"group": "Couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "auto" }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"notValue": "perso"
+					},
+					{
+						"id": "colorPick",
+						"value": "auto"
+					}
+				]
+			}
 		},
 		{
 			"id": "role1",
 			"label": "Teinte 1",
 			"type": "select",
 			"options": [
-				{ "value": "Vibrant", "label": "Vibrant" },
-				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
-				{ "value": "LightVibrant", "label": "Light Vibrant" },
-				{ "value": "Muted", "label": "Muted" },
-				{ "value": "DarkMuted", "label": "Dark Muted" },
-				{ "value": "LightMuted", "label": "Light Muted" }
+				{
+					"value": "Vibrant",
+					"label": "Vibrant"
+				},
+				{
+					"value": "DarkVibrant",
+					"label": "Dark Vibrant"
+				},
+				{
+					"value": "LightVibrant",
+					"label": "Light Vibrant"
+				},
+				{
+					"value": "Muted",
+					"label": "Muted"
+				},
+				{
+					"value": "DarkMuted",
+					"label": "Dark Muted"
+				},
+				{
+					"value": "LightMuted",
+					"label": "Light Muted"
+				}
 			],
 			"defaultValue": "Vibrant",
 			"group": "Couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"notValue": "perso"
+					},
+					{
+						"id": "colorPick",
+						"value": "manual"
+					}
+				]
+			}
 		},
 		{
 			"id": "role2",
 			"label": "Teinte 2",
 			"type": "select",
 			"options": [
-				{ "value": "Vibrant", "label": "Vibrant" },
-				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
-				{ "value": "LightVibrant", "label": "Light Vibrant" },
-				{ "value": "Muted", "label": "Muted" },
-				{ "value": "DarkMuted", "label": "Dark Muted" },
-				{ "value": "LightMuted", "label": "Light Muted" }
+				{
+					"value": "Vibrant",
+					"label": "Vibrant"
+				},
+				{
+					"value": "DarkVibrant",
+					"label": "Dark Vibrant"
+				},
+				{
+					"value": "LightVibrant",
+					"label": "Light Vibrant"
+				},
+				{
+					"value": "Muted",
+					"label": "Muted"
+				},
+				{
+					"value": "DarkMuted",
+					"label": "Dark Muted"
+				},
+				{
+					"value": "LightMuted",
+					"label": "Light Muted"
+				}
 			],
 			"defaultValue": "DarkVibrant",
 			"group": "Couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }, { "id": "colorCount", "value": ["duo", "trio"] }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"notValue": "perso"
+					},
+					{
+						"id": "colorPick",
+						"value": "manual"
+					},
+					{
+						"id": "colorCount",
+						"value": [
+							"duo",
+							"trio"
+						]
+					}
+				]
+			}
 		},
 		{
 			"id": "role3",
 			"label": "Teinte 3",
 			"type": "select",
 			"options": [
-				{ "value": "Vibrant", "label": "Vibrant" },
-				{ "value": "DarkVibrant", "label": "Dark Vibrant" },
-				{ "value": "LightVibrant", "label": "Light Vibrant" },
-				{ "value": "Muted", "label": "Muted" },
-				{ "value": "DarkMuted", "label": "Dark Muted" },
-				{ "value": "LightMuted", "label": "Light Muted" }
+				{
+					"value": "Vibrant",
+					"label": "Vibrant"
+				},
+				{
+					"value": "DarkVibrant",
+					"label": "Dark Vibrant"
+				},
+				{
+					"value": "LightVibrant",
+					"label": "Light Vibrant"
+				},
+				{
+					"value": "Muted",
+					"label": "Muted"
+				},
+				{
+					"value": "DarkMuted",
+					"label": "Dark Muted"
+				},
+				{
+					"value": "LightMuted",
+					"label": "Light Muted"
+				}
 			],
 			"defaultValue": "LightVibrant",
 			"group": "Couleurs",
-			"showIf": { "all": [{ "id": "paletteSource", "notValue": "perso" }, { "id": "colorPick", "value": "manual" }, { "id": "colorCount", "value": "trio" }] }
+			"showIf": {
+				"all": [
+					{
+						"id": "paletteSource",
+						"notValue": "perso"
+					},
+					{
+						"id": "colorPick",
+						"value": "manual"
+					},
+					{
+						"id": "colorCount",
+						"value": "trio"
+					}
+				]
+			}
 		},
 		{
 			"id": "autoShades",
@@ -255,7 +479,10 @@
 			"type": "checkbox",
 			"defaultValue": true,
 			"group": "Couleurs",
-			"showIf": { "id": "colorCount", "value": "mono" }
+			"showIf": {
+				"id": "colorCount",
+				"value": "mono"
+			}
 		},
 		{
 			"id": "background",
@@ -270,13 +497,38 @@
 			"label": "Thème",
 			"type": "select",
 			"options": [
-				{ "value": "brouillard", "label": "Brouillard" },
-				{ "value": "vagues", "label": "Vagues (Bézier)" },
-				{ "value": "aurore", "label": "Aurore" },
-				{ "value": "bokeh", "label": "Bokeh" },
-				{ "value": "geometrique", "label": "Géométrique" },
-				{ "value": "lave", "label": "Lave" },
-				{ "value": "video", "label": "Vidéo importée" }
+				{
+					"value": "halo",
+					"label": "Halo (bandes floues)"
+				},
+				{
+					"value": "brouillard",
+					"label": "Brouillard"
+				},
+				{
+					"value": "vagues",
+					"label": "Vagues (Bézier)"
+				},
+				{
+					"value": "aurore",
+					"label": "Aurore"
+				},
+				{
+					"value": "bokeh",
+					"label": "Bokeh"
+				},
+				{
+					"value": "geometrique",
+					"label": "Géométrique"
+				},
+				{
+					"value": "lave",
+					"label": "Lave"
+				},
+				{
+					"value": "video",
+					"label": "Vidéo importée"
+				}
 			],
 			"defaultValue": "brouillard",
 			"group": "Trame"
@@ -289,61 +541,122 @@
 			"defaultValue": "",
 			"placeholder": "https://…/boucle.mp4",
 			"group": "Trame",
-			"showIf": { "id": "theme", "value": "video" }
+			"showIf": {
+				"id": "theme",
+				"value": "video"
+			}
 		},
 		{
 			"id": "videoBackground",
 			"label": "Fond de la vidéo",
 			"type": "segmented",
 			"options": [
-				{ "value": "noir", "label": "Noir" },
-				{ "value": "transparent", "label": "Transparent" }
+				{
+					"value": "noir",
+					"label": "Noir"
+				},
+				{
+					"value": "transparent",
+					"label": "Transparent"
+				}
 			],
 			"defaultValue": "noir",
 			"group": "Trame",
-			"showIf": { "id": "theme", "value": "video" }
+			"showIf": {
+				"id": "theme",
+				"value": "video"
+			}
 		},
 		{
 			"id": "videoFill",
 			"label": "Remplissage du blanc",
 			"type": "select",
 			"options": [
-				{ "value": "couleur", "label": "Couleur unie" },
-				{ "value": "degrade", "label": "Dégradé de la palette" },
-				{ "value": "trame", "label": "Trame animée" }
+				{
+					"value": "couleur",
+					"label": "Couleur unie"
+				},
+				{
+					"value": "degrade",
+					"label": "Dégradé de la palette"
+				},
+				{
+					"value": "trame",
+					"label": "Trame animée"
+				}
 			],
 			"defaultValue": "degrade",
 			"group": "Trame",
-			"showIf": { "id": "theme", "value": "video" }
+			"showIf": {
+				"id": "theme",
+				"value": "video"
+			}
 		},
 		{
 			"id": "videoTone",
 			"label": "Teinte",
 			"type": "select",
 			"options": [
-				{ "value": "hi", "label": "Claire" },
-				{ "value": "mid", "label": "Moyenne" },
-				{ "value": "bg", "label": "Sombre" }
+				{
+					"value": "hi",
+					"label": "Claire"
+				},
+				{
+					"value": "mid",
+					"label": "Moyenne"
+				},
+				{
+					"value": "bg",
+					"label": "Sombre"
+				}
 			],
 			"defaultValue": "mid",
 			"group": "Trame",
-			"showIf": { "id": "videoFill", "value": "couleur" }
+			"showIf": {
+				"id": "videoFill",
+				"value": "couleur"
+			}
 		},
 		{
 			"id": "videoTheme",
 			"label": "Trame de remplissage",
 			"type": "select",
 			"options": [
-				{ "value": "brouillard", "label": "Brouillard" },
-				{ "value": "vagues", "label": "Vagues (Bézier)" },
-				{ "value": "aurore", "label": "Aurore" },
-				{ "value": "bokeh", "label": "Bokeh" },
-				{ "value": "geometrique", "label": "Géométrique" },
-				{ "value": "lave", "label": "Lave" }
+				{
+					"value": "halo",
+					"label": "Halo (bandes floues)"
+				},
+				{
+					"value": "brouillard",
+					"label": "Brouillard"
+				},
+				{
+					"value": "vagues",
+					"label": "Vagues (Bézier)"
+				},
+				{
+					"value": "aurore",
+					"label": "Aurore"
+				},
+				{
+					"value": "bokeh",
+					"label": "Bokeh"
+				},
+				{
+					"value": "geometrique",
+					"label": "Géométrique"
+				},
+				{
+					"value": "lave",
+					"label": "Lave"
+				}
 			],
 			"defaultValue": "brouillard",
 			"group": "Trame",
-			"showIf": { "id": "videoFill", "value": "trame" }
+			"showIf": {
+				"id": "videoFill",
+				"value": "trame"
+			}
 		},
 		{
 			"id": "videoRate",
@@ -356,7 +669,10 @@
 			"defaultValue": 100,
 			"inputWidth": 72,
 			"group": "Trame",
-			"showIf": { "id": "theme", "value": "video" }
+			"showIf": {
+				"id": "theme",
+				"value": "video"
+			}
 		},
 		{
 			"id": "speed",
@@ -369,34 +685,251 @@
 			"defaultValue": 100,
 			"inputWidth": 72,
 			"group": "Trame",
-			"showIf": { "any": [{ "id": "theme", "notValue": "video" }, { "id": "videoFill", "value": ["trame", "degrade"] }] }
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"notValue": "video"
+					},
+					{
+						"id": "videoFill",
+						"value": [
+							"trame",
+							"degrade"
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "haloCount",
+			"label": "Nombre de bandes",
+			"type": "number",
+			"min": 2,
+			"max": 6,
+			"defaultValue": 3,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "halo"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "halo"
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "haloSize",
+			"label": "Largeur des bandes",
+			"description": "En %",
+			"type": "number",
+			"min": 40,
+			"max": 250,
+			"step": 5,
+			"defaultValue": 100,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "halo"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "halo"
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "haloBlur",
+			"label": "Flou",
+			"type": "segmented",
+			"options": [
+				{
+					"value": "doux",
+					"label": "Doux"
+				},
+				{
+					"value": "fort",
+					"label": "Fort"
+				},
+				{
+					"value": "tres",
+					"label": "Très fort"
+				}
+			],
+			"defaultValue": "fort",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "halo"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "halo"
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "haloBlack",
+			"label": "Noir du fond",
+			"description": "Assombrit le fond pour faire ressortir la couleur, en %",
+			"type": "number",
+			"min": 0,
+			"max": 100,
+			"defaultValue": 85,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"all": [
+					{
+						"any": [
+							{
+								"id": "theme",
+								"value": "halo"
+							},
+							{
+								"all": [
+									{
+										"id": "videoFill",
+										"value": "trame"
+									},
+									{
+										"id": "videoTheme",
+										"value": "halo"
+									}
+								]
+							}
+						]
+					},
+					{
+						"id": "background"
+					}
+				]
+			}
 		},
 		{
 			"id": "density",
 			"label": "Densité",
 			"type": "segmented",
 			"options": [
-				{ "value": "faible", "label": "Faible" },
-				{ "value": "moyenne", "label": "Moyenne" },
-				{ "value": "forte", "label": "Forte" }
+				{
+					"value": "faible",
+					"label": "Faible"
+				},
+				{
+					"value": "moyenne",
+					"label": "Moyenne"
+				},
+				{
+					"value": "forte",
+					"label": "Forte"
+				}
 			],
 			"defaultValue": "moyenne",
 			"group": "Trame",
-			"showIf": { "any": [{ "id": "theme", "notValue": "video" }, { "id": "videoFill", "value": "trame" }] }
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"notValue": [
+							"video",
+							"halo"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"notValue": "halo"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
 			"id": "shapeKind",
 			"label": "Formes",
 			"type": "select",
 			"options": [
-				{ "value": "triangles", "label": "Triangles" },
-				{ "value": "hexagones", "label": "Hexagones" },
-				{ "value": "losanges", "label": "Losanges" },
-				{ "value": "cercles", "label": "Cercles" }
+				{
+					"value": "triangles",
+					"label": "Triangles"
+				},
+				{
+					"value": "hexagones",
+					"label": "Hexagones"
+				},
+				{
+					"value": "losanges",
+					"label": "Losanges"
+				},
+				{
+					"value": "cercles",
+					"label": "Cercles"
+				}
 			],
 			"defaultValue": "triangles",
 			"group": "Trame",
-			"showIf": { "any": [{ "id": "theme", "value": "geometrique" }, { "all": [{ "id": "videoFill", "value": "trame" }, { "id": "videoTheme", "value": "geometrique" }] }] }
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "geometrique"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "geometrique"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
 			"id": "lineWidth",
@@ -408,7 +941,26 @@
 			"defaultValue": 2,
 			"inputWidth": 72,
 			"group": "Trame",
-			"showIf": { "any": [{ "id": "theme", "value": "vagues" }, { "all": [{ "id": "videoFill", "value": "trame" }, { "id": "videoTheme", "value": "vagues" }] }] }
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": "vagues"
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": "vagues"
+							}
+						]
+					}
+				]
+			}
 		},
 		{
 			"id": "grain",
@@ -436,14 +988,38 @@
 			"description": "Mettez les mêmes dimensions à la source navigateur dans OBS",
 			"type": "select",
 			"options": [
-				{ "value": "2560x1440", "label": "1440p paysage (2560 × 1440)" },
-				{ "value": "1440x2560", "label": "1440p portrait (1440 × 2560)" },
-				{ "value": "1920x1080", "label": "1080p paysage (1920 × 1080)" },
-				{ "value": "1080x1920", "label": "1080p portrait (1080 × 1920)" },
-				{ "value": "2560x160", "label": "Chat horizontal 1440p (2560 × 160)" },
-				{ "value": "1920x120", "label": "Chat horizontal 1080p (1920 × 120)" },
-				{ "value": "1080x1080", "label": "Carré (1080 × 1080)" },
-				{ "value": "custom", "label": "Personnalisé" }
+				{
+					"value": "2560x1440",
+					"label": "1440p paysage (2560 × 1440)"
+				},
+				{
+					"value": "1440x2560",
+					"label": "1440p portrait (1440 × 2560)"
+				},
+				{
+					"value": "1920x1080",
+					"label": "1080p paysage (1920 × 1080)"
+				},
+				{
+					"value": "1080x1920",
+					"label": "1080p portrait (1080 × 1920)"
+				},
+				{
+					"value": "2560x160",
+					"label": "Chat horizontal 1440p (2560 × 160)"
+				},
+				{
+					"value": "1920x120",
+					"label": "Chat horizontal 1080p (1920 × 120)"
+				},
+				{
+					"value": "1080x1080",
+					"label": "Carré (1080 × 1080)"
+				},
+				{
+					"value": "custom",
+					"label": "Personnalisé"
+				}
 			],
 			"defaultValue": "2560x1440",
 			"group": "Forme et dimensions"
@@ -458,7 +1034,10 @@
 			"defaultValue": 1920,
 			"inputWidth": 90,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "format", "value": "custom" }
+			"showIf": {
+				"id": "format",
+				"value": "custom"
+			}
 		},
 		{
 			"id": "customHeight",
@@ -470,18 +1049,36 @@
 			"defaultValue": 1080,
 			"inputWidth": 90,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "format", "value": "custom" }
+			"showIf": {
+				"id": "format",
+				"value": "custom"
+			}
 		},
 		{
 			"id": "shape",
 			"label": "Forme",
 			"type": "select",
 			"options": [
-				{ "value": "plein", "label": "Plein cadre" },
-				{ "value": "arrondi", "label": "Rectangle arrondi" },
-				{ "value": "pilule", "label": "Pilule" },
-				{ "value": "cercle", "label": "Cercle" },
-				{ "value": "cadre", "label": "Cadre seul (bordure)" }
+				{
+					"value": "plein",
+					"label": "Plein cadre"
+				},
+				{
+					"value": "arrondi",
+					"label": "Rectangle arrondi"
+				},
+				{
+					"value": "pilule",
+					"label": "Pilule"
+				},
+				{
+					"value": "cercle",
+					"label": "Cercle"
+				},
+				{
+					"value": "cadre",
+					"label": "Cadre seul (bordure)"
+				}
 			],
 			"defaultValue": "plein",
 			"group": "Forme et dimensions"
@@ -496,7 +1093,13 @@
 			"defaultValue": 24,
 			"inputWidth": 72,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "shape", "value": ["arrondi", "cadre"] }
+			"showIf": {
+				"id": "shape",
+				"value": [
+					"arrondi",
+					"cadre"
+				]
+			}
 		},
 		{
 			"id": "frameWidth",
@@ -508,7 +1111,10 @@
 			"defaultValue": 12,
 			"inputWidth": 72,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "shape", "value": "cadre" }
+			"showIf": {
+				"id": "shape",
+				"value": "cadre"
+			}
 		},
 		{
 			"id": "margin",
@@ -520,7 +1126,10 @@
 			"defaultValue": 0,
 			"inputWidth": 72,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "shape", "notValue": "plein" }
+			"showIf": {
+				"id": "shape",
+				"notValue": "plein"
+			}
 		},
 		{
 			"id": "feather",
@@ -528,7 +1137,10 @@
 			"type": "checkbox",
 			"defaultValue": false,
 			"group": "Forme et dimensions",
-			"showIf": { "id": "shape", "notValue": "plein" }
+			"showIf": {
+				"id": "shape",
+				"notValue": "plein"
+			}
 		},
 		{
 			"id": "featherSize",
@@ -559,9 +1171,18 @@
 			"description": "50 % est invisible sur les trames floues (brouillard, aurore, bokeh) et soulage la carte graphique",
 			"type": "segmented",
 			"options": [
-				{ "value": "100", "label": "100 %" },
-				{ "value": "75", "label": "75 %" },
-				{ "value": "50", "label": "50 %" }
+				{
+					"value": "100",
+					"label": "100 %"
+				},
+				{
+					"value": "75",
+					"label": "75 %"
+				},
+				{
+					"value": "50",
+					"label": "50 %"
+				}
 			],
 			"defaultValue": "100",
 			"group": "Rendu"
@@ -571,8 +1192,14 @@
 			"label": "Images par seconde",
 			"type": "segmented",
 			"options": [
-				{ "value": "30", "label": "30" },
-				{ "value": "60", "label": "60" }
+				{
+					"value": "30",
+					"label": "30"
+				},
+				{
+					"value": "60",
+					"label": "60"
+				}
 			],
 			"defaultValue": "30",
 			"group": "Rendu"
@@ -583,9 +1210,18 @@
 			"description": "Pour tester le rendu. N’est jamais dans l’URL copiée pour OBS",
 			"type": "select",
 			"options": [
-				{ "value": "reel", "label": "Source réelle" },
-				{ "value": "image", "label": "Image importée" },
-				{ "value": "jeu", "label": "Jeu (par son nom)" }
+				{
+					"value": "reel",
+					"label": "Source réelle"
+				},
+				{
+					"value": "image",
+					"label": "Image importée"
+				},
+				{
+					"value": "jeu",
+					"label": "Jeu (par son nom)"
+				}
 			],
 			"defaultValue": "reel",
 			"previewOnly": true,
@@ -599,7 +1235,10 @@
 			"maxWidth": 400,
 			"maxHeight": 400,
 			"group": "Aperçu",
-			"showIf": { "id": "previewSource", "value": "image" }
+			"showIf": {
+				"id": "previewSource",
+				"value": "image"
+			}
 		},
 		{
 			"id": "previewGame",
@@ -610,7 +1249,10 @@
 			"placeholder": "Hollow Knight",
 			"previewOnly": true,
 			"group": "Aperçu",
-			"showIf": { "id": "previewSource", "value": "jeu" }
+			"showIf": {
+				"id": "previewSource",
+				"value": "jeu"
+			}
 		},
 		{
 			"id": "previewPalette",

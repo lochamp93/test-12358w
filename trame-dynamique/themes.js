@@ -67,6 +67,57 @@ const THEMES = {
 		});
 	},
 
+	// Halo : grandes bandes floues qui tournent et se croisent sur un fond sombre
+	// (inspiré des fonds animés des lecteurs de musique). Dessiné en basse résolution
+	// avec un gros flou, puis agrandi : rendu très doux et léger pour la carte graphique.
+	halo(ctx, w, h, t, set, o) {
+		const n = Math.max(2, Math.min(6, Math.round(o.haloCount || 4)));
+		const bars = Particles('halo', n, (r, i) => ({
+			px: r(), py: r(), fx: 0.03 + r() * 0.05, fy: 0.03 + r() * 0.05, ph: r() * 6.28,
+			ang: r() * 6.28, spin: (r() < 0.5 ? -1 : 1) * (0.35 + r() * 0.5),
+			width: 0.3 + r() * 0.22, tone: i % 3
+		}));
+		const layer = o.layer;
+		// Calque plus grand que l'écran (marge de 25 %) : le flou ne crée pas de liseré sur les bords
+		const lw = Math.max(24, Math.round(w / 10)), lh = Math.max(24, Math.round(h / 10));
+		const mx = Math.round(lw * 0.25), my = Math.round(lh * 0.25);
+		if (layer.width !== lw + 2 * mx || layer.height !== lh + 2 * my) { layer.width = lw + 2 * mx; layer.height = lh + 2 * my; }
+		const lc = layer.getContext('2d');
+		lc.save();
+		lc.clearRect(0, 0, layer.width, layer.height);
+		lc.translate(mx, my);
+		const small = Math.min(lw, lh), diag = Math.hypot(lw, lh);
+		const blur = { doux: 0.1, fort: 0.16, tres: 0.24 }[o.haloBlur] || 0.16;
+		lc.filter = `blur(${Math.max(1, small * blur)}px)`;
+		const size = (o.haloSize || 100) / 100;
+		for (const b of bars) {
+			// Vitesse de rotation qui varie : accélérations et ralentissements doux
+			const a = b.ang + b.spin * t + 0.9 * Math.sin(t * 0.31 + b.ph) + 0.5 * Math.sin(t * 0.83 + b.ph * 2);
+			// Pivot qui se déplace, parfois hors de l'écran (bandes qui entrent par un coin)
+			const cx = lw * (-0.15 + 1.3 * (0.5 + 0.5 * Math.sin(t * b.fx * 6.28 + b.ph + b.px * 6.28)));
+			const cy = lh * (-0.15 + 1.3 * (0.5 + 0.5 * Math.cos(t * b.fy * 6.28 + b.ph + b.py * 6.28)));
+			const col = b.tone === 0 ? set.mid : b.tone === 1 ? set.hi : MixRgb(set.mid, set.hi, 0.5);
+			lc.fillStyle = Rgba(col, 0.9);
+			lc.save();
+			lc.translate(cx, cy);
+			lc.rotate(a);
+			const bw = small * b.width * size;
+			lc.fillRect(-diag, -bw / 2, diag * 2, bw);
+			lc.restore();
+		}
+		lc.restore();
+		// Fond : voile noir par-dessus la teinte sombre (le noir fait ressortir la couleur)
+		if (o.background && o.haloBlack > 0) {
+			ctx.fillStyle = `rgba(0, 0, 0, ${Math.min(1, o.haloBlack / 100)})`;
+			ctx.fillRect(0, 0, w, h);
+		}
+		ctx.save();
+		ctx.imageSmoothingEnabled = true;
+		ctx.imageSmoothingQuality = 'high';
+		ctx.drawImage(layer, mx, my, lw, lh, 0, 0, w, h);
+		ctx.restore();
+	},
+
 	// Rideaux lumineux qui se tordent doucement
 	// Dessinés en basse résolution sur un calque, puis agrandis : le lissage fond les colonnes
 	aurore(ctx, w, h, t, set, o) {
