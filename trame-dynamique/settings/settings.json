@@ -606,6 +606,10 @@
 					"label": "Halo"
 				},
 				{
+					"value": "kaleido",
+					"label": "Kaléidoscope"
+				},
+				{
 					"value": "matrix",
 					"label": "Matrix"
 				},
@@ -620,6 +624,10 @@
 				{
 					"value": "starfield",
 					"label": "Starfield"
+				},
+				{
+					"value": "halftone",
+					"label": "Trame de points"
 				},
 				{
 					"value": "video",
@@ -679,6 +687,10 @@
 				{
 					"value": "trame",
 					"label": "Trame animée"
+				},
+				{
+					"value": "gris",
+					"label": "Selon les gris"
 				}
 			],
 			"defaultValue": "degrade",
@@ -686,6 +698,18 @@
 			"showIf": {
 				"id": "theme",
 				"value": "video"
+			}
+		},
+		{
+			"id": "greyLevels",
+			"label": "Niveaux de gris",
+			"description": "Noir #000000 : transparent<br>Gris foncé #555555 : teinte 1<br>Gris clair #AAAAAA : teinte 2<br>Blanc #FFFFFF : teinte 3<br>Entre deux niveaux, les teintes se mélangent",
+			"type": "info",
+			"defaultValue": "",
+			"group": "Trame",
+			"showIf": {
+				"id": "videoFill",
+				"value": "gris"
 			}
 		},
 		{
@@ -747,6 +771,10 @@
 					"label": "Halo"
 				},
 				{
+					"value": "kaleido",
+					"label": "Kaléidoscope"
+				},
+				{
 					"value": "matrix",
 					"label": "Matrix"
 				},
@@ -761,6 +789,10 @@
 				{
 					"value": "starfield",
 					"label": "Starfield"
+				},
+				{
+					"value": "halftone",
+					"label": "Trame de points"
 				}
 			],
 			"defaultValue": "brouillard",
@@ -1039,7 +1071,9 @@
 							"aurore",
 							"halo",
 							"bokeh",
-							"vagues"
+							"vagues",
+							"kaleido",
+							"halftone"
 						]
 					},
 					{
@@ -1054,7 +1088,9 @@
 									"aurore",
 									"halo",
 									"bokeh",
-									"vagues"
+									"vagues",
+									"kaleido",
+									"halftone"
 								]
 							}
 						]
@@ -1461,6 +1497,172 @@
 								"id": "videoTheme",
 								"value": [
 									"matrix"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "kaleidoSegments",
+			"label": "Segments",
+			"type": "select",
+			"options": [
+				{
+					"value": "6",
+					"label": "6"
+				},
+				{
+					"value": "8",
+					"label": "8"
+				},
+				{
+					"value": "12",
+					"label": "12"
+				}
+			],
+			"defaultValue": "8",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"kaleido"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"kaleido"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "halftoneSize",
+			"label": "Taille de la grille",
+			"description": "Écart entre les points, en pixels",
+			"type": "number",
+			"min": 6,
+			"max": 200,
+			"defaultValue": 24,
+			"inputWidth": 72,
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"halftone"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"halftone"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "halftonePattern",
+			"label": "Motif",
+			"type": "select",
+			"options": [
+				{
+					"value": "vagues",
+					"label": "Vagues"
+				},
+				{
+					"value": "cercles",
+					"label": "Cercles"
+				},
+				{
+					"value": "aleatoire",
+					"label": "Aléatoire"
+				}
+			],
+			"defaultValue": "vagues",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"halftone"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"halftone"
+								]
+							}
+						]
+					}
+				]
+			}
+		},
+		{
+			"id": "halftoneAngle",
+			"label": "Angle de la grille",
+			"type": "select",
+			"options": [
+				{
+					"value": "0",
+					"label": "0°"
+				},
+				{
+					"value": "45",
+					"label": "45°"
+				}
+			],
+			"defaultValue": "45",
+			"group": "Trame",
+			"showIf": {
+				"any": [
+					{
+						"id": "theme",
+						"value": [
+							"halftone"
+						]
+					},
+					{
+						"all": [
+							{
+								"id": "videoFill",
+								"value": "trame"
+							},
+							{
+								"id": "videoTheme",
+								"value": [
+									"halftone"
 								]
 							}
 						]

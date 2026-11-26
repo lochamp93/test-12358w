@@ -468,7 +468,8 @@ function UpdateMaskFromVideo(w, h) {
 	const mc = maskCanvas.getContext('2d');
 	mc.save();
 	mc.clearRect(0, 0, w, h);
-	mc.filter = ws.values.videoBackground === 'noir' ? 'url(#lumaToAlpha)' : 'none';
+	// « Selon les gris » : on garde l'image brute, la carte de couleurs est appliquée au rendu
+	mc.filter = ws.values.videoFill === 'gris' || ws.values.videoBackground !== 'noir' ? 'none' : 'url(#lumaToAlpha)';
 	// La vidéo couvre la zone (comme « remplir » dans OBS)
 	const vw = videoEl.videoWidth, vh = videoEl.videoHeight;
 	const k = Math.max(w / vw, h / vh);
@@ -491,13 +492,20 @@ function DemoMask(w, h, t) {
 	if (maskCanvas.width !== w || maskCanvas.height !== h) { maskCanvas.width = w; maskCanvas.height = h; }
 	const mc = maskCanvas.getContext('2d');
 	mc.clearRect(0, 0, w, h);
+	const grey = ws.values.videoFill === 'gris';
+	if (grey) { mc.fillStyle = '#000'; mc.fillRect(0, 0, w, h); }
 	const r = Math.min(w, h) * (0.3 + 0.04 * Math.sin(t * 1.4));
+	if (grey) {
+		// Exemple des 3 niveaux : disque gris foncé, points gris clair, anneau blanc
+		mc.fillStyle = '#555555';
+		mc.beginPath(); mc.arc(w / 2, h / 2, r * 0.75, 0, 6.2832); mc.fill();
+	}
 	mc.strokeStyle = '#fff';
 	mc.lineWidth = Math.min(w, h) * 0.07;
 	mc.beginPath();
 	mc.arc(w / 2, h / 2, r, 0, 6.2832);
 	mc.stroke();
-	mc.fillStyle = '#fff';
+	mc.fillStyle = grey ? '#aaaaaa' : '#fff';
 	for (let i = 0; i < 8; i++) {
 		const a = t * 0.6 + i * 0.785;
 		mc.beginPath();
@@ -557,7 +565,7 @@ function Resize() {
 // les trames nettes à pleine résolution, et seules les trames rapides passent à 60 images/s
 const RENDER_PRESETS = {
 	aurore: [0.5, 30], bokeh: [0.6, 30], brouillard: [0.5, 30], degrade: [0.5, 30], halo: [0.5, 30],
-	disco: [1, 30], matrix: [1, 30], mosaique: [1, 30], plasma: [1, 30],
+	disco: [1, 30], matrix: [1, 30], mosaique: [1, 30], kaleido: [0.75, 30], halftone: [1, 30], plasma: [1, 30],
 	starfield: [0.75, 60], vagues: [0.75, 60], video: [0.75, 30]
 };
 function RenderPreset() {
@@ -723,6 +731,10 @@ function DrawTheme(c, name, w, h, t, set, withBackground) {
 		discoSparkle: s.discoSparkle,
 		matrixSize: Number(s.matrixSize) || 28,
 		matrixChars: MatrixChars(s),
+		kaleidoSegments: Number(s.kaleidoSegments) || 8,
+		halftoneSize: Number(s.halftoneSize) || 24,
+		halftonePattern: s.halftonePattern,
+		halftoneAngle: Number(s.halftoneAngle) || 0,
 		layer: layerCanvas
 	});
 	c.restore();
@@ -777,6 +789,7 @@ function DrawVideo(w, h, t, set, withBg) {
 	const fc = fillCanvas.getContext('2d');
 
 	// 1. Remplissage du blanc
+	if (s.videoFill === 'gris') { DrawVideoGreyMap(w, h, t, set, withBg, fc); return; }
 	if (s.videoFill === 'trame') DrawTheme(fc, s.videoTheme, w, h, t, set, true);
 	else {
 		fc.save();
@@ -817,6 +830,53 @@ function DrawVideo(w, h, t, set, withBg) {
 		fc.restore();
 		ctx.drawImage(fillCanvas, 0, 0);
 	}
+	ctx.restore();
+}
+
+// « Selon les gris » : chaque niveau de gris de la vidéo prend une teinte
+//   noir #000000 → transparent, gris foncé #555555 → teinte 1,
+//   gris clair #AAAAAA → teinte 2, blanc #FFFFFF → teinte 3 (dégradé entre les niveaux)
+// Filtre SVG (carte de couleurs) : fonctionne même si la vidéo vient d'un autre site
+let lastGreyKey = '';
+function UpdateGreyMap(set) {
+	let c1, c2, c3;
+	if (set.count >= 3) [c1, c2, c3] = set.list;
+	else if (set.count === 2) { c1 = set.list[0]; c3 = set.list[1]; c2 = MixRgb(c1, c3, 0.5); }
+	else { c2 = set.mid; c1 = MixRgb(set.mid, [0, 0, 0], 0.45); c3 = set.hi; }
+	const key = [c1, c2, c3].map(c => c.map(Math.round).join(',')).join('|');
+	if (key === lastGreyKey) return;
+	lastGreyKey = key;
+	const v = (i) => [c1[i], c1[i], c2[i], c3[i]].map(x => (x / 255).toFixed(4)).join(' ');
+	for (const id of ['greyMapLuma', 'greyMapAlpha']) {
+		const f = document.getElementById(id);
+		f.querySelector('feFuncR').setAttribute('tableValues', v(0));
+		f.querySelector('feFuncG').setAttribute('tableValues', v(1));
+		f.querySelector('feFuncB').setAttribute('tableValues', v(2));
+	}
+}
+
+function DrawVideoGreyMap(w, h, t, set, withBg, fc) {
+	const s = ws.values;
+	let hasMask = false;
+	if (videoUrl && videoEl.videoWidth) {
+		if (!videoFrameReady || maskCanvas.width !== w) UpdateMaskFromVideo(w, h);
+		hasMask = true;
+	} else if (!videoUrl && ws.demo) {
+		DemoMask(w, h, t);
+		hasMask = true;
+	}
+	UpdateGreyMap(set);
+	fc.save();
+	fc.clearRect(0, 0, w, h);
+	if (hasMask) {
+		fc.filter = s.videoBackground === 'noir' ? 'url(#greyMapLuma)' : 'url(#greyMapAlpha)';
+		fc.drawImage(maskCanvas, 0, 0);
+	}
+	fc.restore();
+	ctx.save();
+	ctx.clearRect(0, 0, w, h);
+	if (withBg) { ctx.fillStyle = Rgba(set.bg, 1); ctx.fillRect(0, 0, w, h); }
+	ctx.drawImage(fillCanvas, 0, 0);
 	ctx.restore();
 }
 

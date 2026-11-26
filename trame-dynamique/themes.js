@@ -291,6 +291,83 @@ const THEMES = {
 		}
 	},
 
+	// Kaléidoscope : un motif coloré en mouvement, reflété en miroir autour du centre
+	kaleido(ctx, w, h, t, set, o) {
+		const N = Math.max(4, o.kaleidoSegments || 8);
+		const R = Math.hypot(w, h) / 2 + 2;
+		const ang = Math.PI * 2 / N;
+		// Motif source : un quartier de disque (rayon R, angle ang), dessiné sur un calque
+		const layer = o.layer;
+		const lw = Math.max(32, Math.round(R / 2)), lh = Math.max(16, Math.round(Math.sin(ang) * R / 2) + 2);
+		if (layer.width !== lw || layer.height !== lh) { layer.width = lw; layer.height = lh; }
+		const lc = layer.getContext('2d');
+		lc.clearRect(0, 0, lw, lh);
+		const items = Particles('kaleido2', 26, (r, i) => ({ x: r(), y: r(), s: 0.03 + r() * 0.09, fx: 0.02 + r() * 0.05, fy: 0.02 + r() * 0.05, ph: r() * 6.28, ring: r() < 0.35, tone: i }));
+		const amp = o.amplitude;
+		for (const it of items) {
+			// Formes réparties du centre vers l'extérieur (plus nombreuses près du centre)
+			const radial = Math.pow(0.5 + 0.5 * Math.sin(t * it.fx * 6.28 + it.ph), 1.6);
+			const x = lw * (0.03 + radial * (0.5 + 0.25 * amp));
+			const y = lh * (0.5 + 0.5 * Math.cos(t * it.fy * 6.28 + it.ph * 1.3));
+			const rad = lw * it.s * (0.7 + 0.5 * Math.sin(t * 0.4 + it.ph) * amp);
+			const col = ToneAt(set, it.tone);
+			lc.beginPath();
+			lc.arc(x, y, Math.max(1, rad), 0, 6.2832);
+			if (it.ring) { lc.strokeStyle = Rgba(col, 1); lc.lineWidth = Math.max(1, rad * 0.25); lc.stroke(); }
+			else { lc.fillStyle = Rgba(col, 1); lc.fill(); }
+		}
+		// Reflets : chaque segment est la copie du motif, un sur deux retourné en miroir
+		const rot = t * 0.08;
+		ctx.save();
+		ctx.translate(w / 2, h / 2);
+		ctx.imageSmoothingEnabled = true;
+		for (let k = 0; k < N; k++) {
+			ctx.save();
+			ctx.rotate(rot + k * ang);
+			if (k % 2) { ctx.rotate(ang); ctx.scale(1, -1); }
+			ctx.beginPath();
+			// Quartier légèrement élargi : pas de fine ligne entre deux reflets
+			const e = 2 / R;
+			ctx.moveTo(-Math.cos(ang / 2) * 2, -Math.sin(ang / 2) * 2);
+			ctx.arc(0, 0, R, -e * 2, ang + e * 2);
+			ctx.closePath();
+			ctx.clip();
+			ctx.drawImage(layer, 0, 0, lw, lh, 0, 0, R, lh * (R / lw));
+			ctx.restore();
+		}
+		ctx.restore();
+	},
+
+	// Trame de points (halftone) : points dont la taille gonfle et dégonfle en vagues
+	halftone(ctx, w, h, t, set, o) {
+		const step = Math.max(6, (o.halftoneSize || 24) * o.unit);
+		const angle = (o.halftoneAngle || 0) * Math.PI / 180;
+		const ca = Math.cos(angle), sa = Math.sin(angle);
+		const R = Math.hypot(w, h) / 2 + step;
+		const n = Math.ceil(R / step);
+		const cx = w / 2, cy = h / 2;
+		const amp = o.amplitude;
+		for (let j = -n; j <= n; j++) {
+			for (let i = -n; i <= n; i++) {
+				const gx = i * step, gy = j * step;
+				const x = cx + gx * ca - gy * sa, y = cy + gx * sa + gy * ca;
+				if (x < -step || x > w + step || y < -step || y > h + step) continue;
+				const u = x / w, v = y / h;
+				let f;
+				if (o.halftonePattern === 'cercles') f = 0.5 + 0.5 * Math.sin(Math.hypot((u - 0.5) * w / h, v - 0.5) * 18 - t * 1.6);
+				else if (o.halftonePattern === 'aleatoire') f = Smooth(0.2, 0.8, Fbm(u * 3 * w / h + t * 0.12, v * 3 - t * 0.08));
+				else f = 0.5 + 0.5 * Math.sin((u * w / h + v) * 7 - t * 1.4) * Math.cos(v * 4 + t * 0.5);
+				f = Math.max(0, Math.min(1, 0.5 + (f - 0.5) * (0.6 + 0.4 * amp)));
+				const rad = step * 0.62 * f;
+				if (rad < 0.6) continue;
+				ctx.fillStyle = Rgba(Tone(set, f), 1);
+				ctx.beginPath();
+				ctx.arc(x, y, rad, 0, 6.2832);
+				ctx.fill();
+			}
+		}
+	},
+
 	// Mosaïque : grille de gros pixels qui s'allument et s'éteignent en vagues (écran LED)
 	mosaique(ctx, w, h, t, set, o) {
 		const cell = Math.max(4, o.pixelSize * o.unit);

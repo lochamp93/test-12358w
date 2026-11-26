@@ -4,10 +4,10 @@
 <head>
 	<meta charset="UTF-8">
 	<!-- OBS garde la page en cache : rechargement automatique si une version plus récente est en ligne -->
-	<script src="../-common/utils/fresh.js?v=2026112516" data-version="2026112516" data-version-url="version.txt"></script>
+	<script src="../-common/utils/fresh.js?v=2026112517" data-version="2026112517" data-version-url="version.txt"></script>
 	<title>Trame dynamique</title>
 	<link rel="icon" href="../-common/resources/favicon.png" type="image/png">
-	<link rel="stylesheet" href="./style.css?v=2026112516" />
+	<link rel="stylesheet" href="./style.css?v=2026112517" />
 	<script src="https://unpkg.com/@streamerbot/client/dist/streamerbot-client.js"></script>
 </head>
 
@@ -24,6 +24,24 @@
 			<filter id="lumaToAlpha" color-interpolation-filters="sRGB">
 				<feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0.2126 0.7152 0.0722 0 0" />
 			</filter>
+			<!-- Vidéo « selon les gris » : luminosité → teinte (carte de couleurs mise à jour par le script) -->
+			<filter id="greyMapLuma" color-interpolation-filters="sRGB">
+				<feColorMatrix values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0" />
+				<feComponentTransfer>
+					<feFuncR type="table" tableValues="0 0 0.5 1" />
+					<feFuncG type="table" tableValues="0 0 0.5 1" />
+					<feFuncB type="table" tableValues="0 0 0.5 1" />
+					<feFuncA type="table" tableValues="0 1 1 1" />
+				</feComponentTransfer>
+			</filter>
+			<filter id="greyMapAlpha" color-interpolation-filters="sRGB">
+				<feColorMatrix values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" />
+				<feComponentTransfer>
+					<feFuncR type="table" tableValues="0 0 0.5 1" />
+					<feFuncG type="table" tableValues="0 0 0.5 1" />
+					<feFuncB type="table" tableValues="0 0 0.5 1" />
+				</feComponentTransfer>
+			</filter>
 		</defs>
 	</svg>
 
@@ -39,10 +57,10 @@
 
 	<video id="video" muted loop playsinline preload="auto"></video>
 
-	<script src="../-common/utils/widget-settings.js?v=2026112516"></script>
-	<script src="./helpers.js?v=2026112516"></script>
-	<script src="./themes.js?v=2026112516"></script>
-	<script src="./script.js?v=2026112516"></script>
+	<script src="../-common/utils/widget-settings.js?v=2026112517"></script>
+	<script src="./helpers.js?v=2026112517"></script>
+	<script src="./themes.js?v=2026112517"></script>
+	<script src="./script.js?v=2026112517"></script>
 </body>
 
 </html>
